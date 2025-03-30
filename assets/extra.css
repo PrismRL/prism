@@ -1,0 +1,13 @@
+.md-typeset h1 {
+    margin: 0 0 0.25em
+}
+
+.md-main__inner {
+    margin-top: 1em;
+}
+
+@media only screen and (min-width: 70em) {
+    .terminal-mkdocs-main-grid {
+        grid-template-columns: 3fr 9fr;
+    }
+}
