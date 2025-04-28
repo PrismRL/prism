@@ -29,7 +29,7 @@ local function EditorRoot(self, scene)
    self.props.gridPosition = prism.Vector2(4, 4)
 
    love.graphics.setDefaultFilter("nearest", "nearest")
-   local atlas = spectrum.SpriteAtlas.fromGrid(geometer.assetPath .. "/assets/gui.png", 24, 12)
+   local atlas = spectrum.SpriteAtlas.fromGrid(geometer.assetPath .. "/assets/buttons.png", 24, 12)
 
    local width = love.graphics.getWidth() / self.props.scale.x
    width = width - (width % 8)
@@ -73,6 +73,11 @@ local function EditorRoot(self, scene)
       self.props.quit = true
       self.props.attachable.debug = true
    end
+
+   local forwardButton = Button(scene)
+   forwardButton.props.tileset = atlas.image
+   forwardButton.props.unpressedQuad = atlas:getQuadByIndex(7)
+   forwardButton.props.pressedQuad = atlas:getQuadByIndex(8)
 
    local cellButton = Button(scene)
    cellButton.props.tileset = atlas.image
@@ -174,6 +179,7 @@ local function EditorRoot(self, scene)
       fileButton:render(8, bottomEdge, 24, 12)
       playButton:render(8 * 2 + 24, bottomEdge, 24, 12)
       debugButton:render(8 * 6 + 24, bottomEdge, 24, 12)
+      forwardButton:render(8 * 10 + 24, bottomEdge, 24, 12)
       tools:render(panelEdge - 13 * 8, canvas:getHeight() - 24, 112, 12)
       selectionPanel:render(panelEdge, 0, 88, canvas:getHeight(), depth + 1)
       fillModeButton:render(panelEdge + 80, canvas:getHeight() - 48, 16, 8)
