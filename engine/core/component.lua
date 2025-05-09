@@ -17,7 +17,7 @@ function Component:checkRequirements(entity)
 
    for _, component in pairs(entity.components) do
       for _, requirement in pairs(self.requirements) do
-         if component.className == requirement then table.insert(foundreqs, component) end
+         if component.className == requirement.className then table.insert(foundreqs, component) end
       end
    end
 
