@@ -14,6 +14,7 @@ function Entity:__new()
    local components = self:initialize()
    self.components = {}
    self.componentCache = {}
+   self.componentClassNames = {}
    if components then
       for _, component in ipairs(components) do
          component.owner = self
@@ -50,6 +51,7 @@ function Entity:addComponent(component)
 
    component.owner = self
    table.insert(self.components, component)
+   self.componentClassNames[component.className] = true
 end
 
 --- Removes a component from the entity. This function will throw an error if the

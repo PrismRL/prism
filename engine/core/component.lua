@@ -13,17 +13,10 @@ Component.requirements = {}
 --- @param entity Entity The actor to check the requirements against.
 --- @return boolean meetsRequirements the actor meets all requirements, false otherwise.
 function Component:checkRequirements(entity)
-   local foundreqs = {}
-
-   for _, component in pairs(entity.components) do
-      for _, requirement in pairs(self.requirements) do
-         if component.className == requirement then table.insert(foundreqs, component) end
-      end
+   for _, requirement in pairs(self.requirements) do
+      if entity.componentClassNames[requirement.className] == nil then return false end
    end
-
-   if #foundreqs == #self.requirements then return true end
-
-   return false
+   return true
 end
 
 return Component
