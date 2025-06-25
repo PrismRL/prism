@@ -12,6 +12,7 @@ function Target:__new(...)
    self.reqcomponents = {}
    self.inLevel = true
    self.hint = nil -- A string hint that can be set to let the UI know how to handle the target.
+   self.opt = false
 
    self:with(...)
 end
@@ -22,6 +23,9 @@ end
 --- @param targetObject any
 --- @param previousTargets any[]? A list of the previous target objects.
 function Target:validate(level, owner, targetObject, previousTargets)
+   if not targetObject and not self.opt then return false end
+   if not targetObject and self.opt then return true end
+
    if self.inLevel and prism.Actor:is(targetObject) and not level:hasActor(targetObject) then
       return false
    end
@@ -178,6 +182,13 @@ end
 --- @param hint string
 function Target:setHint(hint)
    self.hint = hint
+   return self
+end
+
+--- Makes the target optional, matching with nil as well as whatever other validators
+--- are specified.
+function Target:optional()
+   self.opt = true
    return self
 end
 

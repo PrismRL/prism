@@ -21,16 +21,6 @@ end
 
 --- @private
 function Action:__validateTargets(level)
-   if #self.targetObjects ~= #self.targets then
-      return false,
-         "Invalid number of targets for action "
-            .. self.className
-            .. " expected "
-            .. #self.targets
-            .. " got "
-            .. #self.targetObjects
-   end
-
    for i = 1, #self.targets do
       local target = self.targets[i]
       --- @diagnostic disable-next-line
