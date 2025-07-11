@@ -261,7 +261,7 @@ function Level:canPerform(action)
    if not success then return success, err end
 
    --- @diagnostic disable-next-line
-   return action:canPerform(self, unpack(action.targetObjects))
+   return action:canPerform(self, unpack(action.targets))
 end
 
 --- Executes an Action, updating the level's state and triggering any events through the systems
@@ -281,7 +281,7 @@ function Level:perform(action, silent)
    prism.logger.debug("Actor", owner:getName(), "is about to perform", action.className)
    if not silent then self.systemManager:beforeAction(self, owner, action) end
    ---@diagnostic disable-next-line
-   action:perform(self, unpack(action.targetObjects))
+   action:perform(self, unpack(action.targets))
    self:yield(prism.messages.ActionMessage(action))
    if not silent then self.systemManager:afterAction(self, owner, action) end
 end
