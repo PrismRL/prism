@@ -1,3 +1,5 @@
+local utf8 = require "utf8"
+
 --- A simple sprite atlas. Used by spectrum.Display to render cells and actors.
 ---@class SpriteAtlas : Object
 ---@field image any The texture atlas love image
@@ -108,8 +110,8 @@ function SpriteAtlas.fromGrid(imagePath, cellWidth, cellHeight, names)
    return SpriteAtlas(imagePath, spriteData, names)
 end
 
---- Creates a SpriteAtlas from a grid of cells, mapping each quad to an ASCII character.
---- The first quad is mapped to string.char(startingCode), e.g. 'A' for 65, ' ' for 32.
+--- Creates a SpriteAtlas from a grid of cells, mapping each quad to a UTF-8 character.
+--- The first quad is mapped to utf8.char(startingCode), e.g. 'A' for 65, ' ' for 32.
 --- @param imagePath string The path to the texture atlas image.
 --- @param cellWidth number The width of each cell in the grid.
 --- @param cellHeight number The height of each cell in the grid.
@@ -125,7 +127,7 @@ function SpriteAtlas.fromASCIIGrid(imagePath, cellWidth, cellHeight)
    local names = {}
 
    for i = 1, totalCells do
-      names[i] = string.char(i - 1)
+      names[i] = utf8.char(i - 1)
    end
 
    return SpriteAtlas.fromGrid(imagePath, cellWidth, cellHeight, names)
