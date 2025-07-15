@@ -54,6 +54,7 @@ Let's start with the constructor.
 
 .. code:: lua
 
+   local utf8 = require "utf8"
    local keybindings = require "keybindingschema"
 
    --- @class InventoryState : GameState
@@ -72,7 +73,7 @@ Let's start with the constructor.
       self.items = inventory.inventory:getAllActors()
       self.letters = {}
       for i = 1, #self.items do
-         self.letters[i] = string.char(96 + i) -- a, b, c, ...
+         self.letters[i] = utf8.char(96 + i) -- a, b, c, ...
       end
    end
 
