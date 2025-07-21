@@ -4,27 +4,27 @@
 --- !doc protected-members
 --- @class Action : Object
 --- @field owner Actor The actor taking the action.
---- @field protected targets Target[] (static) A list of targets to apply the action to.
---- @field protected targetObjects Object[] The objects that correspond to the targets.
+--- @field protected targetObjects Target[] (static) A list of targets to apply the action to.
+--- @field protected targets any[] The objects that correspond to the targets.
 --- @field protected requiredComponents Component[] (static) Components required for an actor to take this action.
 --- @overload fun(owner: Actor, targets: Object[]): Action
 local Action = prism.Object:extend("Action")
 
 --- Constructor for the Action class.
 ---@param owner Actor The actor that is performing the action.
----@param ... Object An optional list of target actors. Not all actions require targets.
+---@param ... any An optional list of target actors. Not all actions require targets.
 function Action:__new(owner, ...)
    self.owner = owner
-   self.targets = self.targets or {}
-   self.targetObjects = { ... }
+   self.targetObjects = self.targetObjects or {}
+   self.targets = { ... }
 end
 
 --- @private
 function Action:__validateTargets(level)
-   for i = 1, #self.targets do
-      local target = self.targets[i]
+   for i = 1, #self.targetObjects do
+      local target = self.targetObjects[i]
       --- @diagnostic disable-next-line
-      if not target:validate(level, self.owner, self.targetObjects[i], self.targetObjects) then
+      if not target:validate(level, self.owner, self.targets[i], self.targets) then
          return false, "Invalid target " .. i .. " for action " .. self.className
       end
    end
@@ -62,33 +62,33 @@ function Action:perform(level, ...)
    error("This is a virtual method and must be overriden by subclasses!")
 end
 
---- Returns the target actor at the specified index.
----@param n number The index of the target actor to retrieve.
----@return any target The target actor at the specified index.
+--- Returns the target value at the specified index.
+---@param n number The index of the target to retrieve.
+---@return any target The target at the specified index.
 function Action:getTarget(n)
-   if self.targetObjects[n] then return self.targetObjects[n] end
+   return self.targets[n]
 end
 
 --- Returns the number of targets associated with this action.
 --- @return number numTargets The number of targets associated with this action.
 function Action:getNumTargets()
-   if not self.targets then return 0 end
-   return #self.targets
+   if not self.targetObjects then return 0 end
+   return #self.targetObjects
 end
 
 --- Returns the target object at the specified index.
 --- @param index number The index of the target object to retrieve.
 --- @return Target|nil targetObject
 function Action:getTargetObject(index)
-   return self.targets[index]
+   return self.targetObjects[index]
 end
 
---- Determines if the specified actor is a target of this action.
---- @param actor Actor The actor to check if they are a target of this action.
---- @return boolean -- True if the specified actor is a target of this action, false otherwise.
-function Action:hasTarget(actor)
-   for _, a in pairs(self.targetObjects) do
-      if a == actor then return true end
+--- Determines if the specified value is a target of this action.
+--- @param target any The value to check if they are a target of this action.
+--- @return boolean -- True if the specified value is a target of this action, false otherwise.
+function Action:hasTarget(target)
+   for _, any in pairs(self.targets) do
+      if any == target then return true end
    end
 
    return false
@@ -97,12 +97,12 @@ end
 --- Validates the specified target for this action.
 --- @param n number The index of the target object to validate.
 --- @param owner Actor The actor that is performing the action.
---- @param toValidate any The target object to validate.
+--- @param toValidate any The target to validate.
 --- @param previousTargets? any[] The previously selected targets.
---- @return boolean -- True if the specified target actor is valid for this action, false otherwise.
+--- @return boolean -- True if the specified target value is valid for this action, false otherwise.
 function Action:validateTarget(n, level, owner, toValidate, previousTargets)
    --- @diagnostic disable-next-line
-   return self.targets[n]:validate(level, owner, toValidate, previousTargets)
+   return self.targetObjects[n]:validate(level, owner, toValidate, previousTargets)
 end
 
 return Action
