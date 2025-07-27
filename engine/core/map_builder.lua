@@ -39,13 +39,13 @@ function MapBuilder:removeActor(actor)
    self.actors:removeActor(actor)
 end
 
---- Draws a rectangle on the map.
+--- Draws a filled rectangle on the map.
 --- @param x1 number The x-coordinate of the top-left corner.
 --- @param y1 number The y-coordinate of the top-left corner.
 --- @param x2 number The x-coordinate of the bottom-right corner.
 --- @param y2 number The y-coordinate of the bottom-right corner.
 --- @param cellFactory CellFactory The cell factory to fill the rectangle with.
-function MapBuilder:drawRectangle(x1, y1, x2, y2, cellFactory)
+function MapBuilder:drawFilledRectangle(x1, y1, x2, y2, cellFactory)
    for x = x1, x2 do
       for y = y1, y2 do
          self:set(x, y, cellFactory())
@@ -53,13 +53,26 @@ function MapBuilder:drawRectangle(x1, y1, x2, y2, cellFactory)
    end
 end
 
---- Draws an ellipse on the map.
+--- Draws a rectangle outline on the map.
+--- @param x1 number The x-coordinate of the top-left corner.
+--- @param y1 number The y-coordinate of the top-left corner.
+--- @param x2 number The x-coordinate of the bottom-right corner.
+--- @param y2 number The y-coordinate of the bottom-right corner.
+--- @param cellFactory CellFactory The cell factory to draw the rectangle with.
+function MapBuilder:drawRectangle(x1, y1, x2, y2, cellFactory)
+   self:drawLine(x1, y1, x1, y2, cellFactory)
+   self:drawLine(x2, y1, x2, y2, cellFactory)
+   self:drawLine(x1, y1, x2, y1, cellFactory)
+   self:drawLine(x1, y2, x2, y2, cellFactory)
+end
+
+--- Draws a filled ellipse on the map.
 --- @param cx number The x-coordinate of the center.
 --- @param cy number The y-coordinate of the center.
 --- @param rx number The radius along the x-axis.
 --- @param ry number The radius along the y-axis.
 --- @param cellFactory CellFactory The cell factory to fill the ellipse with.
-function MapBuilder:drawEllipse(cx, cy, rx, ry, cellFactory)
+function MapBuilder:drawFilledEllipse(cx, cy, rx, ry, cellFactory)
    for x = -rx, rx do
       for y = -ry, ry do
          if (x * x) / (rx * rx) + (y * y) / (ry * ry) <= 1 then
