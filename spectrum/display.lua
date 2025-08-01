@@ -15,6 +15,7 @@
 ---@field cells table<number, table<number, DisplayCell>>
 ---@field camera Vector2 The offset to draw the display at.
 ---@field pushed boolean Whether to draw with the camera offset applied or not.
+---@field animations AnimationMessage[]
 ---@overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
@@ -44,6 +45,30 @@ function Display:__new(width, height, spriteAtlas, cellSize)
             depth = -math.huge, -- Lowest possible depth
          }
       end
+   end
+end
+
+--- Updates animations in the display.
+--- @param level Level
+--- @param dt number
+function Display:update(level, dt)
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      if spectrum.Animation:is(animation.animation) then
+         animation.animation:update(dt)
+
+         if animation.animation.status == "paused" then
+            table.remove(self.animations, i)
+            if animation.blocking then self.blocking = false end
+         end
+      end
+   end
+
+   for _, _, animation in
+      level:query(prism.components.Position, prism.components.IdleAnimation):iter()
+   do
+      --- @cast animation IdleAnimation
+      animation.animation:update(dt)
    end
 end
 
@@ -103,6 +128,58 @@ function Display:putLevel(attachable)
       --- @cast position Position
       local ax, ay = position:getVector():decompose()
       self:putDrawable(ax + camX, ay + camY, drawable)
+   end
+end
+
+local reusedPosition = prism.Vector2()
+--- Puts animations to the display.
+--- @param queryable IQueryable
+function Display:putAnimations(queryable)
+   for actor, position, idleAnimation in
+      queryable:query(prism.components.Position, prism.components.IdleAnimation):iter()
+   do
+      --- @cast idleAnimation IdleAnimation
+      --- @cast position Position
+      local x, y = position:getVector():decompose()
+      local animation = idleAnimation.animation
+
+      animation:draw(self, x, y)
+   end
+
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      if spectrum.Animation:is(animation.animation) then
+         local x, y = animation.x, animation.y
+         if animation.actor then
+            animation.actor:getPosition(reusedPosition)
+            x = x + (reusedPosition and reusedPosition.x or 0)
+            y = y + (reusedPosition and reusedPosition.y or 0)
+         end
+
+         animation.animation:draw(self, x, y)
+      else
+         if animation.animation(love.timer.getDelta()) then table.remove(self.animations, i) end
+      end
+   end
+end
+
+--- Removes any animations that are skippable.
+function Display:skipAnimations()
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      if animation.skippable then table.remove(self.animations, i) end
+   end
+end
+
+--- Adds an animation
+--- @param message AnimationMessage
+--- @param manager GameStateManager
+--- @param level Level
+function Display:yieldAnimation(message, manager, level)
+   table.insert(self.animations, message)
+   if message.blocking then
+      self.blocking = true
+      manager:push(spectrum.AnimatedState(self, level))
    end
 end
 
@@ -193,9 +270,7 @@ function Display:putSenses(primary, secondary)
    end
 
    for _, senses in ipairs(secondary) do
-      if senses.explored then
-         self:_drawCells(drawnCells, senses.explored, 0.3)
-      end
+      if senses.explored then self:_drawCells(drawnCells, senses.explored, 0.3) end
    end
 
    local drawnActors = {}
@@ -213,9 +288,7 @@ function Display:putSenses(primary, secondary)
    end
 
    for _, senses in ipairs(secondary) do
-      if senses.remembered then
-         self:_drawRemembered(drawnActors, senses.remembered, 0.3)
-      end
+      if senses.remembered then self:_drawRemembered(drawnActors, senses.remembered, 0.3) end
    end
 end
 
