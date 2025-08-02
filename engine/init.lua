@@ -237,9 +237,6 @@ prism.components.Collider = prism.require "core.components.collider"
 --- @module "engine.core.components.controller"
 prism.components.Controller = prism.require "core.components.controller"
 
---- @module "engine.core.components.player_controller"
-prism.components.PlayerController = prism.require "core.components.player_controller"
-
 --- @module "engine.core.components.senses"
 prism.components.Senses = prism.require "core.components.senses"
 
