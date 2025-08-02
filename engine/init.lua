@@ -156,7 +156,7 @@ prism.registries = {}
 
 --- Registers a factory for a registry.
 --- @param name string
---- @param type string
+--- @param type Object
 --- @param moduleTable table
 --- @param moduleName string
 local function registerFactory(name, type, moduleTable, moduleName)
@@ -165,22 +165,28 @@ local function registerFactory(name, type, moduleTable, moduleName)
    if prism._currentDefinitions then
       table.insert(
          prism._currentDefinitions,
-         string.format("Registers a %s in the %s registry.", type, name)
+         string.format("Registers a %s in the %s registry.", type.className, name)
       )
       table.insert(prism._currentDefinitions, "--- @param name string A name for the factory")
-      table.insert(prism._currentDefinitions, string.format("--- @param factory %sFactory", type))
       table.insert(
          prism._currentDefinitions,
-         string.format("function %s.register%s(name, factory) end", moduleName, type)
+         string.format("--- @param factory %sFactory", type.className)
+      )
+      table.insert(
+         prism._currentDefinitions,
+         string.format("function %s.register%s(name, factory) end", moduleName, type.className)
       )
    end
 
    moduleTable["register" .. type] = function(objectName, factory)
-      assert(registry[objectName] == nil, type .. " " .. name .. " is already registered!")
+      assert(
+         registry[objectName] == nil,
+         type.className .. " " .. name .. " is already registered!"
+      )
       registry[objectName] = factory
 
       if prism._currentDefinitions then
-         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type)
+         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type.className)
          table.insert(
             prism._currentDefinitions,
             string.format("%s.%s.%s = nil", moduleName, name, objectName)
@@ -191,7 +197,7 @@ end
 
 --- Registers a registry, a global list of game objects.
 --- @param name string The name of the registry, e.g. "components".
---- @param type string The type of the object, e.g. "Component".
+--- @param type Object The type of the object, e.g. "Component".
 --- @param manual? boolean Whether objects in the registry are registered manually with a factory. Defaults to false.
 --- @param module? string The table to assign the registry to. Defaults to the prism global.
 function prism.registerRegistry(name, type, manual, module)
@@ -219,14 +225,14 @@ function prism.registerRegistry(name, type, manual, module)
    if manual then registerFactory(name, type, moduleTable, module or "prism") end
 end
 
-prism.registerRegistry("components", prism.Component.className)
-prism.registerRegistry("targets", prism.Target.className, true)
-prism.registerRegistry("cells", prism.Cell.className, true)
-prism.registerRegistry("actions", prism.Action.className)
-prism.registerRegistry("actors", prism.Actor.className, true)
-prism.registerRegistry("messages", prism.Message.className)
-prism.registerRegistry("decisions", prism.Decision.className)
-prism.registerRegistry("systems", prism.System.className)
+prism.registerRegistry("components", prism.Component)
+prism.registerRegistry("targets", prism.Target, true)
+prism.registerRegistry("cells", prism.Cell, true)
+prism.registerRegistry("actions", prism.Action)
+prism.registerRegistry("actors", prism.Actor, true)
+prism.registerRegistry("messages", prism.Message)
+prism.registerRegistry("decisions", prism.Decision)
+prism.registerRegistry("systems", prism.System)
 
 --- @module "engine.core.systems.senses"
 prism.systems.Senses = prism.require "core.systems.senses"
@@ -318,8 +324,14 @@ local function loadRegistry(path, registry, recurse, definitions)
          if registry.manual then goto continue end
 
          assert(
-            type(item) == "table",
-            "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
+            registry.type:is(item),
+            "Expected a "
+               .. registry.type.className
+               .. " from "
+               .. fileName
+               .. " but received a "
+               .. type(item)
+               .. "!"
          )
          local name = item.className
          if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
@@ -329,12 +341,16 @@ local function loadRegistry(path, registry, recurse, definitions)
             string.format(
                "File %s contains type %s wihout a valid stripped name!",
                fileName,
-               registry.type
+               registry.type.className
             )
          )
          assert(
             items[name] == nil,
-            string.format("File %s contains type %s with duplicate name", fileName, registry.type)
+            string.format(
+               "File %s contains type %s with duplicate name",
+               fileName,
+               registry.type.className
+            )
          )
          items[name] = item
 
