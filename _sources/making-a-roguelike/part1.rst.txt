@@ -132,7 +132,7 @@ behaviour doesn't make for a great game. Let's make them follow the player aroun
             prism.components.Name("Kobold"),
             prism.components.Position(),
             prism.components.Collider(),
-            prism.components.Drawable("k", prism.Color4.RED),
+            prism.components.Drawable{ char = "k", color = prism.Color4.RED },
             prism.components.Senses(),
             prism.components.Sight{ range = 12, fov = true },
             prism.components.Mover{ "walk" },
