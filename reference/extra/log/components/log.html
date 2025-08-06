@@ -55,11 +55,19 @@
 <dd><p>A basic FIFO (First In, First Out) queue implementation.</p>
 </dd></dl>
 
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Log.messageLimit">
+<span class="sig-name descname"><span class="pre">messageLimit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><a class="headerlink" href="#lua-Log.messageLimit" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Log.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Log" title="Log"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Log</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Log" title="Log"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Log</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Initializes a new Log component instance.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size?</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – An optional size limit for the log. Defaults to 32. Oldest messages are removed first.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -68,25 +76,43 @@
 <span class="sig-name descname"><span class="pre">iterLast</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Log" title="Log"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Log</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">iterator?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">()</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.iterLast" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Returns an iterator over the last <cite>n</cite> log messages, most recent first.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iterator?</strong> (<span class="k">fun</span><span class="p">()</span><span class="p">:</span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – A function that returns each log message or nil when done.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The maximum number of messages to return.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>iterator?</strong> (<span class="k">fun</span><span class="p">()</span><span class="p">:</span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – A function that returns each log message or nil when done.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="lua staticmethod">
 <dt class="sig sig-object lua" id="lua-Log.addMessage">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addMessage</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.addMessage" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addMessage</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.addMessage" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Adds a message to an actor’s log component, if it exists.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actor</strong> (<a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a>) – The actor.</p></li>
+<li><p><strong>message</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The message, optionally with string.format characters.</p></li>
+<li><p><strong>...</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code>) – Additional parameters passed to message:format().</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="lua staticmethod">
 <dt class="sig sig-object lua" id="lua-Log.addMessageSensed">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addMessageSensed</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Level</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.addMessageSensed" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addMessageSensed</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Level</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Log.addMessageSensed" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Adds a message to all actors who sensed the source actor at the time the message was generated.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>level</strong> (<a class="reference internal" href="../../../prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Level</span></code></a>) – The level.</p></li>
+<li><p><strong>action</strong> (<a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a>) – The action.</p></li>
+<li><p><strong>message</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The message, optionally with string.format characters.</p></li>
+<li><p><strong>...</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code>) – Additional parameters passed to message:format().</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -225,6 +251,7 @@ SOFTWARE.
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Log module</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Log.messages"><code class="docutils literal notranslate"><span class="pre">messages</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Log.messageLimit"><code class="docutils literal notranslate"><span class="pre">messageLimit</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Log.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Log.iterLast"><code class="docutils literal notranslate"><span class="pre">iterLast()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Log.addMessage"><code class="docutils literal notranslate"><span class="pre">addMessage()</span></code></a></li>
