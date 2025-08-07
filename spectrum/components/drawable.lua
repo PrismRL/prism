@@ -1,14 +1,14 @@
 --- Represents the visual for an actor. Used by Spectrum and Geometer to render actors.
---- @class Drawable : Component
+--- @class Drawable : Component, Sprite
 --- @field index string|integer an index into a SpriteAtlas
 --- @field color Color4
 --- @field background Color4
 --- @field size integer
---- @overload fun(index: string|integer|DrawableOptions, color: Color4?, background: Color4?, layer: number?, size: integer?): Drawable
+--- @overload fun(index: string|integer|Sprite, color: Color4?, background: Color4?, layer: number?, size: integer?): Drawable
 local Drawable = prism.Component:extend "Drawable"
 
---- @class DrawableOptions
---- @field char string|integer
+--- @class Sprite
+--- @field index string|integer
 --- @field color Color4?
 --- @field background Color4?
 --- @field layer integer?
@@ -18,7 +18,7 @@ local warned = false
 
 --- Index needs to be a string associated with a sprite in the SpriteAtlas, or
 --- an integer index associated with a sprite.
---- @param index string|integer|DrawableOptions
+--- @param index string|integer|Sprite
 --- @param color Color4?
 --- @param background Color4?
 --- @param layer integer?
@@ -26,7 +26,7 @@ local warned = false
 function Drawable:__new(index, color, background, layer, size)
    if type(index) == "table" then
       local options = index
-      self.index = options.char
+      self.index = options.index
       self.color = options.color or prism.Color4.WHITE
       self.background = options.background or prism.Color4.TRANSPARENT
       self.layer = options.layer or 1

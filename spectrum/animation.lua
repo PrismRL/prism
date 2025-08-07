@@ -21,21 +21,20 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
---- @alias AnimationFrame fun(display: Display, x?: number, y?: number) | Drawable
+--- @alias AnimationFrame fun(display: Display, x?: number, y?: number) | Sprite
 
 --- An animation to be played in a display. Yield an :lua:class:`AnimationMessage` to play one.
 ---@class Animation : Object
----@field frames AnimationFrame[]
----@field durations number|table
+---@field custom? fun(time: number, display: Display)
+---@field frames? AnimationFrame[]
+---@field durations? number|table
 ---@field onLoop? fun(self: Animation, loops: integer)|string
----@field flippedH? boolean
----@field flippedV? boolean
 ---@field intervals? number[]
 ---@field totalDuration? number
 ---@field timer number,
----@field position integer
+---@field position? integer
 ---@field status "playing"|"paused"
----@overload fun(frames: AnimationFrame[], durations: number|table, onLoop?: function|string): Animation
+---@overload fun(frames: AnimationFrame[]|fun(time: number, display: Display), durations?: number|table, onLoop?: function|string): Animation
 local Animation = prism.Object:extend("Animation")
 
 ---@param arr table
@@ -106,48 +105,55 @@ local function parseIntervals(durations)
    return result, time
 end
 
+function Animation.frames(...)
+   local result, args = {}, { ... }
+
+   for a = 1, #args do
+      local min, max, step = parseInterval(args[a].indexes)
+      for i = min, max, step do
+         result[#result + 1] = { index = i, color = args[a].color }
+      end
+   end
+
+   return result
+end
+
 local nop = function() end
 
----@param frames AnimationFrame[]
+---@param frames AnimationFrame[]|fun(time: number, display: Display)
 ---@param durations number|table
 ---@param onLoop function|string?
 function Animation:__new(frames, durations, onLoop)
-   local td = type(durations)
-   if (td ~= "number" or durations <= 0) and td ~= "table" then
-      error("durations must be a positive number. Was " .. tostring(durations))
+   if type(frames) == "function" then
+      self.custom = frames
+   else
+      local td = type(durations)
+      if (td ~= "number" or durations <= 0) and td ~= "table" then
+         error("durations must be a positive number. Was " .. tostring(durations))
+      end
+      onLoop = onLoop or nop
+      durations = parseDurations(durations, #frames)
+      local intervals, totalDuration = parseIntervals(durations)
+      self.frames = cloneArray(frames)
+      self.durations = durations
+      self.intervals = intervals
+      self.totalDuration = totalDuration
+      self.onLoop = onLoop
+      self.position = 1
    end
-   onLoop = onLoop or nop
-   durations = parseDurations(durations, #frames)
-   local intervals, totalDuration = parseIntervals(durations)
-   self.frames = cloneArray(frames)
-   self.durations = durations
-   self.intervals = intervals
-   self.totalDuration = totalDuration
-   self.onLoop = onLoop
    self.timer = 0
-   self.position = 1
    self.status = "playing"
-   self.flippedH = false
-   self.flippedV = false
+end
+
+--- @return boolean -- Whether this is a custom animation or not.
+function Animation:isCustom()
+   return not not self.custom
 end
 
 ---@return Animation
 function Animation:clone()
    local newAnim = Animation(self.frames, self.durations, self.onLoop)
-   newAnim.flippedH, newAnim.flippedV = self.flippedH, self.flippedV
    return newAnim
-end
-
----@return Animation
-function Animation:flipH()
-   self.flippedH = not self.flippedH
-   return self
-end
-
----@return Animation
-function Animation:flipV()
-   self.flippedV = not self.flippedV
-   return self
 end
 
 ---@param intervals number[]
@@ -170,7 +176,7 @@ local function seekFrameIndex(intervals, timer)
    return i
 end
 
----@param dt number time delta
+---@param dt number
 function Animation:update(dt)
    if self.status ~= "playing" then return end
 
@@ -185,6 +191,7 @@ function Animation:update(dt)
    self.position = seekFrameIndex(self.intervals, self.timer)
 end
 
+--- Pauses the animation, setting the status to "paused".
 function Animation:pause()
    self.status = "paused"
 end
@@ -212,14 +219,19 @@ function Animation:resume()
 end
 
 ---@param display Display
----@param x number
----@param y number
+---@param x? number
+---@param y? number
 function Animation:draw(display, x, y)
-   local frame = self.frames[self.position]
-   if type(frame) == "function" then
-      frame(display, x, y)
+   if self.frames then
+      local frame = self.frames[self.position]
+      if type(frame) == "function" then
+         frame(display, x, y)
+      else
+         --- @cast frame Drawable
+         display:putDrawable(x, y, frame)
+      end
    else
-      display:putDrawable(x, y, frame)
+      if self.custom(self.timer, display) then self:pause() end
    end
 end
 
