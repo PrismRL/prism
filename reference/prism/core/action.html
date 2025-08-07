@@ -75,6 +75,16 @@ See Target for more.</p>
 <dd><p>(static) Components required for an actor to take this action.</p>
 </dd></dl>
 
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Action.reaction">
+<em class="property"><span class="k"><span class="pre">protected</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.reaction" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Action.abstract">
+<em class="property"><span class="k"><span class="pre">protected</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">abstract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.abstract" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Action.__new">
 <span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.__new" title="Link to this definition">¶</a><br /></dt>
@@ -86,6 +96,20 @@ See Target for more.</p>
 <li><p><strong>...</strong> (<a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a>) – An optional list of target actors. Not all actions require targets.</p></li>
 </ul>
 </dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Action.isAbstract">
+<span class="sig-name descname"><span class="pre">isAbstract</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.isAbstract" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Action.isReaction">
+<span class="sig-name descname"><span class="pre">isReaction</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.isReaction" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
 </dl>
 </dd></dl>
 
@@ -344,7 +368,11 @@ SOFTWARE.
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.targets"><code class="docutils literal notranslate"><span class="pre">targets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.targetObjects"><code class="docutils literal notranslate"><span class="pre">targetObjects</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.requiredComponents"><code class="docutils literal notranslate"><span class="pre">requiredComponents</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.reaction"><code class="docutils literal notranslate"><span class="pre">reaction</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.abstract"><code class="docutils literal notranslate"><span class="pre">abstract</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.isAbstract"><code class="docutils literal notranslate"><span class="pre">isAbstract()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.isReaction"><code class="docutils literal notranslate"><span class="pre">isReaction()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.canPerform"><code class="docutils literal notranslate"><span class="pre">canPerform()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.hasRequisiteComponents"><code class="docutils literal notranslate"><span class="pre">hasRequisiteComponents()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.perform"><code class="docutils literal notranslate"><span class="pre">perform()</span></code></a></li>
@@ -370,6 +398,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>

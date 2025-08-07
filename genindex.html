@@ -185,13 +185,21 @@
 </li>
         <li><a href="reference/prism/math/rectangle.html#lua-Rectangle.__new">(method in Rectangle)</a>
 </li>
+        <li><a href="reference/prism/core/relationship.html#lua-Relationship.__new">(method in Relationship)</a>
+</li>
         <li><a href="reference/prism/core/components/remembered.html#lua-Remembered.__new">(method in Remembered)</a>
 </li>
         <li><a href="reference/prism/core/rng.html#lua-RNG.__new">(method in RNG)</a>
 </li>
         <li><a href="reference/prism/core/scheduler/scheduler.html#lua-Scheduler.__new">(method in Scheduler)</a>
 </li>
-        <li><a href="reference/prism/core/components/senses.html#lua-Senses.__new">(method in Senses)</a>
+        <li><a href="reference/extra/sight/relationships/seenby.html#lua-SeenBy.__new">(method in SeenBy)</a>
+</li>
+        <li><a href="reference/extra/sight/relationships/sees.html#lua-Sees.__new">(method in Sees)</a>
+</li>
+        <li><a href="reference/prism/core/relationships/sensedby.html#lua-SensedBy.__new">(method in SensedBy)</a>
+</li>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.__new">(method in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.__new">[1]</a>
 </li>
         <li><a href="reference/prism/core/systems/senses.html#lua-SensesSystem.__new">(method in SensesSystem)</a>
 </li>
@@ -248,6 +256,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/math/color.html#lua-Color4.a">a (data in Color4)</a>
 </li>
+      <li><a href="reference/prism/core/action.html#lua-Action.abstract">abstract (data in Action)</a>
+</li>
       <li><a href="reference/prism/core/components/controller.html#lua-Controller.act">act (method in Controller)</a>
 </li>
       <li><a href="reference/prism/core/action.html#lua-Action">Action (class in )</a>
@@ -273,7 +283,7 @@
       <li><a href="reference/prism/core/map_builder.html#lua-MapBuilder.actors">actors (data in MapBuilder)</a>
 
       <ul>
-        <li><a href="reference/prism/core/components/senses.html#lua-Senses.actors">(data in Senses)</a>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.actors">(data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.actors">[1]</a>
 </li>
       </ul></li>
       <li><a href="reference/prism/core/actorstorage.html#lua-ActorStorage">ActorStorage (class in )</a>
@@ -303,6 +313,8 @@
       <li><a href="reference/extra/log/components/log.html#lua-Log.addMessageSensed">addMessageSensed (staticmethod in Log)</a>
 </li>
       <li><a href="reference/prism/core/map_builder.html#lua-MapBuilder.addPadding">addPadding (method in MapBuilder)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.addRelationship">addRelationship (method in Entity)</a>
 </li>
       <li><a href="reference/prism/core/level.html#lua-Level.addSystem">addSystem (method in Level)</a>
 
@@ -419,7 +431,7 @@
       <li><a href="reference/spectrum/display.html#lua-Display.cells">cells (data in Display)</a>
 
       <ul>
-        <li><a href="reference/prism/core/components/senses.html#lua-Senses.cells">(data in Senses)</a>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.cells">(data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.cells">[1]</a>
 </li>
       </ul></li>
       <li><a href="reference/spectrum/display.html#lua-Display.cellSize">cellSize (data in Display)</a>
@@ -662,10 +674,10 @@
 </li>
       <li><a href="reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.enter">enter (method in GameStateManager)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/core/entity.html#lua-Entity">Entity (class in )</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/droptable/components/droptable.html#lua-DropTableCategory.entries">entries (data in DropTableCategory)</a>
 </li>
       <li><a href="reference/extra/droptable/components/droptable.html#lua-DropTableCategory.entry">entry (data in DropTableCategory)</a>
@@ -680,13 +692,19 @@
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.errorhandler">errorhandler (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.errorhandler">[1]</a>
 </li>
+      <li><a href="reference/prism/core/relationship.html#lua-Relationship.exclusive">exclusive (data in Relationship)</a>
+
+      <ul>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.exclusive">(data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.exclusive">[1]</a>
+</li>
+      </ul></li>
       <li><a href="reference/prism/core/entity.html#lua-Entity.expect">expect (method in Entity)</a>
 </li>
       <li><a href="reference/prism/core/actor.html#lua-Actor.expectPosition">expectPosition (method in Actor)</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses.explored">explored (data in Senses)</a>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses.explored">explored (data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.explored">[1]</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses.exploredStorage">exploredStorage (data in Senses)</a>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses.exploredStorage">exploredStorage (data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.exploredStorage">[1]</a>
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.exposesd">exposesd (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.exposesd">[1]</a>
 </li>
@@ -756,6 +774,18 @@
 </li>
       <li><a href="reference/prism/core/query.html#lua-Query.gather">gather (method in Query)</a>
 </li>
+      <li><a href="reference/prism/core/relationship.html#lua-Relationship.generateInverse">generateInverse (method in Relationship)</a>
+
+      <ul>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.generateInverse">(method in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.generateInverse">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="reference/prism/core/relationship.html#lua-Relationship.generateSymmetric">generateSymmetric (method in Relationship)</a>
+
+      <ul>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.generateSymmetric">(method in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.generateSymmetric">[1]</a>
+</li>
+      </ul></li>
       <li><a href="reference/spectrum/gamestates/levelstate.html#lua-LevelState.geometer">geometer (data in LevelState)</a>
 </li>
       <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.get">get (method in BooleanBuffer)</a>
@@ -776,12 +806,18 @@
 </li>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffects.getActorModifiers">getActorModifiers (staticmethod in StatusEffects)</a>
 </li>
+      <li><a href="reference/prism/core/actorstorage.html#lua-ActorStorage.getAllActorIDs">getAllActorIDs (method in ActorStorage)</a>
+</li>
       <li><a href="reference/prism/core/actorstorage.html#lua-ActorStorage.getAllActors">getAllActors (method in ActorStorage)</a>
 </li>
       <li><a href="reference/prism/core/level.html#lua-Level.getAOE">getAOE (method in Level)</a>
 </li>
       <li><a href="reference/prism/core/component.html#lua-Component.getBase">getBase (method in Component)</a>
+
+      <ul>
+        <li><a href="reference/prism/core/relationship.html#lua-Relationship.getBase">(method in Relationship)</a>
 </li>
+      </ul></li>
       <li><a href="reference/prism/structures/bitmaskbuffer.html#lua-BitmaskBuffer.getBit">getBit (method in BitmaskBuffer)</a>
 </li>
       <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap.getByHash">getByHash (method in SparseMap)</a>
@@ -836,6 +872,8 @@
         <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.getIndex">(method in BooleanBuffer)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffects.getInstance">getInstance (method in StatusEffects)</a>
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.getManager">getManager (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.getManager">[1]</a>
@@ -848,8 +886,6 @@
         <li><a href="reference/prism/core/components/collider.html#lua-Collider.getMask">(method in Collider)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffects.getModifiers">getModifiers (method in StatusEffects)</a>
 
       <ul>
@@ -891,6 +927,8 @@
 </li>
       </ul></li>
       <li><a href="reference/prism/core/actor.html#lua-Actor.getRangeVec">getRangeVec (method in Actor)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.getRelationships">getRelationships (method in Entity)</a>
 </li>
       <li><a href="reference/prism/core/component.html#lua-Component.getRequirements">getRequirements (method in Component)</a>
 
@@ -974,11 +1012,13 @@
         <li><a href="reference/prism/core/level.html#lua-Level.hasActor">(method in Level)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/math/vector.html#lua-Vector2.hash">hash (method in Vector2)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.hasItem">hasItem (method in Inventory)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.hasRelationship">hasRelationship (method in Entity)</a>
 </li>
       <li><a href="reference/prism/core/action.html#lua-Action.hasRequisiteComponents">hasRequisiteComponents (method in Action)</a>
 </li>
@@ -1034,10 +1074,10 @@
 </li>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffects.Instance">Instance (data in StatusEffects)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/core/object.html#lua-Object.instanceOf">instanceOf (method in Object)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffects.instances">instances (data in StatusEffects)</a>
 </li>
       <li><a href="reference/prism/math/rectangle.html#lua-Rectangle.intersects">intersects (method in Rectangle)</a>
@@ -1052,11 +1092,15 @@
 </li>
       <li><a href="reference/prism/core/object.html#lua-Object.is">is (method in Object)</a>
 </li>
+      <li><a href="reference/prism/core/action.html#lua-Action.isAbstract">isAbstract (method in Action)</a>
+</li>
       <li><a href="reference/prism/core/map.html#lua-Map.isInBounds">isInBounds (method in Map)</a>
 </li>
       <li><a href="reference/prism/core/object.html#lua-Object.isInstance">isInstance (method in Object)</a>
 </li>
       <li><a href="reference/prism/core/target.html#lua-Target.isPrototype">isPrototype (method in Target)</a>
+</li>
+      <li><a href="reference/prism/core/action.html#lua-Action.isReaction">isReaction (method in Action)</a>
 </li>
       <li><a href="reference/prism/core/target.html#lua-Target.isType">isType (method in Target)</a>
 </li>
@@ -1369,6 +1413,8 @@
       <ul>
         <li><a href="reference/prism/core/component.html#lua-Component.owner">(data in Component)</a>
 </li>
+        <li><a href="reference/prism/core/relationship.html#lua-Relationship.owner">(data in Relationship)</a>
+</li>
         <li><a href="reference/prism/core/system.html#lua-System.owner">(data in System)</a>
 </li>
         <li><a href="reference/prism/core/system_manager.html#lua-SystemManager.owner">(data in SystemManager)</a>
@@ -1556,6 +1602,8 @@
         <li><a href="reference/prism/core/target.html#lua-Target.range">(method in Target)</a>
 </li>
       </ul></li>
+      <li><a href="reference/prism/core/action.html#lua-Action.reaction">reaction (data in Action)</a>
+</li>
       <li><a href="reference/prism/math/rectangle.html#lua-Rectangle">Rectangle (class in )</a>
 </li>
       <li><a href="reference/prism/math/color.html#lua-Color4.RED">RED (data in Color4)</a>
@@ -1564,11 +1612,21 @@
 </li>
       <li><a href="reference/prism/core/collision.html#lua-Collision.registerMovetype">registerMovetype (staticmethod in Collision)</a>
 </li>
+      <li><a href="reference/prism/core/target.html#lua-Target.related">related (method in Target)</a>
+</li>
+      <li><a href="reference/prism/core/relationship.html#lua-Relationship">Relationship (class in )</a>
+</li>
+      <li><a href="reference/prism/core/query.html#lua-Query.relationship">relationship (method in Query)</a>
+</li>
+      <li><a href="reference/prism/core/query.html#lua-Query.relationshipInfo">relationshipInfo (data in Query)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.relationships">relationships (data in Entity)</a>
+</li>
       <li><a href="reference/prism/core/components/remembered.html#lua-Remembered">Remembered (class in )</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses.remembered">remembered (data in Senses)</a>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses.remembered">remembered (data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.remembered">[1]</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses.rememberedStorage">rememberedStorage (data in Senses)</a>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses.rememberedStorage">rememberedStorage (data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.rememberedStorage">[1]</a>
 </li>
       <li><a href="reference/prism/core/entity.html#lua-Entity.remove">remove (method in Entity)</a>
 
@@ -1590,13 +1648,17 @@
         <li><a href="reference/prism/core/actorstorage.html#lua-ActorStorage.removeActor">(method in ActorStorage)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap.removeAll">removeAll (method in SparseMap)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.removeAllRelationships">removeAllRelationships (method in Entity)</a>
 </li>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.removeItem">removeItem (method in Inventory)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.removeQuantity">removeQuantity (method in Inventory)</a>
+</li>
+      <li><a href="reference/prism/core/entity.html#lua-Entity.removeRelationship">removeRelationship (method in Entity)</a>
 </li>
       <li><a href="reference/prism/core/actorstorage.html#lua-ActorStorage.removeSparseMapEntries">removeSparseMapEntries (method in ActorStorage)</a>
 </li>
@@ -1662,11 +1724,17 @@
 </li>
       <li><a href="reference/prism/core/rng.html#lua-RNG.seed">seed (data in RNG)</a>
 </li>
+      <li><a href="reference/extra/sight/relationships/seenby.html#lua-SeenBy">SeenBy (class in )</a>
+</li>
+      <li><a href="reference/extra/sight/relationships/sees.html#lua-Sees">Sees (class in )</a>
+</li>
       <li><a href="reference/prism/core/behavior_tree/btselector.html#lua-BehaviorTree.Selector">Selector (class in BehaviorTree)</a>
 </li>
       <li><a href="reference/prism/core/target.html#lua-Target.sensed">sensed (method in Target)</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses">Senses (class in )</a>
+      <li><a href="reference/prism/core/relationships/sensedby.html#lua-SensedBy">SensedBy (class in )</a>
+</li>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses">Senses (class in )</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses">[1]</a>
 </li>
       <li><a href="reference/prism/core/systems/senses.html#lua-SensesSystem">SensesSystem (class in )</a>
 </li>
@@ -1718,10 +1786,10 @@
 </li>
       <li><a href="reference/extra/sight/components/sight.html#lua-Sight">Sight (class in )</a>
 </li>
-      <li><a href="reference/extra/sight/systems/sight.html#lua-SightSystem">SightSystem (class in )</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/extra/sight/systems/sight.html#lua-SightSystem">SightSystem (class in )</a>
+</li>
       <li><a href="reference/prism/core/scheduler/simple_scheduler.html#lua-SimpleScheduler">SimpleScheduler (class in )</a>
 </li>
       <li><a href="reference/extra/statuseffects/components/statuseffects.html#lua-StatusEffectsInstance.singleton">singleton (data in StatusEffectsInstance)</a>
@@ -1800,9 +1868,19 @@
 </li>
       <li><a href="reference/prism/core/target.html#lua-Target">Target (class in )</a>
 </li>
+      <li><a href="reference/prism/core/relationship.html#lua-Relationship.target">target (data in Relationship)</a>
+
+      <ul>
+        <li><a href="reference/prism/core/components/senses.html#lua-Senses.target">(data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.target">[1]</a>
+</li>
+        <li><a href="reference/prism/core/query.html#lua-Query.target">(method in Query)</a>
+</li>
+      </ul></li>
       <li><a href="reference/prism/core/action.html#lua-Action.targetObjects">targetObjects (data in Action)</a>
 </li>
       <li><a href="reference/prism/core/action.html#lua-Action.targets">targets (data in Action)</a>
+</li>
+      <li><a href="reference/prism/core/query.html#lua-Query.targetValidator">targetValidator (staticmethod in Query)</a>
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.textedited">textedited (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.textedited">[1]</a>
 </li>
@@ -1822,12 +1900,12 @@
 </li>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.totalCount">totalCount (data in Inventory)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.totalVolume">totalVolume (data in Inventory)</a>
 </li>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.totalWeight">totalWeight (data in Inventory)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.touchmoved">touchmoved (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.touchmoved">[1]</a>
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.touchpressed">touchpressed (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.touchpressed">[1]</a>
@@ -1870,7 +1948,9 @@
 </li>
       <li><a href="reference/prism/math/rectangle.html#lua-Rectangle.union">union (method in Rectangle)</a>
 </li>
-      <li><a href="reference/prism/core/components/senses.html#lua-Senses.unknown">unknown (data in Senses)</a>
+      <li><a href="reference/prism/core/target.html#lua-Target.unique">unique (method in Target)</a>
+</li>
+      <li><a href="reference/prism/core/components/senses.html#lua-Senses.unknown">unknown (data in Senses)</a>, <a href="reference/prism/core/relationships/senses.html#lua-Senses.unknown">[1]</a>
 </li>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.unload">unload (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.unload">[1]</a>
 </li>
@@ -1910,6 +1990,8 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/core/target.html#lua-Target.validate">validate (method in Target)</a>
+</li>
       <li><a href="reference/prism/core/decision.html#lua-Decision.validateResponse">validateResponse (method in Decision)</a>
 </li>
       <li><a href="reference/prism/core/action.html#lua-Action.validateTarget">validateTarget (method in Action)</a>

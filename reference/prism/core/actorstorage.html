@@ -212,6 +212,15 @@ This is a read-only operation. The returned list of actors should not be modifie
 </dd></dl>
 
 <dl class="lua method">
+<dt class="sig sig-object lua" id="lua-ActorStorage.getAllActorIDs">
+<span class="sig-name descname"><span class="pre">getAllActorIDs</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-ActorStorage" title="ActorStorage"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">ActorStorage</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-ActorStorage.getAllActorIDs" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Returns all actors in the storage in a hashmap of [Actor]-&gt;uniqueinteger.
+This ID is only unique within the ActorStorage.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
 <dt class="sig sig-object lua" id="lua-ActorStorage.getComponentCount">
 <span class="sig-name descname"><span class="pre">getComponentCount</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-ActorStorage" title="ActorStorage"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">ActorStorage</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">component</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">The</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-ActorStorage.getComponentCount" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Retrieves the count of a specific component.</p>
@@ -379,6 +388,7 @@ SOFTWARE.
 <li class="toctree-l3"><a class="reference internal" href="#lua-ActorStorage.getComponentCache"><code class="docutils literal notranslate"><span class="pre">getComponentCache()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-ActorStorage.getSparseMap"><code class="docutils literal notranslate"><span class="pre">getSparseMap()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-ActorStorage.getAllActors"><code class="docutils literal notranslate"><span class="pre">getAllActors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-ActorStorage.getAllActorIDs"><code class="docutils literal notranslate"><span class="pre">getAllActorIDs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-ActorStorage.getComponentCount"><code class="docutils literal notranslate"><span class="pre">getComponentCount()</span></code></a></li>
 </ul>
 </li>
@@ -395,6 +405,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>

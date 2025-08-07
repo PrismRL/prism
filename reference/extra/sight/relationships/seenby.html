@@ -7,7 +7,7 @@
 <template id="tmpl_gotoTop"><div id="gotoTop">
   <button>Back to top</button>
 </div></template>
-    <title>Drop &#8212; Prism  documentation</title>
+    <title>SeenBy &#8212; Prism  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=266695fe" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=fbfae649" />
@@ -26,8 +26,6 @@
     <link rel="icon" href="../../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Pickup" href="pickup.html" />
-    <link rel="prev" title="Item" href="../components/item.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -46,27 +44,23 @@
           <div class="body" role="main">
             
   <dl class="lua class">
-<dt class="sig sig-object lua" id="lua-Drop">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Drop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><a class="headerlink" href="#lua-Drop" title="Link to this definition">¶</a><br /></dt>
-<dd><dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Drop.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Drop.__new" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Constructor for the Action class.</p>
+<dt class="sig sig-object lua" id="lua-SeenBy">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SeenBy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><a class="headerlink" href="#lua-SeenBy" title="Link to this definition">¶</a><br /></dt>
+<dd><p>A relationship representing that an entity has been seen by another entity.
+This is the inverse of the <cite>Sees</cite> relationship.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SeenBy.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-SeenBy.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The default constructor for the class. Subclasses should override this.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>owner</strong> (<a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a>) – The actor that is performing the action.</p></li>
-<li><p><strong>...</strong> (<a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a>) – An optional list of target actors. Not all actions require targets.</p></li>
-</ul>
-</dd>
 </dl>
 </dd></dl>
 
 <div class="lua-inherited-members docutils container">
 <p><strong>Other members:</strong></p>
 <div class="admonition">
-<p>Inherited from <a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a>: <a class="reference internal" href="../../../prism/core/action.html#lua-Action.abstract" title="Action.abstract"><code class="docutils literal notranslate"><span class="pre">abstract</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="docutils literal notranslate"><span class="pre">canPerform()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.getNumTargets" title="Action.getNumTargets"><code class="docutils literal notranslate"><span class="pre">getNumTargets()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.getTarget" title="Action.getTarget"><code class="docutils literal notranslate"><span class="pre">getTarget()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.getTargetObject" title="Action.getTargetObject"><code class="docutils literal notranslate"><span class="pre">getTargetObject()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.hasRequisiteComponents" title="Action.hasRequisiteComponents"><code class="docutils literal notranslate"><span class="pre">hasRequisiteComponents()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.hasTarget" title="Action.hasTarget"><code class="docutils literal notranslate"><span class="pre">hasTarget()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.isAbstract" title="Action.isAbstract"><code class="docutils literal notranslate"><span class="pre">isAbstract()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.isReaction" title="Action.isReaction"><code class="docutils literal notranslate"><span class="pre">isReaction()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.owner" title="Action.owner"><code class="docutils literal notranslate"><span class="pre">owner</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.perform" title="Action.perform"><code class="docutils literal notranslate"><span class="pre">perform()</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.reaction" title="Action.reaction"><code class="docutils literal notranslate"><span class="pre">reaction</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.requiredComponents" title="Action.requiredComponents"><code class="docutils literal notranslate"><span class="pre">requiredComponents</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.targetObjects" title="Action.targetObjects"><code class="docutils literal notranslate"><span class="pre">targetObjects</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.targets" title="Action.targets"><code class="docutils literal notranslate"><span class="pre">targets</span></code></a>, <a class="reference internal" href="../../../prism/core/action.html#lua-Action.validateTarget" title="Action.validateTarget"><code class="docutils literal notranslate"><span class="pre">validateTarget()</span></code></a></p>
 <p>Inherited from <a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="../../../prism/core/object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+<p>Inherited from <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship" title="Relationship"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a>: <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.exclusive" title="Relationship.exclusive"><code class="docutils literal notranslate"><span class="pre">exclusive</span></code></a>, <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.generateInverse" title="Relationship.generateInverse"><code class="docutils literal notranslate"><span class="pre">generateInverse()</span></code></a>, <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.generateSymmetric" title="Relationship.generateSymmetric"><code class="docutils literal notranslate"><span class="pre">generateSymmetric()</span></code></a>, <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.getBase" title="Relationship.getBase"><code class="docutils literal notranslate"><span class="pre">getBase()</span></code></a>, <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.owner" title="Relationship.owner"><code class="docutils literal notranslate"><span class="pre">owner</span></code></a>, <a class="reference internal" href="../../../prism/core/relationship.html#lua-Relationship.target" title="Relationship.target"><code class="docutils literal notranslate"><span class="pre">target</span></code></a></p>
 </div>
 </div>
 </dd></dl>
@@ -189,37 +183,16 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../spectrum/index.html">Spectrum</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Extra</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Inventory module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../components/inventory.html"><code class="docutils literal notranslate"><span class="pre">Inventory</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../components/item.html"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Drop</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lua-Drop.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="pickup.html"><code class="docutils literal notranslate"><span class="pre">Pickup</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../inventorytarget.html"><code class="docutils literal notranslate"><span class="pre">InventoryTarget</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../log/index.html">Log module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sight/index.html">Sight module</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Extra</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Extra</a><ul>
-  <li><a href="../index.html">Inventory module</a><ul>
-      <li>Previous: <a href="../components/item.html" title="previous chapter">Item</a></li>
-      <li>Next: <a href="pickup.html" title="next chapter">Pickup</a></li>
-  </ul></li>
-  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -243,7 +216,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../../../../_sources/reference/extra/inventory/actions/drop.rst.txt"
+      <a href="../../../../_sources/reference/extra/sight/relationships/seenby.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

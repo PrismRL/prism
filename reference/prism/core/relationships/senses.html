@@ -26,8 +26,6 @@
     <link rel="icon" href="../../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="SensesSystem" href="../systems/senses.html" />
-    <link rel="prev" title="Remembered" href="remembered.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -93,7 +91,7 @@ except here there is only one entry per grid coordinate. This is suitable for st
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Senses.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Senses</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Senses.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Senses" title="Senses"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Senses</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Senses.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -120,7 +118,7 @@ except here there is only one entry per grid coordinate. This is suitable for st
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Senses.generateInverse">
-<span class="sig-name descname"><span class="pre">generateInverse</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Senses</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">sensedby</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Senses.generateInverse" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">generateInverse</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Senses" title="Senses"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Senses</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">sensedby</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Senses.generateInverse" title="Link to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sensedby</strong> (<a class="reference internal" href="../relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a>) – inverse <cite>SensedBy</cite> relationship.</p>
@@ -256,94 +254,8 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Prism</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.actors"><code class="docutils literal notranslate"><span class="pre">prism.actors</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.actions"><code class="docutils literal notranslate"><span class="pre">prism.actions</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.components"><code class="docutils literal notranslate"><span class="pre">prism.components</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.cells"><code class="docutils literal notranslate"><span class="pre">prism.cells</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.targets"><code class="docutils literal notranslate"><span class="pre">prism.targets</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.messages"><code class="docutils literal notranslate"><span class="pre">prism.messages</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.systems"><code class="docutils literal notranslate"><span class="pre">prism.systems</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.decisions"><code class="docutils literal notranslate"><span class="pre">prism.decisions</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../action.html"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../actor.html"><code class="docutils literal notranslate"><span class="pre">Actor</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../actorstorage.html"><code class="docutils literal notranslate"><span class="pre">ActorStorage</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior.html"><code class="docutils literal notranslate"><span class="pre">IBehavior</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cell.html"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../component.html"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../map.html"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.loadModule"><code class="docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.registerActor"><code class="docutils literal notranslate"><span class="pre">prism.registerActor()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.registerCell"><code class="docutils literal notranslate"><span class="pre">prism.registerCell()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.registerTarget"><code class="docutils literal notranslate"><span class="pre">prism.registerTarget()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.turn"><code class="docutils literal notranslate"><span class="pre">prism.turn()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.advanceCoroutine"><code class="docutils literal notranslate"><span class="pre">prism.advanceCoroutine()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="controller.html"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="name.html"><code class="docutils literal notranslate"><span class="pre">Name</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="opaque.html"><code class="docutils literal notranslate"><span class="pre">Opaque</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="player_controller.html"><code class="docutils literal notranslate"><span class="pre">PlayerController</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="position.html"><code class="docutils literal notranslate"><span class="pre">Position</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="remembered.html"><code class="docutils literal notranslate"><span class="pre">Remembered</span></code></a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.cells"><code class="docutils literal notranslate"><span class="pre">cells</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.explored"><code class="docutils literal notranslate"><span class="pre">explored</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.remembered"><code class="docutils literal notranslate"><span class="pre">remembered</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.exploredStorage"><code class="docutils literal notranslate"><span class="pre">exploredStorage</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.rememberedStorage"><code class="docutils literal notranslate"><span class="pre">rememberedStorage</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.actors"><code class="docutils literal notranslate"><span class="pre">actors</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.unknown"><code class="docutils literal notranslate"><span class="pre">unknown</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.exclusive"><code class="docutils literal notranslate"><span class="pre">exclusive</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.target"><code class="docutils literal notranslate"><span class="pre">target</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.generateSymmetric"><code class="docutils literal notranslate"><span class="pre">generateSymmetric()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Senses.generateInverse"><code class="docutils literal notranslate"><span class="pre">generateInverse()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btconditional.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Conditional</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btnode.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btroot.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Root</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btselector.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Selector</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btsequence.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Sequence</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../behavior_tree/btsucceeder.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Succeeder</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/bitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">BitmaskBuffer</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/booleanbuffer.html"><code class="docutils literal notranslate"><span class="pre">BooleanBuffer</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/cascadingbitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">CascadingBitmaskBuffer</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/queue.html"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/sparsearray.html"><code class="docutils literal notranslate"><span class="pre">SparseArray</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../structures/sparsemap.html"><code class="docutils literal notranslate"><span class="pre">SparseMap</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/color.html"><code class="docutils literal notranslate"><span class="pre">Color4</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/rectangle.html"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../math/vector.html"><code class="docutils literal notranslate"><span class="pre">Vector2</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../algorithms/astar/path.html"><code class="docutils literal notranslate"><span class="pre">Path</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-PassableCallback"><code class="docutils literal notranslate"><span class="pre">PassableCallback</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.Ellipse"><code class="docutils literal notranslate"><span class="pre">prism.Ellipse()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../index.html#lua-prism.Bresenham"><code class="docutils literal notranslate"><span class="pre">prism.Bresenham()</span></code></a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../extra/index.html">Extra</a></li>
 </ul>
@@ -352,10 +264,6 @@ SOFTWARE.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Prism</a><ul>
-      <li>Previous: <a href="remembered.html" title="previous chapter">Remembered</a></li>
-      <li>Next: <a href="../systems/senses.html" title="next chapter">SensesSystem</a></li>
-  </ul></li>
   </ul></li>
 </ul>
 </div>
@@ -379,7 +287,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../../../../_sources/reference/prism/core/components/senses.rst.txt"
+      <a href="../../../../_sources/reference/prism/core/relationships/senses.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

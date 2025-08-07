@@ -56,6 +56,11 @@
 </dd></dl>
 
 <dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Entity.relationships">
+<span class="sig-name descname"><span class="pre">relationships</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">&gt;&gt;</span></span><a class="headerlink" href="#lua-Entity.relationships" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Entity.componentCache">
 <span class="sig-name descname"><span class="pre">componentCache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Entity.componentCache" title="Link to this definition">¶</a><br /></dt>
 <dd><p>This is a cache of prototype -&gt; component for component queries, reducing most queries to a hashmap lookup.</p>
@@ -153,6 +158,68 @@ prerequisites are met and will throw an error if they are not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>prototype</strong> (<span class="p">&lt;</span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">T</span></code><span class="p">&gt;</span>) – The type of the component to return.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Entity.addRelationship">
+<span class="sig-name descname"><span class="pre">addRelationship</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">final?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Entity.addRelationship" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Adds a relationship between this entity and another.
+Enforces cardinality, symmetry, and exclusivity rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationship</strong> (<a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a>) – The relationship instance to add.</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a>) – The target entity of the relationship.</p></li>
+<li><p><strong>final?</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code>) – If true this add is part of a symmetry and we shouldn’t attempt again.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Entity.removeRelationship">
+<span class="sig-name descname"><span class="pre">removeRelationship</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">relationshipType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Entity.removeRelationship" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Removes a relationship of a given type with a specific target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationshipType</strong> (<a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a>) – The relationship type/class (not an instance).</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a>) – The target entity of the relationship.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Entity.removeAllRelationships">
+<span class="sig-name descname"><span class="pre">removeAllRelationships</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">relationshipType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Entity.removeAllRelationships" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Entity.hasRelationship">
+<span class="sig-name descname"><span class="pre">hasRelationship</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">relationshipType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Entity.hasRelationship" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Checks whether this entity has a relationship of a given type with a specific target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relationshipType</strong> (<a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a>) – The relationship type/class.</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a>) – The target entity to check for.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Entity.getRelationships">
+<span class="sig-name descname"><span class="pre">getRelationships</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">relationshipType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Entity.getRelationships" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Gets all relationships of a given type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>relationshipType</strong> (<a class="reference internal" href="relationship.html#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a>) – The relationship type/class.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -303,6 +370,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.components"><code class="docutils literal notranslate"><span class="pre">components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.relationships"><code class="docutils literal notranslate"><span class="pre">relationships</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.componentCache"><code class="docutils literal notranslate"><span class="pre">componentCache</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.give"><code class="docutils literal notranslate"><span class="pre">give()</span></code></a></li>
@@ -312,6 +380,11 @@ SOFTWARE.
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.getName"><code class="docutils literal notranslate"><span class="pre">getName()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Entity.expect"><code class="docutils literal notranslate"><span class="pre">expect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.addRelationship"><code class="docutils literal notranslate"><span class="pre">addRelationship()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.removeRelationship"><code class="docutils literal notranslate"><span class="pre">removeRelationship()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.removeAllRelationships"><code class="docutils literal notranslate"><span class="pre">removeAllRelationships()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.hasRelationship"><code class="docutils literal notranslate"><span class="pre">hasRelationship()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Entity.getRelationships"><code class="docutils literal notranslate"><span class="pre">getRelationships()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
@@ -321,6 +394,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>

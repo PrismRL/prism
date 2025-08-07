@@ -26,7 +26,7 @@
     <link rel="icon" href="../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="RNG" href="rng.html" />
+    <link rel="next" title="Relationship" href="relationship.html" />
     <link rel="prev" title="Object" href="object.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
@@ -86,6 +86,11 @@ it through Level methods. However, it can also be used in other specialized cont
 inventory systems or sensory subsystems (e.g., tracking visible actors).</p>
 </dd></dl>
 
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Query.relationshipInfo">
+<span class="sig-name descname"><span class="pre">relationshipInfo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><a class="headerlink" href="#lua-Query.relationshipInfo" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Query.with">
 <span class="sig-name descname"><span class="pre">with</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Query.with" title="Link to this definition">¶</a><br /></dt>
@@ -98,6 +103,13 @@ Can be called multiple times to accumulate components.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>query</strong> (<a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a>) – Returns self to allow method chaining.</p>
 </dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Query.relationship">
+<span class="sig-name descname"><span class="pre">relationship</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">relationshipType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><a class="headerlink" href="#lua-Query.relationship" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
 </dl>
 </dd></dl>
 
@@ -115,6 +127,24 @@ Can be called multiple times to accumulate components.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>query</strong> (<a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a>) – Returns self to allow method chaining.</p>
 </dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Query.target">
+<span class="sig-name descname"><span class="pre">target</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="target.html#lua-Target" title="Target"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Target</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="level.html#lua-Level" title="Level"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Level</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">previousTargets?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">[]</span></span><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Query" title="Query"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Query</span></code></a><a class="headerlink" href="#lua-Query.target" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Applies a Target filter to this query.
+Automatically adds required components from the Target.
+The query will only return actors that validate against this Target.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua staticmethod">
+<dt class="sig sig-object lua" id="lua-Query.targetValidator">
+<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">targetValidator</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Query.targetValidator" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Set the validator</p>
+<dl class="field-list simple">
 </dl>
 </dd></dl>
 
@@ -321,14 +351,19 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.storage"><code class="docutils literal notranslate"><span class="pre">storage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Query.relationshipInfo"><code class="docutils literal notranslate"><span class="pre">relationshipInfo</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.with"><code class="docutils literal notranslate"><span class="pre">with()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Query.relationship"><code class="docutils literal notranslate"><span class="pre">relationship()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.at"><code class="docutils literal notranslate"><span class="pre">at()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Query.target"><code class="docutils literal notranslate"><span class="pre">target()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Query.targetValidator"><code class="docutils literal notranslate"><span class="pre">targetValidator()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.iter"><code class="docutils literal notranslate"><span class="pre">iter()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.each"><code class="docutils literal notranslate"><span class="pre">each()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Query.first"><code class="docutils literal notranslate"><span class="pre">first()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
@@ -386,7 +421,7 @@ SOFTWARE.
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Prism</a><ul>
       <li>Previous: <a href="object.html" title="previous chapter">Object</a></li>
-      <li>Next: <a href="rng.html" title="next chapter">RNG</a></li>
+      <li>Next: <a href="relationship.html" title="next chapter">Relationship</a></li>
   </ul></li>
   </ul></li>
 </ul>

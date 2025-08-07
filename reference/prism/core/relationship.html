@@ -7,7 +7,7 @@
 <template id="tmpl_gotoTop"><div id="gotoTop">
   <button>Back to top</button>
 </div></template>
-    <title>Collision &#8212; Prism  documentation</title>
+    <title>Relationship &#8212; Prism  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
     <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
@@ -26,8 +26,8 @@
     <link rel="icon" href="../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Component" href="component.html" />
-    <link rel="prev" title="Cell" href="cell.html" />
+    <link rel="next" title="RNG" href="rng.html" />
+    <link rel="prev" title="Query" href="query.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -46,117 +46,69 @@
           <div class="body" role="main">
             
   <dl class="lua class">
-<dt class="sig sig-object lua" id="lua-Collision">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Collision</span></span><a class="headerlink" href="#lua-Collision" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Keeps track of different move types or “layers” in the game for use in collision detection.</p>
+<dt class="sig sig-object lua" id="lua-Relationship">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><a class="headerlink" href="#lua-Relationship" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The <cite>Relationship</cite> class represents a typed relationship between entities.
+Relationships describe social, hierarchical, or functional connections.
+For example, the <cite>Marriage</cite> relationship may enforce a 1-to-1 bond.
+Relationships are usually attached via the <cite>relationships</cite> field of an entity
+as sparse maps of other entities to Relationship instances.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Relationship.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Relationship.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The default constructor for the class. Subclasses should override this.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 <dl class="lua data">
-<dt class="sig sig-object lua" id="lua-Collision.MOVETYPES">
-<span class="sig-name descname"><span class="pre">MOVETYPES</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Collision.MOVETYPES" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Collision movetypes used for bitmasking. Each bit represents a movetype, or collision layer.
-Each movetypes represents a different collision category.</p>
+<dt class="sig sig-object lua" id="lua-Relationship.exclusive">
+<span class="sig-name descname"><span class="pre">exclusive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Relationship.exclusive" title="Link to this definition">¶</a><br /></dt>
+<dd><p>(static) Whether the relationship excludes other relationship types of the same kind.</p>
 </dd></dl>
 
 <dl class="lua data">
-<dt class="sig sig-object lua" id="lua-Collision.registeredMovetypes">
-<span class="sig-name descname"><span class="pre">registeredMovetypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Collision.registeredMovetypes" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Stores registered movetypes names mapped to their bitmask values.</p>
+<dt class="sig sig-object lua" id="lua-Relationship.owner">
+<span class="sig-name descname"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.owner" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The source entity holding this relationship instance.</p>
 </dd></dl>
 
 <dl class="lua data">
-<dt class="sig sig-object lua" id="lua-Collision.movetypeNames">
-<span class="sig-name descname"><span class="pre">movetypeNames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Collision.movetypeNames" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Stores bitmask values mapped to their registered movetypes names.</p>
+<dt class="sig sig-object lua" id="lua-Relationship.target">
+<span class="sig-name descname"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.target" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The other entity involved in this relationship instance.</p>
 </dd></dl>
 
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.registerMovetype">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">registerMovetype</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">movetype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.registerMovetype" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Registers a user-defined name for a collision movetypes.
-Prevents duplicate registrations and invalid movetypes.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Relationship.generateInverse">
+<span class="sig-name descname"><span class="pre">generateInverse</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateInverse" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Generates the inverse relationship to this one. Parent -&gt; Child for instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The name to associate with the movetypes.</p></li>
-<li><p><strong>movetype</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The movetypes key from <cite>Collision.movetypes</cite>.</p></li>
-</ul>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.getMovetypeByName">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getMovetypeByName</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">nil</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.getMovetypeByName" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Retrieves the bitmask value associated with a registered movetypes name.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Relationship.generateSymmetric">
+<span class="sig-name descname"><span class="pre">generateSymmetric</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateSymmetric" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Generates a symetric relationship to this one. Marriage -&gt; Marraige for the other entity.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The registered movetypes name.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>value</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="w"> </span><span class="p">|</span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">nil</span></code>) – The bitmask value, or nil if not found.</p>
-</dd>
 </dl>
 </dd></dl>
 
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.getMovetypeName">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">getMovetypeName</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">bitmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">nil</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.getMovetypeName" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Retrieves the registered movetypes name associated with a bitmask value.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Relationship.getBase">
+<span class="sig-name descname"><span class="pre">getBase</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><a class="headerlink" href="#lua-Relationship.getBase" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Gets the base prototype of this relationship type.
+Used to compare or check type consistency.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bitmask</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The bitmask value.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>name</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="w"> </span><span class="p">|</span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">nil</span></code>) – The movetypes name, or nil if not found.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.assignNextAvailableMovetype">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">assignNextAvailableMovetype</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">bitmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.assignNextAvailableMovetype" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Assigns the next available unregistered movetype to a given name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code>) – The name to associate with the next available movetype.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>bitmask</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The bitmask value assigned.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.createBitmaskFromMovetypes">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">createBitmaskFromMovetypes</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">movetypesNames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">[]</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">The</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.createBitmaskFromMovetypes" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Converts a list of collision movetypes names into a combined bitmask.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>movetypesNames</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">string</span></code><span class="p">[]</span>) – A list of movetypes names to combine.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>The</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – combined bitmask.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="lua staticmethod">
-<dt class="sig sig-object lua" id="lua-Collision.checkBitmaskOverlap">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkBitmaskOverlap</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">bitmaskA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">bitmaskB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">True</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Collision.checkBitmaskOverlap" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Checks if two bitmasks have any overlapping collision movetypes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>bitmaskA</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The first bitmask.</p></li>
-<li><p><strong>bitmaskB</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The second bitmask.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>True</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code>) – if there is an overlap, false otherwise.</p>
-</dd>
 </dl>
 </dd></dl>
 
 <div class="lua-inherited-members docutils container">
+<p><strong>Other members:</strong></p>
+<div class="admonition">
+<p>Inherited from <a class="reference internal" href="object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+</div>
 </div>
 </dd></dl>
 
@@ -293,18 +245,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="actorstorage.html"><code class="docutils literal notranslate"><span class="pre">ActorStorage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="behavior.html"><code class="docutils literal notranslate"><span class="pre">IBehavior</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="cell.html"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.MOVETYPES"><code class="docutils literal notranslate"><span class="pre">MOVETYPES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.registeredMovetypes"><code class="docutils literal notranslate"><span class="pre">registeredMovetypes</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.movetypeNames"><code class="docutils literal notranslate"><span class="pre">movetypeNames</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.registerMovetype"><code class="docutils literal notranslate"><span class="pre">registerMovetype()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.getMovetypeByName"><code class="docutils literal notranslate"><span class="pre">getMovetypeByName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.getMovetypeName"><code class="docutils literal notranslate"><span class="pre">getMovetypeName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.assignNextAvailableMovetype"><code class="docutils literal notranslate"><span class="pre">assignNextAvailableMovetype()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.createBitmaskFromMovetypes"><code class="docutils literal notranslate"><span class="pre">createBitmaskFromMovetypes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.checkBitmaskOverlap"><code class="docutils literal notranslate"><span class="pre">checkBitmaskOverlap()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="component.html"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
@@ -315,7 +256,16 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.exclusive"><code class="docutils literal notranslate"><span class="pre">exclusive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.owner"><code class="docutils literal notranslate"><span class="pre">owner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.target"><code class="docutils literal notranslate"><span class="pre">target</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.generateInverse"><code class="docutils literal notranslate"><span class="pre">generateInverse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.generateSymmetric"><code class="docutils literal notranslate"><span class="pre">generateSymmetric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Relationship.getBase"><code class="docutils literal notranslate"><span class="pre">getBase()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
@@ -338,18 +288,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="components/remembered.html"><code class="docutils literal notranslate"><span class="pre">Remembered</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/senses.html"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.MOVETYPES"><code class="docutils literal notranslate"><span class="pre">MOVETYPES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.registeredMovetypes"><code class="docutils literal notranslate"><span class="pre">registeredMovetypes</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.movetypeNames"><code class="docutils literal notranslate"><span class="pre">movetypeNames</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.registerMovetype"><code class="docutils literal notranslate"><span class="pre">registerMovetype()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.getMovetypeByName"><code class="docutils literal notranslate"><span class="pre">getMovetypeByName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.getMovetypeName"><code class="docutils literal notranslate"><span class="pre">getMovetypeName()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.assignNextAvailableMovetype"><code class="docutils literal notranslate"><span class="pre">assignNextAvailableMovetype()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.createBitmaskFromMovetypes"><code class="docutils literal notranslate"><span class="pre">createBitmaskFromMovetypes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Collision.checkBitmaskOverlap"><code class="docutils literal notranslate"><span class="pre">checkBitmaskOverlap()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
@@ -383,8 +322,8 @@ SOFTWARE.
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Prism</a><ul>
-      <li>Previous: <a href="cell.html" title="previous chapter">Cell</a></li>
-      <li>Next: <a href="component.html" title="next chapter">Component</a></li>
+      <li>Previous: <a href="query.html" title="previous chapter">Query</a></li>
+      <li>Next: <a href="rng.html" title="next chapter">RNG</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -409,7 +348,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../../../_sources/reference/prism/core/collision.rst.txt"
+      <a href="../../../_sources/reference/prism/core/relationship.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
