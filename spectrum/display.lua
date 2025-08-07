@@ -31,6 +31,7 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.height = height
    self.camera = prism.Vector2()
    self.pushed = false
+   self.animations = {}
 
    self.cells = { {} }
 
@@ -54,13 +55,11 @@ end
 function Display:update(level, dt)
    for i = #self.animations, 1, -1 do
       local animation = self.animations[i]
-      if spectrum.Animation:is(animation.animation) then
-         animation.animation:update(dt)
+      animation.animation:update(dt)
 
-         if animation.animation.status == "paused" then
-            table.remove(self.animations, i)
-            if animation.blocking then self.blocking = false end
-         end
+      if animation.animation.status == "paused" then
+         table.remove(self.animations, i)
+         if animation.blocking then self.blocking = false end
       end
    end
 
@@ -148,7 +147,9 @@ function Display:putAnimations(queryable)
 
    for i = #self.animations, 1, -1 do
       local animation = self.animations[i]
-      if spectrum.Animation:is(animation.animation) then
+      if animation.animation:isCustom() then
+         animation.animation:draw(self)
+      else
          local x, y = animation.x, animation.y
          if animation.actor then
             animation.actor:getPosition(reusedPosition)
@@ -157,8 +158,6 @@ function Display:putAnimations(queryable)
          end
 
          animation.animation:draw(self, x, y)
-      else
-         if animation.animation(love.timer.getDelta()) then table.remove(self.animations, i) end
       end
    end
 end
@@ -300,8 +299,9 @@ end
 --- @param color Color4? An optional color to use for the drawable.
 --- @param layer number? An optional layer to use for depth sorting.
 function Display:putDrawable(x, y, drawable, color, layer)
-   for ox = 1, drawable.size do
-      for oy = 1, drawable.size do
+   local size = drawable.size or 1
+   for ox = 1, size do
+      for oy = 1, size do
          self:put(
             x + ox - 1,
             y + oy - 1,

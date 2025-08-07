@@ -1,6 +1,6 @@
 --- Represents an animation to be played.
 --- @class AnimationMessage : Message
---- @field animation Animation|fun(dt: number): boolean
+--- @field animation Animation|fun(dt: number, display: Display): boolean
 --- @field actor? Actor An optional actor to play the animation relative to.
 --- @field x? integer An x position to play the animation at. If an actor is given, this is relative to their position.
 --- @field y? integer A y position to play the animation at. If an actor is given, this is relative to their position.
@@ -10,7 +10,7 @@
 local AnimationMessage = prism.Message:extend "AnimationMessage"
 
 --- @class AnimationMessageOptions
---- @field animation Animation | fun(dt: number): boolean
+--- @field animation Animation | fun(dt: number, display: Display): boolean
 --- @field actor? Actor
 --- @field x? integer
 --- @field y? integer
