@@ -32,7 +32,7 @@ function LevelState:shouldAdvance()
    --- @diagnostic disable-next-line
    if not self.manager or self.manager.states[#self.manager.states] ~= self then return false end
 
-   return not hasDecision or decisionDone
+   return (not hasDecision or decisionDone) and not self.display.blocking
 end
 
 --- Updates the state of the level.
