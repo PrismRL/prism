@@ -182,10 +182,10 @@ local function registerFactory(name, type, moduleTable, moduleName)
       )
    end
 
-   moduleTable["register" .. type] = function(objectName, factory)
+   moduleTable["register" .. type.className] = function(objectName, factory)
       assert(
          registry[objectName] == nil,
-         type.className .. " " .. name .. " is already registered!"
+         type.className .. " " .. objectName .. " is already registered!"
       )
       registry[objectName] = factory
 
@@ -216,8 +216,8 @@ function prism.registerRegistry(name, type, manual, module)
    moduleTable[name] = {}
 
    local pattern = ""
-   for i = 1, #type do
-      local c = name:sub(i, i)
+   for i = 1, #type.className do
+      local c = type.className:sub(i, i)
       pattern = string.format("%s[%s%s]", pattern, c:lower(), c:upper())
    end
 
