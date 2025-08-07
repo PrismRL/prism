@@ -176,10 +176,7 @@ end
 --- @param level Level
 function Display:yieldAnimation(message, manager, level)
    table.insert(self.animations, message)
-   if message.blocking then
-      self.blocking = true
-      manager:push(spectrum.AnimatedState(self, level))
-   end
+   if message.blocking then self.blocking = true end
 end
 
 local tempColor = prism.Color4()
