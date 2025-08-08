@@ -52,10 +52,13 @@ end
 --- @param message Message The message to handle.
 function LevelState:handleMessage(message)
    if prism.decisions.ActionDecision:is(message) then
-      ---@cast message ActionDecision
+      --- @cast message ActionDecision
       self.decision = message
    elseif prism.messages.DebugMessage:is(message) then
       self.manager:push(self.geometer)
+   elseif prism.messages.Animation:is(message) then
+      --- @cast message AnimationMessage
+      self.display:yieldAnimation(message, self.manager, self.level)
    end
 end
 
