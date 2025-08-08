@@ -110,3 +110,9 @@ Animations can force the :lua:class:`LevelState` to wait for them to finish play
 Or they can be skippable by passing ``skippable = true``, though you will have to decide
 when you want animations to be skipped by calling :lua:func:`Display.skipAnimations`,
 e.g. on a key press or mouse click.
+
+Drawing animations
+------------------
+
+:lua:class:`Display` won't draw animations by default. Call
+:lua:func:`Display.putAnimations` when you want them to be drawn.
