@@ -40,6 +40,8 @@ end
 --- @param dt number The time delta since the last update.
 function LevelState:update(dt)
    self.time = self.time + dt
+   self.display:update(self.level, dt)
+
    while self:shouldAdvance() do
       local message = prism.advanceCoroutine(self.updateCoroutine, self.level, self.decision)
       self.decision, self.message = nil, nil
