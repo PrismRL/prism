@@ -120,7 +120,7 @@ Now modify our message handler so it passes the player into the next level:
 
    if prism.messages.Descend:is(message) then
       --- @cast message DescendMessage
-      self.manager:enter(GameLevelState(self.display, Game:generateNextFloor(message.descender). Game:getLevelSeed()))
+      self.manager:enter(GameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
    end
 
 To indicate what level we're on, add another call to :lua:func:`Display.putString` below our health display:

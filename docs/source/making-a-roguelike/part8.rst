@@ -25,7 +25,7 @@ Next we'll register a ``Stairs`` actor in ``modules/game/actors/stairs.lua`` wit
       return prism.Actor.fromComponents {
          prism.components.Name("Stairs"),
          prism.components.Position(),
-         prism.components.Drawable(">"),
+         prism.components.Drawable { char = ">" },
          prism.components.Stair(),
          prism.components.Remembered(),
       }
@@ -99,7 +99,7 @@ First we create a target that targets actors with the ``Stair`` component within
 our ``Descend`` action, which is similar to ``Die`` but yields a different message.
 
 Now let's add some code to ``GameLevelState:keypressed``. After we figure out which direction the user
-just pressed we'll add the following.
+just pressed we'll add the following. Make sure this is checked before the `Move` action is considered.
 
 .. code:: lua
 
@@ -120,7 +120,7 @@ just pressed we'll add the following.
 Creating the next floor
 -----------------------
 
-Now that we've got everything set up we need to actually handle the descend message. In 
+Now that we've got everything set up we need to actually handle the descend message. In
 ``GameLevelState:handleMessage`` we'll add the following message handling.
 
 .. code:: lua

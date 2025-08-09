@@ -20,6 +20,9 @@ return a function from this module that takes a few parameters.
    --- @param height integer
    return function(rng, player, width, height)
       local builder = prism.MapBuilder(prism.cells.Wall)
+
+      -- world building code goes here!
+
       return builder
    end
 

@@ -66,6 +66,8 @@ Doing damage
 Next we're going to add the Damage action. This accepts a single target: the amount of damage to be taken.
 It modifies the health of the target and if it's at or below zero we trigger the Die action we just added.
 
+An action's ``targets`` are the parameters passed into the ``perform`` method, in order. We use the :lua:class:`Target` to apply validation to ensure types within ``perform`` match our expectations. Typically, you will be passing in instances of actors, but in this case it's just a number representing the amount of damage we will apply.
+
 .. code:: lua
 
    local DamageTarget = prism.Target()

@@ -47,6 +47,8 @@ Now let's make an attack action that the kobolds can use on the player. This is
 pretty straightforward. Anything with health is attackable, and we apply our ``Damage`` action
 based on the ``Attacker`` component.
 
+Note that here, ``AttackTarget`` is an Actor with a Health component, and is passed into ``perform`` as ``attacked.`` This is more commonly how Targets are used, versus enforcing basic types like "number".
+
 .. code:: lua
 
    local AttackTarget = prism.Target()
@@ -73,7 +75,9 @@ based on the ``Attacker`` component.
 
    return Attack
 
-Next we need to make kobolds actually use the attack action. Navigate to ``modules/game/components/koboldcontroller.lua``
+Next we need to make kobolds actually use the attack action. We will simply attempt to attack regardless of the situation, and assume that ``canPerform`` will reject the attempt if the circumstances are wrong (e.g. out of range).
+
+Navigate to ``modules/game/components/koboldcontroller.lua``
 and right above the final return we're going to add the following:
 
 .. code:: lua
@@ -142,6 +146,6 @@ If we receive our ``LoseMessage``, we simply close the game. We'll improve on th
 Wrapping up
 -----------
 
-That's it for this chapter. Kobolds now wield an ``Attack`` action and we've handled 
-a fatal game crash by using a :lua:class:`Message`. In the :doc:`next section <part5>` we'll focus on 
+That's it for this chapter. Kobolds now wield an ``Attack`` action and we've handled
+a fatal game crash by using a :lua:class:`Message`. In the :doc:`next section <part5>` we'll focus on
 the user interface with stuff like adding a game over screen and a message log.
