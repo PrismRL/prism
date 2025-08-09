@@ -3,7 +3,7 @@ local SensesSystem = prism.System:extend("SensesSystem")
 SensesSystem.name = "Senses"
 
 function SensesSystem:onTurn(level, actor)
-   if actor:has(prism.components.PlayerController) then return end
+   if actor:get(prism.components.Controller):isPlayerControlled() then return end
    self:triggerRebuild(level, actor)
 end
 
@@ -17,7 +17,7 @@ end
 ---@param event Message
 function SensesSystem:onYield(level, event)
    for actor in level:query(prism.components.Senses):iter() do
-      if actor:get(prism.components.PlayerController) then self:triggerRebuild(level, actor) end
+      if actor:get(prism.components.Controller):isPlayerControlled() then self:triggerRebuild(level, actor) end
    end
 end
 

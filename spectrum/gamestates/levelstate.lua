@@ -69,7 +69,7 @@ function LevelState:getSenses()
       ---@cast actionDecision ActionDecision
       curActor = actionDecision.actor
    elseif self.message then
-      if self.message.action.owner:has(prism.components.PlayerController) then
+      if self.message.action.owner:get(prism.components.Controller):isPlayerControlled() then
          curActor = self.message.action.owner
       end
    end
@@ -78,9 +78,12 @@ function LevelState:getSenses()
    local primary = { sensesComponent }
    local secondary = {}
 
-   local query = self.level:query(prism.components.PlayerController, prism.components.Senses)
-   for _, _, senses in query:iter() do
-      table.insert(secondary, senses)
+   local query = self.level:query(prism.components.Controller, prism.components.Senses)
+   for _, controller, senses in query:iter() do
+      --- @cast controller Controller
+      if controller:isPlayerControlled() then
+         table.insert(secondary, senses)
+      end
    end
 
    if #primary == 0 then

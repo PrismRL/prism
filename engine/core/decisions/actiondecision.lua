@@ -1,5 +1,5 @@
 --- Represents an action to be taken, generally by the player.
---- :lua:class:`PlayerController` yields one to decide what action to perform.
+--- :lua:class:`PlayerController` from the template yields one to decide what action to perform.
 --- @class ActionDecision : Decision
 --- @field actor Actor The actor making the decision.
 --- @field action Action|nil The action to perform.

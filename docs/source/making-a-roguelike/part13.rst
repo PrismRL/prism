@@ -63,9 +63,6 @@ the individual pieces like +5 maxhp. You can subclass this to define a new named
    --- @module "modules.game.statusinstance"
    prism.GameStatusInstance = require ("modules.game.statusinstance")
 
-The path string manipulation is just so that this file loads correctly now matter which folder our module is loaded from, that won't matter here,
-but it's a good idea to do this.
-
 Modifying health
 ----------------
 
