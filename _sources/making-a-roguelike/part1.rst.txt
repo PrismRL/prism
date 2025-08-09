@@ -330,10 +330,9 @@ checking passability with a custom collision mask.
 Kicking kobolds, for real this time
 -----------------------------------
 
-We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick
-when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move action
-is called. If the player doesn't move, we want to check if there's a valid actor to kick in front of us,
-and then perform the kick action on them:
+We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move action is called. 
+
+If the player presses a move button but the ``canPerform`` check fails, we can infer they moved into something that blocked their movement. Then, check if there's a valid actor to kick in front of us (as opposed to another impassable entity), and perform the kick action on them:
 
 .. code:: lua
 

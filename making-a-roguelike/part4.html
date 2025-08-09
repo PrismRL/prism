@@ -83,6 +83,7 @@ much damage they deal.</p>
 <p>Now let’s make an attack action that the kobolds can use on the player. This is
 pretty straightforward. Anything with health is attackable, and we apply our <code class="docutils literal notranslate"><span class="pre">Damage</span></code> action
 based on the <code class="docutils literal notranslate"><span class="pre">Attacker</span></code> component.</p>
+<p>Note that here, <code class="docutils literal notranslate"><span class="pre">AttackTarget</span></code> is an Actor with a Health component, and is passed into <code class="docutils literal notranslate"><span class="pre">perform</span></code> as <code class="docutils literal notranslate"><span class="pre">attacked.</span></code> This is more commonly how Targets are used, versus enforcing basic types like “number”.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">AttackTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">isPrototype</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">)</span>
    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
@@ -108,7 +109,8 @@ based on the <code class="docutils literal notranslate"><span class="pre">Attack
 <span class="kr">return</span> <span class="n">Attack</span>
 </pre></div>
 </div>
-<p>Next we need to make kobolds actually use the attack action. Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/koboldcontroller.lua</span></code>
+<p>Next we need to make kobolds actually use the attack action. We will simply attempt to attack regardless of the situation, and assume that <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> will reject the attempt if the circumstances are wrong (e.g. out of range).</p>
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/koboldcontroller.lua</span></code>
 and right above the final return we’re going to add the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">KoboldController</span><span class="p">:</span><span class="nf">act</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
    <span class="p">...</span>

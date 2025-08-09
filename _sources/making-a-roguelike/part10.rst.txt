@@ -81,7 +81,7 @@ We also want to keep a reference to the previous ``GameState``, so we'll use :lu
       self.previousState = previous
    end
 
-Now we'll draw the inventory. To show the inventory on top of the level, we'll first draw the previous state. 
+Now we'll draw the inventory. To show the inventory on top of the level, we'll first draw the previous state.
 Then we clear the display and draw a simple header, aligned to the right side of the screen. Finally, we loop through
 each item in our inventory, assign it a letter based on its index, and draw it to the screen.
 
@@ -109,7 +109,7 @@ each item in our inventory, assign it a letter based on its index, and draw it t
    end
 
 Now we handle keypresses. For the items we loop through our letters to find which one matches our keypress
-and for now we just try to drop the item when we hit that button. ``Drop``'s :lua:class:`canPerform() <Action.canPerform>` will return false 
+and for now we just try to drop the item when we hit that button. ``Drop``'s :lua:class:`canPerform() <Action.canPerform>` will return false
 if given a ``nil`` target.
 
 .. code:: lua
@@ -229,7 +229,7 @@ and push the ``InventoryState``, if the current actor (``owner``) has an invento
 
 .. code:: lua
 
-   function MyGameLevelState:keypressed(key, scancode)
+   function GameLevelState:keypressed(key, scancode)
       -- ...
 
       if action == "inventory" then
@@ -260,7 +260,7 @@ Create a new file in ``modules/game/actors`` called ``meatbrick.lua`` and regist
       return prism.Actor.fromComponents{
          prism.components.Name("Meat Brick"),
          prism.components.Position(),
-         prism.components.Drawable("%", prism.Color4.RED),
+         prism.components.Drawable { char = "%", color=prism.Color4.RED },
          prism.components.Item{
             stackable = prism.actors.MeatBrick,
             stackLimit = 99
@@ -292,7 +292,8 @@ Now to be able to pick these things up we'll need to hook up the :lua:class:`Pic
 
 We grab the first item on the tile and use it as the target for ``Pickup``.
 Boot up the game and draw in a few meat bricks with Geometer. You should be able to
-pick up and drop them now!
+pick up and drop them now! In a future chapter, we'll hook up the `Die` action to sometimes
+create a new `MeatBrick`.
 
 Fixing the draw order
 ---------------------
@@ -304,13 +305,13 @@ and change the following line from
 
 .. code:: lua
 
-   prism.components.Drawable("@", prism.Color4.GREEN),
+   prism.components.Drawable{ char = "@", color = prism.Color4.GREEN },
 
 to
 
 .. code:: lua
 
-   prism.components.Drawable("@", prism.Color4.GREEN, nil, math.huge),
+   prism.components.Drawable { char = "@", color = prism.Color4.GREEN, layer = math.huge },
 
 We're setting the background color to ``nil`` so that it still defaults to transparent, but we're setting our draw priority
 to :lua:data:`math.huge` so the player will always draw on top of everything else.

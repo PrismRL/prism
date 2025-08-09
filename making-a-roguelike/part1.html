@@ -339,10 +339,8 @@ checking passability with a custom collision mask.</p>
 </details></section>
 <section id="kicking-kobolds-for-real-this-time">
 <h2>Kicking kobolds, for real this time<a class="headerlink" href="#kicking-kobolds-for-real-this-time" title="Link to this heading">¶</a></h2>
-<p>We’ve added the kick action, but we don’t use it anywhere. Let’s fix that by performing the kick
-when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and find where the move action
-is called. If the player doesn’t move, we want to check if there’s a valid actor to kick in front of us,
-and then perform the kick action on them:</p>
+<p>We’ve added the kick action, but we don’t use it anywhere. Let’s fix that by performing the kick when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and find where the move action is called.</p>
+<p>If the player presses a move button but the <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> check fails, we can infer they moved into something that blocked their movement. Then, check if there’s a valid actor to kick in front of us (as opposed to another impassable entity), and perform the kick action on them:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span>
 <span class="p">...</span>
 <span class="kr">end</span>

@@ -101,6 +101,7 @@ the actor from the level.</p>
 <h2>Doing damage<a class="headerlink" href="#doing-damage" title="Link to this heading">¶</a></h2>
 <p>Next we’re going to add the Damage action. This accepts a single target: the amount of damage to be taken.
 It modifies the health of the target and if it’s at or below zero we trigger the Die action we just added.</p>
+<p>An action’s <code class="docutils literal notranslate"><span class="pre">targets</span></code> are the parameters passed into the <code class="docutils literal notranslate"><span class="pre">perform</span></code> method, in order. We use the <a class="reference internal" href="../reference/prism/core/target.html#lua-Target" title="Target"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Target</span></code></a> to apply validation to ensure types within <code class="docutils literal notranslate"><span class="pre">perform</span></code> match our expectations. Typically, you will be passing in instances of actors, but in this case it’s just a number representing the amount of damage we will apply.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DamageTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">isType</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span>
 

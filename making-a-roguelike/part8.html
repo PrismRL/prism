@@ -64,7 +64,7 @@ will be a simple tag component to indicate the actor can be descended.</p>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Stairs&quot;</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span> <span class="p">},</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Stair</span><span class="p">(),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Remembered</span><span class="p">(),</span>
    <span class="p">}</span>
@@ -131,7 +131,7 @@ For now we don’t need anything inside.</p>
 <p>First we create a target that targets actors with the <code class="docutils literal notranslate"><span class="pre">Stair</span></code> component within range 1. Then we create
 our <code class="docutils literal notranslate"><span class="pre">Descend</span></code> action, which is similar to <code class="docutils literal notranslate"><span class="pre">Die</span></code> but yields a different message.</p>
 <p>Now let’s add some code to <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code>. After we figure out which direction the user
-just pressed we’ll add the following.</p>
+just pressed we’ll add the following. Make sure this is checked before the <cite>Move</cite> action is considered.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="kr">then</span>
    <span class="kd">local</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
 

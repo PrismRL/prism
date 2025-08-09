@@ -246,7 +246,7 @@ let’s add some input handling to get the <code class="docutils literal notrans
 </div>
 <p>Then at the bottom of <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code>, just above the wait action, we’ll check for the inventory key
 and push the <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code>, if the current actor (<code class="docutils literal notranslate"><span class="pre">owner</span></code>) has an inventory.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">MyGameLevelState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">scancode</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">scancode</span><span class="p">)</span>
    <span class="c1">-- ...</span>
 
    <span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;inventory&quot;</span> <span class="kr">then</span>
@@ -273,7 +273,7 @@ can pick up and eat to restore their health.</p>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span><span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Meat Brick&quot;</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span><span class="p">),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span> <span class="p">},</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Item</span><span class="p">{</span>
          <span class="n">stackable</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">MeatBrick</span><span class="p">,</span>
          <span class="n">stackLimit</span> <span class="o">=</span> <span class="mi">99</span>
@@ -303,7 +303,8 @@ We’ll make it consumable in the next chapter!</p>
 </div>
 <p>We grab the first item on the tile and use it as the target for <code class="docutils literal notranslate"><span class="pre">Pickup</span></code>.
 Boot up the game and draw in a few meat bricks with Geometer. You should be able to
-pick up and drop them now!</p>
+pick up and drop them now! In a future chapter, we’ll hook up the <cite>Die</cite> action to sometimes
+create a new <cite>MeatBrick</cite>.</p>
 </section>
 <section id="fixing-the-draw-order">
 <h2>Fixing the draw order<a class="headerlink" href="#fixing-the-draw-order" title="Link to this heading">¶</a></h2>
@@ -311,11 +312,11 @@ pick up and drop them now!</p>
 We can fix this by changing the depth or ‘layer’ the player’s drawable is drawn at.
 Go ahead and navigate back to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code>
 and change the following line from</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span><span class="p">),</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span> <span class="p">},</span>
 </pre></div>
 </div>
 <p>to</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="nb">math.huge</span><span class="p">),</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span><span class="p">,</span> <span class="n">layer</span> <span class="o">=</span> <span class="nb">math.huge</span> <span class="p">},</span>
 </pre></div>
 </div>
 <p>We’re setting the background color to <code class="docutils literal notranslate"><span class="pre">nil</span></code> so that it still defaults to transparent, but we’re setting our draw priority
