@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --- An animation to be played in a display. Yield an :lua:class:`AnimationMessage` to play one.
 ---@class Animation : Object
----@field custom? fun(time: number, display: Display)
+---@field custom? fun(time: number, display: Display): boolean
 ---@field frames? AnimationFrame[]
 ---@field durations? number|table
 ---@field onLoop? fun(self: Animation, loops: integer)|string
@@ -34,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---@field timer number,
 ---@field position? integer
 ---@field status "playing"|"paused"
----@overload fun(frames: AnimationFrame[]|fun(time: number, display: Display), durations?: number|table, onLoop?: function|string): Animation
+---@overload fun(frames: AnimationFrame[]|(fun(time: number, display: Display): boolean), durations?: number|table, onLoop?: function|string): Animation
 local Animation = prism.Object:extend("Animation")
 
 ---@param arr table
@@ -105,7 +105,8 @@ local function parseIntervals(durations)
    return result, time
 end
 
-function Animation.frames(...)
+--- @return AnimationFrame[]
+function Animation.buildFrames(...)
    local result, args = {}, { ... }
 
    for a = 1, #args do
@@ -184,7 +185,7 @@ function Animation:update(dt)
    if self.custom then return end
    local loops = math.floor(self.timer / self.totalDuration)
    if loops ~= 0 then
-      self.timer = self.timer - self.totalDuration * loops
+      -- self.timer = self.timer - self.totalDuration * loops
       local f = type(self.onLoop) == "function" and self.onLoop or self[self.onLoop]
       f(self, loops)
    end
