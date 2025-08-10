@@ -8,6 +8,13 @@
 ---@field eachCell fun(self): fun(): integer, integer, Cell
 ---@field debug boolean
 
+--- @class Sprite
+--- @field index string|integer
+--- @field color Color4?
+--- @field background Color4?
+--- @field layer integer?
+--- @field size integer?
+
 --- @alias DisplayCell {char: (string|integer)?, fg: Color4, bg: Color4, depth: number}
 ---@class Display : Object
 ---@field width integer The width of the display in cells.
@@ -288,7 +295,30 @@ function Display:putSenses(primary, secondary)
    end
 end
 
---- Puts a Drawable object onto the display grid at specified coordinates, considering its depth.
+--- Puts a Sprite onto the display grid at specified coordinates, considering its depth.
+--- If a `color` or `layer` is provided, they will override the drawable's default values.
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @param sprite Sprite The drawable object to put.
+--- @param color Color4? An optional color to use for the drawable.
+--- @param layer number? An optional layer to use for depth sorting.
+function Display:putSprite(x, y, sprite, color, layer)
+   local size = sprite.size or 1
+   for ox = 1, size do
+      for oy = 1, size do
+         self:put(
+            x + ox - 1,
+            y + oy - 1,
+            sprite.index,
+            color or sprite.color,
+            sprite.background,
+            layer or sprite.layer
+         )
+      end
+   end
+end
+
+--- Puts a Drawable onto the display grid at specified coordinates, considering its depth.
 --- If a `color` or `layer` is provided, they will override the drawable's default values.
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
@@ -296,19 +326,7 @@ end
 --- @param color Color4? An optional color to use for the drawable.
 --- @param layer number? An optional layer to use for depth sorting.
 function Display:putDrawable(x, y, drawable, color, layer)
-   local size = drawable.size or 1
-   for ox = 1, size do
-      for oy = 1, size do
-         self:put(
-            x + ox - 1,
-            y + oy - 1,
-            drawable.index,
-            color or drawable.color,
-            drawable.background,
-            layer or drawable.layer
-         )
-      end
-   end
+   self:putSprite(x, y, drawable, color, layer)
 end
 
 --- Puts a character, foreground color, and background color at a specific grid position.
@@ -316,8 +334,8 @@ end
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
 --- @param char string|integer The character or index to draw.
---- @param fg? Color4 The foreground color.
---- @param bg? Color4 The background color.
+--- @param fg? Color4 The foreground color. Defaults to white.
+--- @param bg? Color4 The background color. Defaults to transparent.
 --- @param layer number? The draw layer (higher numbers draw on top). Defaults to -math.huge.
 function Display:put(x, y, char, fg, bg, layer)
    if self.pushed then
