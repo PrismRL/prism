@@ -25,3 +25,10 @@ possible. Its classes can be accessed with the ``spectrum`` global, e.g. ``spect
    :glob:
 
    gamestates/*
+
+.. toctree::
+   :caption: Messages
+   :maxdepth: 1
+   :glob:
+
+   messages/*
