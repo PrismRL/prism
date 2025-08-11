@@ -140,16 +140,25 @@ end
 local reusedPosition = prism.Vector2()
 --- Puts animations to the display.
 --- @param queryable IQueryable
-function Display:putAnimations(queryable)
-   for actor, position, idleAnimation in
-      queryable:query(prism.components.Position, prism.components.IdleAnimation):iter()
-   do
-      --- @cast idleAnimation IdleAnimation
-      --- @cast position Position
-      local x, y = position:getVector():decompose()
-      local animation = idleAnimation.animation
+--- @param ... Senses
+function Display:putAnimations(queryable, ...)
+   local drawnActors = {}
+   local queryables = { queryable, ... }
 
-      animation:draw(self, x, y)
+   for _, queryable in ipairs(queryables) do
+      for actor, position, idleAnimation in
+         queryable:query(prism.components.Position, prism.components.IdleAnimation):iter()
+      do
+         if not drawnActors[actor] then
+            --- @cast idleAnimation IdleAnimation
+            --- @cast position Position
+            local x, y = position:getVector():decompose()
+            local animation = idleAnimation.animation
+
+            animation:draw(self, x, y)
+            drawnActors[actor] = true
+         end
+      end
    end
 
    for i = #self.animations, 1, -1 do
@@ -194,8 +203,6 @@ local tempColor = prism.Color4()
 --- @param cellMap table A map of cells to draw.
 --- @param alpha number The transparency level for the drawn cells (0.0 to 1.0).
 function Display:_drawCells(drawnCells, cellMap, alpha)
-   local x, y = self.camera:decompose()
-
    for cx, cy, cell in cellMap:each() do
       if not drawnCells:get(cx, cy) then
          drawnCells:set(cx, cy, true)
@@ -204,7 +211,7 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
          local drawable = cell:expect(prism.components.Drawable)
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
-         self:putDrawable(x + cx, y + cy, drawable, tempColor)
+         self:putDrawable(cx, cy, drawable, tempColor)
       end
    end
 end
@@ -215,8 +222,6 @@ end
 --- @param queryable IQueryable An object capable of being queried for actors with drawable components.
 --- @param alpha number The transparency level for the drawn actors (0.0 to 1.0).
 function Display:_drawActors(drawnActors, queryable, alpha)
-   local x, y = self.camera:decompose()
-
    for actor, position, drawable in
       queryable:query(prism.components.Position, prism.components.Drawable):iter()
    do
@@ -228,7 +233,7 @@ function Display:_drawActors(drawnActors, queryable, alpha)
 
          --- @cast position Position
          local ax, ay = position:getVector():decompose()
-         self:putDrawable(x + ax, y + ay, drawable, tempColor)
+         self:putDrawable(ax, ay, drawable, tempColor)
       end
    end
 end
@@ -237,8 +242,6 @@ end
 ---@param grid SparseGrid
 ---@param alpha number
 function Display:_drawRemembered(drawnActors, grid, alpha)
-   local cx, cy = self.camera:decompose()
-
    for x, y, actor in grid:each() do
       if not drawnActors[actor] then
          drawnActors[actor] = true
@@ -247,7 +250,7 @@ function Display:_drawRemembered(drawnActors, grid, alpha)
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
 
-         self:putDrawable(x + cx, y + cy, drawable, tempColor)
+         self:putDrawable(x, y, drawable, tempColor)
       end
    end
 end
@@ -258,6 +261,7 @@ end
 --- @param primary Senses[] A list of primary Senses objects.
 --- @param secondary Senses[] A list of secondary Senses objects.
 function Display:putSenses(primary, secondary)
+   self:push()
    local drawnCells = prism.SparseGrid()
 
    for _, senses in ipairs(primary) do
@@ -293,6 +297,8 @@ function Display:putSenses(primary, secondary)
    for _, senses in ipairs(secondary) do
       if senses.remembered then self:_drawRemembered(drawnActors, senses.remembered, 0.3) end
    end
+
+   self:putAnimations(unpack(primary), unpack(secondary))
 end
 
 --- Puts a Sprite onto the display grid at specified coordinates, considering its depth.

@@ -17,6 +17,7 @@
   --input-style: solid;
   --display-h1-decoration: none;
   --block-background-color: var(--background-color);
+  --sd-gutter-x: 0;
 }
 
 [data-theme="sepia"] {
@@ -316,6 +317,10 @@ pre code::before {
   overflow-y: hidden;
   border: 1px solid var(--font-color);
   background: inherit;
+}
+
+.sd-col > div[class*="highlight-"] {
+  margin: 0;
 }
 
 pre {

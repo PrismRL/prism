@@ -28,13 +28,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---@field custom? fun(time: number, display: Display): boolean
 ---@field frames? AnimationFrame[]
 ---@field durations? number|table
----@field onLoop? fun(self: Animation, loops: integer)|string
+---@field onLoop? fun(self: Animation)|string
 ---@field intervals? number[]
 ---@field totalDuration? number
 ---@field timer number,
 ---@field position? integer
 ---@field status "playing"|"paused"
----@overload fun(frames: AnimationFrame[]|(fun(time: number, display: Display): boolean), durations?: number|table, onLoop?: function|string): Animation
+---@overload fun(frames: AnimationFrame[]|(fun(time: number, display: Display): boolean), durations?: number|table, onLoop?: fun(animation: Animation)|string): Animation
 local Animation = prism.Object:extend("Animation")
 
 ---@param arr table
@@ -123,7 +123,7 @@ local nop = function() end
 
 ---@param frames AnimationFrame[]|fun(time: number, display: Display)
 ---@param durations number|table
----@param onLoop function|string?
+---@param onLoop fun(animation: Animation)|string?
 function Animation:__new(frames, durations, onLoop)
    if type(frames) == "function" then
       self.custom = frames
@@ -185,9 +185,9 @@ function Animation:update(dt)
    if self.custom then return end
    local loops = math.floor(self.timer / self.totalDuration)
    if loops ~= 0 then
-      -- self.timer = self.timer - self.totalDuration * loops
+      self.timer = self.timer - self.totalDuration * loops
       local f = type(self.onLoop) == "function" and self.onLoop or self[self.onLoop]
-      f(self, loops)
+      f(self)
    end
 
    self.position = seekFrameIndex(self.intervals, self.timer)
