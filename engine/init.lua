@@ -326,33 +326,35 @@ local function loadRegistry(path, registry, recurse, definitions)
 
          local item = require(requireName)
 
-         if registry.manual then goto continue end
-
-         assert(
-            type(item) == "table",
-            "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
-         )
-         local name = item.className
-         if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
-
-         assert(
-            name ~= "",
-            string.format(
-               "File %s contains type %s wihout a valid stripped name!",
-               fileName,
-               registry.type
+         if not registry.manual then
+            assert(
+               type(item) == "table",
+               "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
             )
-         )
-         assert(
-            items[name] == nil,
-            string.format("File %s contains type %s with duplicate name", fileName, registry.type)
-         )
-         items[name] = item
+            local name = item.className
+            if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
 
-         table.insert(definitions, '--- @module "' .. requireName .. '"')
-         table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
+            assert(
+               name ~= "",
+               string.format(
+                  "File %s contains type %s wihout a valid stripped name!",
+                  fileName,
+                  registry.type
+               )
+            )
+            assert(
+               items[name] == nil,
+               string.format(
+                  "File %s contains type %s with duplicate name",
+                  fileName,
+                  registry.type
+               )
+            )
+            items[name] = item
 
-         ::continue::
+            table.insert(definitions, '--- @module "' .. requireName .. '"')
+            table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
+         end
       elseif info.type == "directory" and recurse then
          loadRegistry(fileName, registry, recurse, definitions)
       end
