@@ -7,7 +7,7 @@
 <template id="tmpl_gotoTop"><div id="gotoTop">
   <button>Back to top</button>
 </div></template>
-    <title>Sight module &#8212; Prism  documentation</title>
+    <title>Status effects module &#8212; Prism  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
     <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
@@ -26,8 +26,8 @@
     <link rel="icon" href="../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Sight" href="components/sight.html" />
-    <link rel="prev" title="Log" href="../log/components/log.html" />
+    <link rel="next" title="StatusEffectsModifier" href="components/statuseffects.html" />
+    <link rel="prev" title="SightSystem" href="../sight/systems/sight.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -45,24 +45,21 @@
 
           <div class="body" role="main">
             
-  <section id="sight-module">
-<h1>Sight module<a class="headerlink" href="#sight-module" title="Link to this heading">¶</a></h1>
-<p>The sight module adds a component and system to implement vision for actors,
-using the built in FOV utilities.</p>
+  <section id="status-effects-module">
+<h1>Status effects module<a class="headerlink" href="#status-effects-module" title="Link to this heading">¶</a></h1>
+<p>The status effects module adds a single component, <a class="reference internal" href="components/statuseffects.html#lua-StatusEffects" title="StatusEffects"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">StatusEffects</span></code></a>, a generic
+holder for modifications.</p>
 <p>Load it with the following:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/sight&quot;</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/statuseffects&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="components/sight.html"><code class="docutils literal notranslate"><span class="pre">Sight</span></code></a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Systems</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="systems/sight.html"><code class="docutils literal notranslate"><span class="pre">SightSystem</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/statuseffects.html"><code class="docutils literal notranslate"><span class="pre">StatusEffects</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsInstanceOptions"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstanceOptions</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsInstance"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstance</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsModifier"><code class="docutils literal notranslate"><span class="pre">StatusEffectsModifier</span></code></a></li>
 </ul>
 </div>
 </section>
@@ -192,12 +189,14 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="../droptable/index.html">Drop table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../inventory/index.html">Inventory module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../log/index.html">Log module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sight module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/sight.html"><code class="docutils literal notranslate"><span class="pre">Sight</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="systems/sight.html"><code class="docutils literal notranslate"><span class="pre">SightSystem</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sight/index.html">Sight module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Status effects module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/statuseffects.html"><code class="docutils literal notranslate"><span class="pre">StatusEffects</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsInstanceOptions"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstanceOptions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsInstance"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/statuseffects.html#lua-StatusEffectsModifier"><code class="docutils literal notranslate"><span class="pre">StatusEffectsModifier</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../statuseffects/index.html">Status effects module</a></li>
 </ul>
 </li>
 </ul>
@@ -207,8 +206,8 @@ SOFTWARE.
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Extra</a><ul>
-      <li>Previous: <a href="../log/components/log.html" title="previous chapter">Log</a></li>
-      <li>Next: <a href="components/sight.html" title="next chapter">Sight</a></li>
+      <li>Previous: <a href="../sight/systems/sight.html" title="previous chapter">SightSystem</a></li>
+      <li>Next: <a href="components/statuseffects.html" title="next chapter">StatusEffectsModifier</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -233,7 +232,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../../../_sources/reference/extra/sight/index.rst.txt"
+      <a href="../../../_sources/reference/extra/statuseffects/index.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

@@ -26,6 +26,7 @@
     <link rel="icon" href="../../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="prev" title="Status effects module" href="../index.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -314,16 +315,60 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../spectrum/index.html">Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Extra</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Extra</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../droptable/index.html">Drop table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../inventory/index.html">Inventory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../log/index.html">Log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sight/index.html">Sight module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Status effects module</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">StatusEffects</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.instances"><code class="docutils literal notranslate"><span class="pre">instances</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.modifierMap"><code class="docutils literal notranslate"><span class="pre">modifierMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.add"><code class="docutils literal notranslate"><span class="pre">add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.remove"><code class="docutils literal notranslate"><span class="pre">remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.getModifiers"><code class="docutils literal notranslate"><span class="pre">getModifiers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.getInstance"><code class="docutils literal notranslate"><span class="pre">getInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.getActorModifiers"><code class="docutils literal notranslate"><span class="pre">getActorModifiers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.pairs"><code class="docutils literal notranslate"><span class="pre">pairs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.Modifier"><code class="docutils literal notranslate"><span class="pre">Modifier</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffects.Instance"><code class="docutils literal notranslate"><span class="pre">Instance</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-StatusEffectsInstanceOptions"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstanceOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstanceOptions.modifiers"><code class="docutils literal notranslate"><span class="pre">modifiers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-StatusEffectsInstance"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstance.modifiers"><code class="docutils literal notranslate"><span class="pre">modifiers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstance.singleton"><code class="docutils literal notranslate"><span class="pre">singleton</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstance.modifierMap"><code class="docutils literal notranslate"><span class="pre">modifierMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstance.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsInstance.getModifiers"><code class="docutils literal notranslate"><span class="pre">getModifiers()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-StatusEffectsModifier"><code class="docutils literal notranslate"><span class="pre">StatusEffectsModifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-StatusEffectsModifier.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Extra</a><ul>
+  <li><a href="../index.html">Status effects module</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Status effects module</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

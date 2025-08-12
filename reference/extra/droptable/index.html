@@ -7,7 +7,7 @@
 <template id="tmpl_gotoTop"><div id="gotoTop">
   <button>Back to top</button>
 </div></template>
-    <title>Sight module &#8212; Prism  documentation</title>
+    <title>Drop table module &#8212; Prism  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
     <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
@@ -26,8 +26,8 @@
     <link rel="icon" href="../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Sight" href="components/sight.html" />
-    <link rel="prev" title="Log" href="../log/components/log.html" />
+    <link rel="next" title="DropTable" href="components/droptable.html" />
+    <link rel="prev" title="Extra" href="../index.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -45,24 +45,20 @@
 
           <div class="body" role="main">
             
-  <section id="sight-module">
-<h1>Sight module<a class="headerlink" href="#sight-module" title="Link to this heading">¶</a></h1>
-<p>The sight module adds a component and system to implement vision for actors,
-using the built in FOV utilities.</p>
+  <section id="drop-table-module">
+<h1>Drop table module<a class="headerlink" href="#drop-table-module" title="Link to this heading">¶</a></h1>
+<p>The drop table module adds a single component, <a class="reference internal" href="components/droptable.html#lua-DropTable" title="DropTable"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">DropTable</span></code></a>, a generic way to
+configure dropped items from an <a class="reference internal" href="../../prism/core/entity.html#lua-Entity" title="Entity"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Entity</span></code></a>.</p>
 <p>Load it with the following:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/sight&quot;</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/droptable&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="components/sight.html"><code class="docutils literal notranslate"><span class="pre">Sight</span></code></a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Systems</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="systems/sight.html"><code class="docutils literal notranslate"><span class="pre">SightSystem</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/droptable.html"><code class="docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/droptable.html#lua-DropTableWeightedOption"><code class="docutils literal notranslate"><span class="pre">DropTableWeightedOption</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/droptable.html#lua-DropTable"><code class="docutils literal notranslate"><span class="pre">DropTable</span></code></a></li>
 </ul>
 </div>
 </section>
@@ -189,14 +185,15 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extra</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../droptable/index.html">Drop table module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../inventory/index.html">Inventory module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../log/index.html">Log module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sight module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/sight.html"><code class="docutils literal notranslate"><span class="pre">Sight</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="systems/sight.html"><code class="docutils literal notranslate"><span class="pre">SightSystem</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Drop table module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/droptable.html"><code class="docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/droptable.html#lua-DropTableWeightedOption"><code class="docutils literal notranslate"><span class="pre">DropTableWeightedOption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/droptable.html#lua-DropTable"><code class="docutils literal notranslate"><span class="pre">DropTable</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../inventory/index.html">Inventory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../log/index.html">Log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sight/index.html">Sight module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../statuseffects/index.html">Status effects module</a></li>
 </ul>
 </li>
@@ -207,8 +204,8 @@ SOFTWARE.
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Extra</a><ul>
-      <li>Previous: <a href="../log/components/log.html" title="previous chapter">Log</a></li>
-      <li>Next: <a href="components/sight.html" title="next chapter">Sight</a></li>
+      <li>Previous: <a href="../index.html" title="previous chapter">Extra</a></li>
+      <li>Next: <a href="components/droptable.html" title="next chapter">DropTable</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -233,7 +230,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="../../../_sources/reference/extra/sight/index.rst.txt"
+      <a href="../../../_sources/reference/extra/droptable/index.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
