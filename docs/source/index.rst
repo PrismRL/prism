@@ -59,6 +59,7 @@ Our discord can be found `here <https://discord.gg/9YpsH4hYVF>`_.
    making-a-roguelike/part11
    making-a-roguelike/part12
    making-a-roguelike/part13
+   making-a-roguelike/part14
 
 .. toctree::
    :caption: Explainers
