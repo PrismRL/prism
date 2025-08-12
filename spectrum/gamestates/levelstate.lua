@@ -94,6 +94,7 @@ end
 --- Draws the current state of the level, including the perspective of relevant actors.
 function LevelState:draw()
    self.display:clear()
+
    local primary, secondary = self:getSenses()
    -- Render the level using the actor’s senses
    self.display:putSenses(primary, secondary)

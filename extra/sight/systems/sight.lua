@@ -47,12 +47,13 @@ function SightSystem:updateSeenActors(level, actor)
    local sensesComponent = actor:get(prism.components.Senses)
    if not sensesComponent then return end
 
-   -- clear the actor visibility table
-   sensesComponent.actors = prism.ActorStorage()
+   actor:removeAllRelationships(prism.relationships.Sees)
 
    local query = level:query()
    for x, y, _ in sensesComponent.cells:each() do
       for other in query:at(x, y):iter() do
+         actor:addRelationship(prism.relationships.Sees, other)
+         actor:addRelationship(prism.relationships.Senses, other)
          sensesComponent.actors:addActor(other)
       end
    end

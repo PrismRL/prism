@@ -109,6 +109,8 @@ prism.SimpleScheduler = prism.require "core.scheduler.simple_scheduler"
 prism.Action = prism.require "core.action"
 --- @module "engine.core.component"
 prism.Component = prism.require "core.component"
+--- @module "engine.core.relationship"
+prism.Relationship = prism.require "core.relationship"
 --- @module "engine.core.entity"
 prism.Entity = prism.require "core.entity"
 --- @module "engine.core.actor"
@@ -222,6 +224,7 @@ function prism.registerRegistry(name, type, manual, module)
 end
 
 prism.registerRegistry("components", prism.Component.className)
+prism.registerRegistry("relationships", prism.Relationship.className)
 prism.registerRegistry("targets", prism.Target.className, true)
 prism.registerRegistry("cells", prism.Cell.className, true)
 prism.registerRegistry("actions", prism.Action.className)
@@ -265,6 +268,12 @@ prism.messages.ActionMessage = prism.require "core.messages.actionmessage"
 
 --- @module "engine.core.messages.debugmessage"
 prism.messages.DebugMessage = prism.require "core.messages.debugmessage"
+
+--- @module "engine.core.relationships.senses"
+prism.relationships.Senses = prism.require "core.relationships.senses"
+
+--- @module "engine.core.relationships.sensedby"
+prism.relationships.SensedBy = prism.require "core.relationships.sensedby"
 
 -- --- @param name string
 -- --- @param factory CellFactory
@@ -317,33 +326,35 @@ local function loadRegistry(path, registry, recurse, definitions)
 
          local item = require(requireName)
 
-         if registry.manual then goto continue end
-
-         assert(
-            type(item) == "table",
-            "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
-         )
-         local name = item.className
-         if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
-
-         assert(
-            name ~= "",
-            string.format(
-               "File %s contains type %s wihout a valid stripped name!",
-               fileName,
-               registry.type
+         if not registry.manual then
+            assert(
+               type(item) == "table",
+               "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
             )
-         )
-         assert(
-            items[name] == nil,
-            string.format("File %s contains type %s with duplicate name", fileName, registry.type)
-         )
-         items[name] = item
+            local name = item.className
+            if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
 
-         table.insert(definitions, '--- @module "' .. requireName .. '"')
-         table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
+            assert(
+               name ~= "",
+               string.format(
+                  "File %s contains type %s wihout a valid stripped name!",
+                  fileName,
+                  registry.type
+               )
+            )
+            assert(
+               items[name] == nil,
+               string.format(
+                  "File %s contains type %s with duplicate name",
+                  fileName,
+                  registry.type
+               )
+            )
+            items[name] = item
 
-         ::continue::
+            table.insert(definitions, '--- @module "' .. requireName .. '"')
+            table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
+         end
       elseif info.type == "directory" and recurse then
          loadRegistry(fileName, registry, recurse, definitions)
       end

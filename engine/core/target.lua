@@ -3,6 +3,11 @@
 --- Targets represent what actions are able to act on. The builder pattern is used to
 --- narrow down various requirements for actions.
 --- @class Target : Object
+--- @field hint any
+--- @field _optional boolean
+--- @field inLevel boolean
+--- @field validators (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)[]
+--- @field reqcomponents table<Component, boolean>
 --- @overload fun(...: Component): Target
 local Target = prism.Object:extend("Target")
 
@@ -11,13 +16,12 @@ function Target:__new(...)
    self.validators = {}
    self.reqcomponents = {}
    self.inLevel = true
-   self.hint = nil -- A string hint that can be set to let the UI know how to handle the target.
+   self.hint = nil -- A hint that can be set to let the UI know how to handle the target.
    self._optional = false
 
    self:with(...)
 end
 
---- @private
 --- @param level Level
 --- @param owner Actor The actor performing the action.
 --- @param targetObject any
@@ -30,7 +34,13 @@ function Target:validate(level, owner, targetObject, previousTargets)
       return false
    end
 
-   for _, validator in pairs(self.validators) do
+   for k, validator in pairs(self.validators) do
+      if type(k) == "string" then
+         if not validator(level, owner, targetObject, previousTargets) then return false end
+      end
+   end
+
+   for _, validator in ipairs(self.validators) do
       if not validator(level, owner, targetObject, previousTargets) then return false end
    end
 
@@ -185,8 +195,37 @@ function Target:los(mask)
    return self
 end
 
+--- Ensures the target is not the same as any previous target.
+function Target:unique()
+   self.validators["unique"] = function(_, _, target, previousTargets)
+      if not previousTargets then return true end
+      for _, prev in ipairs(previousTargets) do
+         if prev == target then
+            return false   
+         end
+      end
+      return true
+   end
+
+   return self
+end
+
+--- Requires that the target is related to the action owner via a specific relationship type.
+--- @param relationshipType Relationship
+function Target:related(relationshipType)
+   assert(relationshipType, "Missing relationship type")
+
+   --- @param owner Actor
+   self.validators["related"] = function(_, owner, target)
+      if not prism.Entity:is(target) then return false end
+      return owner:hasRelationship(relationshipType, target)
+   end
+
+   return self
+end
+
 --- Sets a string hint for the target, useful for UI handling.
---- @param hint string
+--- @param hint any
 function Target:setHint(hint)
    self.hint = hint
    return self

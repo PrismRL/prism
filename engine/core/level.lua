@@ -264,6 +264,10 @@ end
 --- @return boolean canPerform True if the action can be performed, false otherwise.
 --- @return string? error An optional error message, if the action cannot be performed.
 function Level:canPerform(action)
+   --- @diagnostic disable-next-line
+   if action.abstract then return false, "Action is an abstract action!" end
+   if self.decision and action:isReaction() then return false, "Action is a reaction and can not be made as a decision!" end
+
    if not self:hasActor(action.owner) then return false, "Actor not inside the level!" end
 
    local success, err = action:hasRequisiteComponents(action.owner)

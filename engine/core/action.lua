@@ -7,8 +7,11 @@
 --- @field protected targets Target[] (static) A list of targets to apply the action to.
 --- @field protected targetObjects Object[] The objects that correspond to the targets.
 --- @field protected requiredComponents Component[] (static) Components required for an actor to take this action.
+--- @field protected reaction boolean 
+--- @field protected abstract boolean
 --- @overload fun(owner: Actor, targets: Object[]): Action
 local Action = prism.Object:extend("Action")
+Action.targets = {}
 
 --- Constructor for the Action class.
 ---@param owner Actor The actor that is performing the action.
@@ -21,18 +24,28 @@ function Action:__new(owner, ...)
    self.targetObjects = { ... }
 end
 
+function Action:isAbstract()
+   return self.abstract
+end
+
+function Action:isReaction()
+   return self.reaction
+end
+
 --- @private
 function Action:__validateTargets(level)
    if #self.targets < #self.targetObjects then
       return false, string.format("Expected %s targets got %s targets for action %s", #self.targets, #self.targetObjects, self.className)
    end
 
+   local previousTargets = {}
    for i = 1, #self.targets do
       local target = self.targets[i]
       --- @diagnostic disable-next-line
-      if not target:validate(level, self.owner, self.targetObjects[i], self.targetObjects) then
+      if not target:validate(level, self.owner, self.targetObjects[i], previousTargets) then
          return false, "Invalid target " .. i .. " for action " .. self.className
       end
+      table.insert(previousTargets, self.targetObjects[i])
    end
 
    return true
@@ -108,7 +121,7 @@ end
 --- @return boolean -- True if the specified target actor is valid for this action, false otherwise.
 function Action:validateTarget(n, level, owner, toValidate, previousTargets)
    --- @diagnostic disable-next-line
-   return self.targets[n]:validate(level, owner, toValidate, previousTargets)
+   return self.targets[n] and self.targets[n]:validate(level, owner, toValidate, previousTargets)
 end
 
 return Action

@@ -197,6 +197,13 @@ function ActorStorage:getAllActors()
    return self.actors
 end
 
+--- Returns all actors in the storage in a hashmap of [Actor]->uniqueinteger.
+--- This ID is only unique within the ActorStorage.
+--- @return table<Actor, integer>
+function ActorStorage:getAllActorIDs()
+   return self.actorToID
+end
+
 --- Retrieves the count of a specific component.
 --- @param component Component The component to query.
 --- @return integer The count of the specified component.

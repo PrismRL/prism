@@ -27,6 +27,8 @@ function SensesSystem:triggerRebuild(level, actor)
    if not senses then return end
 
    senses.cells = prism.SparseGrid()
+   senses.actors = prism.ActorStorage()
+   actor:removeAllRelationships(prism.relationships.Senses)
 
    level:trigger("onSenses", level, actor)
 

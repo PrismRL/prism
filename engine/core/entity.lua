@@ -1,6 +1,7 @@
 --- The superclass of entitys and cells, holding their components.
 --- @class Entity : Object
 --- @field components Component[] A table containing all of the entity's component instances. Generated at runtime.
+--- @field relationships table<Relationship, table<Entity, Relationship>>
 --- @field componentCache table<Component, Component> This is a cache of prototype -> component for component queries, reducing most queries to a hashmap lookup.
 --- @overload fun(): Entity
 local Entity = prism.Object:extend("Entity")
@@ -9,6 +10,7 @@ local Entity = prism.Object:extend("Entity")
 --- Initializes and copies the entity's fields from its prototype.
 --- @param self Entity
 function Entity:__new()
+   self.relationships = {}
    self.components = {}
    self.componentCache = {}
 end
@@ -126,6 +128,107 @@ function Entity:expect(prototype)
    --- @cast prototype Object
    return self.componentCache[prototype]
       or error("Expected component " .. prototype.className .. " but it was not present!")
+end
+
+--
+--- Relationships
+--
+
+--- Adds a relationship between this entity and another.
+--- Enforces cardinality, symmetry, and exclusivity rules.
+--- @param relationship Relationship The relationship instance to add.
+--- @param target Entity The target entity of the relationship.
+--- @param final boolean? If true this add is part of a symmetry and we shouldn't attempt again.
+--- @return Entity
+function Entity:addRelationship(relationship, target, final)
+   assert(prism.Entity:is(target), "Target must be an Entity!")
+
+   local relType = relationship:getBase()
+   self.relationships = self.relationships or {}
+
+   -- Get or create relationship map for this type
+   if not self.relationships[relType] then
+      self.relationships[relType] = {}
+   end
+
+   -- Enforce exclusivity: remove all others of this type
+   if relationship.exclusive then
+      for other in pairs(self.relationships[relType]) do
+         self:removeRelationship(relType, other)
+      end
+   end
+
+   -- Add the relationship
+   self.relationships[relType][target] = relationship
+
+   -- Add symmetric inverse if applicable
+   local symmetricRelationship = relationship:generateSymmetric()
+   if symmetricRelationship and not final then
+      target:addRelationship(symmetricRelationship, self, true)
+   end
+
+   local inverseRelationship = relationship:generateInverse()
+   if inverseRelationship and not final then
+      target:addRelationship(inverseRelationship, self, true)
+   end
+
+   return self
+end
+
+--- Removes a relationship of a given type with a specific target.
+--- @param relationshipType Relationship The relationship type/class (not an instance).
+--- @param target Entity The target entity of the relationship.
+--- @return Entity
+function Entity:removeRelationship(relationshipType, target)
+   self.relationships = self.relationships or {}
+   if not self.relationships[relationshipType] then return self end
+
+   local relationship
+   if self.relationships[relationshipType][target] then
+      relationship = self.relationships[relationshipType][target]
+      self.relationships[relationshipType][target] = nil
+   else
+      return self
+   end
+
+   -- Remove symmetric inverse if needed
+   local symmetric = relationship:generateSymmetric()
+   if symmetric then
+      target:removeRelationship(symmetric:getBase(), self)
+   end
+
+   local inverse = relationship:generateInverse()
+   if inverse then
+      target:removeRelationship(inverse:getBase(), self)
+   end
+
+   return self
+end
+
+--- @param relationshipType Relationship
+function Entity:removeAllRelationships(relationshipType)
+   if not self.relationships[relationshipType] then return self end
+
+   for entity in pairs(self.relationships[relationshipType]) do
+      self:removeRelationship(relationshipType, entity)
+   end
+end
+
+--- Checks whether this entity has a relationship of a given type with a specific target.
+--- @param relationshipType Relationship The relationship type/class.
+--- @param target Entity The target entity to check for.
+--- @return boolean
+function Entity:hasRelationship(relationshipType, target)
+   self.relationships = self.relationships or {}
+   if not self.relationships[relationshipType] then return false end
+   return self.relationships[relationshipType][target] ~= nil
+end
+
+--- Gets all relationships of a given type.
+--- @param relationshipType Relationship The relationship type/class.
+--- @return table<Entity, Relationship>
+function Entity:getRelationships(relationshipType)
+   return self.relationships[relationshipType] or {}
 end
 
 return Entity

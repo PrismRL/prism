@@ -22,6 +22,8 @@ function Query:__new(storage, ...)
 
    self:with(...)
    self.requiredPosition = nil
+
+   self.relationshipInfo = {}
 end
 
 --- Adds required component types to the query.
@@ -46,6 +48,15 @@ function Query:with(...)
    return self
 end
 
+function Query:relationship(owner, relationshipType)
+   table.insert(self.relationshipInfo, {
+      owner = owner,
+      prototype = relationshipType
+   })
+
+   return self
+end
+
 --- Restricts the query to actors at a specific position.
 --- @param x integer The x-coordinate.
 --- @param y integer The y-coordinate.
@@ -56,16 +67,32 @@ function Query:at(x, y)
    return self
 end
 
-local components = {}
-
--- Helper function to check all required components for an actor
-local function hasRequired(actor, storage, requiredComponents)
-   for component in pairs(requiredComponents) do
-      local cache = storage:getComponentCache(component)
-      if not cache or not cache[actor] then return false end
+--- Applies a Target filter to this query.
+--- Automatically adds required components from the Target.
+--- The query will only return actors that validate against this Target.
+--- @param target Target
+--- @param level Level
+--- @param owner Actor
+--- @param previousTargets any[]?
+--- @return Query
+function Query:target(target, level, owner, previousTargets)
+   -- Merge Target's required components into the query
+   for componentType in pairs(target.reqcomponents) do
+      if not self.requiredComponents[componentType] then
+         self:with(componentType)
+      end
    end
-   return true
+
+   -- Set the validator
+   self.targetValidator = function(actor)
+      return target:validate(level, owner, actor, previousTargets)
+   end
+
+   return self
 end
+
+
+local components = {}
 
 -- Helper function to get components for an actor
 --- @param actor Actor
@@ -79,88 +106,114 @@ local function getComponents(actor, requiredComponentsList)
    end
    return unpack(components, 1, n)
 end
---- Returns an iterator function over all matching actors.
---- The iterator yields `(actor, ...components)` for each match.
---- Selection is optimized depending on number of required components and presence of position.
---- @return fun(): Actor?, ...:Component?
-function Query:iter()
-   local positionCache = self.storage:getSparseMap()
-   local actors = self.storage:getAllActors()
-   local requiredPosition = self.requiredPosition
 
-   --- @type table<Component, boolean>
-   local requiredComponents = self.requiredComponents
 
-   -- Case 1: Position-based query
-   if requiredPosition then
-      local actors = positionCache:get(self.requiredPosition:decompose())
-      if not actors then return function()
-         return nil
-      end end
+local function lazyIntersectSets(sets, counts, requiredComponentsList)
+   if #sets == 0 then
+      return function() return nil end
+   end
 
-      local iter, state, actor = pairs(actors)
-      return function()
-         while true do
-            actor = iter(state, actor)
-            if not actor then return nil end
-            if hasRequired(actor, self.storage, requiredComponents) then
-               return actor, getComponents(actor, self.requiredComponentsList)
-            end
-         end
+   -- Find smallest set by counts (counts[i] corresponds to sets[i])
+   local smallestIndex = 1
+   local smallestCount = counts[1]
+   for i = 2, #sets do
+      if counts[i] < smallestCount then
+         smallestCount = counts[i]
+         smallestIndex = i
       end
    end
 
-   -- Case 2: Single component query — directly iterate over componentCache
-   if self.requiredComponentsCount == 1 then
-      local component = self.requiredComponentsList[1]
-      local cache = self.storage:getComponentCache(component)
-      if not cache then return function()
-         return nil
-      end end
+   local smallestSet = sets[smallestIndex]
 
-      local actor = nil
-      return function()
-         actor = next(cache, actor)
-         if not actor then return nil end
-         if hasRequired(actor, self.storage, requiredComponents) then
-            return actor, actor:get(component)
-         end
-      end
-   end
-
-   -- Case 3: Component-only query — use smallest component set
-   local smallestCache = nil
-   local smallestCount = math.huge
-   for component in pairs(requiredComponents) do
-      local cache = self.storage:getComponentCache(component)
-      if
-         cache and (not smallestCache or self.storage:getComponentCount(component) < smallestCount)
-      then
-         smallestCache = cache
-         smallestCount = self.storage:getComponentCount(component)
-      end
-   end
-
-   if not smallestCache then
-      local i = 1
-      return function()
-         local actor = actors[i]
-         i = i + 1
-         return actor
+   local otherSets = {}
+   for i = 1, #sets do
+      if i ~= smallestIndex then
+         table.insert(otherSets, sets[i])
       end
    end
 
    local actor = nil
    return function()
       while true do
-         actor, _ = next(smallestCache, actor)
+         actor = next(smallestSet, actor)
          if not actor then return nil end
-         if hasRequired(actor, self.storage, requiredComponents) then
+
+         local inAll = true
+         for _, set in ipairs(otherSets) do
+            if not set[actor] then
+               inAll = false
+               break
+            end
+         end
+
+         if inAll then
+            return actor
+         end
+      end
+   end
+end
+
+--- Returns an iterator function over all matching actors.
+--- The iterator yields `(actor, ...components)` for each match.
+--- Selection is optimized depending on number of required components and presence of position.
+--- @return fun(): Actor?, ...:Component?
+function Query:iter()
+   local storage = self.storage
+   local requiredComponents = self.requiredComponents
+
+   local sets = {}
+   local counts = {}
+
+   -- Position filter — assign count=0 to prioritize as smallest
+   if self.requiredPosition then
+      local posSet = storage:getSparseMap():get(self.requiredPosition:decompose())
+      if not posSet then
+         return function() return nil end
+      end
+      table.insert(sets, posSet)
+      table.insert(counts, 0)
+   end
+
+   -- Relationships — also count=1 to prioritize
+   for _, rel in ipairs(self.relationshipInfo) do
+      local relSet = rel.owner:getRelationships(rel.prototype)
+      if not relSet then
+         return function() return nil end
+      end
+      table.insert(sets, relSet)
+      table.insert(counts, 0)
+   end
+
+   -- Component caches — use actual counts from storage
+   for componentType in pairs(requiredComponents) do
+      local cache = storage:getComponentCache(componentType)
+      if not cache then
+         return function() return nil end
+      end
+      table.insert(sets, cache)
+      table.insert(counts, storage:getComponentCount(componentType))
+   end
+
+   -- Fallback: if no sets, include all actors
+   if #sets == 0 then
+      table.insert(sets, storage:getAllActorIDs())
+      table.insert(counts, #storage:getAllActors()) -- or just use length
+   end
+
+   local intersectionIter = lazyIntersectSets(sets, counts, self.requiredComponentsList)
+
+   return function()
+      while true do
+         local actor = intersectionIter()
+         if not actor then return nil end
+
+         if not self.targetValidator or self.targetValidator(actor) then
             return actor, getComponents(actor, self.requiredComponentsList)
          end
       end
    end
 end
+
 
 --- Gathers all matching results into a list.
 --- @param results? Actor[] Optional table to insert results into.

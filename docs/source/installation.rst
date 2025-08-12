@@ -26,13 +26,14 @@ Project template
 
 It is highly recommended to use our project template to kick off games made with prism.
 `Click here <https://github.com/new?template_name=prism-template&template_owner=PrismRL>`_ 
-to start a new GitHub repository, or use the following command to clone it locally:
+to start a new GitHub repository, or you can download it directly. Use the following 
+command to clone it locally, replacing the URL if you created a new repository:
 
 .. code:: sh
 
    git clone --recursive --depth 1 https://github.com/PrismRL/prism-template.git
 
-If you cloned the repository without initializing the submodule during clone you can do so with the following:
+The following command will initialize the submodule if ``--recursive`` was left out:
 
 .. code:: sh
 

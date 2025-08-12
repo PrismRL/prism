@@ -72,7 +72,13 @@ function InventoryTarget:validate(level, owner, targetObject, previousTargets)
       return false
    end
 
-   for _, validator in pairs(self.validators) do
+   for k, validator in pairs(self.validators) do
+      if type(k) == "string" then
+         if not validator(level, owner, targetObject, previousTargets) then return false end
+      end
+   end
+
+   for _, validator in ipairs(self.validators) do
       if not validator(level, owner, targetObject, previousTargets) then return false end
    end
 
