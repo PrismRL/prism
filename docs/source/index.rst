@@ -1,4 +1,5 @@
-.. Prism documentation master file, created by
+..
+   Prism documentation master file, created by
    sphinx-quickstart on Sun Apr  6 16:41:35 2025.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -11,15 +12,15 @@ A comprehensive traditional roguelike engine, built on top of `LÖVE <https://lo
 Getting started
 ---------------
 
-Check out :doc:`the tutorial <making-a-roguelike/part1>` for a guided walk-through
-of creating a game, or just :doc:`install prism <installation>` and start hacking away.
+Check out :doc:`the tutorial <making-a-roguelike/part1>` for a guided walk-through of creating a
+game, or just :doc:`install prism <installation>` and start hacking away.
 
 "Traditional" roguelike?
 ------------------------
 
-Prism is geared towards classic roguelike games like `NetHack <https://www.nethack.org/>`_ or 
-`Brogue <https://sites.google.com/site/broguegame/>`_, turn-based games set in randomly generated grid levels. 
-Other turn-based tactics games might also be a good fit.
+Prism is geared towards classic roguelike games like `NetHack <https://www.nethack.org/>`_ or
+`Brogue <https://sites.google.com/site/broguegame/>`_, turn-based games set in randomly generated
+grid levels. Other turn-based tactics games might also be a good fit.
 
 Community
 ---------

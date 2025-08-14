@@ -26,5 +26,5 @@ Everything else should have its type associated:
 Modifying level state
 ---------------------
 
-:lua:func:`Action.perform` should be the primary way to modify level state, i.e. actors and cells. This
-makes it easier to keep track of how the state is changing.
+:lua:func:`Action.perform` should be the primary way to modify level state, i.e. actors and cells.
+This makes it easier to keep track of how the state is changing.

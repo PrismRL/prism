@@ -1,44 +1,38 @@
 Prism
 =====
-The prism module contains the core engine and commonly used utilities. Its classes and 
-functions can be accessed from the ``prism`` global, e.g. ``prism.Level``.
+
+The prism module contains the core engine and commonly used utilities. Its classes and functions can
+be accessed from the ``prism`` global, e.g. ``prism.Level``.
 
 **Registries**
 
-Registries get automatically loaded by :lua:func:`loadModule`. They hold all
-of the game objects, making them easy to access, e.g. ``prism.actors.Player()``.
+Registries get automatically loaded by :lua:func:`loadModule`. They hold all of the game objects,
+making them easy to access, e.g. ``prism.actors.Player()``.
 
 - .. lua:data:: prism.actors: table<string, Actor>
 
-   The actor registry.
-
+     The actor registry.
 - .. lua:data:: prism.actions: table<string, Action>
 
-   The actions registry.
-
+     The actions registry.
 - .. lua:data:: prism.components: table<string, Component>
 
-   The component registry.
-
+     The component registry.
 - .. lua:data:: prism.cells: table<string, Cell>
 
-   The cell registry.
-
+     The cell registry.
 - .. lua:data:: prism.targets: table<string, Target>
 
-   The target registry.
-
+     The target registry.
 - .. lua:data:: prism.messages: table<string, Message>
 
-   The message registry.
-
+     The message registry.
 - .. lua:data:: prism.systems: table<string, System>
 
-   The system registry.
-
+     The system registry.
 - .. lua:data:: prism.decisions: table<string, Decision>
 
-   The decision registry.
+     The decision registry.
 
 .. toctree::
    :caption: Core
@@ -53,35 +47,30 @@ of the game objects, making them easy to access, e.g. ``prism.actors.Player()``.
 
 - .. lua:function:: prism.loadModule(directory: string)
 
-   Loads a module into prism, automatically loading objects based on directory. 
-   . Will also run ``module/module.lua`` for any other set up.
+     Loads a module into prism, automatically loading objects based on directory.
+     . Will also run ``module/module.lua`` for any other set up.
 
-   :param string directory: The root directory of the module.
-
+     :param string directory: The root directory of the module.
 - .. lua:function:: prism.registerActor(name: string, factory: fun(...): Actor)
 
-   Registers an actor factory into the actors registry.
-
+     Registers an actor factory into the actors registry.
 - .. lua:function:: prism.registerCell(name: string, factory: fun(...): Cell)
 
-   Registers a cell factory into the cells registry.
-
+     Registers a cell factory into the cells registry.
 - .. lua:function:: prism.registerTarget(name: string, factory: fun(...): Target)
 
-   Registers a target factory into the targets registry.
-
+     Registers a target factory into the targets registry.
 - .. lua:function:: prism.turn(level: Level, actor: Actor, controller: Controller)
 
-   This is the core turn logic, and if you need to use a different scheduler or 
-   want a different turn structure you should override this. 
+     This is the core turn logic, and if you need to use a different scheduler or
+     want a different turn structure you should override this.
 
-   :param Level level: The current level.
-   :param Actor actor: The actor taking their turn.
-   :param Controller controller: The actor's controller, for convenience.
-
+     :param Level level: The current level.
+     :param Actor actor: The actor taking their turn.
+     :param Controller controller: The actor's controller, for convenience.
 - .. lua:function:: prism.advanceCoroutine()
 
-   Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
+     Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
 
 .. toctree::
    :caption: Basic components
@@ -132,24 +121,21 @@ of the game objects, making them easy to access, e.g. ``prism.actors.Player()``.
 
 **Functions**
 
-
 - .. lua:function:: prism.Ellipse(mode: ("fill" | "line"), center: Vector2, rx: integer, ry: integer, callback: PassableCallback?)
 
-   Generates points for an ellipse on a grid using the Vector2 class.
+     Generates points for an ellipse on a grid using the Vector2 class.
 
-   :param ("fill" | "line") mode: Whether to fill the ellipse or just an outline.
-   :param Vector2 center: The center of the ellipse.
-   :param integer rx: The radius on the x axis.
-   :param integer ry: The radius on the y axis.
-   :param PassableCallback? callback: An optional callback to determine passability.
-
+     :param ("fill" | "line") mode: Whether to fill the ellipse or just an outline.
+     :param Vector2 center: The center of the ellipse.
+     :param integer rx: The radius on the x axis.
+     :param integer ry: The radius on the y axis.
+     :param PassableCallback? callback: An optional callback to determine passability.
 - .. lua:function:: prism.Bresenham(x0: integer, y0: integer, x1: integer, y1: integer, callback: PassableCallback)
 
-   Generates points for an ellipse on a grid using the Vector2 class.
+     Generates points for an ellipse on a grid using the Vector2 class.
 
-   :param integer x0: The x coordinate of the first point.
-   :param integer y0: The y coordinate of the first point.
-   :param integer x1: The x coordinate of the second point.
-   :param integer y1: The y coordinate of the second point.
-   :param PassableCallback? callback: An optional callback to determine passability.
-
+     :param integer x0: The x coordinate of the first point.
+     :param integer y0: The y coordinate of the first point.
+     :param integer x1: The x coordinate of the second point.
+     :param integer y1: The y coordinate of the second point.
+     :param PassableCallback? callback: An optional callback to determine passability.

@@ -1,18 +1,18 @@
 Log module
 ==========
 
-The log module adds a single component, :lua:class:`Log`, used for attaching
-messages to an :lua:class:`Actor`.
+The log module adds a single component, :lua:class:`Log`, used for attaching messages to an
+:lua:class:`Actor`.
 
 Load it with the following:
 
-.. code:: lua
+.. code-block:: lua
 
-  prism.loadModule("prism/extra/log")
+   prism.loadModule("prism/extra/log")
 
 .. toctree::
-  :caption: Components
-  :glob:
-  :maxdepth: 1
+   :caption: Components
+   :glob:
+   :maxdepth: 1
 
-  components/*
+   components/*

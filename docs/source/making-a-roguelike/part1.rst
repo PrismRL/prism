@@ -1,9 +1,8 @@
 Getting started
 ===============
 
-In this tutorial, we'll start with a project template and create an enemy that we
-can kick around and get chased by.
-
+In this tutorial, we'll start with a project template and create an enemy that we can kick around
+and get chased by.
 
 .. video:: ../_static/part1.mp4
    :caption: Kicking a kobold
@@ -13,25 +12,25 @@ The following sections will expand this into a complete game.
 
 .. note::
 
-   We assume familiarity with Lua, but the language is simple enough that you could probably skirt by
-   with only general programming experience.
+   We assume familiarity with Lua, but the language is simple enough that you could probably skirt
+   by with only general programming experience.
 
 Installation
 ------------
 
-Follow the :doc:`installation guide <../installation>` to install LÖVE and set up the project template.
+Follow the :doc:`installation guide <../installation>` to install LÖVE and set up the project
+template.
 
 Creating an enemy
 -----------------
 
-To make the game more engaging, let’s introduce an enemy: the
-**Kobold**.
+To make the game more engaging, let’s introduce an enemy: the **Kobold**.
 
 1. Navigate to the ``/modules/game/actors/`` directory.
 2. Create a new file named ``kobold.lua``.
 3. Add the following code to define the Kobold actor:
 
-.. code:: lua
+.. code-block:: lua
 
    prism.registerActor("Kobold", function()
       return prism.Actor.fromComponents {
@@ -44,14 +43,13 @@ To make the game more engaging, let’s introduce an enemy: the
 
    See :doc:`../how-tos/object-registration` for an overview on how to load objects in prism.
 
-Let’s run the game again, and press ``~``. This opens Geometer, the editor.
-Click on the k on the right hand side and use the pen tool to draw a
-kobold in. Press the green button to resume the game.
+Let’s run the game again, and press ``~``. This opens Geometer, the editor. Click on the k on the
+right hand side and use the pen tool to draw a kobold in. Press the green button to resume the game.
 
 You might notice that you can walk right through the kobold. We fix that by giving it a
 :lua:class:`Collider`:
 
-.. code:: lua
+.. code-block:: lua
 
    prism.components.Collider()
 
@@ -59,37 +57,36 @@ You might notice that you can walk right through the kobold. We fix that by givi
 
    See :doc:`../how-tos/collision` for more information on the collision system.
 
-If we restart the game and spawn in another kobold, we shouldn't be able to walk
-through kobolds anymore. We're also going to give the kobold a few more core components: a
-:lua:class:`Senses`, ``SightComponent``, and ``MoverComponent``, so it can see and move:
+If we restart the game and spawn in another kobold, we shouldn't be able to walk through kobolds
+anymore. We're also going to give the kobold a few more core components: a :lua:class:`Senses`,
+``SightComponent``, and ``MoverComponent``, so it can see and move:
 
-.. code:: lua
+.. code-block:: lua
 
    prism.components.Senses(),
    prism.components.Sight{ range = 12, fov = true },
    prism.components.Mover{ "walk" }
 
-      
-
 The kobold controller
 ---------------------
 
-Now that the kobold exists in the world, you might notice something—it’s
-not moving! To give it behavior, we need to implement a :lua:class:`Controller`.
+Now that the kobold exists in the world, you might notice something—it’s not moving! To give it
+behavior, we need to implement a :lua:class:`Controller`.
 
 A :lua:class:`Controller` (or one of its derivatives) defines the :lua:func:`Controller.act`
-function, which takes the :lua:class:`Level` and the :lua:class:`Actor` as arguments and
-returns a valid action.
+function, which takes the :lua:class:`Level` and the :lua:class:`Actor` as arguments and returns a
+valid action.
 
 .. caution::
 
-   The ``act`` function **should not modify the level directly**--it should only use it to validate actions.
+   The ``act`` function **should not modify the level directly**--it should only use it to validate
+   actions.
 
 1. Navigate to ``modules/game/components/``.
 2. Create a new file named ``koboldcontroller.lua``.
 3. Add the following code:
 
-.. code:: lua
+.. code-block:: lua
 
    --- @class KoboldController : Controller
    --- @overload fun(): KoboldController
@@ -114,12 +111,12 @@ returns a valid action.
 
 Back in ``kobold.lua``, give it our new controller component:
 
-.. code:: lua
+.. code-block:: lua
 
    prism.components.KoboldController()
 
-Our kobold should move right until they hit a wall now, but this
-behaviour doesn't make for a great game. Let's make them follow the player around.
+Our kobold should move right until they hit a wall now, but this behaviour doesn't make for a great
+game. Let's make them follow the player around.
 
 .. dropdown:: Complete kobold.lua
 
@@ -142,17 +139,18 @@ behaviour doesn't make for a great game. Let's make them follow the player aroun
 
 Pathfinding
 -----------
+
 To make our kobold follow the player, we need to do a few things:
 
 1. See if the player is within range of the kobold.
 2. Find a valid path to the player.
 3. Move the kobold along that path.
 
-We can find the player by grabbing the :lua:class:`Senses` from the kobold and
-seeing if it contains the player. We should also ensure the kobold has the component in the first place.
+We can find the player by grabbing the :lua:class:`Senses` from the kobold and seeing if it contains
+the player. We should also ensure the kobold has the component in the first place.
 
-.. code:: lua
-   
+.. code-block:: lua
+
    local senses = actor:get(prism.components.Senses)
    if not senses then return prism.actions.Wait(actor) end -- we can't see!
 
@@ -166,17 +164,17 @@ seeing if it contains the player. We should also ensure the kobold has the compo
 We can get a path to the player by using the :lua:func:`Level.findPath` method, passing the
 positions and the kobold's collision mask.
 
-.. code:: lua
+.. code-block:: lua
 
    local mover = actor:get(prism.components.Mover)
    if not mover then return prism.actions.Wait(actor) end -- we can't move!
 
    local path = level:findPath(actor:getPosition(), player:getPosition(), actor, mover.mask, 1)
 
-Then we check if there's a path and move the kobold along it, using :lua:func:`Path.pop` to get the first
-position.
+Then we check if there's a path and move the kobold along it, using :lua:func:`Path.pop` to get the
+first position.
 
-.. code:: lua
+.. code-block:: lua
 
    if path then
       local move = prism.actions.Move(actor, path:pop())
@@ -222,28 +220,26 @@ Jump back into the game and you should find kobolds chasing after you.
 
       return KoboldController
 
-
 Kicking kobolds
 ---------------
 
-In this section we’ll give you something to do to these kobolds: kick them!
-We’ll need to create our first action. Head over to ``/modules/game/actions`` and add kick.lua.
+In this section we’ll give you something to do to these kobolds: kick them! We’ll need to create our
+first action. Head over to ``/modules/game/actions`` and add kick.lua.
 
-Let’s first create a target for our kick. Put this at the top of
-kick.lua:
+Let’s first create a target for our kick. Put this at the top of kick.lua:
 
-.. code:: lua
+.. code-block:: lua
 
    local KickTarget = prism.Target()
       :with(prism.components.Collider)
       :range(1)
       :sensed()
 
-With this target we’re saying you can only kick actors at range one with a collider 
-component. Then we can define the kick action, including our target. We will also require
-that any actor trying to perform the kick action have a controller.
+With this target we’re saying you can only kick actors at range one with a collider component. Then
+we can define the kick action, including our target. We will also require that any actor trying to
+perform the kick action have a controller.
 
-.. code:: lua
+.. code-block:: lua
 
    ---@class KickAction : Action
    local Kick = prism.Action:extend("KickAction")
@@ -255,13 +251,13 @@ that any actor trying to perform the kick action have a controller.
 
    return Kick
 
-For the logic, we'll define methods that validate and perform the kick. We don't have any
-special conditions for kicking, so from :lua:func:`Action.canPerform` we'll just return true.
-For the kick itself, we get the direction from the player to the target (kobold), and check passability
-for three tiles in the direction before finally moving them. We also give the kobold flying movement by
+For the logic, we'll define methods that validate and perform the kick. We don't have any special
+conditions for kicking, so from :lua:func:`Action.canPerform` we'll just return true. For the kick
+itself, we get the direction from the player to the target (kobold), and check passability for three
+tiles in the direction before finally moving them. We also give the kobold flying movement by
 checking passability with a custom collision mask.
 
-.. code:: lua
+.. code-block:: lua
 
    function Kick:canPerform(level)
       return true
@@ -326,15 +322,18 @@ checking passability with a custom collision mask.
 
       return Kick
 
-
 Kicking kobolds, for real this time
 -----------------------------------
 
-We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move action is called. 
+We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick
+when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move
+action is called.
 
-If the player presses a move button but the ``canPerform`` check fails, we can infer they moved into something that blocked their movement. Then, check if there's a valid actor to kick in front of us (as opposed to another impassable entity), and perform the kick action on them:
+If the player presses a move button but the ``canPerform`` check fails, we can infer they moved into
+something that blocked their movement. Then, check if there's a valid actor to kick in front of us
+(as opposed to another impassable entity), and perform the kick action on them:
 
-.. code:: lua
+.. code-block:: lua
 
    if self.level:canPerform(move) then
    ...
@@ -362,5 +361,6 @@ That's all for part one. In conclusion, we've accomplished the following:
 2. Implemented a kick action to shove kobolds around.
 3. Integrated the kick by performing it when bumping into a valid target.
 
-You can find the code for this part at https://github.com/prismrl/Kicking-Kobolds on the ``part1`` branch. In the 
-:doc:`next section <part2>`, we'll do some work with components and systems to flesh out the combat system.
+You can find the code for this part at https://github.com/prismrl/Kicking-Kobolds on the ``part1``
+branch. In the :doc:`next section <part2>`, we'll do some work with components and systems to flesh
+out the combat system.

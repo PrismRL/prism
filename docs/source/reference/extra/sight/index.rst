@@ -1,25 +1,25 @@
 Sight module
 ============
 
-The sight module adds a component and system to implement vision for actors,
-using the built in FOV utilities.
+The sight module adds a component and system to implement vision for actors, using the built in FOV
+utilities.
 
 Load it with the following:
 
-.. code:: lua
+.. code-block:: lua
 
-  prism.loadModule("prism/extra/sight")
-
-.. toctree::
-  :caption: Components
-  :glob:
-  :maxdepth: 1
-
-  components/*
+   prism.loadModule("prism/extra/sight")
 
 .. toctree::
-  :caption: Systems
-  :glob:
-  :maxdepth: 1
+   :caption: Components
+   :glob:
+   :maxdepth: 1
 
-  systems/*
+   components/*
+
+.. toctree::
+   :caption: Systems
+   :glob:
+   :maxdepth: 1
+
+   systems/*
