@@ -117,17 +117,23 @@ function Color4:clamp()
    )
 end
 
---- Predefined colors
-Color4.BLACK       = Color4(0, 0, 0, 1)           -- #000000
-Color4.WHITE       = Color4(1, 1, 1, 1)           -- #FFFFFF
-Color4.RED         = Color4(1, 0, 0, 1)           -- #FF0000
-Color4.GREEN       = Color4(0, 1, 0, 1)           -- #00FF00
-Color4.BLUE        = Color4(0, 0, 1, 1)           -- #0000FF
-Color4.YELLOW      = Color4(0.5, 0.5, 0.0, 1.0)   -- #808000
-Color4.MAGENTA     = Color4(0.5, 0.0, 0.5, 1.0)   -- #800080
-Color4.CYAN        = Color4(0.0, 0.5, 0.5, 1.0)   -- #008080
-Color4.LIGHTGRAY   = Color4(0.75, 0.75, 0.75, 1.0)-- #C0C0C0
-Color4.DARKGRAY    = Color4(0.25, 0.25, 0.25, 1.0)-- #404040
-Color4.TRANSPARENT = Color4(0, 0, 0, 0)           -- #00000000
+--- PICO-8 palette
+Color4.BLACK = Color4(0, 0, 0, 1)
+Color4.WHITE = Color4.fromHex(0xFFF1E8)
+Color4.RED = Color4.fromHex(0xFF004D)
+Color4.GREEN = Color4.fromHex(0x008751)
+Color4.LIME = Color4.fromHex(0x00E436)
+Color4.BLUE = Color4.fromHex(0x29ADFF)
+Color4.NAVY = Color4.fromHex(0x1D2B53)
+Color4.PURPLE = Color4.fromHex(0x7E2553)
+Color4.BROWN = Color4.fromHex(0xAB5236)
+Color4.DARKGREY = Color4.fromHex(0x5F574F)
+Color4.GREY = Color4.fromHex(0xC2C3C7)
+Color4.YELLOW = Color4.fromHex(0xFFEC27)
+Color4.ORANGE = Color4.fromHex(0xFFA300)
+Color4.PINK = Color4.fromHex(0xFF77A8)
+Color4.LAVENDER = Color4.fromHex(0x83769C)
+Color4.PEACH = Color4.fromHex(0xFFCCAA)
+Color4.TRANSPARENT = Color4(0, 0, 0, 0)
 
 return Color4
