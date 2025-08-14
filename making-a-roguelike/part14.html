@@ -51,14 +51,15 @@
 <p class="admonition-title">Note</p>
 <p>This chapter is very work in progress, beware! Don’t procede yet adventurer!</p>
 </div>
-<p>In this chapter we’ll add wands and a generalized targetting system for actions. We’ll add a Wand of Hurt which you can
-zap a creature with to hurt them, and a Wand of Swapping which you can use to swap positions with another actor.</p>
+<p>In this chapter we’ll add wands and a generalized targetting system for actions. We’ll add a Wand of
+Hurt which you can zap a creature with to hurt them, and a Wand of Swapping which you can use to
+swap positions with another actor.</p>
 <section id="creating-a-base-module">
 <h2>Creating a base module<a class="headerlink" href="#creating-a-base-module" title="Link to this heading">¶</a></h2>
-<p>We’re going to be creating a base module where we can put components, actions, and actors we want to reference in the main
-module so they’re available at load time.</p>
-<p>Head to <code class="docutils literal notranslate"><span class="pre">modules</span></code> and create a new folder there called <code class="docutils literal notranslate"><span class="pre">basegame</span></code>. Now go ahead and add an <code class="docutils literal notranslate"><span class="pre">actions</span></code> and <code class="docutils literal notranslate"><span class="pre">components</span></code>
-folder.</p>
+<p>We’re going to be creating a base module where we can put components, actions, and actors we want to
+reference in the main module so they’re available at load time.</p>
+<p>Head to <code class="docutils literal notranslate"><span class="pre">modules</span></code> and create a new folder there called <code class="docutils literal notranslate"><span class="pre">basegame</span></code>. Now go ahead and add an
+<code class="docutils literal notranslate"><span class="pre">actions</span></code> and <code class="docutils literal notranslate"><span class="pre">components</span></code> folder.</p>
 <p>Let’s head to <code class="docutils literal notranslate"><span class="pre">modules/basegame/components</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">zappable.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class ZappableOptions</span>
 <span class="c1">--- @field charges integer</span>
@@ -86,8 +87,8 @@ folder.</p>
 <span class="kr">return</span> <span class="n">Zappable</span>
 </pre></div>
 </div>
-<p>This component is going to be the base Zappable component all of our wand components derive from. It implements a few utility functions
-for managing charges and checking if we have charges left to zap.</p>
+<p>This component is going to be the base Zappable component all of our wand components derive from. It
+implements a few utility functions for managing charges and checking if we have charges left to zap.</p>
 <p>Now let’s head to <code class="docutils literal notranslate"><span class="pre">modules/basegame/actions</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">zap.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">Log</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span>
 
@@ -118,13 +119,13 @@ for managing charges and checking if we have charges left to zap.</p>
 <span class="kr">return</span> <span class="n">Zap</span>
 </pre></div>
 </div>
-<p>Now we implement a zap action. We implement a canPerform that checks if the wand has enough charges to zap. Then we
-implement a perform action that reduces the wand’s charges and logs a message.</p>
+<p>Now we implement a zap action. We implement a canPerform that checks if the wand has enough charges
+to zap. Then we implement a perform action that reduces the wand’s charges and logs a message.</p>
 </section>
 <section id="making-a-wand">
 <h2>Making a wand<a class="headerlink" href="#making-a-wand" title="Link to this heading">¶</a></h2>
-<p>Let’s head to <code class="docutils literal notranslate"><span class="pre">/modules/game/components</span></code> and create a new folder called <code class="docutils literal notranslate"><span class="pre">zappable</span></code>. Then let’s create a new file
-named <code class="docutils literal notranslate"><span class="pre">hurtzappable.lua</span></code>.</p>
+<p>Let’s head to <code class="docutils literal notranslate"><span class="pre">/modules/game/components</span></code> and create a new folder called <code class="docutils literal notranslate"><span class="pre">zappable</span></code>. Then let’s
+create a new file named <code class="docutils literal notranslate"><span class="pre">hurtzappable.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class HurtZappableOptions : ZappableOptions</span>
 <span class="c1">--- @field damage integer</span>
 
@@ -141,8 +142,8 @@ named <code class="docutils literal notranslate"><span class="pre">hurtzappable.
 <span class="kr">return</span> <span class="n">HurtZappable</span>
 </pre></div>
 </div>
-<p>This is pretty much the base Zappable component, but we’ve added a damage amount to it. Now let’s head to
-<code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">wandofhurt.lua</span></code>.</p>
+<p>This is pretty much the base Zappable component, but we’ve added a damage amount to it. Now let’s
+head to <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">wandofhurt.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;WandofHurt&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
 <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
     <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Wand of Hurt&quot;</span><span class="p">),</span>
@@ -159,8 +160,8 @@ named <code class="docutils literal notranslate"><span class="pre">hurtzappable.
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Great, now we’ve got to implement the zap. Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new file folder called
-<code class="docutils literal notranslate"><span class="pre">zaps</span></code>. Inside create a new file called <code class="docutils literal notranslate"><span class="pre">hurtzap.lua</span></code>.</p>
+<p>Great, now we’ve got to implement the zap. Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new
+file folder called <code class="docutils literal notranslate"><span class="pre">zaps</span></code>. Inside create a new file called <code class="docutils literal notranslate"><span class="pre">hurtzap.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">HurtZappableTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">)</span>
     <span class="p">:</span><span class="n">inInventory</span><span class="p">()</span>
 
@@ -186,16 +187,18 @@ named <code class="docutils literal notranslate"><span class="pre">hurtzappable.
 <span class="kr">return</span> <span class="n">HurtZap</span>
 </pre></div>
 </div>
-<p>We’re going to extend the base zap to add a tiny bit of behavior to it. We’ll add a target, anything with health, and
-try to deal damage to it.</p>
-<p>Okay now if you go in game there’s a bit of an issue! You can’t actually zap anything with this wand yet, just drop it!
-We’ll have to modify the user interface to add some proper targetting to let us select who we’d like to zap.</p>
+<p>We’re going to extend the base zap to add a tiny bit of behavior to it. We’ll add a target, anything
+with health, and try to deal damage to it.</p>
+<p>Okay now if you go in game there’s a bit of an issue! You can’t actually zap anything with this wand
+yet, just drop it! We’ll have to modify the user interface to add some proper targetting to let us
+select who we’d like to zap.</p>
 </section>
 <section id="handling-targets">
 <h2>Handling targets<a class="headerlink" href="#handling-targets" title="Link to this heading">¶</a></h2>
-<p>Let’s head over <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> and create a new folder called <code class="docutils literal notranslate"><span class="pre">targethandlers</span></code>. Inside let’s create a new file called
-<code class="docutils literal notranslate"><span class="pre">targethandler.lua</span></code>.</p>
-<p>Let’s walk through step by step. We’re going to create a new base class we’ll use for all our target handlers.</p>
+<p>Let’s head over <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> and create a new folder called <code class="docutils literal notranslate"><span class="pre">targethandlers</span></code>. Inside let’s
+create a new file called <code class="docutils literal notranslate"><span class="pre">targethandler.lua</span></code>.</p>
+<p>Let’s walk through step by step. We’re going to create a new base class we’ll use for all our target
+handlers.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class TargetHandler : GameState</span>
 <span class="c1">--- @field display Display</span>
 <span class="c1">--- @field levelState LevelState</span>
@@ -222,8 +225,8 @@ We’ll have to modify the user interface to add some proper targetting to let u
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>This accepts a display, the base levelstate, a target list, and the current target we’re handling and initializes
-a few fields for convenience.</p>
+<p>This accepts a display, the base levelstate, a target list, and the current target we’re handling
+and initializes a few fields for convenience.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">getValidTargets</span><span class="p">()</span>
     <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;Method &#39;getValidTargets&#39; must be implemented in subclass&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
@@ -247,15 +250,17 @@ a few fields for convenience.</p>
 <span class="kr">return</span> <span class="n">TargetHandler</span>
 </pre></div>
 </div>
-<p>The first method, <code class="docutils literal notranslate"><span class="pre">getValidTargets()</span></code> is defined in the base class because we use it in the following methods to see if we
-have a target and start popping states back to the inventory if we don’t.</p>
-<p>The init function is called in both resume and load and primes the target handler with all of the valid targets, and pops
-back to the inventory if not. We pass “poprecursive” up the chain of states to indicate we should keep popping until we
-reach the inventory again.</p>
+<p>The first method, <code class="docutils literal notranslate"><span class="pre">getValidTargets()</span></code> is defined in the base class because we use it in the
+following methods to see if we have a target and start popping states back to the inventory if we
+don’t.</p>
+<p>The init function is called in both resume and load and primes the target handler with all of the
+valid targets, and pops back to the inventory if not. We pass “poprecursive” up the chain of states
+to indicate we should keep popping until we reach the inventory again.</p>
 </section>
 <section id="creating-our-concrete-target-handler">
 <h2>Creating our concrete target handler<a class="headerlink" href="#creating-our-concrete-target-handler" title="Link to this heading">¶</a></h2>
-<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">gamestates/targethandlers</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">generaltargethandler.lua</span></code>.</p>
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">gamestates/targethandlers</span></code> and create a new file called
+<code class="docutils literal notranslate"><span class="pre">generaltargethandler.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
 <span class="kd">local</span> <span class="n">TargetHandler</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;gamestates.targethandlers.targethandler&quot;</span>
@@ -265,8 +270,8 @@ reach the inventory again.</p>
 <span class="kd">local</span> <span class="n">GeneralTargetHandler</span> <span class="o">=</span> <span class="n">TargetHandler</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;GeneralTargetHandler&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We create a new target handler derived from the TargetHandler gamestate. Next we move on to getValidTargets. Where we’ll
-query the level for valid targets to our action and collect them.</p>
+<p>We create a new target handler derived from the TargetHandler gamestate. Next we move on to
+getValidTargets. Where we’ll query the level for valid targets to our action and collect them.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">getValidTargets</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">valid</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -288,8 +293,8 @@ query the level for valid targets to our action and collect them.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We check if the current target is a Vector or an Actor and we’ll set the selectorPosition based on the current target that we chose
-arbitrarily.</p>
+<p>We check if the current target is a Vector or an Actor and we’ll set the selectorPosition based on
+the current target that we chose arbitrarily.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">setSelectorPosition</span><span class="p">()</span>
     <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">is</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span> <span class="kr">then</span>
         <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
@@ -307,8 +312,9 @@ arbitrarily.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Then we’ll implement a draw function that draws this state. You’ll recognize a lot of this code it’s very similar to the code found in
-<code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>. The main difference between this and the drawing code in GameLevelState is that we’ll center the camera on the selector’s position.</p>
+<p>Then we’ll implement a draw function that draws this state. You’ll recognize a lot of this code it’s
+very similar to the code found in <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>. The main difference between this and the
+drawing code in GameLevelState is that we’ll center the camera on the selector’s position.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">cameraPos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span>
 
@@ -334,7 +340,8 @@ arbitrarily.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now finally we’ll handle keypresses. Let’s walk through it. First let’s define a map and the keypressed function.</p>
+<p>Now finally we’ll handle keypresses. Let’s walk through it. First let’s define a map and the
+keypressed function.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindOffsets</span> <span class="o">=</span> <span class="p">{</span>
     <span class="p">[</span><span class="s2">&quot;move up&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">UP</span><span class="p">,</span>
     <span class="p">[</span><span class="s2">&quot;move left&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">LEFT</span><span class="p">,</span>
@@ -350,24 +357,40 @@ arbitrarily.</p>
     <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">keybindings</span><span class="p">:</span><span class="n">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>First we’ll check if the user hit the tab keybind, and if so we’ll use Lua’s next function to cycle through our valid targets table.</p>
-<p>Then if the user hits the select keybind we add this target to the overall target list we’re building and pop this instance of the target handler
-off of the gamestate stack.</p>
+<p>First we’ll check if the user hit the tab keybind, and if so we’ll use Lua’s next function to cycle
+through our valid targets table.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;tab&quot;</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">lastTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="kr">while</span>
+        <span class="p">(</span><span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="p">(</span><span class="n">lastTarget</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="kr">do</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="kr">end</span>
+
+    <span class="n">self</span><span class="p">:</span><span class="n">setSelectorPosition</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Then if the user hits the select keybind we add this target to the overall target list we’re
+building and pop this instance of the target handler off of the gamestate stack.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;select&quot;</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
     <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>If the user hits the return keybind we’ll pop this state and pass “poprecursive” to indicate to the other states that we should pop all the way
-back to the inventory.</p>
+<p>If the user hits the return keybind we’ll pop this state and pass “poprecursive” to indicate to the
+other states that we should pop all the way back to the inventory.</p>
 <div class="highlight-Lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;return&quot;</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pop&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Next we’ll handle moving the selector. When the user hits a movement key we move the selector, check for a valid target on that tile, and if it exists
-we’ll set that as the current target.</p>
+<p>Next we’ll handle moving the selector. When the user hits a movement key we move the selector, check
+for a valid target on that tile, and if it exists we’ll set that as the current target.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>    <span class="kr">if</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="kr">then</span>
         <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">+</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
         <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="kc">nil</span>
@@ -393,10 +416,12 @@ we’ll set that as the current target.</p>
 </section>
 <section id="modifying-inventoryactionstate">
 <h2>Modifying InventoryActionState<a class="headerlink" href="#modifying-inventoryactionstate" title="Link to this heading">¶</a></h2>
-<p>Okay with our target handler out of the way we’re going to have to make some changes to the InventoryActionState. Navigate to <code class="docutils literal notranslate"><span class="pre">/gamestates/inventoryactionstate.lua</span></code>.
-First we’re going to make a small change to the constructor.</p>
-<p>Instead of validating if the action is valid with it’s only target being the item we’ll instead validate if it’s first target is
-the item. The actions table notably now holds prototypes instead of instances of actions.</p>
+<p>Okay with our target handler out of the way we’re going to have to make some changes to the
+InventoryActionState. Navigate to <code class="docutils literal notranslate"><span class="pre">/gamestates/inventoryactionstate.lua</span></code>. First we’re going to
+make a small change to the constructor.</p>
+<p>Instead of validating if the action is valid with it’s only target being the item we’ll instead
+validate if it’s first target is the item. The actions table notably now holds prototypes instead of
+instances of actions.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
     <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
@@ -413,8 +438,8 @@ the item. The actions table notably now holds prototypes instead of instances of
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Next we’ll make a small modification to draw. We’ll use the action’s name field and fallback to the className if it doesn’t exist. This is so our
-zaps display as “Zap” and not “HurtZap”.</p>
+<p>Next we’ll make a small modification to draw. We’ll use the action’s name field and fallback to the
+className if it doesn’t exist. This is so our zaps display as “Zap” and not “HurtZap”.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
     <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
     <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
@@ -430,8 +455,9 @@ zaps display as “Zap” and not “HurtZap”.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we’ll modify the keypressed function. Instead of simply executing the action the user selects we’ll know check if the action is valid with just the
-item as the first target, and if not we’ll push GeneralTargetHandler states to handle the rest of the targets.</p>
+<p>Now we’ll modify the keypressed function. Instead of simply executing the action the user selects
+we’ll know check if the action is valid with just the item as the first target, and if not we’ll
+push GeneralTargetHandler states to handle the rest of the targets.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">)</span> <span class="kr">do</span>
         <span class="kr">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">string.char</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">96</span><span class="p">)</span> <span class="kr">then</span>
@@ -461,8 +487,10 @@ item as the first target, and if not we’ll push GeneralTargetHandler states to
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>And to wrap things up we’ll change InventoryActionState’s resume. When it resumes we’ll check if we’re handling targets for an action, adn if we are we check if we
-succeeded. If we succeeded we set the action and then pop the state. If not we display a message to the user explaining why their action didn’t work.</p>
+<p>And to wrap things up we’ll change InventoryActionState’s resume. When it resumes we’ll check if
+we’re handling targets for an action, adn if we are we check if we succeeded. If we succeeded we set
+the action and then pop the state. If not we display a message to the user explaining why their
+action didn’t work.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">resume</span><span class="p">()</span>
     <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">targets</span> <span class="kr">then</span>
         <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectedAction</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targets</span><span class="p">))</span>
@@ -481,8 +509,9 @@ succeeded. If we succeeded we set the action and then pop the state. If not we d
 </section>
 <section id="wrapping-it-up">
 <h2>Wrapping it up<a class="headerlink" href="#wrapping-it-up" title="Link to this heading">¶</a></h2>
-<p>That one was a doozy, but we layed the ground work for making adding new ways to target really easy in the future! In the next section we’ll go over equipment, and modify InventoryActionState
-a little bit more to handle non-standard targets like inventory slots.</p>
+<p>That one was a doozy, but we layed the ground work for making adding new ways to target really easy
+in the future! In the next section we’ll go over equipment, and modify InventoryActionState a little
+bit more to handle non-standard targets like inventory slots.</p>
 </section>
 </section>
 

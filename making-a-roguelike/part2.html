@@ -47,13 +47,11 @@
             
   <section id="taking-flight">
 <h1>Taking flight<a class="headerlink" href="#taking-flight" title="Link to this heading">¶</a></h1>
-<p>Unfortunately for kobolds, they can’t fly. In this section we’re going to
-create a <a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> that plunges actors into the abyss if they’re unable
-to fly.</p>
+<p>Unfortunately for kobolds, they can’t fly. In this section we’re going to create a
+<a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> that plunges actors into the abyss if they’re unable to fly.</p>
 <figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../_images/part2.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">Kicking kobolds into the abyss</span></p></figcaption></figure><section id="creating-the-void-component">
 <h2>Creating the void component<a class="headerlink" href="#creating-the-void-component" title="Link to this heading">¶</a></h2>
-<p>First we’ll need to create a component we’ll put on cells to indicate they’re a place you
-can fall.</p>
+<p>First we’ll need to create a component we’ll put on cells to indicate they’re a place you can fall.</p>
 <ol class="arabic simple">
 <li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code></p></li>
 <li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">void.lua</span></code></p></li>
@@ -110,8 +108,8 @@ an allowed movement type.</p>
    <span class="kr">if</span> <span class="ow">not</span> <span class="n">cell</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Void</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kc">false</span> <span class="kr">end</span>
 </pre></div>
 </div>
-<p>And that we can’t move through the cell. We can get the cell’s collision mask and compare it with our own
-with <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.checkBitmaskOverlap" title="Collision.checkBitmaskOverlap"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.checkBitmaskOverlap()</span></code></a> to accomplish that check:</p>
+<p>And that we can’t move through the cell. We can get the cell’s collision mask and compare it with
+our own with <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.checkBitmaskOverlap" title="Collision.checkBitmaskOverlap"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.checkBitmaskOverlap()</span></code></a> to accomplish that check:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kd">local</span> <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cell</span><span class="p">:</span><span class="n">getCollisionMask</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">mover</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">mover</span> <span class="ow">and</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span> <span class="ow">or</span> <span class="mi">0</span> <span class="c1">-- default to the immovable mask</span>
@@ -193,8 +191,8 @@ with <a class="reference internal" href="../reference/prism/core/collision.html#
 </section>
 <section id="registering-the-fall-system">
 <h2>Registering the Fall system<a class="headerlink" href="#registering-the-fall-system" title="Link to this heading">¶</a></h2>
-<p>Navigate back to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and on line 32 you’ll see where we register systems. Go ahead and add
-<code class="docutils literal notranslate"><span class="pre">prism.systems.Fall()</span></code> to the bottom of the list like so.</p>
+<p>Navigate back to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and on line 32 you’ll see where we register systems. Go
+ahead and add <code class="docutils literal notranslate"><span class="pre">prism.systems.Fall()</span></code> to the bottom of the list like so.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">level</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Level</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">actors</span><span class="p">,</span> <span class="p">{</span>
    <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">Senses</span><span class="p">(),</span>
    <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">Sight</span><span class="p">(),</span>
@@ -205,10 +203,10 @@ with <a class="reference internal" href="../reference/prism/core/collision.html#
 </section>
 <section id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Link to this heading">¶</a></h2>
-<p>With our <code class="docutils literal notranslate"><span class="pre">FallSystem</span></code> in place, kobolds and other unfortunate creatures will now tumble
-into the void if they end their turn standing on a pit they can’t fly over.
-We’ve used a component to tag dangerous tiles, an action to represent involuntary movement,
-and a system to enforce game logic based on actor movement.</p>
+<p>With our <code class="docutils literal notranslate"><span class="pre">FallSystem</span></code> in place, kobolds and other unfortunate creatures will now tumble into the
+void if they end their turn standing on a pit they can’t fly over. We’ve used a component to tag
+dangerous tiles, an action to represent involuntary movement, and a system to enforce game logic
+based on actor movement.</p>
 <p>In the <a class="reference internal" href="part3.html"><span class="doc">next section</span></a> of the tutorial, we’ll dive into something a little more active:
 combat. We’ll set up a health component, and teach actors how to attack.</p>
 </section>

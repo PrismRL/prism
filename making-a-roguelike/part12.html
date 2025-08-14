@@ -51,11 +51,13 @@
 <p class="admonition-title">Note</p>
 <p>This section hasn’t had a second pass! Some chests might be mimics!</p>
 </div>
-<p>In this chapter we’ll add a drop table to the kobolds, and create chests the player can open like a loot pinata. To do this we’ll be making
-heavy use of the DropTable component included in <code class="docutils literal notranslate"><span class="pre">extra/droptable</span></code>. How to write your own drop tables will be covered in a future how-to.</p>
+<p>In this chapter we’ll add a drop table to the kobolds, and create chests the player can open like a
+loot pinata. To do this we’ll be making heavy use of the DropTable component included in
+<code class="docutils literal notranslate"><span class="pre">extra/droptable</span></code>. How to write your own drop tables will be covered in a future how-to.</p>
 <section id="getting-the-drop-on-it">
 <h2>Getting the drop on it<a class="headerlink" href="#getting-the-drop-on-it" title="Link to this heading">¶</a></h2>
-<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code> where you’ll add the following line to your module loading before <code class="docutils literal notranslate"><span class="pre">modules/game</span></code>.</p>
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code> where you’ll add the following line to your module loading before
+<code class="docutils literal notranslate"><span class="pre">modules/game</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/droptable&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -66,9 +68,10 @@ heavy use of the DropTable component included in <code class="docutils literal n
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This is a really simple drop table, and it just says there’s a 30% chance for the kobold to drop a meat brick. If you were to go into the game
-and kick a few kobolds now you’d notice nothing is happening! That’s because the drop table needs to be hooked into the game logic. Let’s head
-over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/die.lua</span></code> where we’ll change the beginning the Die action.</p>
+<p>This is a really simple drop table, and it just says there’s a 30% chance for the kobold to drop a
+meat brick. If you were to go into the game and kick a few kobolds now you’d notice nothing is
+happening! That’s because the drop table needs to be hooked into the game logic. Let’s head over to
+<code class="docutils literal notranslate"><span class="pre">modules/game/actions/die.lua</span></code> where we’ll change the beginning the Die action.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">walkmask</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">createBitmaskFromMovetypes</span><span class="p">{</span><span class="s2">&quot;walk&quot;</span><span class="p">}</span>
 <span class="kr">function</span> <span class="nc">Die</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
@@ -86,15 +89,20 @@ over to <code class="docutils literal notranslate"><span class="pre">modules/gam
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>First we make our walkmask, a simple collision mask saying an actor with the walk movetype can move onto this tile. Then within perform we’ll get the Die’ers position,
-drop table, and the cell they’re standing on’s mask.</p>
-<p>If the cell is walkable and they have a drop table we roll on the table and then add all of the results to the the level at the tile which they died. We check walkability so we don’t
-spawn items over a pit. Now if you boot up the game and kick a few kobolds around you should start getting some meat bricks as drops, success!</p>
+<p>First we make our walkmask, a simple collision mask saying an actor with the walk movetype can move
+onto this tile. Then within perform we’ll get the Die’ers position, drop table, and the cell they’re
+standing on’s mask.</p>
+<p>If the cell is walkable and they have a drop table we roll on the table and then add all of the
+results to the the level at the tile which they died. We check walkability so we don’t spawn items
+over a pit. Now if you boot up the game and kick a few kobolds around you should start getting some
+meat bricks as drops, success!</p>
 </section>
 <section id="creating-containers">
 <h2>Creating containers<a class="headerlink" href="#creating-containers" title="Link to this heading">¶</a></h2>
-<p>Many games won’t settle just for drop tables. You might want a zelda style chest the player can crack open and get some goodies! So let’s add that. The first step we’ll need to take
-is adding a new tag component. Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code> and create a new file there called <code class="docutils literal notranslate"><span class="pre">container.lua</span></code>.</p>
+<p>Many games won’t settle just for drop tables. You might want a zelda style chest the player can
+crack open and get some goodies! So let’s add that. The first step we’ll need to take is adding a
+new tag component. Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code> and create a new file there called
+<code class="docutils literal notranslate"><span class="pre">container.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Container : Component</span>
 <span class="c1">--- @overload fun(): Container</span>
 <span class="kd">local</span> <span class="n">Container</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Container&quot;</span>
@@ -106,8 +114,9 @@ is adding a new tag component. Navigate to <code class="docutils literal notrans
 <span class="kr">return</span> <span class="n">Container</span>
 </pre></div>
 </div>
-<p>This is a really simple component that just marks an actor with an inventory as a container that can be opened. Next up let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> where we’ll
-create a new file called <code class="docutils literal notranslate"><span class="pre">opencontainer.lua</span></code>.</p>
+<p>This is a really simple component that just marks an actor with an inventory as a container that can
+be opened. Next up let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> where we’ll create a new file called
+<code class="docutils literal notranslate"><span class="pre">opencontainer.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">sf</span> <span class="o">=</span> <span class="nb">string.format</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
 <span class="kd">local</span> <span class="n">Log</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span>
@@ -146,11 +155,12 @@ create a new file called <code class="docutils literal notranslate"><span class=
 <span class="kr">return</span> <span class="n">OpenContainer</span>
 </pre></div>
 </div>
-<p>Then we get to the perform action. We know that the container has to have an inventory because it’s required by the container component. So we grab the
-inventory and get a list of the items it contains. Then we loop through that list and remove them from the container’s inventory while adding them to the
-level. Finally, we remove the container itself from the level.</p>
-<p>Now that we’re all set up with our container logic we need to actually make a container to try this with. Let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code>
-called <code class="docutils literal notranslate"><span class="pre">chest.lua</span></code>.</p>
+<p>Then we get to the perform action. We know that the container has to have an inventory because it’s
+required by the container component. So we grab the inventory and get a list of the items it
+contains. Then we loop through that list and remove them from the container’s inventory while adding
+them to the level. Finally, we remove the container itself from the level.</p>
+<p>Now that we’re all set up with our container logic we need to actually make a container to try this
+with. Let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">chest.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;Chest&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
 <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
     <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Chest&quot;</span><span class="p">),</span>
@@ -163,19 +173,44 @@ called <code class="docutils literal notranslate"><span class="pre">chest.lua</s
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Let’s break this down a little since this is the first time we’re really making use of the factory to take optional parameters for an actor. We accept
-a contents argument to the Chest constructor. All parameters to the factory function MUST be optional! In this case it’d set items = nil and inventory
-wouldn’t see the field. If this parameter is not optional Geometer will crash on startup!</p>
+<p>Let’s break this down a little since this is the first time we’re really making use of the factory
+to take optional parameters for an actor. We accept a contents argument to the Chest constructor.
+All parameters to the factory function MUST be optional! In this case it’d set items = nil and
+inventory wouldn’t see the field. If this parameter is not optional Geometer will crash on startup!</p>
 </section>
 <section id="cracking-a-cold-one">
 <h2>Cracking a cold one<a class="headerlink" href="#cracking-a-cold-one" title="Link to this heading">¶</a></h2>
-<p>If you go ingame now and bump the chest you’ll notice you kick it, that’s definitely not what we want. We’ll have to change to logic
-in <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>. Let’s find out way to <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code> and add the following right above where we try to kick:</p>
-<p>Okay! When you walk into a chest now you should pop that sucker open! Congratulations! Wait, nothing was inside the chest though. That’s not very fun. Let’s take care of that.</p>
+<p>If you go ingame now and bump the chest you’ll notice you kick it, that’s definitely not what we
+want. We’ll have to change to logic in <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>. Let’s find out way to
+<code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code> and add the following right above where we try to kick:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">scancode</span><span class="p">)</span>
+   <span class="c1">-- yada yada</span>
+   <span class="kr">if</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="kr">then</span>
+      <span class="c1">-- blah blah</span>
+
+      <span class="kd">local</span> <span class="n">openable</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span>
+         <span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Container</span><span class="p">)</span>
+         <span class="p">:</span><span class="n">at</span><span class="p">(</span><span class="n">destination</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span>
+         <span class="p">:</span><span class="n">first</span><span class="p">()</span>
+
+      <span class="kd">local</span> <span class="n">openContainer</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">OpenContainer</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">openable</span><span class="p">)</span>
+      <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">openContainer</span><span class="p">)</span> <span class="kr">then</span>
+         <span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">openContainer</span><span class="p">)</span>
+         <span class="kr">return</span>
+      <span class="kr">end</span>
+
+      <span class="c1">-- kick stuff</span>
+   <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Okay! When you walk into a chest now you should pop that sucker open! Congratulations! Wait, nothing
+was inside the chest though. That’s not very fun. Let’s take care of that.</p>
 </section>
 <section id="spicing-up-level-generation">
 <h2>Spicing up level generation<a class="headerlink" href="#spicing-up-level-generation" title="Link to this heading">¶</a></h2>
-<p>Let’s first create a new top level folder, <code class="docutils literal notranslate"><span class="pre">loot</span></code> and within that folder a new file <code class="docutils literal notranslate"><span class="pre">chest.lua</span></code>. Let’s keep it really simple for now.</p>
+<p>Let’s first create a new top level folder, <code class="docutils literal notranslate"><span class="pre">loot</span></code> and within that folder a new file <code class="docutils literal notranslate"><span class="pre">chest.lua</span></code>.
+Let’s keep it really simple for now.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">return</span> <span class="p">{</span>
    <span class="p">{</span>
       <span class="n">entry</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">MeatBrick</span>
@@ -183,9 +218,11 @@ in <code class="docutils literal notranslate"><span class="pre">GameLevelState</
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This defines a single gauranteed drop of a meatbrick. We’ll flesh this out a lot more when we create more stuff for chests to drop. Next let’s head over to <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code>
-and let’s spawn a chest using this level generation.</p>
-<p>At the end of the anonymous function we return in this file just above <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">builder</span></code> let’s add the following.</p>
+<p>This defines a single gauranteed drop of a meatbrick. We’ll flesh this out a lot more when we create
+more stuff for chests to drop. Next let’s head over to <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code> and let’s spawn a chest
+using this level generation.</p>
+<p>At the end of the anonymous function we return in this file just above <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">builder</span></code> let’s add
+the following.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">chestRoom</span> <span class="o">=</span> <span class="n">availableRooms</span><span class="p">[</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">#</span><span class="n">availableRooms</span><span class="p">)]</span>
 <span class="kd">local</span> <span class="n">center</span> <span class="o">=</span> <span class="n">chestRoom</span><span class="p">:</span><span class="n">center</span><span class="p">()</span>
 <span class="kd">local</span> <span class="n">drops</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">DropTable</span><span class="p">(</span><span class="n">chestloot</span><span class="p">):</span><span class="n">getDrops</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
@@ -196,13 +233,15 @@ and let’s spawn a chest using this level generation.</p>
 <span class="kr">return</span> <span class="n">builder</span>
 </pre></div>
 </div>
-<p>The chest will overlap with a kobold which we’re also spawning in the center of the room, but that’s fine we’ll deal with that when we revisit the level generation in the future.
-You’ll see now that when we open the chest we get a meat brick!</p>
+<p>The chest will overlap with a kobold which we’re also spawning in the center of the room, but that’s
+fine we’ll deal with that when we revisit the level generation in the future. You’ll see now that
+when we open the chest we get a meat brick!</p>
 </section>
 <section id="in-the-next-chapter">
 <h2>In the next chapter<a class="headerlink" href="#in-the-next-chapter" title="Link to this heading">¶</a></h2>
-<p>In the next chapter we’ll create some more items to add to our loot tables and make the game more interesting. We’ll add a potion and go over
-making buffs using the StatusEffect component included in /extra!</p>
+<p>In the next chapter we’ll create some more items to add to our loot tables and make the game more
+interesting. We’ll add a potion and go over making buffs using the StatusEffect component included
+in /extra!</p>
 </section>
 </section>
 

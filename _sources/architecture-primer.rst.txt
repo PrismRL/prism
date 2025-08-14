@@ -11,53 +11,53 @@ This is an overview of how the various objects in Prism fit together to form a g
 Actors
 ------
 
-Actors are the entities that populate the game world. They include the player, monsters, items, chests,
-and any other interactive elements. Each actor consists of components—data structures that define their
-state and behavior.
+Actors are the entities that populate the game world. They include the player, monsters, items,
+chests, and any other interactive elements. Each actor consists of components—data structures that
+define their state and behavior.
 
 Components
 ----------
 
-Components store the data that define an actor or cell’s properties and abilities. A monster’s health, a poison
-effect, or a cell's opacity are all represented as components. Components determine what actions
-an actor can perform.
+Components store the data that define an actor or cell’s properties and abilities. A monster’s
+health, a poison effect, or a cell's opacity are all represented as components. Components determine
+what actions an actor can perform.
 
 Actions
 -------
 
-Actions are how actors interact with the game world. Moving, attacking, and casting spells are all actions.
-Actions require actors to have specific components and perform state changes within the level. Arguments to an action
-are defined by its targets.
+Actions are how actors interact with the game world. Moving, attacking, and casting spells are all
+actions. Actions require actors to have specific components and perform state changes within the
+level. Arguments to an action are defined by its targets.
 
 Targets
 -------
 
-Targets define the arguments for an action by validating objects. A "move" action might require a position within
-a range of 1 from the performing actor, or a "zap" action might require an item with certain components along with
-a position or an actor.
+Targets define the arguments for an action by validating objects. A "move" action might require a
+position within a range of 1 from the performing actor, or a "zap" action might require an item with
+certain components along with a position or an actor.
 
 Systems
 -------
 
-Systems handle game logic based on events. They process changes, such as reducing an actor’s health due to
-poison at the end of their turn or checking if a floating creature should fall into a pit. Systems operate
-at the level-wide scale being fed all events from that level.
+Systems handle game logic based on events. They process changes, such as reducing an actor’s health
+due to poison at the end of their turn or checking if a floating creature should fall into a pit.
+Systems operate at the level-wide scale being fed all events from that level.
 
 Messages & Decisions
 --------------------
 
-Messages are how communication flows to and from the level. These might include requests to open the debugger,
-or to play a sound or animation. Input from the player is requested through decisions,
-a child class of messages. Game states and systems are able to respond to messages.
+Messages are how communication flows to and from the level. These might include requests to open the
+debugger, or to play a sound or animation. Input from the player is requested through decisions, a
+child class of messages. Game states and systems are able to respond to messages.
 
 Level
 -----
 
-The level manages all actors and maintains the game state. It tracks turns, processes actions, moves actors,
-and holds the map and various caches for the game world.
+The level manages all actors and maintains the game state. It tracks turns, processes actions, moves
+actors, and holds the map and various caches for the game world.
 
 Cells
 -----
 
-Cells define the physical structure of the level. They represent terrain elements such as walls, floors,
-water, and lava—determining where actors can move and interact.
+Cells define the physical structure of the level. They represent terrain elements such as walls,
+floors, water, and lava—determining where actors can move and interact.

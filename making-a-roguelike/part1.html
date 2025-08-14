@@ -47,22 +47,22 @@
             
   <section id="getting-started">
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
-<p>In this tutorial, we’ll start with a project template and create an enemy that we
-can kick around and get chased by.</p>
+<p>In this tutorial, we’ll start with a project template and create an enemy that we can kick around
+and get chased by.</p>
 <figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../_images/part1.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">Kicking a kobold</span></p></figcaption></figure><p>The following sections will expand this into a complete game.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We assume familiarity with Lua, but the language is simple enough that you could probably skirt by
-with only general programming experience.</p>
+<p>We assume familiarity with Lua, but the language is simple enough that you could probably skirt
+by with only general programming experience.</p>
 </div>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>Follow the <a class="reference internal" href="../installation.html"><span class="doc">installation guide</span></a> to install LÖVE and set up the project template.</p>
+<p>Follow the <a class="reference internal" href="../installation.html"><span class="doc">installation guide</span></a> to install LÖVE and set up the project
+template.</p>
 </section>
 <section id="creating-an-enemy">
 <h2>Creating an enemy<a class="headerlink" href="#creating-an-enemy" title="Link to this heading">¶</a></h2>
-<p>To make the game more engaging, let’s introduce an enemy: the
-<strong>Kobold</strong>.</p>
+<p>To make the game more engaging, let’s introduce an enemy: the <strong>Kobold</strong>.</p>
 <ol class="arabic simple">
 <li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">/modules/game/actors/</span></code> directory.</p></li>
 <li><p>Create a new file named <code class="docutils literal notranslate"><span class="pre">kobold.lua</span></code>.</p></li>
@@ -80,9 +80,8 @@ with only general programming experience.</p>
 <p class="admonition-title">Note</p>
 <p>See <a class="reference internal" href="../how-tos/object-registration.html"><span class="doc">Object registration</span></a> for an overview on how to load objects in prism.</p>
 </div>
-<p>Let’s run the game again, and press <code class="docutils literal notranslate"><span class="pre">~</span></code>. This opens Geometer, the editor.
-Click on the k on the right hand side and use the pen tool to draw a
-kobold in. Press the green button to resume the game.</p>
+<p>Let’s run the game again, and press <code class="docutils literal notranslate"><span class="pre">~</span></code>. This opens Geometer, the editor. Click on the k on the
+right hand side and use the pen tool to draw a kobold in. Press the green button to resume the game.</p>
 <p>You might notice that you can walk right through the kobold. We fix that by giving it a
 <a class="reference internal" href="../reference/prism/core/components/collider.html#lua-Collider" title="Collider"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Collider</span></code></a>:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">()</span>
@@ -92,9 +91,9 @@ kobold in. Press the green button to resume the game.</p>
 <p class="admonition-title">Note</p>
 <p>See <a class="reference internal" href="../how-tos/collision.html"><span class="doc">Collision</span></a> for more information on the collision system.</p>
 </div>
-<p>If we restart the game and spawn in another kobold, we shouldn’t be able to walk
-through kobolds anymore. We’re also going to give the kobold a few more core components: a
-<a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>, <code class="docutils literal notranslate"><span class="pre">SightComponent</span></code>, and <code class="docutils literal notranslate"><span class="pre">MoverComponent</span></code>, so it can see and move:</p>
+<p>If we restart the game and spawn in another kobold, we shouldn’t be able to walk through kobolds
+anymore. We’re also going to give the kobold a few more core components: a <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">SightComponent</span></code>, and <code class="docutils literal notranslate"><span class="pre">MoverComponent</span></code>, so it can see and move:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">(),</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Sight</span><span class="p">{</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">},</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">{</span> <span class="s2">&quot;walk&quot;</span> <span class="p">}</span>
@@ -103,14 +102,15 @@ through kobolds anymore. We’re also going to give the kobold a few more core c
 </section>
 <section id="the-kobold-controller">
 <h2>The kobold controller<a class="headerlink" href="#the-kobold-controller" title="Link to this heading">¶</a></h2>
-<p>Now that the kobold exists in the world, you might notice something—it’s
-not moving! To give it behavior, we need to implement a <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a>.</p>
+<p>Now that the kobold exists in the world, you might notice something—it’s not moving! To give it
+behavior, we need to implement a <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a>.</p>
 <p>A <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a> (or one of its derivatives) defines the <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller.act" title="Controller.act"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Controller:act()</span></code></a>
-function, which takes the <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a> and the <a class="reference internal" href="../reference/prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Actor</span></code></a> as arguments and
-returns a valid action.</p>
+function, which takes the <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a> and the <a class="reference internal" href="../reference/prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Actor</span></code></a> as arguments and returns a
+valid action.</p>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">act</span></code> function <strong>should not modify the level directly</strong>–it should only use it to validate actions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">act</span></code> function <strong>should not modify the level directly</strong>–it should only use it to validate
+actions.</p>
 </div>
 <ol class="arabic simple">
 <li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/</span></code>.</p></li>
@@ -143,8 +143,8 @@ returns a valid action.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">KoboldController</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Our kobold should move right until they hit a wall now, but this
-behaviour doesn’t make for a great game. Let’s make them follow the player around.</p>
+<p>Our kobold should move right until they hit a wall now, but this behaviour doesn’t make for a great
+game. Let’s make them follow the player around.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete kobold.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
@@ -173,8 +173,8 @@ behaviour doesn’t make for a great game. Let’s make them follow the player a
 <li><p>Find a valid path to the player.</p></li>
 <li><p>Move the kobold along that path.</p></li>
 </ol>
-<p>We can find the player by grabbing the <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a> from the kobold and
-seeing if it contains the player. We should also ensure the kobold has the component in the first place.</p>
+<p>We can find the player by grabbing the <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a> from the kobold and seeing if it contains
+the player. We should also ensure the kobold has the component in the first place.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">senses</span> <span class="o">=</span> <span class="n">actor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">)</span>
 <span class="kr">if</span> <span class="ow">not</span> <span class="n">senses</span> <span class="kr">then</span> <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="kr">end</span> <span class="c1">-- we can&#39;t see!</span>
 
@@ -194,8 +194,8 @@ positions and the kobold’s collision mask.</p>
 <span class="kd">local</span> <span class="n">path</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">findPath</span><span class="p">(</span><span class="n">actor</span><span class="p">:</span><span class="n">getPosition</span><span class="p">(),</span> <span class="n">player</span><span class="p">:</span><span class="n">getPosition</span><span class="p">(),</span> <span class="n">actor</span><span class="p">,</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then we check if there’s a path and move the kobold along it, using <a class="reference internal" href="../reference/prism/algorithms/astar/path.html#lua-Path.pop" title="Path.pop"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Path:pop()</span></code></a> to get the first
-position.</p>
+<p>Then we check if there’s a path and move the kobold along it, using <a class="reference internal" href="../reference/prism/algorithms/astar/path.html#lua-Path.pop" title="Path.pop"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Path:pop()</span></code></a> to get the
+first position.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">path</span> <span class="kr">then</span>
    <span class="kd">local</span> <span class="n">move</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Move</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span><span class="n">pop</span><span class="p">())</span>
    <span class="kr">if</span> <span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span>
@@ -243,19 +243,18 @@ position.</p>
 </details></section>
 <section id="kicking-kobolds">
 <h2>Kicking kobolds<a class="headerlink" href="#kicking-kobolds" title="Link to this heading">¶</a></h2>
-<p>In this section we’ll give you something to do to these kobolds: kick them!
-We’ll need to create our first action. Head over to <code class="docutils literal notranslate"><span class="pre">/modules/game/actions</span></code> and add kick.lua.</p>
-<p>Let’s first create a target for our kick. Put this at the top of
-kick.lua:</p>
+<p>In this section we’ll give you something to do to these kobolds: kick them! We’ll need to create our
+first action. Head over to <code class="docutils literal notranslate"><span class="pre">/modules/game/actions</span></code> and add kick.lua.</p>
+<p>Let’s first create a target for our kick. Put this at the top of kick.lua:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">KickTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
    <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
    <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>With this target we’re saying you can only kick actors at range one with a collider
-component. Then we can define the kick action, including our target. We will also require
-that any actor trying to perform the kick action have a controller.</p>
+<p>With this target we’re saying you can only kick actors at range one with a collider component. Then
+we can define the kick action, including our target. We will also require that any actor trying to
+perform the kick action have a controller.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">---@class KickAction : Action</span>
 <span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kick&quot;</span>
@@ -267,10 +266,10 @@ that any actor trying to perform the kick action have a controller.</p>
 <span class="kr">return</span> <span class="n">Kick</span>
 </pre></div>
 </div>
-<p>For the logic, we’ll define methods that validate and perform the kick. We don’t have any
-special conditions for kicking, so from <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Action:canPerform()</span></code></a> we’ll just return true.
-For the kick itself, we get the direction from the player to the target (kobold), and check passability
-for three tiles in the direction before finally moving them. We also give the kobold flying movement by
+<p>For the logic, we’ll define methods that validate and perform the kick. We don’t have any special
+conditions for kicking, so from <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Action:canPerform()</span></code></a> we’ll just return true. For the kick
+itself, we get the direction from the player to the target (kobold), and check passability for three
+tiles in the direction before finally moving them. We also give the kobold flying movement by
 checking passability with a custom collision mask.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="kr">return</span> <span class="kc">true</span>
@@ -339,8 +338,12 @@ checking passability with a custom collision mask.</p>
 </details></section>
 <section id="kicking-kobolds-for-real-this-time">
 <h2>Kicking kobolds, for real this time<a class="headerlink" href="#kicking-kobolds-for-real-this-time" title="Link to this heading">¶</a></h2>
-<p>We’ve added the kick action, but we don’t use it anywhere. Let’s fix that by performing the kick when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and find where the move action is called.</p>
-<p>If the player presses a move button but the <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> check fails, we can infer they moved into something that blocked their movement. Then, check if there’s a valid actor to kick in front of us (as opposed to another impassable entity), and perform the kick action on them:</p>
+<p>We’ve added the kick action, but we don’t use it anywhere. Let’s fix that by performing the kick
+when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and find where the move
+action is called.</p>
+<p>If the player presses a move button but the <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> check fails, we can infer they moved into
+something that blocked their movement. Then, check if there’s a valid actor to kick in front of us
+(as opposed to another impassable entity), and perform the kick action on them:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span>
 <span class="p">...</span>
 <span class="kr">end</span>
@@ -368,8 +371,9 @@ checking passability with a custom collision mask.</p>
 <li><p>Implemented a kick action to shove kobolds around.</p></li>
 <li><p>Integrated the kick by performing it when bumping into a valid target.</p></li>
 </ol>
-<p>You can find the code for this part at <a class="reference external" href="https://github.com/prismrl/Kicking-Kobolds">https://github.com/prismrl/Kicking-Kobolds</a> on the <code class="docutils literal notranslate"><span class="pre">part1</span></code> branch. In the
-<a class="reference internal" href="part2.html"><span class="doc">next section</span></a>, we’ll do some work with components and systems to flesh out the combat system.</p>
+<p>You can find the code for this part at <a class="reference external" href="https://github.com/prismrl/Kicking-Kobolds">https://github.com/prismrl/Kicking-Kobolds</a> on the <code class="docutils literal notranslate"><span class="pre">part1</span></code>
+branch. In the <a class="reference internal" href="part2.html"><span class="doc">next section</span></a>, we’ll do some work with components and systems to flesh
+out the combat system.</p>
 </section>
 </section>
 

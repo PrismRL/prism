@@ -1,16 +1,16 @@
 Carving out caverns
 ===================
 
-In this section of the tutorial we'll create a more interesting place to kick kobolds,
-and put some in the game world to start.
+In this section of the tutorial we'll create a more interesting place to kick kobolds, and put some
+in the game world to start.
 
 Getting started on a map
 ------------------------
 
-Let's create a new file in the root of the project called ``levelgen.lua``. We'll
-return a function from this module that takes a few parameters.
+Let's create a new file in the root of the project called ``levelgen.lua``. We'll return a function
+from this module that takes a few parameters.
 
-.. code:: lua
+.. code-block:: lua
 
    local PARTITIONS = 3
 
@@ -26,23 +26,25 @@ return a function from this module that takes a few parameters.
       return builder
    end
 
-We give the level building function an :lua:class:`RNG` which will be exclusive to it, the player we want to place, and
-the width and height of the map we want generated. Inside we create a :lua:class:`MapBuilder` and return it.
-The constant ``PARTITIONS`` will define the grid size of the rooms.
+We give the level building function an :lua:class:`RNG` which will be exclusive to it, the player we
+want to place, and the width and height of the map we want generated. Inside we create a
+:lua:class:`MapBuilder` and return it. The constant ``PARTITIONS`` will define the grid size of the
+rooms.
 
 Populating the void
 -------------------
 
-The first step is filling the void with a ``width`` * ``height`` initialization of pits and walls. To
-decide where to put which we'll use `love.math.perlinNoise <https://www.love2d.org/wiki/love.math.perlinNoise>`_.
-We'll offset the Perlin noise to a random point and set a ``Wall`` for values greater than ``0.5``.
+The first step is filling the void with a ``width`` * ``height`` initialization of pits and walls.
+To decide where to put which we'll use `love.math.perlinNoise
+<https://www.love2d.org/wiki/love.math.perlinNoise>`_. We'll offset the Perlin noise to a random
+point and set a ``Wall`` for values greater than ``0.5``.
 
 .. note::
 
-   Perlin noise is deterministic and returns the same value for the same point, so offsetting where we start
-   guarantees a random pattern.
+   Perlin noise is deterministic and returns the same value for the same point, so offsetting where
+   we start guarantees a random pattern.
 
-.. code:: lua
+.. code-block:: lua
 
     -- Fill the map with random noise of pits and walls.
    local nox, noy = rng:random(1, 10000), rng:random(1, 10000)
@@ -57,10 +59,11 @@ We'll offset the Perlin noise to a random point and set a ``Wall`` for values gr
 Making room
 -----------
 
-Next, we'll generate rooms in a grid, where the width and height are determined by our ``PARTITIONS`` constant.
-First, create a table of :lua:class:`Rectangles <Rectangle>` to hold our rooms.
+Next, we'll generate rooms in a grid, where the width and height are determined by our
+``PARTITIONS`` constant. First, create a table of :lua:class:`Rectangles <Rectangle>` to hold our
+rooms.
 
-.. code:: lua
+.. code-block:: lua
 
    -- Create rooms in each of the partitions.
    --- @type table<number, Rectangle>
@@ -68,7 +71,7 @@ First, create a table of :lua:class:`Rectangles <Rectangle>` to hold our rooms.
 
 We're going to omit one of the rooms to introduce some variance.
 
-.. code:: lua
+.. code-block:: lua
 
    local missing = prism.Vector2(
       rng:random(0, PARTITIONS - 1),
@@ -77,22 +80,22 @@ We're going to omit one of the rooms to introduce some variance.
 
 Then we're going to calculate the total width and height of our patitions.
 
-.. code:: lua
+.. code-block:: lua
 
    local pw, ph = math.floor(width / PARTITIONS), math.floor(height / PARTITIONS)
 
 After that let's set some reasonable limits on the minimum and maximum room width and height.
 
-.. code:: lua
+.. code-block:: lua
 
    local minrw, minrh = math.floor(pw / 3), math.floor(ph / 3)
    local maxrw, maxrh = pw - 2, ph - 2 -- Subtract 2 to ensure there's a margin.
 
-Next we loop through each of our partitions and build a room so long as it's not the one we're omitting. We create a
-:lua:class:`Rectangle`, hash its partition coordinates, and put it into our table of rooms. Finally we draw the room onto our map
-with :lua:func:`MapBuilder.drawRectangle`.
+Next we loop through each of our partitions and build a room so long as it's not the one we're
+omitting. We create a :lua:class:`Rectangle`, hash its partition coordinates, and put it into our
+table of rooms. Finally we draw the room onto our map with :lua:func:`MapBuilder.drawRectangle`.
 
-.. code:: lua
+.. code-block:: lua
 
    for px = 0, PARTITIONS - 1 do
       for py = 0, PARTITIONS - 1 do
@@ -113,12 +116,12 @@ with :lua:func:`MapBuilder.drawRectangle`.
 Carving hallways
 ----------------
 
-Next we'll define a local function to draw the classic Rogue style L shaped hallways between
-rooms. It accepts two :lua:class:`Rectangles <Rectangle>` representing the rooms, and if both ``a`` and ``b``
-exist we draw a hallway between them. We use the level
-generator's RNG to determine if we should start vertically or horizontally for a little bit of spice.
+Next we'll define a local function to draw the classic Rogue style L shaped hallways between rooms.
+It accepts two :lua:class:`Rectangles <Rectangle>` representing the rooms, and if both ``a`` and
+``b`` exist we draw a hallway between them. We use the level generator's RNG to determine if we
+should start vertically or horizontally for a little bit of spice.
 
-.. code:: lua
+.. code-block:: lua
 
    -- Helper function to connect two points with an L-shaped hallway.
    --- @param a Rectangle
@@ -138,10 +141,10 @@ generator's RNG to determine if we should start vertically or horizontally for a
       end
    end
 
-Now we'll go through each room and try to connect it to the one to the right, and the
-one to the bottom. If either doesn't exist the hallway helper won't get past the guard and nothing will happen.
+Now we'll go through each room and try to connect it to the one to the right, and the one to the
+bottom. If either doesn't exist the hallway helper won't get past the guard and nothing will happen.
 
-.. code:: lua
+.. code-block:: lua
 
    for hash, currentRoom in pairs(rooms) do
       local px, py = prism.Vector2._unhash(hash)
@@ -155,7 +158,7 @@ Spawning people
 
 Now to place the player. We'll select a random room and put the player on the center tile.
 
-.. code:: lua
+.. code-block:: lua
 
    local startRoom
    while not startRoom do
@@ -166,10 +169,10 @@ Now to place the player. We'll select a random room and put the player on the ce
    local playerPos = startRoom:center():floor()
    builder:addActor(player, playerPos.x, playerPos.y)
 
-We're getting close now, but we need some kobolds to kick. Let's go through every room that's not the starting room and spawn
-a kobold there.
+We're getting close now, but we need some kobolds to kick. Let's go through every room that's not
+the starting room and spawn a kobold there.
 
-.. code:: lua
+.. code-block:: lua
 
    for _, room in pairs(rooms) do
       if room ~= startRoom then
@@ -180,9 +183,9 @@ a kobold there.
    end
 
 Sending it back
---------------
+---------------
 
-.. code:: lua
+.. code-block:: lua
 
    builder:addPadding(1, prism.cells.Wall)
 
@@ -285,27 +288,28 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
       end
 
 Updating GameLevelState
--------------------------
+-----------------------
 
 Head back to ``gamestates/gamelevelstate.lua`` and add the following line to the top of the file.
 
-.. code:: lua
+.. code-block:: lua
 
    local levelgen = require "levelgen"
 
-Then we're going to change its constructor. Head to ``GameLevelState:__new`` and let's replace the map
-builder code there with this:
+Then we're going to change its constructor. Head to ``GameLevelState:__new`` and let's replace the
+map builder code there with this:
 
-.. code:: lua
+.. code-block:: lua
 
    local seed = tostring(os.time())
    local mapbuilder = levelgen(prism.RNG(seed), prism.actors.Player(), 60, 30)
 
-Now run the game! You'll be exploring a map reminiscent of Rogue but with a lot more pits to kick kobolds into.
+Now run the game! You'll be exploring a map reminiscent of Rogue but with a lot more pits to kick
+kobolds into.
 
 Descending to the next part
 ---------------------------
 
-We've developed a simple level generation algorithm using :lua:class:`RNG` and :lua:class:`MapBuilder`.
-In the :doc:`next section <part8>` of the tutorial we'll add a set of stairs and let the player descend deeper into the dungeon!
-
+We've developed a simple level generation algorithm using :lua:class:`RNG` and
+:lua:class:`MapBuilder`. In the :doc:`next section <part8>` of the tutorial we'll add a set of
+stairs and let the player descend deeper into the dungeon!

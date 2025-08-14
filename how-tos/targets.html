@@ -47,10 +47,12 @@
             
   <section id="targets">
 <h1>Targets<a class="headerlink" href="#targets" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">Target</span></code> class defines <strong>an object an action can act on</strong>. It uses a builder pattern to combine filters and checks. Targets validate parameters to actions at runtime
-allowing you to easily and safely discriminate an any type to something more specific. They are designed such that you can pass in any arbitrary Lua type into the Action’s parameters
-without runtime errors.</p>
-<p>This how-to is going to use a simple Health component as an example, this does not ship with the engine but can be found in the tutorial.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Target</span></code> class defines <strong>an object an action can act on</strong>. It uses a builder pattern to
+combine filters and checks. Targets validate parameters to actions at runtime allowing you to easily
+and safely discriminate an any type to something more specific. They are designed such that you can
+pass in any arbitrary Lua type into the Action’s parameters without runtime errors.</p>
+<p>This how-to is going to use a simple Health component as an example, this does not ship with the
+engine but can be found in the tutorial.</p>
 <section id="creating-a-basic-target">
 <h2>Creating a basic target<a class="headerlink" href="#creating-a-basic-target" title="Link to this heading">¶</a></h2>
 <p>To create a Target that requires certain components:</p>
@@ -65,7 +67,8 @@ without runtime errors.</p>
 </section>
 <section id="adding-custom-filters">
 <h2>Adding custom filters<a class="headerlink" href="#adding-custom-filters" title="Link to this heading">¶</a></h2>
-<p>You can add custom logic with <code class="docutils literal notranslate"><span class="pre">:filter()</span></code>. For example, to target only actors with less than half health:</p>
+<p>You can add custom logic with <code class="docutils literal notranslate"><span class="pre">:filter()</span></code>. For example, to target only actors with less than half
+health:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">myTarget</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">target</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
    <span class="kr">return</span> <span class="n">health</span> <span class="ow">and</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">health</span><span class="p">.</span><span class="n">maxHP</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
@@ -95,8 +98,8 @@ without runtime errors.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">myTarget</span><span class="p">:</span><span class="n">los</span><span class="p">(</span><span class="n">collisionMask</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This checks tiles along a Bresenham line and fails if any cell blocks movement. For more info
-on collision masks see the Collision how-to!</p>
+<p>This checks tiles along a Bresenham line and fails if any cell blocks movement. For more info on
+collision masks see the Collision how-to!</p>
 </section>
 <section id="checking-target-types">
 <h2>Checking target types<a class="headerlink" href="#checking-target-types" title="Link to this heading">¶</a></h2>

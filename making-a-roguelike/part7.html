@@ -47,12 +47,12 @@
             
   <section id="carving-out-caverns">
 <h1>Carving out caverns<a class="headerlink" href="#carving-out-caverns" title="Link to this heading">¶</a></h1>
-<p>In this section of the tutorial we’ll create a more interesting place to kick kobolds,
-and put some in the game world to start.</p>
+<p>In this section of the tutorial we’ll create a more interesting place to kick kobolds, and put some
+in the game world to start.</p>
 <section id="getting-started-on-a-map">
 <h2>Getting started on a map<a class="headerlink" href="#getting-started-on-a-map" title="Link to this heading">¶</a></h2>
-<p>Let’s create a new file in the root of the project called <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code>. We’ll
-return a function from this module that takes a few parameters.</p>
+<p>Let’s create a new file in the root of the project called <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code>. We’ll return a function
+from this module that takes a few parameters.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">PARTITIONS</span> <span class="o">=</span> <span class="mi">3</span>
 
 <span class="c1">--- @param rng RNG</span>
@@ -68,19 +68,20 @@ return a function from this module that takes a few parameters.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We give the level building function an <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> which will be exclusive to it, the player we want to place, and
-the width and height of the map we want generated. Inside we create a <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a> and return it.
-The constant <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> will define the grid size of the rooms.</p>
+<p>We give the level building function an <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> which will be exclusive to it, the player we
+want to place, and the width and height of the map we want generated. Inside we create a
+<a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a> and return it. The constant <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> will define the grid size of the
+rooms.</p>
 </section>
 <section id="populating-the-void">
 <h2>Populating the void<a class="headerlink" href="#populating-the-void" title="Link to this heading">¶</a></h2>
-<p>The first step is filling the void with a <code class="docutils literal notranslate"><span class="pre">width</span></code> * <code class="docutils literal notranslate"><span class="pre">height</span></code> initialization of pits and walls. To
-decide where to put which we’ll use <a class="reference external" href="https://www.love2d.org/wiki/love.math.perlinNoise">love.math.perlinNoise</a>.
-We’ll offset the Perlin noise to a random point and set a <code class="docutils literal notranslate"><span class="pre">Wall</span></code> for values greater than <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p>The first step is filling the void with a <code class="docutils literal notranslate"><span class="pre">width</span></code> * <code class="docutils literal notranslate"><span class="pre">height</span></code> initialization of pits and walls.
+To decide where to put which we’ll use <a class="reference external" href="https://www.love2d.org/wiki/love.math.perlinNoise">love.math.perlinNoise</a>. We’ll offset the Perlin noise to a random
+point and set a <code class="docutils literal notranslate"><span class="pre">Wall</span></code> for values greater than <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Perlin noise is deterministic and returns the same value for the same point, so offsetting where we start
-guarantees a random pattern.</p>
+<p>Perlin noise is deterministic and returns the same value for the same point, so offsetting where
+we start guarantees a random pattern.</p>
 </div>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span> <span class="c1">-- Fill the map with random noise of pits and walls.</span>
 <span class="kd">local</span> <span class="n">nox</span><span class="p">,</span> <span class="n">noy</span> <span class="o">=</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
@@ -96,8 +97,9 @@ guarantees a random pattern.</p>
 </section>
 <section id="making-room">
 <h2>Making room<a class="headerlink" href="#making-room" title="Link to this heading">¶</a></h2>
-<p>Next, we’ll generate rooms in a grid, where the width and height are determined by our <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> constant.
-First, create a table of <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangles</span></code></a> to hold our rooms.</p>
+<p>Next, we’ll generate rooms in a grid, where the width and height are determined by our
+<code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> constant. First, create a table of <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangles</span></code></a> to hold our
+rooms.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create rooms in each of the partitions.</span>
 <span class="c1">--- @type table&lt;number, Rectangle&gt;</span>
 <span class="kd">local</span> <span class="n">rooms</span> <span class="o">=</span> <span class="p">{}</span>
@@ -119,9 +121,9 @@ First, create a table of <a class="reference internal" href="../reference/prism/
 <span class="kd">local</span> <span class="n">maxrw</span><span class="p">,</span> <span class="n">maxrh</span> <span class="o">=</span> <span class="n">pw</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ph</span> <span class="o">-</span> <span class="mi">2</span> <span class="c1">-- Subtract 2 to ensure there&#39;s a margin.</span>
 </pre></div>
 </div>
-<p>Next we loop through each of our partitions and build a room so long as it’s not the one we’re omitting. We create a
-<a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangle</span></code></a>, hash its partition coordinates, and put it into our table of rooms. Finally we draw the room onto our map
-with <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder.drawRectangle" title="MapBuilder.drawRectangle"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">MapBuilder:drawRectangle()</span></code></a>.</p>
+<p>Next we loop through each of our partitions and build a room so long as it’s not the one we’re
+omitting. We create a <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangle</span></code></a>, hash its partition coordinates, and put it into our
+table of rooms. Finally we draw the room onto our map with <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder.drawRectangle" title="MapBuilder.drawRectangle"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">MapBuilder:drawRectangle()</span></code></a>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">px</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
    <span class="kr">for</span> <span class="n">py</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
       <span class="kr">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span><span class="n">equals</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)</span> <span class="kr">then</span>
@@ -142,10 +144,10 @@ with <a class="reference internal" href="../reference/prism/core/map_builder.htm
 </section>
 <section id="carving-hallways">
 <h2>Carving hallways<a class="headerlink" href="#carving-hallways" title="Link to this heading">¶</a></h2>
-<p>Next we’ll define a local function to draw the classic Rogue style L shaped hallways between
-rooms. It accepts two <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangles</span></code></a> representing the rooms, and if both <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>
-exist we draw a hallway between them. We use the level
-generator’s RNG to determine if we should start vertically or horizontally for a little bit of spice.</p>
+<p>Next we’ll define a local function to draw the classic Rogue style L shaped hallways between rooms.
+It accepts two <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangles</span></code></a> representing the rooms, and if both <code class="docutils literal notranslate"><span class="pre">a</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code> exist we draw a hallway between them. We use the level generator’s RNG to determine if we
+should start vertically or horizontally for a little bit of spice.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Helper function to connect two points with an L-shaped hallway.</span>
 <span class="c1">--- @param a Rectangle</span>
 <span class="c1">--- @param b Rectangle</span>
@@ -165,8 +167,8 @@ generator’s RNG to determine if we should start vertically or horizontally for
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we’ll go through each room and try to connect it to the one to the right, and the
-one to the bottom. If either doesn’t exist the hallway helper won’t get past the guard and nothing will happen.</p>
+<p>Now we’ll go through each room and try to connect it to the one to the right, and the one to the
+bottom. If either doesn’t exist the hallway helper won’t get past the guard and nothing will happen.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">hash</span><span class="p">,</span> <span class="n">currentRoom</span> <span class="kr">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span> <span class="kr">do</span>
    <span class="kd">local</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_unhash</span><span class="p">(</span><span class="n">hash</span><span class="p">)</span>
 
@@ -189,8 +191,8 @@ one to the bottom. If either doesn’t exist the hallway helper won’t get past
 <span class="n">builder</span><span class="p">:</span><span class="n">addActor</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We’re getting close now, but we need some kobolds to kick. Let’s go through every room that’s not the starting room and spawn
-a kobold there.</p>
+<p>We’re getting close now, but we need some kobolds to kick. Let’s go through every room that’s not
+the starting room and spawn a kobold there.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">room</span> <span class="kr">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span> <span class="kr">do</span>
    <span class="kr">if</span> <span class="n">room</span> <span class="o">~=</span> <span class="n">startRoom</span> <span class="kr">then</span>
       <span class="kd">local</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">room</span><span class="p">:</span><span class="n">center</span><span class="p">():</span><span class="n">floor</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
@@ -311,18 +313,20 @@ a kobold there.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">levelgen</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;levelgen&quot;</span>
 </pre></div>
 </div>
-<p>Then we’re going to change its constructor. Head to <code class="docutils literal notranslate"><span class="pre">GameLevelState:__new</span></code> and let’s replace the map
-builder code there with this:</p>
+<p>Then we’re going to change its constructor. Head to <code class="docutils literal notranslate"><span class="pre">GameLevelState:__new</span></code> and let’s replace the
+map builder code there with this:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">seed</span> <span class="o">=</span> <span class="nb">tostring</span><span class="p">(</span><span class="nb">os.time</span><span class="p">())</span>
 <span class="kd">local</span> <span class="n">mapbuilder</span> <span class="o">=</span> <span class="n">levelgen</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">RNG</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now run the game! You’ll be exploring a map reminiscent of Rogue but with a lot more pits to kick kobolds into.</p>
+<p>Now run the game! You’ll be exploring a map reminiscent of Rogue but with a lot more pits to kick
+kobolds into.</p>
 </section>
 <section id="descending-to-the-next-part">
 <h2>Descending to the next part<a class="headerlink" href="#descending-to-the-next-part" title="Link to this heading">¶</a></h2>
-<p>We’ve developed a simple level generation algorithm using <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> and <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>.
-In the <a class="reference internal" href="part8.html"><span class="doc">next section</span></a> of the tutorial we’ll add a set of stairs and let the player descend deeper into the dungeon!</p>
+<p>We’ve developed a simple level generation algorithm using <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> and
+<a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>. In the <a class="reference internal" href="part8.html"><span class="doc">next section</span></a> of the tutorial we’ll add a set of
+stairs and let the player descend deeper into the dungeon!</p>
 </section>
 </section>
 

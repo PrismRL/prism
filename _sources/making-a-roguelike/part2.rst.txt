@@ -1,33 +1,31 @@
 Taking flight
 =============
 
-Unfortunately for kobolds, they can't fly. In this section we're going to 
-create a :lua:class:`System` that plunges actors into the abyss if they're unable
-to fly.
+Unfortunately for kobolds, they can't fly. In this section we're going to create a
+:lua:class:`System` that plunges actors into the abyss if they're unable to fly.
 
 .. video:: ../_static/part2.mp4
-   :caption: Kicking kobolds into the abyss 
+   :caption: Kicking kobolds into the abyss
    :align: center
 
 Creating the void component
 ---------------------------
 
-First we'll need to create a component we'll put on cells to indicate they're a place you
-can fall.
+First we'll need to create a component we'll put on cells to indicate they're a place you can fall.
 
 1. Navigate to ``modules/game/components``
 2. Create a new file called ``void.lua``
 
 Put the following into ``void.lua``:
 
-.. code:: lua
+.. code-block:: lua
 
    --- @class Void : Component
    local Void = prism.Component:extend "Void"
 
    return Void
 
-This is a simple tag component that we'll use to mark tiles where actors can fall if they don’t have 
+This is a simple tag component that we'll use to mark tiles where actors can fall if they don’t have
 an allowed movement type.
 
 Adding void to our pit
@@ -37,7 +35,7 @@ Adding void to our pit
 
 Add the following line to its components:
 
-.. code:: lua  
+.. code-block:: lua
 
    prism.components.Void()
 
@@ -50,7 +48,7 @@ Next we're going to create an lua:class:`Action` to represent an actor falling.
 2. Create a new file called ``fall.lua``.
 3. Define the ``Fall`` action:
 
-.. code:: lua
+.. code-block:: lua
 
    --- @class Fall : Action
    --- @overload fun(owner: Actor): Fall
@@ -60,7 +58,7 @@ Next we're going to create an lua:class:`Action` to represent an actor falling.
 
 To perform the fall itself, all we're going to do is remove the actor:
 
-.. code:: lua
+.. code-block:: lua
 
    function Fall:perform(level)
       level:removeActor(self.owner) -- into the depths with you!
@@ -70,7 +68,7 @@ Determining whether we `should` fall is a bit more complex. We need the followin
 
 The cell we're standing on has the void component, which we can check simply:
 
-.. code:: lua
+.. code-block:: lua
 
    --- @param level Level
    function Fall:canPerform(level)
@@ -80,11 +78,10 @@ The cell we're standing on has the void component, which we can check simply:
       -- We can only fall on cells that are voids.
       if not cell:has(prism.components.Void) then return false end
 
+And that we can't move through the cell. We can get the cell's collision mask and compare it with
+our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
 
-And that we can't move through the cell. We can get the cell's collision mask and compare it with our own
-with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
-
-.. code:: lua
+.. code-block:: lua
 
       local cellMask = cell:getCollisionMask()
       local mover = self.owner:get(prism.components.Mover)
@@ -96,7 +93,6 @@ with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
    end
 
    return Fall
-
 
 .. dropdown:: Complete fall.lua
 
@@ -132,7 +128,6 @@ with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
 
       return Fall
 
-
 Triggering fall with a system
 -----------------------------
 
@@ -147,7 +142,7 @@ Let's create a :lua:class:`System` to make sure things fall when they ought to.
 We want the actor to fall immediately when they land on a valid tile, so we'll use the
 :lua:func:`System.onMove` callback to apply the fall action whenever valid:
 
-.. code:: lua
+.. code-block:: lua
 
    --- @class FallSystem : System
    local FallSystem = prism.System:extend "FallSystem"
@@ -171,10 +166,10 @@ We want the actor to fall immediately when they land on a valid tile, so we'll u
 Registering the Fall system
 ---------------------------
 
-Navigate back to ``gamelevelstate.lua`` and on line 32 you'll see where we register systems. Go ahead and add
-``prism.systems.Fall()`` to the bottom of the list like so.
+Navigate back to ``gamelevelstate.lua`` and on line 32 you'll see where we register systems. Go
+ahead and add ``prism.systems.Fall()`` to the bottom of the list like so.
 
-.. code:: lua
+.. code-block:: lua
 
    local level = prism.Level(map, actors, {
       prism.systems.Senses(),
@@ -185,10 +180,10 @@ Navigate back to ``gamelevelstate.lua`` and on line 32 you'll see where we regis
 Wrapping up
 -----------
 
-With our ``FallSystem`` in place, kobolds and other unfortunate creatures will now tumble 
-into the void if they end their turn standing on a pit they can’t fly over.
-We’ve used a component to tag dangerous tiles, an action to represent involuntary movement,
-and a system to enforce game logic based on actor movement.
+With our ``FallSystem`` in place, kobolds and other unfortunate creatures will now tumble into the
+void if they end their turn standing on a pit they can’t fly over. We’ve used a component to tag
+dangerous tiles, an action to represent involuntary movement, and a system to enforce game logic
+based on actor movement.
 
 In the :doc:`next section <part3>` of the tutorial, we’ll dive into something a little more active:
 combat. We’ll set up a health component, and teach actors how to attack.

@@ -47,10 +47,10 @@
             
   <section id="creating-continuity">
 <h1>Creating continuity<a class="headerlink" href="#creating-continuity" title="Link to this heading">¶</a></h1>
-<p>In this chapter, we’ll create a Game object and store it in a global called GAME to track
-the overall state of the game. This includes managing a random number generator (RNG) that
-we’ll use to seed level generation, as well as keeping track of the dungeon depth the player
-is currently exploring.</p>
+<p>In this chapter, we’ll create a Game object and store it in a global called GAME to track the
+overall state of the game. This includes managing a random number generator (RNG) that we’ll use to
+seed level generation, as well as keeping track of the dungeon depth the player is currently
+exploring.</p>
 <section id="getting-the-message">
 <h2>Getting the message<a class="headerlink" href="#getting-the-message" title="Link to this heading">¶</a></h2>
 <p>First, let’s update our <code class="docutils literal notranslate"><span class="pre">DescendMessage</span></code> to include the actor that’s descending.</p>
@@ -67,7 +67,8 @@ is currently exploring.</p>
 <span class="kr">return</span> <span class="n">DescendMessage</span>
 </pre></div>
 </div>
-<p>Next, let’s modify the <code class="docutils literal notranslate"><span class="pre">Descend</span></code> action so that it populates the message with the descending actor.</p>
+<p>Next, let’s modify the <code class="docutils literal notranslate"><span class="pre">Descend</span></code> action so that it populates the message with the descending
+actor.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Descend</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="n">level</span><span class="p">:</span><span class="n">removeActor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
    <span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">Descend</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">))</span>
@@ -77,9 +78,9 @@ is currently exploring.</p>
 </section>
 <section id="creating-the-game">
 <h2>Creating the game<a class="headerlink" href="#creating-the-game" title="Link to this heading">¶</a></h2>
-<p>Now we’ll create a new class <code class="docutils literal notranslate"><span class="pre">Game</span></code>. This will hold an <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> and the current depth, and handle our
-level generation. Having a centralized <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> for generating seeds for level generation ensures
-that the game will be repeatable given the same seed.</p>
+<p>Now we’ll create a new class <code class="docutils literal notranslate"><span class="pre">Game</span></code>. This will hold an <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> and the current depth, and
+handle our level generation. Having a centralized <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> for generating seeds for level
+generation ensures that the game will be repeatable given the same seed.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">levelgen</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;levelgen&quot;</span>
 
 <span class="c1">--- @class Game : Object</span>
@@ -111,8 +112,8 @@ that the game will be repeatable given the same seed.</p>
 <span class="kr">return</span> <span class="n">Game</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="nb">os.time</span><span class="p">()))</span>
 </pre></div>
 </div>
-<p>This class will eventually track everything we need for the overall game.  There should only
-be one instance of a <code class="docutils literal notranslate"><span class="pre">Game</span></code>, so we return a seeded <code class="docutils literal notranslate"><span class="pre">Game</span></code> instance rather than the prototype.</p>
+<p>This class will eventually track everything we need for the overall game. There should only be one
+instance of a <code class="docutils literal notranslate"><span class="pre">Game</span></code>, so we return a seeded <code class="docutils literal notranslate"><span class="pre">Game</span></code> instance rather than the prototype.</p>
 </section>
 <section id="modifying-the-levelstate">
 <h2>Modifying the levelstate<a class="headerlink" href="#modifying-the-levelstate" title="Link to this heading">¶</a></h2>
@@ -139,8 +140,8 @@ be one instance of a <code class="docutils literal notranslate"><span class="pre
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>This sets up our level with the map we build and the seed we’ll pass from the <code class="docutils literal notranslate"><span class="pre">Game</span></code>.
-Let’s change our overload here as well to reflect the new arguments.</p>
+<p>This sets up our level with the map we build and the seed we’ll pass from the <code class="docutils literal notranslate"><span class="pre">Game</span></code>. Let’s change
+our overload here as well to reflect the new arguments.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @overload fun(display: Display, builder: MapBuilder, seed: string): GameLevelState</span>
 <span class="kd">local</span> <span class="n">GameLevelState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">LevelState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;GameLevelState&quot;</span>
 </pre></div>
@@ -152,20 +153,23 @@ Let’s change our overload here as well to reflect the new arguments.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>To indicate what level we’re on, add another call to <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.putString" title="Display.putString"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:putString()</span></code></a> below our health display:</p>
+<p>To indicate what level we’re on, add another call to <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.putString" title="Display.putString"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:putString()</span></code></a> below our health
+display:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span> <span class="kr">end</span>
 
 <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Depth: &quot;</span> <span class="o">..</span> <span class="n">Game</span><span class="p">.</span><span class="n">depth</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally, head over to main.lua and <code class="docutils literal notranslate"><span class="pre">require</span></code> the class right below where we’re loading all our modules.</p>
+<p>Finally, head over to main.lua and <code class="docutils literal notranslate"><span class="pre">require</span></code> the class right below where we’re loading all our
+modules.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;modules/game&quot;</span><span class="p">)</span>
 
 <span class="kd">local</span> <span class="n">Game</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;game&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In <code class="docutils literal notranslate"><span class="pre">love.load()</span></code>, we’ll generate the first level and pass a seed for the level to our <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">love.load()</span></code>, we’ll generate the first level and pass a seed for the level to our
+<code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">())</span>
 <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()))</span>
 </pre></div>
@@ -174,8 +178,8 @@ Let’s change our overload here as well to reflect the new arguments.</p>
 </section>
 <section id="moving-along">
 <h2>Moving along<a class="headerlink" href="#moving-along" title="Link to this heading">¶</a></h2>
-<p>We’ve created a <code class="docutils literal notranslate"><span class="pre">Game</span></code> class to maintain some global game state and now pass our player to the next level.
-In the next section, we’ll start working on an inventory system, along with a few items.</p>
+<p>We’ve created a <code class="docutils literal notranslate"><span class="pre">Game</span></code> class to maintain some global game state and now pass our player to the
+next level. In the next section, we’ll start working on an inventory system, along with a few items.</p>
 </section>
 </section>
 

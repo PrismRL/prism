@@ -51,26 +51,25 @@
 <dd><dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableCategory.chance">
 <span class="sig-name descname"><span class="pre">chance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-DropTableCategory.chance" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Defaults to one if not specified</p>
+<dd><p>A number from 0-1 to determine the chance for the category to drop. Defaults to 1 (100%).</p>
 </dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableCategory.entries">
 <span class="sig-name descname"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableWeightedOption" title="DropTableWeightedOption"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableWeightedOption</span></code></a><span class="p"><span class="pre">[]?</span></span><a class="headerlink" href="#lua-DropTableCategory.entries" title="Link to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Weighted items to choose from when the category does drop.</p>
+</dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableCategory.quantity">
 <span class="sig-name descname"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-DropTableCategory.quantity" title="Link to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>The amount to drop. Defaults to 1.</p>
+</dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableCategory.entry">
 <span class="sig-name descname"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">)?</span></span><a class="headerlink" href="#lua-DropTableCategory.entry" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Entities in the game, including the player, enemies, and items.
-Actors are composed of Components that define their state and behavior.
-For example, an actor may have a Sight component that determines their field of vision, explored tiles,
-and other related aspects.</p>
+<dd><p>The actual actor to drop. This or entries must not be nil.</p>
 </dd></dl>
 
 <div class="lua-inherited-members docutils container">
@@ -83,21 +82,20 @@ and other related aspects.</p>
 <dd><dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableWeightedOption.weight">
 <span class="sig-name descname"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><a class="headerlink" href="#lua-DropTableWeightedOption.weight" title="Link to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>The weight of the item, e.g. if there are weights of 50 and 30, the former will drop 50/80 times.</p>
+</dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableWeightedOption.entry">
 <span class="sig-name descname"><span class="pre">entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><a class="headerlink" href="#lua-DropTableWeightedOption.entry" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Entities in the game, including the player, enemies, and items.
-Actors are composed of Components that define their state and behavior.
-For example, an actor may have a Sight component that determines their field of vision, explored tiles,
-and other related aspects.</p>
+<dd><p>The actual actor to drop.</p>
 </dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTableWeightedOption.quantity">
 <span class="sig-name descname"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-DropTableWeightedOption.quantity" title="Link to this definition">¶</a><br /></dt>
-<dd></dd></dl>
+<dd><p>The amount to drop. Defaults to 1.</p>
+</dd></dl>
 
 <div class="lua-inherited-members docutils container">
 </div>
@@ -105,29 +103,22 @@ and other related aspects.</p>
 
 <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-DropTable">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DropTable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Controller</span></code></a><a class="headerlink" href="#lua-DropTable" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DropTable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><a class="headerlink" href="#lua-DropTable" title="Link to this definition">¶</a><br /></dt>
 <dd><p>A drop table which tracks what items the actor should drop upon death.</p>
 <dl class="lua data">
-<dt class="sig sig-object lua" id="lua-DropTable.table">
-<span class="sig-name descname"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="p"><span class="pre">[]</span></span><a class="headerlink" href="#lua-DropTable.table" title="Link to this definition">¶</a><br /></dt>
+<dt class="sig sig-object lua" id="lua-DropTable.categories">
+<span class="sig-name descname"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="p"><span class="pre">[]</span></span><a class="headerlink" href="#lua-DropTable.categories" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
-
-<dl class="lua method">
-<dt class="sig sig-object lua" id="lua-DropTable.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTable" title="DropTable"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="p"><span class="pre">[]</span></span><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-DropTable.__new" title="Link to this definition">¶</a><br /></dt>
-<dd><dl class="field-list simple">
-</dl>
-</dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-DropTable.weights">
-<span class="sig-name descname"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTable.table" title="DropTable.table"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code></a><a class="headerlink" href="#lua-DropTable.weights" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Calculate the weights for categories with multiple entries.</p>
+<span class="sig-name descname"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;&gt;</span></span><a class="headerlink" href="#lua-DropTable.weights" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Weights per category per entry.</p>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-DropTable.quantifyItem">
-<span class="sig-name descname"><span class="pre">quantifyItem</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTable" title="DropTable"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">drops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">[]</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-DropTable.quantifyItem" title="Link to this definition">¶</a><br /></dt>
+<dt class="sig sig-object lua" id="lua-DropTable.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTable" title="DropTable"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTableCategory" title="DropTableCategory"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a><span class="p"><span class="pre">[]</span></span><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-DropTable.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -135,7 +126,7 @@ and other related aspects.</p>
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-DropTable.getDrops">
 <span class="sig-name descname"><span class="pre">getDrops</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-DropTable" title="DropTable"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">DropTable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">RNG</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">[]</span></span><a class="headerlink" href="#lua-DropTable.getDrops" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Takes an RNG and returns an actor from the drop table.</p>
+<dd><p>Takes an RNG and returns a table of actors from the drop table.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -144,7 +135,6 @@ and other related aspects.</p>
 <p><strong>Other members:</strong></p>
 <div class="admonition">
 <p>Inherited from <a class="reference internal" href="../../../prism/core/component.html#lua-Component" title="Component"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a>: <a class="reference internal" href="../../../prism/core/component.html#lua-Component.checkRequirements" title="Component.checkRequirements"><code class="docutils literal notranslate"><span class="pre">checkRequirements()</span></code></a>, <a class="reference internal" href="../../../prism/core/component.html#lua-Component.getBase" title="Component.getBase"><code class="docutils literal notranslate"><span class="pre">getBase()</span></code></a>, <a class="reference internal" href="../../../prism/core/component.html#lua-Component.getRequirements" title="Component.getRequirements"><code class="docutils literal notranslate"><span class="pre">getRequirements()</span></code></a>, <a class="reference internal" href="../../../prism/core/component.html#lua-Component.owner" title="Component.owner"><code class="docutils literal notranslate"><span class="pre">owner</span></code></a>, <a class="reference internal" href="../../../prism/core/component.html#lua-Component.requirements" title="Component.requirements"><code class="docutils literal notranslate"><span class="pre">requirements</span></code></a></p>
-<p>Inherited from <a class="reference internal" href="../../../prism/core/components/controller.html#lua-Controller" title="Controller"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a>: <a class="reference internal" href="../../../prism/core/components/controller.html#lua-Controller.act" title="Controller.act"><code class="docutils literal notranslate"><span class="pre">act()</span></code></a>, <a class="reference internal" href="../../../prism/core/components/controller.html#lua-Controller.blackboard" title="Controller.blackboard"><code class="docutils literal notranslate"><span class="pre">blackboard</span></code></a></p>
 <p>Inherited from <a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="../../../prism/core/object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="../../../prism/core/object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
 </div>
 </div>
@@ -288,10 +278,9 @@ SOFTWARE.
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-DropTable"><code class="docutils literal notranslate"><span class="pre">DropTable</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.table"><code class="docutils literal notranslate"><span class="pre">table</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.categories"><code class="docutils literal notranslate"><span class="pre">categories</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.weights"><code class="docutils literal notranslate"><span class="pre">weights</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.quantifyItem"><code class="docutils literal notranslate"><span class="pre">quantifyItem()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-DropTable.getDrops"><code class="docutils literal notranslate"><span class="pre">getDrops()</span></code></a></li>
 </ul>
 </li>

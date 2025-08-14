@@ -47,13 +47,14 @@
             
   <section id="queries">
 <h1>Queries<a class="headerlink" href="#queries" title="Link to this heading">¶</a></h1>
-<p>Most roguelikes involve systems where you need to efficiently find actors or entities
-with certain components—such as all enemies, or everyone at a specific location. Prism
-provides a built-in query system to make this easy and efficient.</p>
+<p>Most roguelikes involve systems where you need to efficiently find actors or entities with certain
+components—such as all enemies, or everyone at a specific location. Prism provides a built-in query
+system to make this easy and efficient.</p>
 <section id="basic-usage">
 <h2>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading">¶</a></h2>
-<p>To start a query, call <a class="reference internal" href="../reference/prism/core/query.html#lua-IQueryable.query" title="IQueryable.query"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">IQueryable.query</span></code></a> with the component types you want to require. This
-interface is implemented by <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a>, <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>, and <a class="reference internal" href="../reference/prism/core/actorstorage.html#lua-ActorStorage" title="ActorStorage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">ActorStorage</span></code></a>.</p>
+<p>To start a query, call <a class="reference internal" href="../reference/prism/core/query.html#lua-IQueryable.query" title="IQueryable.query"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">IQueryable.query</span></code></a> with the component types you want to require.
+This interface is implemented by <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a>, <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>, and
+<a class="reference internal" href="../reference/prism/core/actorstorage.html#lua-ActorStorage" title="ActorStorage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">ActorStorage</span></code></a>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">query</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -99,8 +100,8 @@ interface is implemented by <a class="reference internal" href="../reference/pri
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">actor</span><span class="p">,</span> <span class="n">playerController</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">PlayerController</span><span class="p">):</span><span class="n">first</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Good for singleton components like if your game has only one actor with a PlayerController.
-First calls iter behind the scenes and discards the iterator after the first result.</p>
+<p>Good for singleton components like if your game has only one actor with a PlayerController. First
+calls iter behind the scenes and discards the iterator after the first result.</p>
 </section>
 <section id="putting-it-together">
 <h2>Putting it together<a class="headerlink" href="#putting-it-together" title="Link to this heading">¶</a></h2>
@@ -116,8 +117,8 @@ First calls iter behind the scenes and discards the iterator after the first res
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Query performance is optimized internally based on your filters.
-Position-based queries and single-component queries are particularly fast.</p>
+<p>Query performance is optimized internally based on your filters. Position-based queries and
+single-component queries are particularly fast.</p>
 </div>
 </section>
 </section>

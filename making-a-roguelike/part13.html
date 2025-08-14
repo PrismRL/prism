@@ -51,9 +51,10 @@
 <p class="admonition-title">Note</p>
 <p>This chapter hasn’t had a second pass! Beware explosive brews!</p>
 </div>
-<p>In this chapter we’ll use the StatusEffect component included in <code class="docutils literal notranslate"><span class="pre">prism/extra</span></code> to create a potion of vitality that heals the drinker
-and increases their hitpoint maximum by 5, temporarily. We’ll go over creating a buff, making our Health component respect it, and
-ticking down the duration on status effects.</p>
+<p>In this chapter we’ll use the StatusEffect component included in <code class="docutils literal notranslate"><span class="pre">prism/extra</span></code> to create a potion
+of vitality that heals the drinker and increases their hitpoint maximum by 5, temporarily. We’ll go
+over creating a buff, making our Health component respect it, and ticking down the duration on
+status effects.</p>
 <section id="adding-status-effects-to-the-player">
 <h2>Adding status effects to the player<a class="headerlink" href="#adding-status-effects-to-the-player" title="Link to this heading">¶</a></h2>
 <p>Make your way to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and add the following component.</p>
@@ -63,14 +64,14 @@ ticking down the duration on status effects.</p>
 </section>
 <section id="getting-a-brew-going">
 <h2>Getting a brew going<a class="headerlink" href="#getting-a-brew-going" title="Link to this heading">¶</a></h2>
-<p>The first thing we’re going to want to do is head over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code> and load the <code class="docutils literal notranslate"><span class="pre">statuseffects</span></code> module. Let’s add this line
-right above where we’re loading our game module.</p>
+<p>The first thing we’re going to want to do is head over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code> and load the
+<code class="docutils literal notranslate"><span class="pre">statuseffects</span></code> module. Let’s add this line right above where we’re loading our game module.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/statuseffects&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Okay with that done the next thing we’re going to want to do is create a subclass of the StatusEffectInstance that will serve as a base
-prototype for all of our buffs/debuffs in the game. This is where we’ll define stuff that’s game specific to our status effects like
-durations.</p>
+<p>Okay with that done the next thing we’re going to want to do is create a subclass of the
+StatusEffectInstance that will serve as a base prototype for all of our buffs/debuffs in the game.
+This is where we’ll define stuff that’s game specific to our status effects like durations.</p>
 <p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">statusinstance.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class GameStatusInstance : StatusEffectsInstance</span>
 <span class="c1">--- @field duration integer?</span>
@@ -88,25 +89,28 @@ durations.</p>
 <span class="kr">return</span> <span class="n">GameStatusInstance</span>
 </pre></div>
 </div>
-<p>Our only addition for our usecase is going to be a duration since we’ll want timed buffs. Now head over to <code class="docutils literal notranslate"><span class="pre">module.lua</span></code> in the same folder.
-We’re going to load this file and inject our status instance into the global namespace simply for convenience sake.</p>
-<p>This Instance is a collection of Modifiers. A status effect instance might be the entire buff a potion gives you like +5 maxhp, +2 strength. A modifier is
-the individual pieces like +5 maxhp. You can subclass this to define a new named instance or use it anonymously.</p>
+<p>Our only addition for our usecase is going to be a duration since we’ll want timed buffs. Now head
+over to <code class="docutils literal notranslate"><span class="pre">module.lua</span></code> in the same folder. We’re going to load this file and inject our status
+instance into the global namespace simply for convenience sake.</p>
+<p>This Instance is a collection of Modifiers. A status effect instance might be the entire buff a
+potion gives you like +5 maxhp, +2 strength. A modifier is the individual pieces like +5 maxhp. You
+can subclass this to define a new named instance or use it anonymously.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span> <span class="nd">@module</span> <span class="s2">&quot;modules.game.statusinstance&quot;</span>
 <span class="n">prism</span><span class="o">.</span><span class="n">GameStatusInstance</span> <span class="o">=</span> <span class="n">require</span> <span class="p">(</span><span class="s2">&quot;modules.game.statusinstance&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The path string manipulation is just so that this file loads correctly now matter which folder our module is loaded from, that won’t matter here,
-but it’s a good idea to do this.</p>
+<p>The path string manipulation is just so that this file loads correctly now matter which folder our
+module is loaded from, that won’t matter here, but it’s a good idea to do this.</p>
 </section>
 <section id="modifying-health">
 <h2>Modifying health<a class="headerlink" href="#modifying-health" title="Link to this heading">¶</a></h2>
-<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/components/health.lua</span></code> and take a look at our health component. At the top of the file let’s add
-the following code.</p>
+<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/components/health.lua</span></code> and take a look at our health component.
+At the top of the file let’s add the following code.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">StatusEffects</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span>
 </pre></div>
 </div>
-<p>Let’s quickly alias the StatusEffects component, we’re going to use one of it’s static methods later in the file.</p>
+<p>Let’s quickly alias the StatusEffects component, we’re going to use one of it’s static methods later
+in the file.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class HealthModifier : StatusEffectsModifier</span>
 <span class="c1">--- @field maxHP integer</span>
 <span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Modifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
@@ -116,7 +120,8 @@ the following code.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>This defined a new StatusEffectsModifier. We’ll leave the constructor as it is, but let’s set maxHP to private.</p>
+<p>This defined a new StatusEffectsModifier. We’ll leave the constructor as it is, but let’s set maxHP
+to private.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Health : Component</span>
 <span class="c1">--- @field private maxHP integer</span>
 <span class="c1">--- @field hp integer</span>
@@ -137,8 +142,8 @@ the following code.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We loop through each modifier, add it to our base maxHP, and return the modified value. While we’re here we’ll need to change a few
-more things. First let’s change heal to use our new getter function.</p>
+<p>We loop through each modifier, add it to our base maxHP, and return the modified value. While we’re
+here we’ll need to change a few more things. First let’s change heal to use our new getter function.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param amount integer</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">heal</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">+</span> <span class="n">amount</span><span class="p">,</span> <span class="n">self</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span>
@@ -151,11 +156,13 @@ more things. First let’s change heal to use our new getter function.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>And finally we’ll set <code class="docutils literal notranslate"><span class="pre">Health.Modifier</span></code> to the modifier we’ve just created for this component so that we can access it from a convenient place.</p>
+<p>And finally we’ll set <code class="docutils literal notranslate"><span class="pre">Health.Modifier</span></code> to the modifier we’ve just created for this component so
+that we can access it from a convenient place.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">Health</span><span class="p">.</span><span class="n">Modifier</span> <span class="o">=</span> <span class="n">HealthModifier</span>
 </pre></div>
 </div>
-<p>Now in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> we’ll have to make a small change. We’re drawing maxHP, but we’re accessing it directly let’s change this line in <code class="docutils literal notranslate"><span class="pre">draw</span></code>:</p>
+<p>Now in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> we’ll have to make a small change. We’re drawing maxHP, but we’re
+accessing it directly let’s change this line in <code class="docutils literal notranslate"><span class="pre">draw</span></code>:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span> <span class="kr">end</span>
 </pre></div>
 </div>
@@ -209,7 +216,8 @@ more things. First let’s change heal to use our new getter function.</p>
    <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Then if we’ve got a status effects component and our drink applies a status effect we add that to the status effects component.</p>
+<p>Then if we’ve got a status effects component and our drink applies a status effect we add that to
+the status effects component.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
    <span class="kr">if</span> <span class="n">health</span> <span class="ow">and</span> <span class="n">drinkable</span><span class="p">.</span><span class="n">healing</span> <span class="kr">then</span>
       <span class="n">health</span><span class="p">:</span><span class="n">heal</span><span class="p">(</span><span class="n">drinkable</span><span class="p">.</span><span class="n">healing</span><span class="p">)</span>
@@ -242,9 +250,10 @@ more things. First let’s change heal to use our new getter function.</p>
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You’ve seen most of this before, except the Drinkable component. Here we’re saying that this potion should heal for 5 and modify the actor’s maxHP
-by +5 for 10 turns.</p>
-<p>If we go into the game now and drink the potion everything should work, but you’ll notice the buff doesn’t expire after 10 turns! Let’s fix that!</p>
+<p>You’ve seen most of this before, except the Drinkable component. Here we’re saying that this potion
+should heal for 5 and modify the actor’s maxHP by +5 for 10 turns.</p>
+<p>If we go into the game now and drink the potion everything should work, but you’ll notice the buff
+doesn’t expire after 10 turns! Let’s fix that!</p>
 </section>
 <section id="ticking-down-durations">
 <h2>Ticking down durations<a class="headerlink" href="#ticking-down-durations" title="Link to this heading">¶</a></h2>
@@ -272,8 +281,8 @@ by +5 for 10 turns.</p>
    <span class="kr">end</span>
 </pre></div>
 </div>
-<p>First we loop through all of the status effects currently applied to our actor, ticking down their durations and
-keeping track of which ones have expired.</p>
+<p>First we loop through all of the status effects currently applied to our actor, ticking down their
+durations and keeping track of which ones have expired.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">handle</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">expired</span><span class="p">)</span> <span class="kr">do</span>
    <span class="n">statusComponent</span><span class="p">:</span><span class="n">remove</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 <span class="kr">end</span>
@@ -288,8 +297,9 @@ keeping track of which ones have expired.</p>
 <span class="kr">return</span> <span class="n">Tick</span>
 </pre></div>
 </div>
-<p>Finally we clamp our hp to maxHP by calling <code class="docutils literal notranslate"><span class="pre">enforceBounds</span></code> from earlier. This is where you’d enforce minimums or maximums that might change.
-Without this if the player ends the duration of the buff with 15 health they’d end up keeping that health total and only see a reduction in their
+<p>Finally we clamp our hp to maxHP by calling <code class="docutils literal notranslate"><span class="pre">enforceBounds</span></code> from earlier. This is where you’d
+enforce minimums or maximums that might change. Without this if the player ends the duration of the
+buff with 15 health they’d end up keeping that health total and only see a reduction in their
 maximum.</p>
 <p>Now head over to <code class="docutils literal notranslate"><span class="pre">modules/game/systems</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class TickSystem : System</span>
@@ -302,8 +312,9 @@ maximum.</p>
 <span class="kr">return</span> <span class="n">TickSystem</span>
 </pre></div>
 </div>
-<p>Each turn we try to perform tick action on the actor. If we head back into the game and spawn a new Potion of Vitality with Geometer and drink it
-we’ll see that our health and max health both go up by 5, and then after 10 turns our max health returns to it’s original value, success!</p>
+<p>Each turn we try to perform tick action on the actor. If we head back into the game and spawn a new
+Potion of Vitality with Geometer and drink it we’ll see that our health and max health both go up by
+5, and then after 10 turns our max health returns to it’s original value, success!</p>
 </section>
 <section id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Link to this heading">¶</a></h2>

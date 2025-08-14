@@ -47,15 +47,16 @@
             
   <section id="collision">
 <h1>Collision<a class="headerlink" href="#collision" title="Link to this heading">¶</a></h1>
-<p>Most roguelikes require some kind of collision, so we’ve provided a collision system
-built in to Prism. Here’s how it works:</p>
-<p>First, register any “layers” or types of movement you want to use, usually in your module’s module.lua:</p>
+<p>Most roguelikes require some kind of collision, so we’ve provided a collision system built in to
+Prism. Here’s how it works:</p>
+<p>First, register any “layers” or types of movement you want to use, usually in your module’s
+module.lua:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">assignNextAvailableMovetype</span><span class="p">(</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">assignNextAvailableMovetype</span><span class="p">(</span><span class="s2">&quot;fly&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then, use a <a class="reference internal" href="../reference/prism/core/components/collider.html#lua-Collider" title="Collider"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Collider</span></code></a> to define collision for actors and cells. If no move types
-are supplied, nothing will be able to pass.</p>
+<p>Then, use a <a class="reference internal" href="../reference/prism/core/components/collider.html#lua-Collider" title="Collider"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Collider</span></code></a> to define collision for actors and cells. If no move types are
+supplied, nothing will be able to pass.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">{</span> <span class="n">allowedMovetypes</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">}</span> <span class="p">}</span>
 
 <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">()</span> <span class="c1">-- impassable</span>
@@ -65,8 +66,9 @@ are supplied, nothing will be able to pass.</p>
 <p class="admonition-title">Caution</p>
 <p>Cells are required to define a collider!</p>
 </div>
-<p>For movement, you can define a component yourself by using <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.createBitmaskFromMovetypes" title="Collision.createBitmaskFromMovetypes"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.createBitmaskFromMovetypes()</span></code></a> to
-create a collision mask. Here’s an example from the <a class="reference external" href="https://github.com/prismrl/prism-template">template</a>:</p>
+<p>For movement, you can define a component yourself by using
+<a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.createBitmaskFromMovetypes" title="Collision.createBitmaskFromMovetypes"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.createBitmaskFromMovetypes()</span></code></a> to create a collision mask. Here’s an example from
+the <a class="reference external" href="https://github.com/prismrl/prism-template">template</a>:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class MoverComponent : Component</span>
 <span class="c1">--- @field mask integer</span>
 <span class="kd">local</span> <span class="n">Mover</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span> <span class="s2">&quot;MoverComponent&quot;</span> <span class="p">)</span>
@@ -85,8 +87,8 @@ create a collision mask. Here’s an example from the <a class="reference extern
 </pre></div>
 </div>
 <p>Then you can use it whenever a function expects a mask, like in <a class="reference internal" href="../reference/prism/core/level.html#lua-Level.findPath" title="Level.findPath"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:findPath()</span></code></a> or
-<a class="reference internal" href="../reference/prism/core/level.html#lua-Level.getCellPassable" title="Level.getCellPassable"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:getCellPassable()</span></code></a>. You could use the same function to create a custom mask for a specific action,
-such as throwing an item over a pit.</p>
+<a class="reference internal" href="../reference/prism/core/level.html#lua-Level.getCellPassable" title="Level.getCellPassable"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:getCellPassable()</span></code></a>. You could use the same function to create a custom mask for a
+specific action, such as throwing an item over a pit.</p>
 </section>
 
 

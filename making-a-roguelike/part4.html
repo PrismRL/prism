@@ -47,8 +47,8 @@
             
   <section id="taking-licks">
 <h1>Taking licks<a class="headerlink" href="#taking-licks" title="Link to this heading">¶</a></h1>
-<p>It’s time to make kobolds a little dangerous! In this chapter we’re going
-to give the player health and have the kobolds attack them!</p>
+<p>It’s time to make kobolds a little dangerous! In this chapter we’re going to give the player health
+and have the kobolds attack them!</p>
 <section id="giving-the-player-hp">
 <h2>Giving the player HP<a class="headerlink" href="#giving-the-player-hp" title="Link to this heading">¶</a></h2>
 <p>The first thing we’re going to do is give the player a <code class="docutils literal notranslate"><span class="pre">Health</span></code> component.</p>
@@ -58,8 +58,8 @@ to give the player health and have the kobolds attack them!</p>
 </section>
 <section id="creating-the-attack-component">
 <h2>Creating the attack component<a class="headerlink" href="#creating-the-attack-component" title="Link to this heading">¶</a></h2>
-<p>We need a component to hold information about attackers. For now, it will just hold how
-much damage they deal.</p>
+<p>We need a component to hold information about attackers. For now, it will just hold how much damage
+they deal.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Attacker : Component</span>
 <span class="c1">--- @field damage integer</span>
 <span class="c1">--- @overload fun(damage: integer)</span>
@@ -80,10 +80,12 @@ much damage they deal.</p>
 </section>
 <section id="the-attack-action">
 <h2>The attack action<a class="headerlink" href="#the-attack-action" title="Link to this heading">¶</a></h2>
-<p>Now let’s make an attack action that the kobolds can use on the player. This is
-pretty straightforward. Anything with health is attackable, and we apply our <code class="docutils literal notranslate"><span class="pre">Damage</span></code> action
-based on the <code class="docutils literal notranslate"><span class="pre">Attacker</span></code> component.</p>
-<p>Note that here, <code class="docutils literal notranslate"><span class="pre">AttackTarget</span></code> is an Actor with a Health component, and is passed into <code class="docutils literal notranslate"><span class="pre">perform</span></code> as <code class="docutils literal notranslate"><span class="pre">attacked.</span></code> This is more commonly how Targets are used, versus enforcing basic types like “number”.</p>
+<p>Now let’s make an attack action that the kobolds can use on the player. This is pretty
+straightforward. Anything with health is attackable, and we apply our <code class="docutils literal notranslate"><span class="pre">Damage</span></code> action based on the
+<code class="docutils literal notranslate"><span class="pre">Attacker</span></code> component.</p>
+<p>Note that here, <code class="docutils literal notranslate"><span class="pre">AttackTarget</span></code> is an Actor with a Health component, and is passed into <code class="docutils literal notranslate"><span class="pre">perform</span></code>
+as <code class="docutils literal notranslate"><span class="pre">attacked.</span></code> This is more commonly how Targets are used, versus enforcing basic types like
+“number”.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">AttackTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">isPrototype</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">)</span>
    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
@@ -109,9 +111,11 @@ based on the <code class="docutils literal notranslate"><span class="pre">Attack
 <span class="kr">return</span> <span class="n">Attack</span>
 </pre></div>
 </div>
-<p>Next we need to make kobolds actually use the attack action. We will simply attempt to attack regardless of the situation, and assume that <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> will reject the attempt if the circumstances are wrong (e.g. out of range).</p>
-<p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/koboldcontroller.lua</span></code>
-and right above the final return we’re going to add the following:</p>
+<p>Next we need to make kobolds actually use the attack action. We will simply attempt to attack
+regardless of the situation, and assume that <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> will reject the attempt if the
+circumstances are wrong (e.g. out of range).</p>
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/koboldcontroller.lua</span></code> and right above the final return we’re
+going to add the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">KoboldController</span><span class="p">:</span><span class="nf">act</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
    <span class="p">...</span>
 
@@ -128,8 +132,8 @@ and right above the final return we’re going to add the following:</p>
 <section id="sending-a-message">
 <h2>Sending a message<a class="headerlink" href="#sending-a-message" title="Link to this heading">¶</a></h2>
 <p>If you play the game now and let yourself get beat up by kobolds you’ll find something unfortunate:
-the game crashes when you die! To solve this we’ll send a <a class="reference internal" href="../reference/prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Message</span></code></a> to the user interface with <a class="reference internal" href="../reference/prism/core/level.html#lua-Level.yield" title="Level.yield"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:yield()</span></code></a>
-when the last player controlled actor dies.</p>
+the game crashes when you die! To solve this we’ll send a <a class="reference internal" href="../reference/prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Message</span></code></a> to the user interface
+with <a class="reference internal" href="../reference/prism/core/level.html#lua-Level.yield" title="Level.yield"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:yield()</span></code></a> when the last player controlled actor dies.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You can read more about the game loop and why this happens <a class="reference internal" href="../explainers/game-loop.html"><span class="doc">here</span></a>.</p>
@@ -144,8 +148,8 @@ when the last player controlled actor dies.</p>
 <span class="kr">return</span> <span class="n">LoseMessage</span>
 </pre></div>
 </div>
-<p>This message just indicates that the game is over, so it doesn’t need to hold any data. Next
-head back over to the Die action. Let’s change its <code class="docutils literal notranslate"><span class="pre">perform</span></code> to the following:</p>
+<p>This message just indicates that the game is over, so it doesn’t need to hold any data. Next head
+back over to the Die action. Let’s change its <code class="docutils literal notranslate"><span class="pre">perform</span></code> to the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Die</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="n">level</span><span class="p">:</span><span class="n">removeActor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
 
@@ -167,13 +171,14 @@ head back over to the Die action. Let’s change its <code class="docutils liter
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>If we receive our <code class="docutils literal notranslate"><span class="pre">LoseMessage</span></code>, we simply close the game. We’ll improve on this in the next chapter.</p>
+<p>If we receive our <code class="docutils literal notranslate"><span class="pre">LoseMessage</span></code>, we simply close the game. We’ll improve on this in the next
+chapter.</p>
 </section>
 <section id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Link to this heading">¶</a></h2>
-<p>That’s it for this chapter. Kobolds now wield an <code class="docutils literal notranslate"><span class="pre">Attack</span></code> action and we’ve handled
-a fatal game crash by using a <a class="reference internal" href="../reference/prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Message</span></code></a>. In the <a class="reference internal" href="part5.html"><span class="doc">next section</span></a> we’ll focus on
-the user interface with stuff like adding a game over screen and a message log.</p>
+<p>That’s it for this chapter. Kobolds now wield an <code class="docutils literal notranslate"><span class="pre">Attack</span></code> action and we’ve handled a fatal game
+crash by using a <a class="reference internal" href="../reference/prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Message</span></code></a>. In the <a class="reference internal" href="part5.html"><span class="doc">next section</span></a> we’ll focus on the user
+interface with stuff like adding a game over screen and a message log.</p>
 </section>
 </section>
 

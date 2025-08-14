@@ -87,9 +87,10 @@
 <span class="kr">return</span> <span class="n">Die</span>
 </pre></div>
 </div>
-<p>Now that we have the <code class="docutils literal notranslate"><span class="pre">Die</span></code> action, let’s test it by changing the <code class="docutils literal notranslate"><span class="pre">Fall</span></code> action to use it instead of just removing
-the actor from the level.</p>
-<p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/fall.lua</span></code> and replace the single line in its <code class="docutils literal notranslate"><span class="pre">perform</span></code> with the following:</p>
+<p>Now that we have the <code class="docutils literal notranslate"><span class="pre">Die</span></code> action, let’s test it by changing the <code class="docutils literal notranslate"><span class="pre">Fall</span></code> action to use it instead
+of just removing the actor from the level.</p>
+<p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/fall.lua</span></code> and replace the single line in its <code class="docutils literal notranslate"><span class="pre">perform</span></code> with
+the following:</p>
 <div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- level:removeActor(self.owner) -- into the depths with you!</span>
 </pre></div>
 </div>
@@ -99,9 +100,13 @@ the actor from the level.</p>
 </section>
 <section id="doing-damage">
 <h2>Doing damage<a class="headerlink" href="#doing-damage" title="Link to this heading">¶</a></h2>
-<p>Next we’re going to add the Damage action. This accepts a single target: the amount of damage to be taken.
-It modifies the health of the target and if it’s at or below zero we trigger the Die action we just added.</p>
-<p>An action’s <code class="docutils literal notranslate"><span class="pre">targets</span></code> are the parameters passed into the <code class="docutils literal notranslate"><span class="pre">perform</span></code> method, in order. We use the <a class="reference internal" href="../reference/prism/core/target.html#lua-Target" title="Target"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Target</span></code></a> to apply validation to ensure types within <code class="docutils literal notranslate"><span class="pre">perform</span></code> match our expectations. Typically, you will be passing in instances of actors, but in this case it’s just a number representing the amount of damage we will apply.</p>
+<p>Next we’re going to add the Damage action. This accepts a single target: the amount of damage to be
+taken. It modifies the health of the target and if it’s at or below zero we trigger the Die action
+we just added.</p>
+<p>An action’s <code class="docutils literal notranslate"><span class="pre">targets</span></code> are the parameters passed into the <code class="docutils literal notranslate"><span class="pre">perform</span></code> method, in order. We use the
+<a class="reference internal" href="../reference/prism/core/target.html#lua-Target" title="Target"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Target</span></code></a> to apply validation to ensure types within <code class="docutils literal notranslate"><span class="pre">perform</span></code> match our expectations.
+Typically, you will be passing in instances of actors, but in this case it’s just a number
+representing the amount of damage we will apply.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DamageTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">isType</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span>
 
@@ -124,8 +129,8 @@ It modifies the health of the target and if it’s at or below zero we trigger t
 <span class="kr">return</span> <span class="n">Damage</span>
 </pre></div>
 </div>
-<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/kick.lua</span></code> and at the end of <code class="docutils literal notranslate"><span class="pre">Kick:perform</span></code> we’re going to add the
-following:</p>
+<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/kick.lua</span></code> and at the end of <code class="docutils literal notranslate"><span class="pre">Kick:perform</span></code> we’re going
+to add the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="p">...</span>
 
@@ -139,9 +144,9 @@ following:</p>
 </section>
 <section id="that-s-all-for-now">
 <h2>That’s all for now<a class="headerlink" href="#that-s-all-for-now" title="Link to this heading">¶</a></h2>
-<p>We’ve started on a basic health system and made our <code class="docutils literal notranslate"><span class="pre">Kick</span></code> action deal damage. In the <a class="reference internal" href="part4.html"><span class="doc">next chapter</span></a>
-we’ll implement the player health, make kobolds dangerous by giving them the attack action, and implement
-the required logic for the player dying.</p>
+<p>We’ve started on a basic health system and made our <code class="docutils literal notranslate"><span class="pre">Kick</span></code> action deal damage. In the <a class="reference internal" href="part4.html"><span class="doc">next
+chapter</span></a> we’ll implement the player health, make kobolds dangerous by giving them the attack
+action, and implement the required logic for the player dying.</p>
 </section>
 </section>
 

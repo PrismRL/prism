@@ -54,8 +54,8 @@
 </div>
 <section id="giving-the-player-an-inventory">
 <h2>Giving the player an inventory<a class="headerlink" href="#giving-the-player-an-inventory" title="Link to this heading">¶</a></h2>
-<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and add our inventory component.
-We’ll limit the size to the alphabet.</p>
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and add our inventory component. We’ll limit
+the size to the alphabet.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Inventory</span><span class="p">{</span>
    <span class="n">limitCount</span> <span class="o">=</span> <span class="mi">26</span><span class="p">,</span>
 <span class="p">},</span>
@@ -71,15 +71,15 @@ We’ll limit the size to the alphabet.</p>
 <span class="p">{</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;pickup&quot;</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Picks up an inventory item.&quot;</span> <span class="p">},</span>
 </pre></div>
 </div>
-<p>We’ll use these later in the tutorial to open the inventory and return to the main
-game state.</p>
+<p>We’ll use these later in the tutorial to open the inventory and return to the main game state.</p>
 </section>
 <section id="creating-an-inventory-screen">
 <h2>Creating an inventory screen<a class="headerlink" href="#creating-an-inventory-screen" title="Link to this heading">¶</a></h2>
 <p>Navigate to <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">inventorystate.lua</span></code>.</p>
-<p>We create a new <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> and we pass in the display, decision, level,
-and the inventory. We get all the items at the time of instantiation and store them in the items field for convenience.
-Finally we create a mapping of letters from 1-26 corresponding to a-z which we’ll use during input handling.</p>
+<p>We create a new <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> and we pass in the display, decision, level, and the
+inventory. We get all the items at the time of instantiation and store them in the items field for
+convenience. Finally we create a mapping of letters from 1-26 corresponding to a-z which we’ll use
+during input handling.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">utf8</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;utf8&quot;</span>
 <span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
 
@@ -104,15 +104,17 @@ Finally we create a mapping of letters from 1-26 corresponding to a-z which we�
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We also want to keep a reference to the previous <code class="docutils literal notranslate"><span class="pre">GameState</span></code>, so we’ll use <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState.load" title="GameState.load"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">GameState:load()</span></code></a> to capture it.</p>
+<p>We also want to keep a reference to the previous <code class="docutils literal notranslate"><span class="pre">GameState</span></code>, so we’ll use
+<a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState.load" title="GameState.load"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">GameState:load()</span></code></a> to capture it.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">load</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">previousState</span> <span class="o">=</span> <span class="n">previous</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we’ll draw the inventory. To show the inventory on top of the level, we’ll first draw the previous state.
-Then we clear the display and draw a simple header, aligned to the right side of the screen. Finally, we loop through
-each item in our inventory, assign it a letter based on its index, and draw it to the screen.</p>
+<p>Now we’ll draw the inventory. To show the inventory on top of the level, we’ll first draw the
+previous state. Then we clear the display and draw a simple header, aligned to the right side of the
+screen. Finally, we loop through each item in our inventory, assign it a letter based on its index,
+and draw it to the screen.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
    <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
@@ -135,9 +137,9 @@ each item in our inventory, assign it a letter based on its index, and draw it t
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we handle keypresses. For the items we loop through our letters to find which one matches our keypress
-and for now we just try to drop the item when we hit that button. <code class="docutils literal notranslate"><span class="pre">Drop</span></code>’s <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">canPerform()</span></code></a> will return false
-if given a <code class="docutils literal notranslate"><span class="pre">nil</span></code> target.</p>
+<p>Now we handle keypresses. For the items we loop through our letters to find which one matches our
+keypress and for now we just try to drop the item when we hit that button. <code class="docutils literal notranslate"><span class="pre">Drop</span></code>’s
+<a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">canPerform()</span></code></a> will return false if given a <code class="docutils literal notranslate"><span class="pre">nil</span></code> target.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
    <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">letter</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">)</span> <span class="kr">do</span>
       <span class="kr">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">letter</span> <span class="kr">then</span>
@@ -153,8 +155,8 @@ if given a <code class="docutils literal notranslate"><span class="pre">nil</spa
    <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Then we check if the user hit the inventory or return key, and if so we call <a class="reference internal" href="../reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.pop" title="GameStateManager.pop"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">GameStateManager:pop()</span></code></a>,
-returning us to the previous state.</p>
+<p>Then we check if the user hit the inventory or return key, and if so we call
+<a class="reference internal" href="../reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.pop" title="GameStateManager.pop"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">GameStateManager:pop()</span></code></a>, returning us to the previous state.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kd">local</span> <span class="n">binding</span> <span class="o">=</span> <span class="n">keybindings</span><span class="p">:</span><span class="n">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
    <span class="kr">if</span> <span class="n">binding</span> <span class="o">==</span> <span class="s2">&quot;inventory&quot;</span> <span class="ow">or</span> <span class="n">binding</span> <span class="o">==</span> <span class="s2">&quot;return&quot;</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
@@ -238,14 +240,14 @@ returning us to the previous state.</p>
 </details></section>
 <section id="opening-the-inventory">
 <h2>Opening the inventory<a class="headerlink" href="#opening-the-inventory" title="Link to this heading">¶</a></h2>
-<p>With the inventory state complete it’s time to glue things together. Head back to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and
-let’s add some input handling to get the <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code> to pop up.</p>
+<p>With the inventory state complete it’s time to glue things together. Head back to
+<code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and let’s add some input handling to get the <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code> to pop up.</p>
 <p>First <a class="reference external" href="https://www.lua.org/manual/5.1/manual.html#pdf-require"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">require</span></code></a> access our <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code> at the top of the file.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">InventoryState</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;gamestates.inventorystate&quot;</span>
 </pre></div>
 </div>
-<p>Then at the bottom of <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code>, just above the wait action, we’ll check for the inventory key
-and push the <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code>, if the current actor (<code class="docutils literal notranslate"><span class="pre">owner</span></code>) has an inventory.</p>
+<p>Then at the bottom of <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code>, just above the wait action, we’ll check for the
+inventory key and push the <code class="docutils literal notranslate"><span class="pre">InventoryState</span></code>, if the current actor (<code class="docutils literal notranslate"><span class="pre">owner</span></code>) has an inventory.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">scancode</span><span class="p">)</span>
    <span class="c1">-- ...</span>
 
@@ -266,9 +268,10 @@ and push the <code class="docutils literal notranslate"><span class="pre">Invent
 </section>
 <section id="creating-an-item">
 <h2>Creating an item<a class="headerlink" href="#creating-an-item" title="Link to this heading">¶</a></h2>
-<p>Our kobold kicking hero needs something to chew on, and a way to regain health! Let’s add a Meat Brick that they
-can pick up and eat to restore their health.</p>
-<p>Create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">meatbrick.lua</span></code> and register the following actor.</p>
+<p>Our kobold kicking hero needs something to chew on, and a way to regain health! Let’s add a Meat
+Brick that they can pick up and eat to restore their health.</p>
+<p>Create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">meatbrick.lua</span></code> and register the following
+actor.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;MeatBrick&quot;</span><span class="p">,</span> <span class="kr">function</span> <span class="p">()</span>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span><span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Meat Brick&quot;</span><span class="p">),</span>
@@ -301,17 +304,16 @@ We’ll make it consumable in the next chapter!</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We grab the first item on the tile and use it as the target for <code class="docutils literal notranslate"><span class="pre">Pickup</span></code>.
-Boot up the game and draw in a few meat bricks with Geometer. You should be able to
-pick up and drop them now! In a future chapter, we’ll hook up the <cite>Die</cite> action to sometimes
-create a new <cite>MeatBrick</cite>.</p>
+<p>We grab the first item on the tile and use it as the target for <code class="docutils literal notranslate"><span class="pre">Pickup</span></code>. Boot up the game and
+draw in a few meat bricks with Geometer. You should be able to pick up and drop them now! In a
+future chapter, we’ll hook up the <cite>Die</cite> action to sometimes create a new <cite>MeatBrick</cite>.</p>
 </section>
 <section id="fixing-the-draw-order">
 <h2>Fixing the draw order<a class="headerlink" href="#fixing-the-draw-order" title="Link to this heading">¶</a></h2>
-<p>You might notice that now when the player moves on top of the food sometimes the player is drawn underneath the food.
-We can fix this by changing the depth or ‘layer’ the player’s drawable is drawn at.
-Go ahead and navigate back to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code>
-and change the following line from</p>
+<p>You might notice that now when the player moves on top of the food sometimes the player is drawn
+underneath the food. We can fix this by changing the depth or ‘layer’ the player’s drawable is drawn
+at. Go ahead and navigate back to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and change the following line
+from</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span> <span class="p">},</span>
 </pre></div>
 </div>
@@ -319,14 +321,15 @@ and change the following line from</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">GREEN</span><span class="p">,</span> <span class="n">layer</span> <span class="o">=</span> <span class="nb">math.huge</span> <span class="p">},</span>
 </pre></div>
 </div>
-<p>We’re setting the background color to <code class="docutils literal notranslate"><span class="pre">nil</span></code> so that it still defaults to transparent, but we’re setting our draw priority
-to <a class="reference external" href="https://www.lua.org/manual/5.1/manual.html#pdf-math.huge"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">math.huge</span></code></a> so the player will always draw on top of everything else.</p>
+<p>We’re setting the background color to <code class="docutils literal notranslate"><span class="pre">nil</span></code> so that it still defaults to transparent, but we’re
+setting our draw priority to <a class="reference external" href="https://www.lua.org/manual/5.1/manual.html#pdf-math.huge"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">math.huge</span></code></a> so the player will always draw on top of
+everything else.</p>
 </section>
 <section id="in-the-next-chapter">
 <h2>In the next chapter<a class="headerlink" href="#in-the-next-chapter" title="Link to this heading">¶</a></h2>
-<p>We’ve implemented a simple inventory with the provided inventory module.
-In the next chapter we’ll make the bricks consumable, get them to drop from kobolds, and add
-user interface elements to allow the user a choice between dropping and eating the meat.</p>
+<p>We’ve implemented a simple inventory with the provided inventory module. In the next chapter we’ll
+make the bricks consumable, get them to drop from kobolds, and add user interface elements to allow
+the user a choice between dropping and eating the meat.</p>
 </section>
 </section>
 
