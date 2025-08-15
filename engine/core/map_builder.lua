@@ -116,8 +116,7 @@ end
 --- @return Cell -- The cell at the specified coordinates, or the initialValue if not set.
 function MapBuilder:get(x, y)
    local value = prism.SparseGrid.get(self, x, y)
-   if value == nil then value = self.initialValue end
-   return value
+   return value or self.initialValue()
 end
 
 --- Sets the cell at the specified coordinates.
