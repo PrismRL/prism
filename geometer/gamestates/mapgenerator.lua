@@ -1,21 +1,19 @@
+--- A wrapper around Geometer's EditorState meant for stepping through map generation.
 --- @class MapGeneratorState : EditorState
+--- @overload fun(generator: function, builder: MapBuilder, display: Display): MapGeneratorState
 local MapGeneratorState = geometer.EditorState:extend "MapGeneratorState"
 
----@param generator fun(mapbuilder: MapBuilder): fun()
-function MapGeneratorState:__new(generator)
-   local attachable = prism.MapBuilder()
-   self.generator = coroutine.create(generator(attachable))
-
-   local spriteAtlas =
-      spectrum.SpriteAtlas.fromGrid("example_srd/display/wanderlust_16x16.png", 16, 16)
-   local display = spectrum.Display(spriteAtlas, prism.Vector2(16, 16), attachable)
-
-   geometer.EditorState.__new(self, attachable, display)
+--- @param generator function
+--- @param builder MapBuilder
+--- @param display Display
+function MapGeneratorState:__new(generator, builder, display)
+   geometer.EditorState.__new(self, builder, display)
+   self.co = coroutine.create(generator)
 end
 
 function MapGeneratorState:update(dt)
    if not self.editor.active then
-      coroutine.resume(self.generator)
+      coroutine.resume(self.co)
       self.editor.active = true
    end
 
