@@ -62,11 +62,11 @@ function Log.addMessageSensed(level, action, message, ...)
       if senses.actors:hasActor(action.owner) then seesParty = true end
 
       for i = 1, action:getNumTargets() do
-         local target = action:getTarget(i)
-         if actor == target then return end
+         local targeted = action:getTargeted(i)
+         if actor == targeted then return end
 
-         if prism.Actor:is(target) then
-            if senses.actors:hasActor(target) then seesParty = true end
+         if prism.Actor:is(targeted) then
+            if senses.actors:hasActor(targeted) then seesParty = true end
          end
       end
 
