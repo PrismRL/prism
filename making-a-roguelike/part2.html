@@ -99,8 +99,7 @@ an allowed movement type.</p>
 </div>
 <p>Determining whether we <cite>should</cite> fall is a bit more complex. We need the following to be true:</p>
 <p>The cell we’re standing on has the void component, which we can check simply:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param level Level</span>
-<span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">getCell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
@@ -109,14 +108,17 @@ an allowed movement type.</p>
 </pre></div>
 </div>
 <p>And that we can’t move through the cell. We can get the cell’s collision mask and compare it with
-our own with <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.checkBitmaskOverlap" title="Collision.checkBitmaskOverlap"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.checkBitmaskOverlap()</span></code></a> to accomplish that check:</p>
+our own with <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.checkBitmaskOverlap" title="Collision.checkBitmaskOverlap"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.checkBitmaskOverlap()</span></code></a> to accomplish that check. If the actor
+doesn’t have a <code class="docutils literal notranslate"><span class="pre">Mover</span></code> component we’ll default to falling.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kd">local</span> <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cell</span><span class="p">:</span><span class="n">getCollisionMask</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">mover</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">mover</span> <span class="ow">and</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span> <span class="ow">or</span> <span class="mi">0</span> <span class="c1">-- default to the immovable mask</span>
+   <span class="kr">if</span> <span class="n">mover</span> <span class="kr">then</span>
+      <span class="c1">-- We have a Void component on the cell. If the actor CAN&#39;T move here</span>
+      <span class="c1">-- then they fall.</span>
+      <span class="kr">return</span> <span class="ow">not</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">checkBitmaskOverlap</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span><span class="p">)</span>
+   <span class="kr">end</span>
 
-   <span class="c1">-- We have a Void component on the cell. If the actor CAN&#39;T move here</span>
-   <span class="c1">-- then they fall.</span>
-   <span class="kr">return</span> <span class="ow">not</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">checkBitmaskOverlap</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+   <span class="kr">return</span> <span class="kc">true</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Fall</span>
@@ -130,7 +132,6 @@ our own with <a class="reference internal" href="../reference/prism/core/collisi
 <span class="c1">--- @overload fun(owner: Actor): Fall</span>
 <span class="kd">local</span> <span class="n">Fall</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Fall&quot;</span>
 
-<span class="c1">--- @param level Level</span>
 <span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">getCell</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -140,14 +141,15 @@ our own with <a class="reference internal" href="../reference/prism/core/collisi
 
    <span class="kd">local</span> <span class="n">cellMask</span> <span class="o">=</span> <span class="n">cell</span><span class="p">:</span><span class="n">getCollisionMask</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">mover</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">mover</span> <span class="ow">and</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span> <span class="ow">or</span> <span class="mi">0</span> <span class="c1">-- default to the immovable mask</span>
+   <span class="kr">if</span> <span class="n">mover</span> <span class="kr">then</span>
+      <span class="c1">-- We have a Void component on the cell. If the actor CAN&#39;T move here</span>
+      <span class="c1">-- then they fall.</span>
+      <span class="kr">return</span> <span class="ow">not</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">checkBitmaskOverlap</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">mover</span><span class="p">.</span><span class="n">mask</span><span class="p">)</span>
+   <span class="kr">end</span>
 
-   <span class="c1">-- We have a Void component on the cell. If the actor CAN&#39;T move here</span>
-   <span class="c1">-- then they fall.</span>
-   <span class="kr">return</span> <span class="ow">not</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">checkBitmaskOverlap</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+   <span class="kr">return</span> <span class="kc">true</span>
 <span class="kr">end</span>
 
-<span class="c1">--- @param level Level</span>
 <span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="n">level</span><span class="p">:</span><span class="n">perform</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Die</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">))</span>
 <span class="kr">end</span>
@@ -159,26 +161,17 @@ our own with <a class="reference internal" href="../reference/prism/core/collisi
 </details></section>
 <section id="triggering-fall-with-a-system">
 <h2>Triggering fall with a system<a class="headerlink" href="#triggering-fall-with-a-system" title="Link to this heading">¶</a></h2>
-<p>We’ve defined a fall action, but kobolds aren’t exactly volunteering to fall into the void.</p>
-<p>Let’s create a <a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> to make sure things fall when they ought to.</p>
-<ol class="arabic simple">
-<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">modules/game/</span></code> directory.</p></li>
-<li><p>Create a new folder called <code class="docutils literal notranslate"><span class="pre">systems</span></code> if it doesn’t exist.</p></li>
-<li><p>Create a new file in that folder named <code class="docutils literal notranslate"><span class="pre">fallsystem.lua</span></code>.</p></li>
-</ol>
+<p>We’ve defined a fall action, but kobolds aren’t exactly volunteering to fall into the void. Let’s
+create a <a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> to make sure things fall when they ought to. Create a new directory
+<code class="docutils literal notranslate"><span class="pre">modules/game/systems</span></code> and a new file <code class="docutils literal notranslate"><span class="pre">fallsystem.lua</span></code>.</p>
 <p>We want the actor to fall immediately when they land on a valid tile, so we’ll use the
-<a class="reference internal" href="../reference/prism/core/system.html#lua-System.onMove" title="System.onMove"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">System:onMove()</span></code></a> callback to apply the fall action whenever valid:</p>
+<a class="reference internal" href="../reference/prism/core/system.html#lua-System.onMove" title="System.onMove"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">System:onMove()</span></code></a> callback to apply the fall action whenever valid.
+<a class="reference internal" href="../reference/prism/core/level.html#lua-Level.tryPerform" title="Level.tryPerform"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:tryPerform()</span></code></a> will perform the action if it’s valid, but won’t error if it’s not.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class FallSystem : System</span>
 <span class="kd">local</span> <span class="n">FallSystem</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">System</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;FallSystem&quot;</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param actor Actor</span>
 <span class="kr">function</span> <span class="nc">FallSystem</span><span class="p">:</span><span class="nf">onMove</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">fall</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Fall</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>
-
-   <span class="kr">if</span> <span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">fall</span><span class="p">)</span> <span class="kr">then</span>
-      <span class="n">level</span><span class="p">:</span><span class="n">perform</span><span class="p">(</span><span class="n">fall</span><span class="p">)</span>
-   <span class="kr">end</span>
+   <span class="n">level</span><span class="p">:</span><span class="n">tryPerform</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Fall</span><span class="p">(</span><span class="n">actor</span><span class="p">))</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">FallSystem</span>

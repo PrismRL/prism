@@ -149,7 +149,13 @@ our overload here as well to reflect the new arguments.</p>
 <p>Now modify our message handler so it passes the player into the next level:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">Descend</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
    <span class="c1">--- @cast message DescendMessage</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">descender</span><span class="p">),</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()))</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span>
+      <span class="n">GameLevelState</span><span class="p">(</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span>
+         <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">descender</span><span class="p">),</span>
+         <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()</span>
+      <span class="p">)</span>
+   <span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -179,7 +185,8 @@ modules.</p>
 <section id="moving-along">
 <h2>Moving along<a class="headerlink" href="#moving-along" title="Link to this heading">¶</a></h2>
 <p>We’ve created a <code class="docutils literal notranslate"><span class="pre">Game</span></code> class to maintain some global game state and now pass our player to the
-next level. In the next section, we’ll start working on an inventory system, along with a few items.</p>
+next level. In the <a class="reference internal" href="part10.html"><span class="doc">next section</span></a>, we’ll start working on an inventory system, along
+with a few items.</p>
 </section>
 </section>
 

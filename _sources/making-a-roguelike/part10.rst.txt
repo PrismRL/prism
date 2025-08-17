@@ -322,6 +322,6 @@ everything else.
 In the next chapter
 -------------------
 
-We've implemented a simple inventory with the provided inventory module. In the next chapter we'll
-make the bricks consumable, get them to drop from kobolds, and add user interface elements to allow
-the user a choice between dropping and eating the meat.
+We've implemented a simple inventory with the provided inventory module. In the :doc:`next chapter
+<part11>` we'll make the bricks consumable, get them to drop from kobolds, and add user interface
+elements to allow the user a choice between dropping and eating the meat.

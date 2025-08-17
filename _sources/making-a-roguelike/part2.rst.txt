@@ -70,7 +70,6 @@ The cell we're standing on has the void component, which we can check simply:
 
 .. code-block:: lua
 
-   --- @param level Level
    function Fall:canPerform(level)
       local x, y = self.owner:getPosition():decompose()
       local cell = level:getCell(x, y)
@@ -79,17 +78,20 @@ The cell we're standing on has the void component, which we can check simply:
       if not cell:has(prism.components.Void) then return false end
 
 And that we can't move through the cell. We can get the cell's collision mask and compare it with
-our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
+our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check. If the actor
+doesn't have a ``Mover`` component we'll default to falling.
 
 .. code-block:: lua
 
       local cellMask = cell:getCollisionMask()
       local mover = self.owner:get(prism.components.Mover)
-      local mask = mover and mover.mask or 0 -- default to the immovable mask
+      if mover then
+         -- We have a Void component on the cell. If the actor CAN'T move here
+         -- then they fall.
+         return not prism.Collision.checkBitmaskOverlap(cellMask, mover.mask)
+      end
 
-      -- We have a Void component on the cell. If the actor CAN'T move here
-      -- then they fall.
-      return not prism.Collision.checkBitmaskOverlap(cellMask, mask)
+      return true
    end
 
    return Fall
@@ -104,7 +106,6 @@ our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
       --- @overload fun(owner: Actor): Fall
       local Fall = prism.Action:extend "Fall"
 
-      --- @param level Level
       function Fall:canPerform(level)
          local x, y = self.owner:getPosition():decompose()
          local cell = level:getCell(x, y)
@@ -114,14 +115,15 @@ our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
 
          local cellMask = cell:getCollisionMask()
          local mover = self.owner:get(prism.components.Mover)
-         local mask = mover and mover.mask or 0 -- default to the immovable mask
+         if mover then
+            -- We have a Void component on the cell. If the actor CAN'T move here
+            -- then they fall.
+            return not prism.Collision.checkBitmaskOverlap(cellMask, mover.mask)
+         end
 
-         -- We have a Void component on the cell. If the actor CAN'T move here
-         -- then they fall.
-         return not prism.Collision.checkBitmaskOverlap(cellMask, mask)
+         return true
       end
 
-      --- @param level Level
       function Fall:perform(level)
          level:perform(prism.actions.Die(self.owner))
       end
@@ -131,30 +133,21 @@ our own with :lua:func:`Collision.checkBitmaskOverlap` to accomplish that check:
 Triggering fall with a system
 -----------------------------
 
-We've defined a fall action, but kobolds aren’t exactly volunteering to fall into the void.
-
-Let's create a :lua:class:`System` to make sure things fall when they ought to.
-
-1. Navigate to the ``modules/game/`` directory.
-2. Create a new folder called ``systems`` if it doesn't exist.
-3. Create a new file in that folder named ``fallsystem.lua``.
+We've defined a fall action, but kobolds aren’t exactly volunteering to fall into the void. Let's
+create a :lua:class:`System` to make sure things fall when they ought to. Create a new directory
+``modules/game/systems`` and a new file ``fallsystem.lua``.
 
 We want the actor to fall immediately when they land on a valid tile, so we'll use the
-:lua:func:`System.onMove` callback to apply the fall action whenever valid:
+:lua:func:`System.onMove` callback to apply the fall action whenever valid.
+:lua:func:`Level.tryPerform` will perform the action if it's valid, but won't error if it's not.
 
 .. code-block:: lua
 
    --- @class FallSystem : System
    local FallSystem = prism.System:extend "FallSystem"
 
-   --- @param level Level
-   --- @param actor Actor
    function FallSystem:onMove(level, actor)
-      local fall = prism.actions.Fall(actor)
-
-      if level:canPerform(fall) then
-         level:perform(fall)
-      end
+      level:tryPerform(prism.actions.Fall(actor))
    end
 
    return FallSystem

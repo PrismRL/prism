@@ -138,6 +138,7 @@ not tracking depth anywhere.
 In the next chapter
 -------------------
 
-We've created a ``Stairs`` actor that takes us down an infinite amount of levels. Next, we'll set up
-a ``Game`` object that tracks what depth we're on and manages level generation. We'll pass the
-player to the new level so that we're playing as the same actor all the way down.
+We've created a ``Stairs`` actor that takes us down an infinite amount of levels. In the :doc:`next
+chapter <part9>`, we'll set up a ``Game`` object that tracks what depth we're on and manages level
+generation. We'll pass the player to the new level so that we're playing as the same actor all the
+way down.

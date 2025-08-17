@@ -121,7 +121,13 @@ Now modify our message handler so it passes the player into the next level:
 
    if prism.messages.Descend:is(message) then
       --- @cast message DescendMessage
-      self.manager:enter(GameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
+      self.manager:enter(
+         GameLevelState(
+            self.display,
+            Game:generateNextFloor(message.descender),
+            Game:getLevelSeed()
+         )
+      )
    end
 
 To indicate what level we're on, add another call to :lua:func:`Display.putString` below our health
@@ -157,4 +163,5 @@ Moving along
 ------------
 
 We've created a ``Game`` class to maintain some global game state and now pass our player to the
-next level. In the next section, we'll start working on an inventory system, along with a few items.
+next level. In the :doc:`next section <part10>`, we'll start working on an inventory system, along
+with a few items.
