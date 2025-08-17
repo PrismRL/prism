@@ -5,21 +5,20 @@ Stashing treasure
 
    This section hasn't had a second pass! Some chests might be mimics!
 
-In this chapter we'll add a drop table to the kobolds, and create chests the player can open like a
-loot pinata. To do this we'll be making heavy use of the DropTable component included in
-``extra/droptable``. How to write your own drop tables will be covered in a future how-to.
+In this chapter we'll use the optional :lua:class:`DropTable` component to implement chests and have
+kobolds drop items.
 
 Getting the drop on it
 ----------------------
 
-Let's head over to ``main.lua`` where you'll add the following line to your module loading before
-``modules/game``.
+Head over to ``main.lua`` and load the drop table module.
 
 .. code-block:: lua
 
    prism.loadModule("prism/extra/droptable")
 
-Now let's make our way over to ``modules/game/actors/kobold.lua`` and add the droptable component.
+Now we can give ``modules/game/actors/kobold.lua`` a ``DropTable``. We'll give them a 30% chance to
+drop one of our meat bricks.
 
 .. code-block:: lua
 
@@ -28,21 +27,18 @@ Now let's make our way over to ``modules/game/actors/kobold.lua`` and add the dr
       entry = prism.actors.MeatBrick,
    }
 
-This is a really simple drop table, and it just says there's a 30% chance for the kobold to drop a
-meat brick. If you were to go into the game and kick a few kobolds now you'd notice nothing is
-happening! That's because the drop table needs to be hooked into the game logic. Let's head over to
-``modules/game/actions/die.lua`` where we'll change the beginning the Die action.
+If you were to kick a few kobolds you'd notice nothing is happening! That's because the drop table
+needs to be hooked into the game logic. Open ``modules/game/actions/die.lua`` and we'll add drops to
+the level when an actor dies.
 
 .. code-block:: lua
 
-   local walkmask = prism.Collision.createBitmaskFromMovetypes{"walk"}
    function Die:perform(level)
       local x, y = self.owner:getPosition():decompose()
       local dropTable = self.owner:get(prism.components.DropTable)
-      local cellmask = level:getCell(x, y):getCollisionMask()
 
-      if prism.Collision.checkBitmaskOverlap(walkmask, cellmask) and dropTable then
-         local drops = dropTable:getDrops(level.RNG)
+      if dropTable then
+         local drops = dropTable:getDrops(level.rng)
          for _, drop in ipairs(drops) do
             level:addActor(drop, x, y)
          end
@@ -51,22 +47,25 @@ happening! That's because the drop table needs to be hooked into the game logic.
       -- rest of Die:perform
    end
 
-First we make our walkmask, a simple collision mask saying an actor with the walk movetype can move
-onto this tile. Then within perform we'll get the Die'ers position, drop table, and the cell they're
-standing on's mask.
+If they have a drop table, we use :lua:func:`DropTable.getDrops` to roll the drop table, and add
+each item to the level at the actor's position.
 
-If the cell is walkable and they have a drop table we roll on the table and then add all of the
-results to the the level at the tile which they died. We check walkability so we don't spawn items
-over a pit. Now if you boot up the game and kick a few kobolds around you should start getting some
-meat bricks as drops, success!
+To ensure dropped items don't float over pits, we can add the :lua:func:`System.onActorAdded`
+callback to ``modules/game/systems/fallsystem.lua``.
+
+.. code-block:: lua
+
+   function FallSystem:onActorAdded(level, actor)
+      level:tryPerform(prism.actions.Fall(actor))
+   end
+
+Boot up the game and kick a few kobolds around. They should start dropping meat!
 
 Creating containers
 -------------------
 
-Many games won't settle just for drop tables. You might want a zelda style chest the player can
-crack open and get some goodies! So let's add that. The first step we'll need to take is adding a
-new tag component. Navigate to ``modules/game/components`` and create a new file there called
-``container.lua``.
+For chests, we'll start with a new tag. Navigate ``modules/game/components`` and create a new file
+there called ``container.lua``.
 
 .. code-block:: lua
 
@@ -80,13 +79,12 @@ new tag component. Navigate to ``modules/game/components`` and create a new file
 
    return Container
 
-This is a really simple component that just marks an actor with an inventory as a container that can
-be opened. Next up let's head over to ``modules/game/actions`` where we'll create a new file called
-``opencontainer.lua``.
+Next we'll define a new action for opening these. Head over to ``modules/game/actions`` and create a
+new file called ``opencontainer.lua``. For our target, we want a container within range 1 that we
+can see.
 
 .. code-block:: lua
 
-   local sf = string.format
    local Name = prism.components.Name
    local Log = prism.components.Log
 
@@ -95,7 +93,8 @@ be opened. Next up let's head over to ``modules/game/actions`` where we'll creat
       :range(1)
       :sensed()
 
-Let's start with our target. We specify it must be a container, at range 1, and sensed by the actor.
+In ``perform``, we grab every item in the target container's inventory and dump them on the ground,
+before removing the container and logging messages.
 
 .. code-block:: lua
 
@@ -108,55 +107,51 @@ Let's start with our target. We specify it must be a container, at range 1, and 
    --- @param container Actor
    function OpenContainer:perform(level, container)
       local inventory = container:expect(prism.components.Inventory)
-      local items = inventory:query():gather()
-
       local x, y = container:expectPosition():decompose()
-      for _, item in ipairs(items) do
+
+      inventory:query():each(function(item)
          inventory:removeItem(item)
          level:addActor(item, x, y)
-      end
+      end)
 
       level:removeActor(container)
 
       local containerName = Name.get(container)
-      Log.addMessage(self.owner, sf("You open the %s.", containerName))
-      Log.addMessageSensed(level, self, sf("The %s opens the %s.", Name.get(self.owner), containerName))
+      Log.addMessage(self.owner, "You kick open the %s.", containerName)
+      Log.addMessageSensed(level, self, "The %s kicks open the %s.", Name.get(self.owner), containerName)
    end
 
    return OpenContainer
 
-Then we get to the perform action. We know that the container has to have an inventory because it's
-required by the container component. So we grab the inventory and get a list of the items it
-contains. Then we loop through that list and remove them from the container's inventory while adding
-them to the level. Finally, we remove the container itself from the level.
-
 Now that we're all set up with our container logic we need to actually make a container to try this
-with. Let's create a new file in ``modules/game/actors`` called ``chest.lua``.
+with. Let's create a new file in ``modules/game/actors`` called ``chest.lua``. We'll accept a
+``contents`` parameter to define the items in the chest.
 
 .. code-block:: lua
 
    prism.registerActor("Chest", function(contents)
-   return prism.Actor.fromComponents {
-       prism.components.Name("Chest"),
-       prism.components.Position(),
-       prism.components.Inventory{items = contents},
-       prism.components.Drawable("(", prism.Color4.YELLOW),
-       prism.components.Container(),
-       prism.components.Collider()
-   }
+      --- @cast contents Actor[]
+      return prism.Actor.fromComponents {
+          prism.components.Name("Chest"),
+          prism.components.Position(),
+          prism.components.Inventory{items = contents},
+          prism.components.Drawable("(", prism.Color4.YELLOW),
+          prism.components.Container(),
+          prism.components.Collider()
+      }
    end)
 
-Let's break this down a little since this is the first time we're really making use of the factory
-to take optional parameters for an actor. We accept a contents argument to the Chest constructor.
-All parameters to the factory function MUST be optional! In this case it'd set items = nil and
-inventory wouldn't see the field. If this parameter is not optional Geometer will crash on startup!
+.. note::
+
+   To support Geometer, parameters passed to actor and cell factories must be optional.
 
 Cracking a cold one
 -------------------
 
-If you go ingame now and bump the chest you'll notice you kick it, that's definitely not what we
-want. We'll have to change to logic in ``GameLevelState``. Let's find out way to
-``GameLevelState:keypressed`` and add the following right above where we try to kick:
+If you launch the game and bump into a chest you'll notice you kick it, which is fun but not exactly
+what we want. We'll have to change to logic in ``GameLevelState``. In
+``modules/gamestates/gamelevelstate.lua`` ``GameLevelState:keypressed`` and add the following right
+above where we try to kick:
 
 .. code-block:: lua
 
@@ -187,7 +182,7 @@ Spicing up level generation
 ---------------------------
 
 Let's first create a new top level folder, ``loot`` and within that folder a new file ``chest.lua``.
-Let's keep it really simple for now.
+Let's keep it simple for now and give chests a guaranteed drop of meat.
 
 .. code-block:: lua
 
@@ -197,31 +192,23 @@ Let's keep it really simple for now.
       }
    }
 
-This defines a single gauranteed drop of a meatbrick. We'll flesh this out a lot more when we create
-more stuff for chests to drop. Next let's head over to ``levelgen.lua`` and let's spawn a chest
-using this level generation.
-
-At the end of the anonymous function we return in this file just above ``return builder`` let's add
-the following.
+At the end of ``levelgen.lua``, we'll spawn a chest in the middle of a random room.
 
 .. code-block:: lua
 
    local chestRoom = availableRooms[rng:random(1, #availableRooms)]
-   local center = chestRoom:center()
+   local center = chestRoom:center():floor()
    local drops = prism.components.DropTable(chestloot):getDrops(rng)
 
-   local mf = math.floor
-   builder:addActor(prism.actors.Chest(drops), mf(center.x), mf(center.y))
+   builder:addActor(prism.actors.Chest(drops), center:decompose())
 
    return builder
 
-The chest will overlap with a kobold which we're also spawning in the center of the room, but that's
-fine we'll deal with that when we revisit the level generation in the future. You'll see now that
-when we open the chest we get a meat brick!
+The chest will overlap with a kobold, but we'll deal with that when we revisit level generation.
+You'll see now that when we open the chest we get a meat brick!
 
 In the next chapter
 -------------------
 
-In the next chapter we'll create some more items to add to our loot tables and make the game more
-interesting. We'll add a potion and go over making buffs using the StatusEffect component included
-in /extra!
+We've used the :lua:class:`DropTable` component to add drops to kobolds and added chests. In the
+:doc:`next chapter <part13>` we'll add a potion and go over making buffs.

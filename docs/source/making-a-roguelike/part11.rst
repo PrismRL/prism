@@ -339,5 +339,5 @@ In the next chapter
 -------------------
 
 We've made our food edible and expanded the ``InventoryState`` with dynamic action selection. In the
-next chapter we'll go over drop tables and containers like chests, populating the dungeon with
-delicious meat and shiny trinkets!
+:doc:`next chapter <part12>` we'll go over drop tables and containers like chests, populating the
+dungeon with delicious meat and shiny trinkets!
