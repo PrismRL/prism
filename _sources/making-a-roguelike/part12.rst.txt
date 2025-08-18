@@ -1,10 +1,6 @@
 Stashing treasure
 =================
 
-.. note::
-
-   This section hasn't had a second pass! Some chests might be mimics!
-
 In this chapter we'll use the optional :lua:class:`DropTable` component to implement chests and have
 kobolds drop items.
 
