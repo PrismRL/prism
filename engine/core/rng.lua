@@ -34,7 +34,7 @@ local function createMash()
 end
 
 --- Initializes a new RNG instance.
---- @param seed any The seed for the RNG (optional).
+--- @param seed any The seed for the RNG.
 function RNG:__new(seed)
    assert(seed, "A seed must be provided to instantiate an RNG!")
    assert(tostring(seed), "Seed must be a string or implement __tostring!")

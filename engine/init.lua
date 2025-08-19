@@ -125,8 +125,8 @@ prism.RNG = prism.require "core.rng"
 prism.System = prism.require "core.system"
 --- @module "engine.core.system_manager"
 prism.SystemManager = prism.require "core.system_manager"
---- @module "engine.core.map_builder"
-prism.MapBuilder = prism.require "core.map_builder"
+--- @module "engine.core.levelbuilder"
+prism.LevelBuilder = prism.require "core.levelbuilder"
 --- @module "engine.core.map"
 prism.Map = prism.require "core.map"
 --- @module "engine.core.message"
@@ -416,13 +416,13 @@ end
 
 function prism.hotload() end
 
---- This is the core turn logic, and if you need to use a different scheduler or want a different turn structure you should override this.
---- There is a version of this provided for time-based
----@param level Level
----@param actor Actor
----@param controller Controller
----@diagnostic disable-next-line
-function prism.turn(level, actor, controller)
+--- @alias TurnHandler fun(level: Level, actor: Actor, controller: Controller)
+
+--- This is the default core turn logic. Use :lua:func:`LevelBuilder.addTurnHandler` to override this.
+--- @param level Level
+--- @param actor Actor
+--- @param controller Controller
+function prism.defaultTurn(level, actor, controller)
    local action = controller:act(level, actor)
 
    -- we make sure we got an action back from the controller for sanity's sake

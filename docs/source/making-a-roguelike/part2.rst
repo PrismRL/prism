@@ -164,11 +164,11 @@ ahead and add ``prism.systems.Fall()`` to the bottom of the list like so.
 
 .. code-block:: lua
 
-   local level = prism.Level(map, actors, {
+   builder:addSystems(
       prism.systems.Senses(),
       prism.systems.Sight(),
-      prism.systems.Fall(),
-   })
+      prism.systems.Fall()
+   )
 
 Wrapping up
 -----------

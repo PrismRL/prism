@@ -9,7 +9,7 @@ Basic usage
 -----------
 
 To start a query, call :lua:func:`IQueryable.query` with the component types you want to require.
-This interface is implemented by :lua:class:`Level`, :lua:class:`MapBuilder`, and
+This interface is implemented by :lua:class:`Level`, :lua:class:`LevelBuilder`, and
 :lua:class:`ActorStorage`.
 
 .. code-block:: lua
