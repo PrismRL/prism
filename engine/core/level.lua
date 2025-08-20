@@ -1,20 +1,20 @@
 --- Represents a single game level, managing the map, actors, systems,
 --- scheduling, and cached data for FOV and pathfinding. Also handles the
 --- turn-based game loop via `run` and `step`.
----
 --- @class Level : Object, IQueryable, SpectrumAttachable
 ---
---- @field actorStorage ActorStorage                  -- Stores all actors; supports lookup and indexing.
---- @field map Map                                    -- The static layout of terrain, walls, etc.
---- @field RNG RNG                                    -- Level-local RNG; supports deterministic behavior.
---- @field private systemManager SystemManager        -- Manages systems, dispatches events, controls lifecycle.
---- @field private scheduler Scheduler                -- Controls actor turn order in the game loop.
---- @field private opacityCache BooleanBuffer         -- Cached opacity grid for FOV and lighting.
---- @field private passableCache CascadingBitmaskBuffer -- Cached passability grid for pathfinding.
---- @field private decision ActionDecision            -- Temporary storage for the current actor’s choice.
---- @field private _passabilityQuery Query?           -- A cache'd passability query to avoid garbage.
---- @field private _opacityQuery Query?               -- A cache'd opacity query to avoid garbage.
---- @overload fun(map: Map, actors: Actor[], systems: System[], scheduler: Scheduler?, seed: string?): Level
+--- @field actorStorage ActorStorage                    Stores all actors; supports lookup and indexing.
+--- @field map Map                                      The static layout of terrain, walls, etc.
+--- @field RNG RNG                                      Level-local RNG; supports deterministic behavior.
+--- @field private systemManager SystemManager          Manages systems, dispatches events, controls lifecycle.
+--- @field private scheduler Scheduler                  Controls actor turn order in the game loop.
+--- @field private turn TurnHandler                     Function to perform an actor's turn in the level.
+--- @field private opacityCache BooleanBuffer           Cached opacity grid for FOV and lighting.
+--- @field private passableCache CascadingBitmaskBuffer Cached passability grid for pathfinding.
+--- @field private decision ActionDecision              Temporary storage for the current actor’s choice.
+--- @field private _passabilityQuery Query?             A cache'd passability query to avoid garbage.
+--- @field private _opacityQuery Query?                 A cache'd opacity query to avoid garbage.
+--- @overload fun(builder: LevelBuilder): Level
 local Level = prism.Object:extend("Level")
 
 Level.serializationBlacklist = {
@@ -23,23 +23,29 @@ Level.serializationBlacklist = {
 }
 
 --- Constructor for the Level class.
---- @param map Map The map to use for the level.
---- @param actors Actor[] A list of actors to populate the level initially.
---- @param systems System[] A list of systems to register with the level.
---- @param scheduler Scheduler?
---- @param seed string?
---- @private
-function Level:__new(map, actors, systems, scheduler, seed)
+--- @param builder LevelBuilder A builder to construct the level from.
+function Level:__new(builder)
    self.systemManager = prism.SystemManager(self)
    self.actorStorage = prism.ActorStorage(self:sparseMapCallback(), self:sparseMapCallback())
-   self.scheduler = scheduler or prism.SimpleScheduler()
-   self.map = map
-   self.opacityCache = prism.BooleanBuffer(map.w, map.h) -- holds a cache of opacity to speed up fov calcs
-   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, 4) -- holds a cache of passability to speed up a* calcs
-   self.RNG = prism.RNG(seed or love.timer.getTime())
+   self.scheduler = builder.scheduler or prism.SimpleScheduler()
+   self.turn = builder.turn or prism.defaultTurn
+   self.RNG = prism.RNG(builder.seed or love.timer.getTime())
    self.debug = false
 
-   self:initialize(actors, systems)
+   --- @diagnostic disable-next-line
+   local map, actors = builder:getEntities()
+   self.opacityCache = prism.BooleanBuffer(map.w, map.h) -- holds a cache of opacity to speed up fov calcs
+   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, 4) -- holds a cache of passability to speed up a* calcs
+   self.map = map
+
+   self:initialize(actors, builder.systems)
+end
+
+--- Initialize a builder for a Level.
+--- @param initialCell CellFactory A default cell factory for the map.
+--- @return LevelBuilder
+function Level.builder(initialCell)
+   return prism.LevelBuilder(initialCell)
 end
 
 --- @param actors Actor[]
@@ -68,16 +74,14 @@ function Level:initialize(actors, systems)
    self.systemManager:postInitialize(self)
 end
 
---- Initializes the level,
---- Update is the main game loop for a level. It's a coroutine that yields
---- back to the main thread when it needs to wait for input from the player.
---- This function is the heart of the game loop.
+--- Runs the level by processing actors from the scheduler. :lua:class:`LevelState`
+--- initializes a coroutine with this function to run the game loop.
 function Level:run()
    -- TODO: Fix this
    if self.decision then
       local actor = self.decision.actor
 
-      prism.turn(self, actor, actor:expect(prism.components.Controller))
+      self:turn(actor, actor:expect(prism.components.Controller))
 
       self.systemManager:onTurnEnd(self, actor)
    end
@@ -99,7 +103,7 @@ function Level:step()
    local actor = schedNext
    ---@cast actor Actor
    self.systemManager:onTurn(self, actor)
-   prism.turn(self, actor, actor:expect(prism.components.Controller))
+   self:turn(actor, actor:expect(prism.components.Controller))
    self.systemManager:onTurnEnd(self, actor)
 end
 
@@ -177,8 +181,14 @@ function Level:addActor(actor, x, y)
          actor:give(prism.components.Position(prism.Vector2(x, y)))
       else
          prism.logger.warn(
-            "Attempted to add", actor:getName(), "to level",
-            "at position", x, ",", y, "but it did not have a position component!"
+            "Attempted to add",
+            actor:getName(),
+            "to level",
+            "at position",
+            x,
+            ",",
+            y,
+            "but it did not have a position component!"
          )
       end
    end
@@ -266,7 +276,9 @@ end
 function Level:canPerform(action)
    --- @diagnostic disable-next-line
    if action.abstract then return false, "Action is an abstract action!" end
-   if self.decision and action:isReaction() then return false, "Action is a reaction and can not be made as a decision!" end
+   if self.decision and action:isReaction() then
+      return false, "Action is a reaction and can not be made as a decision!"
+   end
 
    if not self:hasActor(action.owner) then return false, "Actor not inside the level!" end
 
@@ -366,7 +378,7 @@ function Level:getActorCell(actor)
    return self:getCell(actor:expectPosition():decompose())
 end
 
---- Is there a cell at this x, y? Part of the interface with MapBuilder
+--- Is there a cell at this x, y? Part of the interface with LevelBuilder
 --- @param x integer The x component to check if in bounds.
 --- @param y integer The x component to check if in bounds.
 --- @return boolean

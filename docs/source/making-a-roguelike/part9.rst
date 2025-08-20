@@ -64,7 +64,7 @@ generation ensures that the game will be repeatable given the same seed.
    end
 
    --- @param player Actor
-   --- @return MapBuilder builder
+   --- @return LevelBuilder builder
    function Game:generateNextFloor(player)
       self.depth = self.depth + 1
 
@@ -91,20 +91,19 @@ Next we'll change ``GameLevelState``'s constructor.
 .. code-block:: lua
 
    --- @param display Display
-   --- @param builder MapBuilder
+   --- @param builder LevelBuilder
    --- @param seed string
    function GameLevelState:__new(display, builder, seed)
-      -- Build the map and instantiate the level with systems
-      local map, actors = builder:build()
-      local level = prism.Level(map, actors, {
+      builder:addSystems(
          prism.systems.Senses(),
          prism.systems.Sight(),
          prism.systems.Fall(),
-      }, nil, seed)
+      )
+      builder:addSeed(seed)
 
       -- Initialize with the created level and display, the heavy lifting is done by
       -- the parent class.
-      spectrum.LevelState.__new(self, level, display)
+      spectrum.LevelState.__new(self, builder:build(), display)
    end
 
 This sets up our level with the map we build and the seed we'll pass from the ``Game``. Let's change
@@ -112,7 +111,7 @@ our overload here as well to reflect the new arguments.
 
 .. code-block:: lua
 
-   --- @overload fun(display: Display, builder: MapBuilder, seed: string): GameLevelState
+   --- @overload fun(display: Display, builder: LevelBuilder, seed: string): GameLevelState
    local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 
 Now modify our message handler so it passes the player into the next level:

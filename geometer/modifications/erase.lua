@@ -22,7 +22,7 @@ function EraseModification:execute(attachable)
 
    for x = i, k do
       for y = j, l do
-         if prism.MapBuilder:is(attachable) then self:placeCell(attachable, x, y, nil) end
+         if prism.LevelBuilder:is(attachable) then self:placeCell(attachable, x, y, nil) end
          for actor in attachable:query():at(x, y):iter() do
             self:removeActor(attachable, actor)
          end
