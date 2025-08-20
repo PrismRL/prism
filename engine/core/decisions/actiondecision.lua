@@ -15,18 +15,12 @@ function ActionDecision:validateResponse()
    return self.action ~= nil
 end
 
---- Sets an action. It must be valid, i.e. :lua:func:`Level.canPerform` returns true.
---- @param action Action A valid action.
-function ActionDecision:setAction(action)
-   self.action = action
-end
-
 --- Sets an action if it can be performed and there is not an action set already.
 --- @param action Action An action to try setting.
 --- @param level Level The level.
 --- @return boolean set True if the action was set, false otherwise.
 --- @return string? err An error message if setting the action failed.
-function ActionDecision:trySetAction(action, level)
+function ActionDecision:setAction(action, level)
    if self.action then return false, "ActionDecision already has an action!" end
 
    local can, err = level:canPerform(action)
