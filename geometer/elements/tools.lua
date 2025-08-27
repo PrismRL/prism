@@ -86,32 +86,22 @@ local function Tools(self, scene)
       pointer:captureElement(button, false)
    end
 
-   self:on("pen", function(_, pointer)
-      press(pointer, penButton)
-   end)
+   local buttons = {
+      pen = penButton,
+      delete = deleteButton,
+      rect = rectButton,
+      ellipse = ellipseButton,
+      line = lineButton,
+      bucket = fillButton,
+      select = selectButton,
+   }
 
-   self:on("delete", function(_, pointer)
-      press(pointer, deleteButton)
-   end)
-
-   self:on("rect", function(_, pointer)
-      press(pointer, rectButton)
-   end)
-
-   self:on("ellipse", function(_, pointer)
-      press(pointer, ellipseButton)
-   end)
-
-   self:on("line", function(_, pointer)
-      press(pointer, lineButton)
-   end)
-
-   self:on("bucket", function(_, pointer)
-      press(pointer, fillButton)
-   end)
-
-   self:on("select", function(_, pointer)
-      press(pointer, selectButton)
+   self:on("controls", function(_, pointer, controls)
+      --- @cast pointer Inky.Pointer
+      --- @cast controls Controls
+      for action, button in pairs(buttons) do
+         if controls:pressed(action) then press(pointer, button) end
+      end
    end)
 
    return function(_, x, y, w, h)

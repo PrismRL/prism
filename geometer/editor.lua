@@ -1,5 +1,5 @@
---- @type Keybinding
-local keybinds = geometer.require "keybindingschema"
+--- @type Controls
+local controls = geometer.require "controls"
 local PenTool = geometer.require "tools.pen"
 
 ---@alias Placeable { entity: Entity, factory: fun(): Entity }
@@ -82,12 +82,27 @@ function Editor:setAttachable(attachable)
 end
 
 function Editor:update(dt)
+   controls:update()
    local mx, my = love.mouse.getX(), love.mouse.getY()
    pointer:setPosition(mx / scale.x, my / scale.y)
 
    if self.editorRoot.props.quit then
       self.active = false
       self.editorRoot.props.quit = false
+   end
+
+   scene:raise("controls", pointer, controls)
+   if controls:pressed("undo") then
+      self:undo()
+   elseif controls:pressed("redo") then
+      self:redo()
+   elseif controls:pressed("fill") then
+      self.fillMode = not self.fillMode
+      scene:raise("fillMode", self.fillMode)
+   elseif controls:pressed("copy") then
+      if self.tool.copy then self.tool:copy(self.attachable) end
+   elseif controls:pressed("paste") then
+      if self.tool.paste then self.tool:paste(self.attachable) end
    end
 
    scene:raise("update", dt)
@@ -138,31 +153,6 @@ function Editor:mousemoved(x, y, dx, dy, istouch)
    if love.mouse.isDown(2) then
       pointer:setPosition(x, y)
       pointer:raise("drag", dx, dy)
-   end
-end
-
-function Editor:keypressed(key, scancode)
-   pointer:raise("keypressed", key)
-   if not self.keybindsEnabled then return end
-
-   local mode
-   if love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl") then mode = "ctrl" end
-
-   local action = keybinds:keypressed(key, mode)
-   if action then scene:raise(action, pointer) end
-   if action == "undo" then
-      self:undo()
-   elseif action == "redo" then
-      self:redo()
-   elseif action == "fill" then
-      self.fillMode = not self.fillMode
-      scene:raise("fillMode", self.fillMode)
-   elseif action == "mode" then
-      self.selectorMode = self.selectorModes[self.selectorMode]
-   elseif action == "copy" then
-      if self.tool.copy then self.tool:copy(self.attachable) end
-   elseif action == "paste" then
-      if self.tool.paste then self.tool:paste(self.attachable) end
    end
 end
 
