@@ -32,7 +32,7 @@ function LevelState:shouldAdvance()
    --- @diagnostic disable-next-line
    if not self.manager or self.manager.states[#self.manager.states] ~= self then return false end
 
-   return not hasDecision or decisionDone
+   return (not hasDecision or decisionDone) and not self.display.blocking
 end
 
 --- Updates the state of the level.
@@ -40,6 +40,8 @@ end
 --- @param dt number The time delta since the last update.
 function LevelState:update(dt)
    self.time = self.time + dt
+   self.display:update(self.level, dt)
+
    while self:shouldAdvance() do
       local message = prism.advanceCoroutine(self.updateCoroutine, self.level, self.decision)
       self.decision, self.message = nil, nil
@@ -58,10 +60,13 @@ end
 --- @param message Message The message to handle.
 function LevelState:handleMessage(message)
    if prism.decisions.ActionDecision:is(message) then
-      ---@cast message ActionDecision
+      --- @cast message ActionDecision
       self.decision = message
    elseif prism.messages.DebugMessage:is(message) then
       self.manager:push(self.geometer)
+   elseif prism.messages.Animation:is(message) then
+      --- @cast message AnimationMessage
+      self.display:yieldAnimation(message, self.manager, self.level)
    end
 end
 

@@ -19,7 +19,7 @@ from this module that takes a few parameters.
    --- @param width integer
    --- @param height integer
    return function(rng, player, width, height)
-      local builder = prism.MapBuilder(prism.cells.Wall)
+      local builder = prism.LevelBuilder(prism.cells.Wall)
 
       -- world building code goes here!
 
@@ -28,7 +28,7 @@ from this module that takes a few parameters.
 
 We give the level building function an :lua:class:`RNG` which will be exclusive to it, the player we
 want to place, and the width and height of the map we want generated. Inside we create a
-:lua:class:`MapBuilder` and return it. The constant ``PARTITIONS`` will define the grid size of the
+:lua:class:`LevelBuilder` and return it. The constant ``PARTITIONS`` will define the grid size of the
 rooms.
 
 Populating the void
@@ -93,7 +93,7 @@ After that let's set some reasonable limits on the minimum and maximum room widt
 
 Next we loop through each of our partitions and build a room so long as it's not the one we're
 omitting. We create a :lua:class:`Rectangle`, hash its partition coordinates, and put it into our
-table of rooms. Finally we draw the room onto our map with :lua:func:`MapBuilder.drawRectangle`.
+table of rooms. Finally we draw the room onto our map with :lua:func:`LevelBuilder.drawRectangle`.
 
 .. code-block:: lua
 
@@ -133,11 +133,11 @@ should start vertically or horizontally for a little bit of spice.
       local bx, by = b:center():floor():decompose()
       -- Randomly choose one of two L-shaped tunnel patterns for variety.
       if rng:random() > 0.5 then
-         builder:drawLine(ax, ay, bx, ay, prism.cells.Floor)
-         builder:drawLine(bx, ay, bx, by, prism.cells.Floor)
+         builder:line(ax, ay, bx, ay, prism.cells.Floor)
+         builder:line(bx, ay, bx, by, prism.cells.Floor)
       else
-         builder:drawLine(ax, ay, ax, by, prism.cells.Floor)
-         builder:drawLine(ax, by, bx, by, prism.cells.Floor)
+         builder:line(ax, ay, ax, by, prism.cells.Floor)
+         builder:line(ax, by, bx, by, prism.cells.Floor)
       end
    end
 
@@ -191,7 +191,7 @@ Sending it back
 
    return builder
 
-Finally we'll pad the entire map in some walls and return the finished :lua:class:`MapBuilder`.
+Finally we'll pad the entire map in some walls and return the finished :lua:class:`LevelBuilder`.
 
 .. dropdown:: Complete levelgen.lua
 
@@ -204,7 +204,7 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
       --- @param width integer
       --- @param height integer
       return function(rng, player, width, height)
-         local builder = prism.MapBuilder(prism.cells.Wall)
+         local builder = prism.LevelBuilder(prism.cells.Wall)
 
          -- Fill the map with random noise of pits and walls.
          local nox, noy = rng:random(1, 10000), rng:random(1, 10000)
@@ -249,11 +249,11 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
             local bx, by = b:center():floor():decompose()
             -- Randomly choose one of two L-shaped tunnel patterns for variety.
             if rng:random() > 0.5 then
-               builder:drawLine(ax, ay, bx, ay, prism.cells.Floor)
-               builder:drawLine(bx, ay, bx, by, prism.cells.Floor)
+               builder:line(ax, ay, bx, ay, prism.cells.Floor)
+               builder:line(bx, ay, bx, by, prism.cells.Floor)
             else
-               builder:drawLine(ax, ay, ax, by, prism.cells.Floor)
-               builder:drawLine(ax, by, bx, by, prism.cells.Floor)
+               builder:line(ax, ay, ax, by, prism.cells.Floor)
+               builder:line(ax, by, bx, by, prism.cells.Floor)
             end
          end
 
@@ -311,5 +311,5 @@ Descending to the next part
 ---------------------------
 
 We've developed a simple level generation algorithm using :lua:class:`RNG` and
-:lua:class:`MapBuilder`. In the :doc:`next section <part8>` of the tutorial we'll add a set of
+:lua:class:`LevelBuilder`. In the :doc:`next section <part8>` of the tutorial we'll add a set of
 stairs and let the player descend deeper into the dungeon!

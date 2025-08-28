@@ -125,8 +125,8 @@ prism.RNG = prism.require "core.rng"
 prism.System = prism.require "core.system"
 --- @module "engine.core.system_manager"
 prism.SystemManager = prism.require "core.system_manager"
---- @module "engine.core.map_builder"
-prism.MapBuilder = prism.require "core.map_builder"
+--- @module "engine.core.levelbuilder"
+prism.LevelBuilder = prism.require "core.levelbuilder"
 --- @module "engine.core.map"
 prism.Map = prism.require "core.map"
 --- @module "engine.core.message"
@@ -160,7 +160,7 @@ prism.registries = {}
 
 --- Registers a factory for a registry.
 --- @param name string
---- @param type string
+--- @param type Object
 --- @param moduleTable table
 --- @param moduleName string
 local function registerFactory(name, type, moduleTable, moduleName)
@@ -169,22 +169,28 @@ local function registerFactory(name, type, moduleTable, moduleName)
    if prism._currentDefinitions then
       table.insert(
          prism._currentDefinitions,
-         string.format("Registers a %s in the %s registry.", type, name)
+         string.format("Registers a %s in the %s registry.", type.className, name)
       )
       table.insert(prism._currentDefinitions, "--- @param name string A name for the factory")
-      table.insert(prism._currentDefinitions, string.format("--- @param factory %sFactory", type))
       table.insert(
          prism._currentDefinitions,
-         string.format("function %s.register%s(name, factory) end", moduleName, type)
+         string.format("--- @param factory %sFactory", type.className)
+      )
+      table.insert(
+         prism._currentDefinitions,
+         string.format("function %s.register%s(name, factory) end", moduleName, type.className)
       )
    end
 
-   moduleTable["register" .. type] = function(objectName, factory)
-      assert(registry[objectName] == nil, type .. " " .. name .. " is already registered!")
+   moduleTable["register" .. type.className] = function(objectName, factory)
+      assert(
+         registry[objectName] == nil,
+         type.className .. " " .. objectName .. " is already registered!"
+      )
       registry[objectName] = factory
 
       if prism._currentDefinitions then
-         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type)
+         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type.className)
          table.insert(
             prism._currentDefinitions,
             string.format("%s.%s.%s = nil", moduleName, name, objectName)
@@ -195,7 +201,7 @@ end
 
 --- Registers a registry, a global list of game objects.
 --- @param name string The name of the registry, e.g. "components".
---- @param type string The type of the object, e.g. "Component".
+--- @param type Object The type of the object, e.g. "Component".
 --- @param manual? boolean Whether objects in the registry are registered manually with a factory. Defaults to false.
 --- @param module? string The table to assign the registry to. Defaults to the prism global.
 function prism.registerRegistry(name, type, manual, module)
@@ -210,8 +216,8 @@ function prism.registerRegistry(name, type, manual, module)
    moduleTable[name] = {}
 
    local pattern = ""
-   for i = 1, #type do
-      local c = name:sub(i, i)
+   for i = 1, #type.className do
+      local c = type.className:sub(i, i)
       pattern = string.format("%s[%s%s]", pattern, c:lower(), c:upper())
    end
 
@@ -223,15 +229,15 @@ function prism.registerRegistry(name, type, manual, module)
    if manual then registerFactory(name, type, moduleTable, module or "prism") end
 end
 
-prism.registerRegistry("components", prism.Component.className)
-prism.registerRegistry("relationships", prism.Relationship.className)
-prism.registerRegistry("targets", prism.Target.className, true)
-prism.registerRegistry("cells", prism.Cell.className, true)
-prism.registerRegistry("actions", prism.Action.className)
-prism.registerRegistry("actors", prism.Actor.className, true)
-prism.registerRegistry("messages", prism.Message.className)
-prism.registerRegistry("decisions", prism.Decision.className)
-prism.registerRegistry("systems", prism.System.className)
+prism.registerRegistry("components", prism.Component)
+prism.registerRegistry("relationships", prism.Relationship)
+prism.registerRegistry("targets", prism.Target, true)
+prism.registerRegistry("cells", prism.Cell, true)
+prism.registerRegistry("actions", prism.Action)
+prism.registerRegistry("actors", prism.Actor, true)
+prism.registerRegistry("messages", prism.Message)
+prism.registerRegistry("decisions", prism.Decision)
+prism.registerRegistry("systems", prism.System)
 
 --- @module "engine.core.systems.senses"
 prism.systems.Senses = prism.require "core.systems.senses"
@@ -328,8 +334,14 @@ local function loadRegistry(path, registry, recurse, definitions)
 
          if not registry.manual then
             assert(
-               type(item) == "table",
-               "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
+               registry.type:is(item),
+               "Expected a "
+                  .. registry.type.className
+                  .. " from "
+                  .. fileName
+                  .. " but received a "
+                  .. type(item)
+                  .. "!"
             )
             local name = item.className
             if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
@@ -339,7 +351,7 @@ local function loadRegistry(path, registry, recurse, definitions)
                string.format(
                   "File %s contains type %s wihout a valid stripped name!",
                   fileName,
-                  registry.type
+                  registry.type.className
                )
             )
             assert(
@@ -347,9 +359,10 @@ local function loadRegistry(path, registry, recurse, definitions)
                string.format(
                   "File %s contains type %s with duplicate name",
                   fileName,
-                  registry.type
+                  registry.type.className
                )
             )
+
             items[name] = item
 
             table.insert(definitions, '--- @module "' .. requireName .. '"')
@@ -416,13 +429,13 @@ end
 
 function prism.hotload() end
 
---- This is the core turn logic, and if you need to use a different scheduler or want a different turn structure you should override this.
---- There is a version of this provided for time-based
----@param level Level
----@param actor Actor
----@param controller Controller
----@diagnostic disable-next-line
-function prism.turn(level, actor, controller)
+--- @alias TurnHandler fun(level: Level, actor: Actor, controller: Controller)
+
+--- This is the default core turn logic. Use :lua:func:`LevelBuilder.addTurnHandler` to override this.
+--- @param level Level
+--- @param actor Actor
+--- @param controller Controller
+function prism.defaultTurn(level, actor, controller)
    local action = controller:act(level, actor)
 
    -- we make sure we got an action back from the controller for sanity's sake

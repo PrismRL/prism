@@ -11,7 +11,7 @@ local controls = geometer.require "controls"
 local EditorState = spectrum.GameState:extend "EditorState"
 
 --- Create a new Editor managing gamestate, attached to a
---- SpectrumAttachable, this is a Level|MapBuilder interface.
+--- SpectrumAttachable, this is a Level|LevelBuilder interface.
 --- @param attachable SpectrumAttachable
 function EditorState:__new(attachable, display, fileEnabled)
    self.editor = geometer.Editor(attachable, display, fileEnabled)
