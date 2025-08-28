@@ -299,6 +299,7 @@ function Display:putSenses(primary, secondary)
    end
 
    self:putAnimations(unpack(primary), unpack(secondary))
+   self:pop()
 end
 
 --- Puts a Sprite onto the display grid at specified coordinates, considering its depth.
