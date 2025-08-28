@@ -82,7 +82,6 @@ function Editor:setAttachable(attachable)
 end
 
 function Editor:update(dt)
-   controls:update()
    local mx, my = love.mouse.getX(), love.mouse.getY()
    pointer:setPosition(mx / scale.x, my / scale.y)
 
@@ -106,6 +105,7 @@ function Editor:update(dt)
    end
 
    scene:raise("update", dt)
+   pointer:raise("update", dt)
 
    self.tool:update(dt, self)
 end

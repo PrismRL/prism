@@ -1,17 +1,8 @@
 return spectrum.Input.Controls {
    controls = {
-      undo = function()
-         return not (
-            (spectrum.Input.key.lctrl.down or spectrum.Input.key.rctrl.down)
-            and spectrum.Input.key.z.pressed
-         )
-      end,
-      redo = function()
-         return not (
-            (spectrum.Input.key.lctrl.down or spectrum.Input.key.rctrl.down)
-            and spectrum.Input.key.y.pressed
-         )
-      end,
+      undo = "lctrl z",
+      redo = "lctrl y",
+      close = "`",
       copy = "c",
       paste = "v",
       fill = "f",

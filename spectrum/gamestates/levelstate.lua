@@ -49,6 +49,8 @@ function LevelState:update(dt)
    if prism.decisions.ActionDecision:is(self.decision) then
       self:updateDecision(dt, self.decision.actor, self.decision)
    end
+
+   if spectrum.Input.key["`"].pressed then self.manager:push(self.geometer) end
 end
 
 --- Handles incoming messages from the coroutine.
@@ -103,10 +105,6 @@ function LevelState:draw()
    -- Render the level using the actor’s senses
    self.display:putSenses(primary, secondary)
    self.display:draw()
-end
-
-function LevelState:keypressed(key, scancode)
-   if key == "`" then self.manager:push(self.geometer) end
 end
 
 --- This method is invoked each update when a decision exists
