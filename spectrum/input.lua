@@ -83,14 +83,15 @@ Input._last = -1 -- Last input device used (-1 = keyboard, joystick ID = gamepad
 
 --- Parses a trigger string into category and input name.
 --- @param trigger_string string The trigger string (e.g., "button:a", "key:space", "leftx+")
---- @return string input_category The input category ("key", "button", "axis", etc.)
---- @return string input_name The input name ("a", "space", "leftx+", etc.)
+--- @return { category: string, name: string }[]
 local function parse_trigger(trigger_string)
-   local input_category, input_name = trigger_string:match("(.+):(.+)")
-   if input_category then return input_category, input_name end
+   local triggers = {}
+   for token in trigger_string:gmatch("%S+") do
+      local input_category, input_name = token:match("(.+):(.+)")
+      table.insert(triggers, { category = input_category or "key", name = input_name or token })
+   end
 
-   -- Default to keyboard key if no category specified
-   return "key", trigger_string
+   return triggers
 end
 
 local function get_joystick_id(joystick)
@@ -109,6 +110,7 @@ local function get_new_joystick_data()
    }
 end
 
+--- @return ControlState
 local function get_input(category, name, joystick_id)
    if joystick_id then
       joystick_id = get_joystick_id(joystick_id)
@@ -550,20 +552,30 @@ end
 
 --- A configured set of controls.
 --- @class Controls : Object
+--- @field _controls
+--- @field _pairs
 --- @overload fun(config: ControlsOptions): Controls
 local Controls = prism.Object:extend("Controls")
 
+--- @return ControlState|ControlState[]
 local function trigger_to_input(trigger_string, joystick_id)
    assert(type(trigger_string) == "string", "Trigger must be a string")
 
-   local input_category, input_name = parse_trigger(trigger_string)
-   input_name = control_map[input_name] or input_name
-
-   if input_category == "button" or input_category == "axis" then
-      return get_input(input_category, input_name, joystick_id)
+   local triggers = parse_trigger(trigger_string)
+   --- @type ControlState[]
+   local inputs = {}
+   for _, trigger in ipairs(triggers) do
+      local input_name = control_map[trigger.name] or trigger.name
+      if trigger.category == "button" or trigger.category == "axis" then
+         table.insert(inputs, get_input(trigger.category, input_name, joystick_id))
+      else
+         table.insert(inputs, get_input(trigger.category, input_name))
+      end
    end
 
-   return get_input(input_category, input_name)
+   if #inputs == 1 then return inputs[1] end
+
+   return inputs
 end
 
 --- @class ControlsOptions
@@ -689,6 +701,23 @@ function Controls:setPairs(pairs_config)
    self._pairs = pairs_list
 end
 
+local function update_control_state(control_state, input_state)
+   control_state.pressed = control_state.pressed or input_state.pressed
+   control_state.down = control_state.down or input_state.down
+   control_state.released = control_state.released or input_state.released
+
+   -- Use the strongest axis value (highest absolute value)
+   if input_state.x and input_state.x ^ 2 > control_state.x ^ 2 then
+      control_state.x = input_state.x
+   end
+
+   if input_state.y and input_state.y ^ 2 > control_state.y ^ 2 then
+      control_state.y = input_state.y
+   end
+end
+
+local temp_state = {}
+
 --- Updates all controls for this instance.
 --- This should be called once per frame, before referencing the controls.
 function Controls:update()
@@ -698,6 +727,7 @@ function Controls:update()
       local control_state = self[control_config.name]
 
       if control_config.list then
+         local was_down = control_state.down
          -- Handle trigger list (string or table of strings)
          control_state.pressed = false
          control_state.down = false
@@ -707,17 +737,23 @@ function Controls:update()
 
          -- Aggregate state from all triggers in the list
          for __, input_state in ipairs(control_config.list) do
-            control_state.pressed = control_state.pressed or input_state.pressed
-            control_state.down = control_state.down or input_state.down
-            control_state.released = control_state.released or input_state.released
+            if #input_state > 0 then
+               temp_state.pressed = input_state[1].pressed
+               temp_state.down = input_state[1].down
+               temp_state.released = input_state[1].released
+               for i = 2, #input_state do
+                  temp_state.down = temp_state.down and input_state[i].down
+                  temp_state.pressed = temp_state.pressed or input_state[i].pressed
+                  temp_state.released = temp_state.released or input_state[i].released
+               end
 
-            -- Use the strongest axis value (highest absolute value)
-            if input_state.x and input_state.x ^ 2 > control_state.x ^ 2 then
-               control_state.x = input_state.x
-            end
-
-            if input_state.y and input_state.y ^ 2 > control_state.y ^ 2 then
-               control_state.y = input_state.y
+               control_state.pressed = control_state.pressed
+                  or (temp_state.down and temp_state.pressed)
+               control_state.down = control_state.down or temp_state.down
+               control_state.released = control_state.released
+                  or (was_down and not temp_state.down and temp_state.released)
+            else
+               update_control_state(control_state, input_state)
             end
          end
       elseif control_config.func then
