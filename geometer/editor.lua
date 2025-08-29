@@ -91,16 +91,16 @@ function Editor:update(dt)
    end
 
    scene:raise("controls", pointer, controls)
-   if controls:pressed("undo") then
+   if controls.undo.pressed then
       self:undo()
-   elseif controls:pressed("redo") then
+   elseif controls.redo.pressed then
       self:redo()
-   elseif controls:pressed("fill") then
+   elseif controls.fill.pressed then
       self.fillMode = not self.fillMode
       scene:raise("fillMode", self.fillMode)
-   elseif controls:pressed("copy") then
+   elseif controls.copy.pressed then
       if self.tool.copy then self.tool:copy(self.attachable) end
-   elseif controls:pressed("paste") then
+   elseif controls.paste.pressed then
       if self.tool.paste then self.tool:paste(self.attachable) end
    end
 

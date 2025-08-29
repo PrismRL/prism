@@ -29,7 +29,7 @@ end
 
 function EditorState:update(dt)
    controls:update()
-   if not self.editor.active or controls:pressed("close") then self.manager:pop() end
+   if not self.editor.active or controls.close.pressed then self.manager:pop() end
 
    self.editor:update(dt)
 end

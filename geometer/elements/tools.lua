@@ -100,7 +100,7 @@ local function Tools(self, scene)
       --- @cast pointer Inky.Pointer
       --- @cast controls Controls
       for action, button in pairs(buttons) do
-         if controls:pressed(action) then press(pointer, button) end
+         if controls[action].pressed then press(pointer, button) end
       end
    end)
 
