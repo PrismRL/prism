@@ -16,8 +16,8 @@ spectrum.SpriteAtlas = spectrum.require "spriteatlas"
 --- @module "spectrum.display"
 spectrum.Display = spectrum.require "display"
 
---- @module "spectrum.keybindings"
-spectrum.Keybinding = spectrum.require "keybindings"
+--- @module "spectrum.input"
+spectrum.Input = spectrum.require "input"
 
 --- @module "spectrum.gamestates.statemanager"
 spectrum.StateManager = spectrum.require "gamestates.statemanager"

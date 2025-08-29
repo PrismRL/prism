@@ -57,14 +57,14 @@ local function TextInput(self, scene)
       end
    end)
 
-   self:onPointer("keypressed", function(_, pointer, key)
-      if key == "backspace" then
+   self:onPointer("update", function(_, pointer)
+      if spectrum.Input.key.backspace.pressed then
          local content = self.props.content
          if string.len(content) > 0 then
             content = string.sub(content, 1, string.len(content) - 1)
          end
          self.props.content = content
-      elseif key == "return" or key == "escape" then
+      elseif spectrum.Input.key["return"].pressed or spectrum.Input.key.escape.pressed then
          focus(false, pointer)
       end
    end)

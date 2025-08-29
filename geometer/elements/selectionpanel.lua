@@ -117,7 +117,7 @@ local function SelectionPanel(self, scene)
       clearButton:render(x + 8 * 11, y + 2 * 8, 8, 8, depth + 2)
       grid:render(x, y + 5 * 8, w, 8 * 12, depth + 1)
 
-      local drawable = self.props.selected.entity:get(prism.components.Drawable)
+      local drawable = self.props.selected.entity:expect(prism.components.Drawable)
       local quad = self.props.display:getQuad(drawable.index)
       local scale = prism.Vector2(
          self.props.size.x / self.props.display.cellSize.x,

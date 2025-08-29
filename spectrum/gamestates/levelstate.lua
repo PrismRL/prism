@@ -47,6 +47,12 @@ function LevelState:update(dt)
       self.decision, self.message = nil, nil
       if message then self:handleMessage(message) end
    end
+
+   if prism.decisions.ActionDecision:is(self.decision) then
+      self:updateDecision(dt, self.decision.actor, self.decision)
+   end
+
+   if spectrum.Input.key["`"].pressed then self.manager:push(self.geometer) end
 end
 
 --- Handles incoming messages from the coroutine.
@@ -106,12 +112,8 @@ function LevelState:draw()
    self.display:draw()
 end
 
-function LevelState:keypressed(key, scancode)
-   if key == "`" then self.manager:push(self.geometer) end
-end
-
 --- This method is invoked each update when a decision exists
---- and its response is not yet valid.. Override this method in subclasses to implement
+--- and its response is not yet valid. Override this method in subclasses to implement
 --- custom decision-handling logic.
 --- @param dt number The time delta since the last update.
 --- @param actor Actor The actor responsible for making the decision.
