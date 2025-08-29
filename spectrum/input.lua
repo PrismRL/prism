@@ -349,7 +349,7 @@ end
 
 --- Automatically integrates Mash with LÖVE by hooking into
 --- all the necessary input callbacks. Call this once during initialization.
-function Input.inject()
+function Input.hook()
    inject("keypressed", Input.keypressed)
    inject("textinput", Input.textinput)
    inject("keyreleased", Input.keyreleased)
