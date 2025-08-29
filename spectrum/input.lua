@@ -290,6 +290,7 @@ function Input.gamepadaxis(joystick, axis_name, axis_value)
 
    -- Extract axis base name and coordinate (x or y)
    local base_axis_name, coordinate = axis_name:match("([%a]+)([xy])")
+   --- @type "x"|"y"
    coordinate = coordinate or "x"
 
    if not Input._data.joystick[joystick_id] then
@@ -300,7 +301,8 @@ function Input.gamepadaxis(joystick, axis_name, axis_value)
 
    -- Handle positive axis direction (e.g., "leftx+")
    local positive_input = get_input("axis", axis_name .. "+", joystick_id)
-   local previous_positive_value = positive_input[coordinate] or 0
+   if not positive_input.vector then positive_input.vector = prism.Vector2() end
+   local previous_positive_value = positive_input.vector[coordinate]
 
    if previous_positive_value <= Input._threshold then
       if axis_value > Input._threshold then
@@ -314,7 +316,7 @@ function Input.gamepadaxis(joystick, axis_name, axis_value)
       end
    end
 
-   positive_input[coordinate] = axis_value
+   positive_input.vector[coordinate] = axis_value
 
    -- Triggers don't have negative values, so skip negative axis handling
    if axis_name == "triggerleft" or axis_name == "triggerright" then
@@ -324,7 +326,8 @@ function Input.gamepadaxis(joystick, axis_name, axis_value)
 
    -- Handle negative axis direction (e.g., "leftx-")
    local negative_input = get_input("axis", axis_name .. "-", joystick_id)
-   local previous_negative_value = negative_input[coordinate] or 0
+   if not negative_input.vector then negative_input.vector = prism.Vector2() end
+   local previous_negative_value = negative_input.vector[coordinate]
 
    if previous_negative_value >= -Input._threshold then
       if axis_value < -Input._threshold then
@@ -338,7 +341,7 @@ function Input.gamepadaxis(joystick, axis_name, axis_value)
       end
    end
 
-   negative_input[coordinate] = axis_value
+   negative_input.vector[coordinate] = axis_value
 
    -- Store the raw axis value in joystick data
    if base_axis_name then joystick_data[base_axis_name][coordinate] = axis_value end
@@ -552,8 +555,13 @@ end
 
 --- A configured set of controls.
 --- @class Controls : Object
---- @field _controls
---- @field _pairs
+--- @field private _mode integer
+--- @field private _autoSwitch boolean
+--- @field private _transform? love.Transform
+--- @field private _joystickId integer
+--- @field private _controls { name: string, list?: ControlState|ControlState[], state?: boolean, func?: (fun(): boolean, number, number) }[]
+--- @field private _pairs { name: string, triggers: string[] }[]
+--- @field [string] ControlState The state of a named control.
 --- @overload fun(config: ControlsOptions): Controls
 local Controls = prism.Object:extend("Controls")
 
@@ -617,30 +625,8 @@ function Controls:__new(config)
    if config.controls then self:setControls(config.controls) end
 
    if config.pairs then self:setPairs(config.pairs) end
-end
 
---- @param name string name of a control.
---- @return ControlState -- the state of the control.
-function Controls:get(name)
-   return self[name]
-end
-
---- @param name string The name of a control.
---- @return boolean pressed Whether the control was just pressed.
-function Controls:pressed(name)
-   return self:get(name).pressed
-end
-
---- @param name string The name of a control.
---- @return boolean down Whether the control is held down.
-function Controls:down(name)
-   return self:get(name).down
-end
-
---- @param name string The name of a control.
---- @return boolean released Whether the control was just released.
-function Controls:released(name)
-   return self:get(name).released
+   self.get = setmetatable({ _parent = self }, get_mt)
 end
 
 --- Sets the control configuration for this input instance
@@ -666,6 +652,7 @@ function Controls:setControls(controls)
       if definition_type == "string" then
          -- Single trigger string
          config.list = { trigger_to_input(value, self._joystickId or 1) }
+         --- @diagnostic disable-next-line
          self[name] = {}
       elseif definition_type == "table" then
          -- Multiple trigger strings
@@ -676,10 +663,12 @@ function Controls:setControls(controls)
             table.insert(input_list, input_state)
          end
          config.list = input_list
+         --- @diagnostic disable-next-line
          self[name] = {}
       elseif definition_type == "function" then
          -- Custom function
          config.func = value
+         --- @diagnostic disable-next-line
          self[name] = {}
       else
          error("Invalid trigger type: " .. definition_type .. " for control: " .. name)
@@ -694,25 +683,29 @@ end
 function Controls:setPairs(pairs_config)
    local pairs_list = {}
    for name, config in pairs(pairs_config) do
-      local pair = { name = name, _pair = true, triggers = config }
-      self[name] = { _pair = true, vector = prism.Vector2() }
+      local pair = { name = name, triggers = config }
+      self[name] = { vector = prism.Vector2() }
       table.insert(pairs_list, pair)
    end
    self._pairs = pairs_list
 end
 
+--- @param control_state ControlState
+--- @param input_state ControlState
 local function update_control_state(control_state, input_state)
    control_state.pressed = control_state.pressed or input_state.pressed
    control_state.down = control_state.down or input_state.down
    control_state.released = control_state.released or input_state.released
 
    -- Use the strongest axis value (highest absolute value)
-   if input_state.x and input_state.x ^ 2 > control_state.x ^ 2 then
-      control_state.x = input_state.x
-   end
-
-   if input_state.y and input_state.y ^ 2 > control_state.y ^ 2 then
-      control_state.y = input_state.y
+   if input_state.vector then
+      if not control_state.vector then control_state.vector = prism.Vector2() end
+      if input_state.vector.x ^ 2 > control_state.vector.x ^ 2 then
+         control_state.vector.x = input_state.vector.x
+      end
+      if input_state.vector.y ^ 2 > control_state.vector.y ^ 2 then
+         control_state.vector.y = input_state.vector.y
+      end
    end
 end
 
@@ -732,8 +725,7 @@ function Controls:update()
          control_state.pressed = false
          control_state.down = false
          control_state.released = false
-         control_state.x = 0
-         control_state.y = 0
+         if control_state.vector then control_state.vector:compose(0, 0) end
 
          -- Aggregate state from all triggers in the list
          for __, input_state in ipairs(control_config.list) do
@@ -760,7 +752,11 @@ function Controls:update()
          -- Handle custom function
          local current_state = control_config.state
          local new_state, axis_x, axis_y = control_config.func()
-         control_state.x, control_state.y = axis_x or 0, axis_y or 0
+
+         if axis_x or axis_y then
+            if not control_state.vector then control_state.vector = prism.Vector2() end
+            control_state.vector:compose(axis_x, axis_y)
+         end
 
          -- Detect state changes for pressed/released events
          if current_state == new_state then
