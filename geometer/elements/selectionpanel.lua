@@ -106,7 +106,7 @@ local function SelectionPanel(self, scene)
    local fontSize = self.props.size.x - (self.props.size.x > 48 and 24 or 8)
    local selectionFont =
       love.graphics.newFont(geometer.assetPath .. "/assets/FROGBLOCK-Polyducks.ttf", fontSize)
-   self.props.selectedText = love.graphics.newTextBatch(selectionFont, "")
+   self.props.selectedText = love.graphics.newText(selectionFont, "")
 
    return function(_, x, y, w, h, depth)
       local offsetY = love.graphics.getCanvas():getHeight() - background:getHeight()
