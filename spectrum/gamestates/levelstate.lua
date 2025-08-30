@@ -48,11 +48,18 @@ function LevelState:update(dt)
       if message then self:handleMessage(message) end
    end
 
-   if prism.decisions.ActionDecision:is(self.decision) then
-      self:updateDecision(dt, self.decision.actor, self.decision)
-   end
+   if self.decision then self:updateDecision(dt, self.decision.actor, self.decision) end
 
    if spectrum.Input.key["`"].pressed then self.manager:push(self.geometer) end
+end
+
+--- Sets the action for the current decision, if one exists.
+--- @param action Action The action to set for the current decision.
+--- @return boolean success True if the action was successfully set; false otherwise.
+--- @return string? error An error message if the action could not be set.
+function LevelState:setAction(action)
+   if self.decision then self.decision:setAction(action, self.level) end
+   return false, "No decision to set action for."
 end
 
 --- Handles incoming messages from the coroutine.
