@@ -35,7 +35,7 @@ function Level:__new(builder)
    --- @diagnostic disable-next-line
    local map, actors = builder:getEntities()
    self.opacityCache = prism.BooleanBuffer(map.w, map.h) -- holds a cache of opacity to speed up fov calcs
-   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, 4) -- holds a cache of passability to speed up a* calcs
+   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, builder.maximumActorSize or 4) -- holds a cache of passability to speed up a* calcs
    self.map = map
 
    self:initialize(actors, builder.systems)

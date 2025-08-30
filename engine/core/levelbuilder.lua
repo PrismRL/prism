@@ -4,6 +4,7 @@
 --- @field initialValue CellFactory The initial value to fill the map with.
 --- @field scheduler? Scheduler
 --- @field turn? TurnHandler
+--- @field maximumActorSize integer
 --- @field seed any
 --- @field systems System[]
 --- @overload fun(initialCell: CellFactory): LevelBuilder
@@ -73,6 +74,14 @@ end
 --- @return LevelBuilder
 function LevelBuilder:addSeed(seed)
    self.seed = seed
+   return self
+end
+
+--- Sets the maximum size for an actor to pathfind in the level.
+--- @param size integer The maximum actor size. Defaults to 4.
+--- @return LevelBuilder
+function LevelBuilder:setMaximumActorSize(size)
+   self.maximumActorSize = size
    return self
 end
 
