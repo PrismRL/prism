@@ -24,21 +24,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --- @alias AnimationFrame fun(display: Display, x?: number, y?: number) | Sprite
 
 --- An animation to be played in a display. Yield an :lua:class:`AnimationMessage` to play one.
----@class Animation : Object
----@field custom? fun(time: number, display: Display): boolean
----@field frames? AnimationFrame[]
----@field durations? number|table
----@field onLoop? fun(self: Animation)|string
----@field intervals? number[]
----@field totalDuration? number
----@field timer number,
----@field position? integer
----@field status "playing"|"paused"
----@overload fun(frames: AnimationFrame[]|(fun(time: number, display: Display): boolean), durations?: number|table, onLoop?: fun(animation: Animation)|string): Animation
+--- Animations can be built with a list of frames and durations, or with a custom function.
+--- @class Animation : Object
+--- @field custom? fun(time: number, display: Display): boolean
+--- @field frames? AnimationFrame[]
+--- @field durations? number|table
+--- @field onLoop? fun(self: Animation)|string
+--- @field intervals? number[]
+--- @field totalDuration? number
+--- @field timer number,
+--- @field position? integer
+--- @field status "playing"|"paused"
+--- @overload fun(frames: AnimationFrame[]|(fun(time: number, display: Display): boolean), durations?: number|table, onLoop?: fun(animation: Animation)|string): Animation
 local Animation = prism.Object:extend("Animation")
 
----@param arr table
----@return table
+--- @param arr table
+--- @return table
 local function cloneArray(arr)
    local result = {}
    for i = 1, #arr do
@@ -47,8 +48,8 @@ local function cloneArray(arr)
    return result
 end
 
----@param str number|string
----@return number?, number?, integer
+--- @param str number|string
+--- @return number?, number?, integer
 local function parseInterval(str)
    if type(str) == "number" then return str, str, 1 end
    str = str:gsub("%s", "") -- remove spaces
@@ -59,9 +60,9 @@ local function parseInterval(str)
    return min, max, step
 end
 
----@param durations number|table
----@param frameCount integer
----@return table
+--- @param durations number|table
+--- @param frameCount integer
+--- @return table
 local function parseDurations(durations, frameCount)
    local result = {}
    if type(durations) == "number" then
@@ -94,8 +95,8 @@ local function parseDurations(durations, frameCount)
    return result
 end
 
----@param durations number|table
----@return table, integer
+--- @param durations number|table
+--- @return table, integer
 local function parseIntervals(durations)
    local result, time = { 0 }, 0
    for i = 1, #durations do
@@ -134,9 +135,9 @@ end
 
 local nop = function() end
 
----@param frames AnimationFrame[]|fun(time: number, display: Display)
----@param durations number|table
----@param onLoop fun(animation: Animation)|string?
+--- @param frames AnimationFrame[]|fun(time: number, display: Display)
+--- @param durations number|table
+--- @param onLoop fun(animation: Animation)|string?
 function Animation:__new(frames, durations, onLoop)
    if type(frames) == "function" then
       self.custom = frames
@@ -164,15 +165,15 @@ function Animation:isCustom()
    return not not self.custom
 end
 
----@return Animation
+--- @return Animation
 function Animation:clone()
    local newAnim = Animation(self.frames, self.durations, self.onLoop)
    return newAnim
 end
 
----@param intervals number[]
----@param timer number
----@return integer
+--- @param intervals number[]
+--- @param timer number
+--- @return integer
 local function seekFrameIndex(intervals, timer)
    local high, low, i = #intervals - 1, 1, 1
 
@@ -190,7 +191,7 @@ local function seekFrameIndex(intervals, timer)
    return i
 end
 
----@param dt number
+--- @param dt number
 function Animation:update(dt)
    if self.status ~= "playing" then return end
 
@@ -211,7 +212,7 @@ function Animation:pause()
    self.status = "paused"
 end
 
----@param position integer
+--- @param position integer
 function Animation:gotoFrame(position)
    self.position = position
    self.timer = self.intervals[self.position]
@@ -233,9 +234,9 @@ function Animation:resume()
    self.status = "playing"
 end
 
----@param display Display
----@param x? number
----@param y? number
+--- @param display Display
+--- @param x? number
+--- @param y? number
 function Animation:draw(display, x, y)
    if self.frames then
       local frame = self.frames[self.position]

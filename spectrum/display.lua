@@ -1,12 +1,12 @@
----@class SpectrumAttachable : Object, IQueryable
----@field getCell fun(self, x:integer, y:integer): Cell
----@field setCell fun(self, x:integer, y:integer, cell: Cell|nil)
----@field addActor fun(self, actor: Actor)
----@field removeActor fun(self, actor: Actor)
----@field inBounds fun(self, x: integer, y:integer)
----@field getSize fun(): Vector2
----@field eachCell fun(self): fun(): integer, integer, Cell
----@field debug boolean
+--- @class SpectrumAttachable : Object, IQueryable
+--- @field getCell fun(self, x:integer, y:integer): Cell
+--- @field setCell fun(self, x:integer, y:integer, cell: Cell|nil)
+--- @field addActor fun(self, actor: Actor)
+--- @field removeActor fun(self, actor: Actor)
+--- @field inBounds fun(self, x: integer, y:integer)
+--- @field getSize fun(): Vector2
+--- @field eachCell fun(self): fun(): integer, integer, Cell
+--- @field debug boolean
 
 --- @class Sprite
 --- @field index string|integer
@@ -16,14 +16,15 @@
 --- @field size integer?
 
 --- @alias DisplayCell {char: (string|integer)?, fg: Color4, bg: Color4, depth: number}
----@class Display : Object
----@field width integer The width of the display in cells.
----@field height integer The height of the display in cells.
----@field cells table<number, table<number, DisplayCell>>
----@field camera Vector2 The offset to draw the display at.
----@field pushed boolean Whether to draw with the camera offset applied or not.
----@field animations AnimationMessage[]
----@overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
+--- @class Display : Object
+--- @field width integer The width of the display in cells.
+--- @field height integer The height of the display in cells.
+--- @field cells table<number, table<number, DisplayCell>>
+--- @field camera Vector2 The offset to draw the display at.
+--- @field pushed boolean Whether to draw with the camera offset applied or not.
+--- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
+--- @field animations AnimationMessage[]
+--- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
 --- Initializes the terminal display.
@@ -38,6 +39,7 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.height = height
    self.camera = prism.Vector2()
    self.pushed = false
+   self.overridenActors = {}
    self.animations = {}
 
    self.cells = { {} }
@@ -65,6 +67,9 @@ function Display:update(level, dt)
       animation.animation:update(dt)
 
       if animation.animation.status == "paused" then
+         if animation.actor and animation.animation:isCustom() then
+            self:unoverrideActor(animation.actor)
+         end
          table.remove(self.animations, i)
          if animation.blocking then self.blocking = false end
       end
@@ -127,13 +132,15 @@ function Display:putLevel(attachable)
       end
    end
 
-   for _, position, drawable in
+   for actor, position, drawable in
       attachable:query(prism.components.Position, prism.components.Drawable):iter()
    do
-      --- @cast drawable Drawable
-      --- @cast position Position
-      local ax, ay = position:getVector():decompose()
-      self:putDrawable(ax + camX, ay + camY, drawable)
+      if not self.overridenActors[actor] then
+         --- @cast drawable Drawable
+         --- @cast position Position
+         local ax, ay = position:getVector():decompose()
+         self:putDrawable(ax + camX, ay + camY, drawable)
+      end
    end
 end
 
@@ -186,13 +193,26 @@ function Display:skipAnimations()
    end
 end
 
---- Adds an animation
+--- Adds an animation to the display.
 --- @param message AnimationMessage
---- @param manager GameStateManager
---- @param level Level
-function Display:yieldAnimation(message, manager, level)
+function Display:yieldAnimation(message)
    table.insert(self.animations, message)
+   -- We override the actor immediately to prevent flickering
+   if message.actor and message.animation:isCustom() then self:overrideActor(message.actor) end
    if message.blocking then self.blocking = true end
+end
+
+--- Marks an actor as being manually drawn, preventing it from being drawn
+--- automatically by putLevel or putSenses methods.
+--- @param actor Actor The actor to override.
+function Display:overrideActor(actor)
+   self.overridenActors[actor] = true
+end
+
+--- Clears the override on an actor, allowing it to be drawn automatically again.
+--- @param actor Actor The actor to clear.
+function Display:unoverrideActor(actor)
+   self.overridenActors[actor] = nil
 end
 
 local tempColor = prism.Color4()
@@ -226,7 +246,7 @@ function Display:_drawActors(drawnActors, queryable, alpha)
       queryable:query(prism.components.Position, prism.components.Drawable):iter()
    do
       --- @cast drawable Drawable
-      if not drawnActors[actor] then
+      if not drawnActors[actor] and not self.overridenActors[actor] then
          drawnActors[actor] = true
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
