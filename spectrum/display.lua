@@ -392,6 +392,11 @@ end
 function Display:putBG(x, y, bg, layer)
    if x < 1 or x > self.width or y < 1 or y > self.height then return end
 
+   if self.pushed then
+      x = x + self.camera.x
+      y = y + self.camera.y
+   end
+
    bg = bg or prism.Color4.TRANSPARENT
 
    local cell = self.cells[x][y]
