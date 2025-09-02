@@ -12,7 +12,7 @@ Item.stackable = false
 Item.stackCount = 1
 Item.stacklimit = math.huge
 
---- @alias ItemOptions { weight?: number, volume?: number, stackable?: ActorFactory|boolean, stackLimit: number|nil }
+--- @alias ItemOptions { weight?: number, volume?: number, stackable?: ActorFactory|boolean, stackLimit: number|nil, stackCount?: number }
 
 --- Constructor for the Item component, see ItemOptions for available options.
 --- @param options ItemOptions
@@ -23,6 +23,7 @@ function Item:__new(options)
    self.volume = options.volume or 0
    self.stackable = options.stackable or false
    self.stackLimit = options.stackable and options.stackLimit or math.huge
+   self.stackCount = options.stackCount or 1
 end
 
 --- Stacks an actor into this item. Updates the stackCount of both this item and
