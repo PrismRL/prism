@@ -87,8 +87,9 @@ function Target:outsideLevel()
 end
 
 --- Checks if the target is within the specified range, and if it's an Actor or Vector2.
---- @param range integer
-function Target:range(range)
+--- @param range integer The maximum range to the target.
+--- @param distanceType? DistanceType Optional distance type.
+function Target:range(range, distanceType)
    self.range = range
 
    --- @param owner Actor
@@ -99,12 +100,12 @@ function Target:range(range)
       if prism.Actor:is(target) then
          if not target:getPosition() then return false end
          --- @cast target Actor
-         return owner:getRange(target) <= self.range
+         return owner:getRange(target, distanceType) <= self.range
       end
 
       if prism.Vector2:is(target) then
          --- @cast target Vector2
-         return owner:getRangeVec(target) <= self.range
+         return owner:getRangeVec(target, distanceType) <= self.range
       end
 
       return false
@@ -200,9 +201,7 @@ function Target:unique()
    self.validators["unique"] = function(_, _, target, previousTargets)
       if not previousTargets then return true end
       for _, prev in ipairs(previousTargets) do
-         if prev == target then
-            return false   
-         end
+         if prev == target then return false end
       end
       return true
    end
