@@ -25,7 +25,7 @@ end
 --- @param initialCell CellFactory A cell factory to define the default value of the map.
 --- @return LevelBuilder
 function LevelBuilder.fromLz4(file, initialCell)
-   local contents = love.filesystem.read("level.json.gz")
+   local contents = love.filesystem.read(file)
    local json = love.data.decompress("string", "lz4", contents)
    local data = prism.json.decode(json)
    --- @type LevelBuilder
