@@ -107,6 +107,7 @@ local function parseIntervals(durations)
 end
 
 --- @class MultiSprite : Sprite
+--- @field index? any
 --- @field indexes string An range string, e.g. "1-5" representing indexes 1, 2, 3, 4, 5.
 
 --- Helper function to easily build a list of frames with the same settings over a range of indexes.
