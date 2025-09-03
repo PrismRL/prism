@@ -53,6 +53,7 @@ local function File(self, scene)
    newButton.props.tileset = image
    newButton.props.hoveredQuad = quad
    newButton.props.onPress = function(pointer)
+      self.props.editor:setAttachable(prism.LevelBuilder(prism.defaultCell))
       close(pointer)
    end
 

@@ -9,6 +9,7 @@
 --- @field systems System[]
 --- @overload fun(initialCell: CellFactory): LevelBuilder
 local LevelBuilder = prism.SparseGrid:extend("LevelBuilder")
+LevelBuilder._serializationBlacklist.initialValue = true
 
 --- Initialize a new LevelBuilder.
 --- @param initialCell CellFactory A cell factory to define the default value of the map.
@@ -132,7 +133,6 @@ end
 --- @param y2 number The y-coordinate of the ending point.
 --- @param cellFactory CellFactory The cell factory to draw the line with.
 function LevelBuilder:line(x1, y1, x2, y2, cellFactory)
-   print(x1, y1, x2, y2)
    local line = prism.Bresenham(x1, y1, x2, y2)
    for _, position in ipairs(line) do
       self:set(position[1], position[2], cellFactory())
@@ -158,7 +158,7 @@ end
 --- @return Cell -- The cell at the specified coordinates, or the initialValue if not set.
 function LevelBuilder:get(x, y)
    local value = prism.SparseGrid.get(self, x, y)
-   if value == nil then value = self.initialValue end
+   if value == nil then value = self.initialValue() end
    return value
 end
 

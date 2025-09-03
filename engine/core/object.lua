@@ -168,7 +168,7 @@ function Object.serialize(object)
 
    -- Helper function to determine if a value is a SerializableObject
    local function isSerializableObject(value)
-      return type(value) == "table" and getmetatable(value) and value.is and value:is(Object)
+      return type(value) == "table" and getmetatable(value) and Object:is(value)
    end
 
    -- Helper function to serialize a single value
