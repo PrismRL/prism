@@ -213,8 +213,8 @@ function LevelBuilder:pad(width, cellFactory)
 end
 
 --- Returns the location of the upper left and lower right points that exist in the level,
---- in the level's local coordinate system. Notably, based on cell locations. So if an agent
---- is located somewhere without a cell, this method will not consider it.
+--- in the level's local coordinate system. Notably,  this is based on cell locations.
+--- So if an actor is located somewhere without a cell, this method will not consider it.
 --- @return Vector2, Vector2
 function LevelBuilder:getBounds()
    local minX, minY = math.huge, math.huge
@@ -250,8 +250,6 @@ function LevelBuilder:blit(source, destX, destY, maskFn)
    end
 
    -- Adjust actor positions
-   -- (this DOES NOT WORK, but I think the issue has to do with how actors get serialized/deserialized
-   -- not the blit code itself.)
    for actor in source.actors:query():iter() do
       ---@diagnostic disable-next-line
       local sourcePosition = actor:getPosition()
