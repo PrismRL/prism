@@ -20,6 +20,20 @@ function LevelBuilder:__new(initialCell)
    self.systems = {}
 end
 
+--- Creates a LevelBuilder from an LZ4-compressed JSON file.
+--- @param file string The path to the LZ4-compressed JSON file.
+--- @param initialCell CellFactory A cell factory to define the default value of the map.
+--- @return LevelBuilder
+function LevelBuilder.fromLz4(file, initialCell)
+   local contents = love.filesystem.read("level.json.gz")
+   local json = love.data.decompress("string", "lz4", contents)
+   local data = prism.json.decode(json)
+   --- @type LevelBuilder
+   local builder = prism.Object.deserialize(data)
+   builder.initialValue = prism.cells.Wall
+   return builder
+end
+
 --- Adds an actor to the map at the specified coordinates.
 --- @param actor table The actor to add.
 --- @param x number? The x-coordinate.
