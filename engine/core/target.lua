@@ -188,9 +188,12 @@ function Target:los(mask)
 
       for _, point in ipairs(points) do
          local x, y = point[1], point[2]
-         if x == ownerX and y == ownerY then return true end
-         if not level:getCellPassable(x, y, mask) then return false end
+         if x ~= ownerX and y ~= ownerY then
+            if not level:getCellPassable(x, y, mask) then return false end
+         end
       end
+
+      return true
    end
 
    return self
