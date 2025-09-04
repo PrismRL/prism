@@ -43,6 +43,18 @@ function Vector2:length()
    return math.sqrt(self.x * self.x + self.y * self.y)
 end
 
+--- Normalizes the vector to a unit vector.
+--- @param out? Vector2 Optional vector to fill.
+function Vector2:normalize(out)
+   out = out or Vector2()
+   local len = self:length()
+   if len > 0 then
+      out.x = self.x / len
+      out.y = self.y / len
+   end
+   return out
+end
+
 --- Returns a Vector2 with x, y floored.
 --- @return Vector2
 function Vector2:floor()
