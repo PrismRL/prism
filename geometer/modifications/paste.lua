@@ -16,7 +16,7 @@ end
 
 function PasteModification:execute(attachable, editor)
    for x, y, cell in self.cells:each() do
-      self:placeCell(attachable, x + self.topLeft.x - 1, y + self.topLeft.y - 1, getmetatable(cell))
+      self:placeCell(attachable, x + self.topLeft.x - 1, y + self.topLeft.y - 1, cell)
    end
 end
 

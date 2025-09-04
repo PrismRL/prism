@@ -80,7 +80,7 @@ end
 ---@param placeable Placeable
 function Modification:placeCell(attachable, x, y, placeable)
    if not self.replaced then self.replaced = prism.SparseGrid() end
-   local instance = placeable.factory()
+   local instance = placeable and placeable.factory() or nil
    --- @cast instance Cell
 
    self.replaced:set(x, y, attachable:getCell(x, y) or false)

@@ -181,7 +181,7 @@ end
 --- @param y number The y-coordinate.
 --- @param cell Cell The cell to set.
 function LevelBuilder:set(x, y, cell)
-   assert(cell:isInstance(), "set expects an instance, not a factory!")
+   assert(cell == nil or cell:isInstance(), "set expects an instance, not a factory!")
    prism.SparseGrid.set(self, x, y, cell)
 end
 
