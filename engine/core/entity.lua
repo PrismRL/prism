@@ -139,7 +139,7 @@ end
 --- @param relationship Relationship The relationship instance to add.
 --- @param target Entity The target entity of the relationship.
 --- @param final boolean? If true this add is part of a symmetry and we shouldn't attempt again.
---- @return Entity
+--- @return Entity -- self, for chaining.
 function Entity:addRelationship(relationship, target, final)
    assert(prism.Entity:is(target), "Target must be an Entity!")
 
@@ -147,9 +147,7 @@ function Entity:addRelationship(relationship, target, final)
    self.relationships = self.relationships or {}
 
    -- Get or create relationship map for this type
-   if not self.relationships[relType] then
-      self.relationships[relType] = {}
-   end
+   if not self.relationships[relType] then self.relationships[relType] = {} end
 
    -- Enforce exclusivity: remove all others of this type
    if relationship.exclusive then
@@ -178,7 +176,7 @@ end
 --- Removes a relationship of a given type with a specific target.
 --- @param relationshipType Relationship The relationship type/class (not an instance).
 --- @param target Entity The target entity of the relationship.
---- @return Entity
+--- @return Entity -- self, for chaining.
 function Entity:removeRelationship(relationshipType, target)
    self.relationships = self.relationships or {}
    if not self.relationships[relationshipType] then return self end
@@ -193,18 +191,15 @@ function Entity:removeRelationship(relationshipType, target)
 
    -- Remove symmetric inverse if needed
    local symmetric = relationship:generateSymmetric()
-   if symmetric then
-      target:removeRelationship(symmetric:getBase(), self)
-   end
+   if symmetric then target:removeRelationship(symmetric:getBase(), self) end
 
    local inverse = relationship:generateInverse()
-   if inverse then
-      target:removeRelationship(inverse:getBase(), self)
-   end
+   if inverse then target:removeRelationship(inverse:getBase(), self) end
 
    return self
 end
 
+--- Removes all relationships with the given type.
 --- @param relationshipType Relationship
 function Entity:removeAllRelationships(relationshipType)
    if not self.relationships[relationshipType] then return self end
@@ -214,14 +209,15 @@ function Entity:removeAllRelationships(relationshipType)
    end
 end
 
---- Checks whether this entity has a relationship of a given type with a specific target.
---- @param relationshipType Relationship The relationship type/class.
---- @param target Entity The target entity to check for.
---- @return boolean
+--- Checks whether this entity has a relationship.
+--- @param relationshipType Relationship The relationship prototype.
+--- @param target? Entity An optional entity to check. If nil, will check if the entity has any relationship with the type.
+--- @return boolean -- True if the entity has the relationship.
 function Entity:hasRelationship(relationshipType, target)
    self.relationships = self.relationships or {}
    if not self.relationships[relationshipType] then return false end
-   return self.relationships[relationshipType][target] ~= nil
+   return (target and self.relationships[relationshipType][target] ~= nil)
+      or self.relationships[relationshipType]
 end
 
 --- Gets all relationships of a given type.
