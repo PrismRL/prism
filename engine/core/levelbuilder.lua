@@ -189,15 +189,9 @@ end
 --- @param width number The width of the padding to add.
 --- @param cellFactory CellFactory The cell factory to use for padding.
 function LevelBuilder:pad(width, cellFactory)
-   local minX, minY = math.huge, math.huge
-   local maxX, maxY = -math.huge, -math.huge
-
-   for x, y in self:each() do
-      if x < minX then minX = x end
-      if x > maxX then maxX = x end
-      if y < minY then minY = y end
-      if y > maxY then maxY = y end
-   end
+   local min, max = self:getBounds()
+   local minX, minY = min:decompose()
+   local maxX, maxY = max:decompose()
 
    for x = minX - width, maxX + width do
       for y = minY - width, minY - 1 do
@@ -218,6 +212,24 @@ function LevelBuilder:pad(width, cellFactory)
    end
 end
 
+--- Returns the location of the upper left and lower right points that exist in the level,
+--- in the level's local coordinate system. Notably,  this is based on cell locations.
+--- So if an actor is located somewhere without a cell, this method will not consider it.
+--- @return Vector2, Vector2
+function LevelBuilder:getBounds()
+   local minX, minY = math.huge, math.huge
+   local maxX, maxY = -math.huge, -math.huge
+
+   for x, y in self:each() do
+      if x < minX then minX = x end
+      if x > maxX then maxX = x end
+      if y < minY then minY = y end
+      if y > maxY then maxY = y end
+   end
+
+   return prism.Vector2(minX, minY), prism.Vector2(maxX, maxY)
+end
+
 --- Blits the source LevelBuilder onto this LevelBuilder at the specified coordinates.
 --- @param source LevelBuilder The source LevelBuilder to copy from.
 --- @param destX number The x-coordinate of the top-left corner in the destination LevelBuilder.
@@ -228,18 +240,22 @@ function LevelBuilder:blit(source, destX, destY, maskFn)
       return true
    end
 
+   local min = source:getBounds()
+   local minX, minY = min:decompose()
+
    for x, y, value in source:each() do
       if maskFn(x, y, value, self:get(x, y)) then
-         self:set(destX + x, destY + y, source:get(x, y))
+         self:set(destX + (x - minX), destY + (y - minY), source:get(x, y))
       end
    end
 
    -- Adjust actor positions
    for actor in source.actors:query():iter() do
       ---@diagnostic disable-next-line
-      local position = actor:getPosition()
-      if position then
-         actor:give(prism.components.Position(position + prism.Vector2(destX, destY)))
+      local sourcePosition = actor:getPosition()
+      if sourcePosition then
+         local adjustedSourcePosition = sourcePosition - min
+         actor:give(prism.components.Position(adjustedSourcePosition + prism.Vector2(destX, destY)))
       end
 
       self.actors:addActor(actor)
@@ -251,15 +267,9 @@ end
 --- @return Actor[]
 function LevelBuilder:getEntities()
    -- Determine the bounding box of the sparse grid
-   local minX, minY = math.huge, math.huge
-   local maxX, maxY = -math.huge, -math.huge
-
-   for x, y in self:each() do
-      if x < minX then minX = x end
-      if x > maxX then maxX = x end
-      if y < minY then minY = y end
-      if y > maxY then maxY = y end
-   end
+   local min, max = self:getBounds()
+   local minX, minY = min:decompose()
+   local maxX, maxY = max:decompose()
 
    -- Assert that the sparse grid is not empty
    assert(minX <= maxX and minY <= maxY, "SparseGrid is empty and cannot be built into a Map.")
