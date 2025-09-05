@@ -6,7 +6,7 @@
 --- @field hint any
 --- @field _optional boolean
 --- @field inLevel boolean
---- @field validators (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)[]
+--- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
 --- @field reqcomponents table<Component, boolean>
 --- @overload fun(...: Component): Target
 local Target = prism.Object:extend("Target")
@@ -167,24 +167,21 @@ end
 --- is passable by the given mask. Fails if it can't reach the target.
 --- @param mask Bitmask
 function Target:los(mask)
-   --- @param level Level
-   --- @param owner Actor
    self.validators["los"] = function(level, owner, target)
       if not prism.Actor:is(target) and not prism.Vector2:is(target) then return false end
       if not owner:getPosition() then return false end
 
       if prism.Actor:is(target) and not target:getPosition() then return false end
 
-      local ownerX, ownerY = owner:expectPosition():decompose()
-      local targetX, targetY
+      --- @type Vector2
+      local targetPosition = target
       if prism.Actor:is(target) then
          --- @cast target Actor
-         targetX, targetY = target:expectPosition():decompose()
-      else
-         --- @cast target Vector2
-         targetX, targetY = target:decompose()
+         targetPosition = target:expectPosition()
       end
-      local points = prism.Bresenham(ownerX, ownerY, targetX, targetY)
+
+      local ownerX, ownerY = owner:expectPosition():decompose()
+      local points = prism.Bresenham(ownerX, ownerY, targetPosition:decompose())
 
       for _, point in ipairs(points) do
          local x, y = point[1], point[2]
@@ -221,6 +218,15 @@ function Target:related(relationshipType)
    self.validators["related"] = function(_, owner, target)
       if not prism.Entity:is(target) then return false end
       return owner:hasRelationship(relationshipType, target)
+   end
+
+   return self
+end
+
+--- Excludes the owner from being a valid target.
+function Target:excludeOwner()
+   self.validators["excludeOwner"] = function(_, owner, target)
+      return owner ~= target
    end
 
    return self
