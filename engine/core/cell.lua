@@ -6,7 +6,7 @@
 --- @overload fun(): Cell
 local Cell = prism.Entity:extend("Cell")
 
---- @alias CellFactory fun(): Cell
+--- @alias CellFactory fun(...): Cell
 
 --- Constructor for the Cell class.
 function Cell:__new()

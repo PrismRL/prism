@@ -51,7 +51,7 @@ end
 function Query:relationship(owner, relationshipType)
    table.insert(self.relationshipInfo, {
       owner = owner,
-      prototype = relationshipType
+      prototype = relationshipType,
    })
 
    return self
@@ -78,9 +78,7 @@ end
 function Query:target(target, level, owner, previousTargets)
    -- Merge Target's required components into the query
    for componentType in pairs(target.reqcomponents) do
-      if not self.requiredComponents[componentType] then
-         self:with(componentType)
-      end
+      if not self.requiredComponents[componentType] then self:with(componentType) end
    end
 
    -- Set the validator
@@ -90,7 +88,6 @@ function Query:target(target, level, owner, previousTargets)
 
    return self
 end
-
 
 local components = {}
 
@@ -107,10 +104,11 @@ local function getComponents(actor, requiredComponentsList)
    return unpack(components, 1, n)
 end
 
-
 local function lazyIntersectSets(sets, counts, requiredComponentsList)
    if #sets == 0 then
-      return function() return nil end
+      return function()
+         return nil
+      end
    end
 
    -- Find smallest set by counts (counts[i] corresponds to sets[i])
@@ -127,9 +125,7 @@ local function lazyIntersectSets(sets, counts, requiredComponentsList)
 
    local otherSets = {}
    for i = 1, #sets do
-      if i ~= smallestIndex then
-         table.insert(otherSets, sets[i])
-      end
+      if i ~= smallestIndex then table.insert(otherSets, sets[i]) end
    end
 
    local actor = nil
@@ -146,9 +142,7 @@ local function lazyIntersectSets(sets, counts, requiredComponentsList)
             end
          end
 
-         if inAll then
-            return actor
-         end
+         if inAll then return actor end
       end
    end
 end
@@ -168,7 +162,9 @@ function Query:iter()
    if self.requiredPosition then
       local posSet = storage:getSparseMap():get(self.requiredPosition:decompose())
       if not posSet then
-         return function() return nil end
+         return function()
+            return nil
+         end
       end
       table.insert(sets, posSet)
       table.insert(counts, 0)
@@ -178,7 +174,9 @@ function Query:iter()
    for _, rel in ipairs(self.relationshipInfo) do
       local relSet = rel.owner:getRelationships(rel.prototype)
       if not relSet then
-         return function() return nil end
+         return function()
+            return nil
+         end
       end
       table.insert(sets, relSet)
       table.insert(counts, 0)
@@ -188,7 +186,9 @@ function Query:iter()
    for componentType in pairs(requiredComponents) do
       local cache = storage:getComponentCache(componentType)
       if not cache then
-         return function() return nil end
+         return function()
+            return nil
+         end
       end
       table.insert(sets, cache)
       table.insert(counts, storage:getComponentCount(componentType))
@@ -213,7 +213,6 @@ function Query:iter()
       end
    end
 end
-
 
 --- Gathers all matching results into a list.
 --- @param results? Actor[] Optional table to insert results into.

@@ -207,6 +207,8 @@ function Entity:removeAllRelationships(relationshipType)
    for entity in pairs(self.relationships[relationshipType]) do
       self:removeRelationship(relationshipType, entity)
    end
+
+   return self
 end
 
 --- Checks whether this entity has a relationship.
@@ -217,7 +219,7 @@ function Entity:hasRelationship(relationshipType, target)
    self.relationships = self.relationships or {}
    if not self.relationships[relationshipType] then return false end
    return (target and self.relationships[relationshipType][target] ~= nil)
-      or self.relationships[relationshipType]
+      or next(self.relationships[relationshipType]) ~= nil
 end
 
 --- Gets all relationships of a given type.

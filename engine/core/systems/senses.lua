@@ -16,18 +16,21 @@ end
 ---@param level Level
 ---@param event Message
 function SensesSystem:onYield(level, event)
+   if not prism.Decision:is(event) then return end
+
    for actor in level:query(prism.components.Senses):iter() do
       if actor:get(prism.components.PlayerController) then self:triggerRebuild(level, actor) end
    end
 end
 
+--- @param level Level
+--- @param actor Actor
 function SensesSystem:triggerRebuild(level, actor)
    --- @type Senses
    local senses = actor:get(prism.components.Senses)
    if not senses then return end
 
    senses.cells = prism.SparseGrid()
-   senses.actors = prism.ActorStorage()
    actor:removeAllRelationships(prism.relationships.Senses)
 
    level:trigger("onSenses", level, actor)
@@ -47,7 +50,10 @@ function SensesSystem:triggerRebuild(level, actor)
    end
 
    for rememberedActor in
-      senses:query(prism.components.Drawable, prism.components.Remembered):iter()
+      level
+         :query(prism.components.Drawable, prism.components.Remembered)
+         :relationship(actor, prism.relationships.Senses)
+         :iter()
    do
       local x, y = rememberedActor:getPosition():decompose()
       senses.remembered:set(x, y, rememberedActor)

@@ -146,7 +146,7 @@ function Target:sensed()
 
       if prism.Actor:is(target) then
          --- @cast target Actor
-         return senses.actors:hasActor(target)
+         return owner:hasRelationship(prism.relationships.Senses, target)
       end
 
       if prism.Vector2:is(target) then

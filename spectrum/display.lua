@@ -146,15 +146,15 @@ end
 
 local reusedPosition = prism.Vector2()
 --- Puts animations to the display.
---- @param queryable IQueryable
+--- @param level Level
 --- @param ... Senses
-function Display:putAnimations(queryable, ...)
+function Display:putAnimations(level, ...)
    local drawnActors = {}
-   local queryables = { queryable, ... }
+   local senses = { ... }
 
-   for _, queryable in ipairs(queryables) do
+   for _, sense in ipairs(senses) do
       for actor, position, idleAnimation in
-         queryable:query(prism.components.Position, prism.components.IdleAnimation):iter()
+         sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
       do
          if not drawnActors[actor] then
             --- @cast idleAnimation IdleAnimation
@@ -236,14 +236,15 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
    end
 end
 
---- Draws actors from a queryable object onto the display, handling depth and transparency.
+--- Draws actors from a Senses component onto the display, handling depth and transparency.
 --- @private
 --- @param drawnActors table A table to keep track of already drawn actors to prevent overdrawing.
---- @param queryable IQueryable An object capable of being queried for actors with drawable components.
+--- @param senses Senses An object capable of being queried for actors with drawable components.
+--- @param level Level
 --- @param alpha number The transparency level for the drawn actors (0.0 to 1.0).
-function Display:_drawActors(drawnActors, queryable, alpha)
+function Display:_drawActors(drawnActors, senses, level, alpha)
    for actor, position, drawable in
-      queryable:query(prism.components.Position, prism.components.Drawable):iter()
+      senses:query(level, prism.components.Position, prism.components.Drawable):iter()
    do
       --- @cast drawable Drawable
       if not drawnActors[actor] and not self.overridenActors[actor] then
@@ -280,7 +281,8 @@ end
 --- senses are drawn with reduced opacity. Explored areas are drawn with even lower opacity.
 --- @param primary Senses[] A list of primary Senses objects.
 --- @param secondary Senses[] A list of secondary Senses objects.
-function Display:putSenses(primary, secondary)
+--- @param level Level The level.
+function Display:putSenses(primary, secondary, level)
    self:push()
    local drawnCells = prism.SparseGrid()
 
@@ -303,11 +305,11 @@ function Display:putSenses(primary, secondary)
    local drawnActors = {}
 
    for _, senses in ipairs(primary) do
-      self:_drawActors(drawnActors, senses, 1)
+      self:_drawActors(drawnActors, senses, level, 1)
    end
 
    for _, senses in ipairs(secondary) do
-      self:_drawActors(drawnActors, senses, 0.7)
+      self:_drawActors(drawnActors, senses, level, 0.7)
    end
 
    for _, senses in ipairs(primary) do
@@ -318,7 +320,7 @@ function Display:putSenses(primary, secondary)
       if senses.remembered then self:_drawRemembered(drawnActors, senses.remembered, 0.3) end
    end
 
-   self:putAnimations(unpack(primary), unpack(secondary))
+   self:putAnimations(level, unpack(primary), unpack(secondary))
    self:pop()
 end
 

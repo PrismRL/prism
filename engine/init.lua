@@ -281,42 +281,6 @@ prism.relationships.Senses = prism.require "core.relationships.senses"
 --- @module "engine.core.relationships.sensedby"
 prism.relationships.SensedBy = prism.require "core.relationships.sensedby"
 
--- --- @param name string
--- --- @param factory CellFactory
--- function prism.registerCell(name, factory)
---    assert(prism.cells[name] == nil, "Cell " .. name .. " is already registered!")
---    prism.cells[name] = factory
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Cell")
---       table.insert(prism._currentDefinitions, "prism.cells." .. name .. " = nil")
---    end
--- end
---
--- --- @param name string
--- --- @param factory ActorFactory
--- function prism.registerActor(name, factory)
---    assert(prism.actors[name] == nil, "Actor " .. name .. " is already registered!")
---    prism.actors[name] = factory
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Actor")
---       table.insert(prism._currentDefinitions, "prism.actors." .. name .. " = nil")
---    end
--- end
---
--- --- @param name string
--- --- @param target TargetFactory
--- function prism.registerTarget(name, target)
---    assert(prism.targets[name] == nil, "Target " .. name .. " is already registered!")
---    prism.targets[name] = target
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Target")
---       table.insert(prism._currentDefinitions, "prism.targets." .. name .. " = nil")
---    end
--- end
-
 --- @param path string The path to load into the registry from.
 local function loadRegistry(path, registry, recurse, definitions)
    local info = {}
