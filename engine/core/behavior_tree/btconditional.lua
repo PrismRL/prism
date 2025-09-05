@@ -1,10 +1,10 @@
 --- A conditional node in the behavior tree.
 --- @class BehaviorTree.Conditional : BehaviorTree.Node
---- @overload fun(conditionFunc: fun(level: Level, actor: Actor)): BehaviorTree.Conditional
+--- @overload fun(conditionFunc: fun(self: BehaviorTree.Conditional, level: Level, actor: Actor)): BehaviorTree.Conditional
 local BTConditional = prism.BehaviorTree.Node:extend("BehaviorTree.Conditional")
 
 --- Creates a new BehaviorTree.Conditional.
---- @param conditionFunc fun(self, level: Level, actor: Actor): boolean
+--- @param conditionFunc fun(self: BehaviorTree.Conditional, level: Level, actor: Actor): boolean
 function BTConditional:__new(conditionFunc)
    self.conditionFunc = conditionFunc
 end
