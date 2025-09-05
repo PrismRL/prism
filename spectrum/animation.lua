@@ -21,6 +21,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
+--- @alias AnimationFactory fun(...): Animation
 --- @alias AnimationFrame fun(display: Display, x?: number, y?: number) | Sprite
 
 --- An animation to be played in a display. Yield an :lua:class:`AnimationMessage` to play one.
