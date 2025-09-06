@@ -54,7 +54,7 @@ function ActorStorage:removeActor(actor)
    if not self.actorToID[actor] then return end
 
    self:_removeComponentCache(actor)
-   self:removeSparseMapEntries(actor)
+   if actor:has(prism.components.Position) then self:removeSparseMapEntries(actor) end
 
    for k, v in ipairs(self.actors) do
       if v == actor then
