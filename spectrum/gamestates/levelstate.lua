@@ -73,7 +73,7 @@ function LevelState:handleMessage(message)
       self.manager:push(self.geometer)
    elseif prism.messages.Animation:is(message) then
       --- @cast message AnimationMessage
-      self.display:yieldAnimation(message, self.manager, self.level)
+      self.display:yieldAnimation(message)
    end
 end
 
@@ -115,7 +115,7 @@ function LevelState:draw()
 
    local primary, secondary = self:getSenses()
    -- Render the level using the actor’s senses
-   self.display:putSenses(primary, secondary)
+   self.display:putSenses(primary, secondary, self.level)
    self.display:draw()
 end
 

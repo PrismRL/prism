@@ -49,24 +49,21 @@ end
 --- @param message string The message, optionally with string.format characters.
 --- @param ... any Additional parameters passed to message:format().
 function Log.addMessageSensed(level, action, message, ...)
-   -- Find all actors with both Senses and Log components.
    local query = level:query(prism.components.Senses, prism.components.Log)
 
-   for actor, senses in query:iter() do
+   for actor, _ in query:iter() do
       --- @cast actor Actor
-      --- @cast senses Senses
 
       if action.owner == actor then return end
 
       local seesParty = false
-      if senses.actors:hasActor(action.owner) then seesParty = true end
+      if actor:hasRelationship(prism.relationships.Senses, action.owner) then seesParty = true end
 
       for i = 1, action:getNumTargets() do
          local targeted = action:getTargeted(i)
-         if actor == targeted then return end
 
-         if prism.Actor:is(targeted) then
-            if senses.actors:hasActor(targeted) then seesParty = true end
+         if actor ~= targeted and prism.Actor:is(targeted) then
+            if actor:hasRelationship(prism.relationships.Senses, targeted) then seesParty = true end
          end
       end
 
