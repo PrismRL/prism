@@ -95,11 +95,12 @@ local reusedvec = prism.Vector2()
 --- @param actor Actor The actor to remove.
 function ActorStorage:removeSparseMapEntries(actor)
    if not self.sparseMap.list then return end
-   if not actor:has(prism.components.Position) then return end
 
    local toRemove = {}
-   for hash in pairs(self.sparseMap.list[actor]) do
-      toRemove[hash] = true
+   if self.sparseMap.list[actor] then
+      for hash in pairs(self.sparseMap.list[actor]) do
+         toRemove[hash] = true
+      end
    end
 
    self.sparseMap:removeAll(actor)
