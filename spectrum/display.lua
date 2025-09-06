@@ -403,6 +403,10 @@ function Display:putBG(x, y, bg, layer)
 
    local cell = self.cells[x][y]
 
+   if not cell then
+      return
+   end
+
    if not layer or layer >= cell.depth then
       bg:copy(cell.bg)
       cell.depth = layer or -math.huge
