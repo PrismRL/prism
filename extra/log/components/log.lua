@@ -49,26 +49,14 @@ end
 --- @param message string The message, optionally with string.format characters.
 --- @param ... any Additional parameters passed to message:format().
 function Log.addMessageSensed(level, action, message, ...)
-   local query = level:query(prism.components.Senses, prism.components.Log)
+   local query = level
+      :query(prism.components.Senses, prism.components.Log)
+      :relationship(action.owner, prism.relationships.Senses)
 
    for actor, _ in query:iter() do
       --- @cast actor Actor
 
-      if action.owner == actor then return end
-
-      local seesParty = false
-      if actor:hasRelationship(prism.relationships.Senses, action.owner) then seesParty = true end
-
-      for i = 1, action:getNumTargets() do
-         local targeted = action:getTargeted(i)
-
-         if actor ~= targeted and prism.Actor:is(targeted) then
-            if actor:hasRelationship(prism.relationships.Senses, targeted) then seesParty = true end
-         end
-      end
-
-      -- Only log the message if the actor sensed the source
-      if seesParty then Log.addMessage(actor, message, ...) end
+      if action.owner ~= actor then Log.addMessage(actor, message, ...) end
    end
 end
 
