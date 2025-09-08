@@ -76,7 +76,7 @@ function Display:update(level, dt)
    end
 
    for _, _, animation in
-      level:query(prism.components.Position, prism.components.IdleAnimation):iter()
+   level:query(prism.components.Position, prism.components.IdleAnimation):iter()
    do
       --- @cast animation IdleAnimation
       animation.animation:update(dt)
@@ -133,7 +133,7 @@ function Display:putLevel(attachable)
    end
 
    for actor, position, drawable in
-      attachable:query(prism.components.Position, prism.components.Drawable):iter()
+   attachable:query(prism.components.Position, prism.components.Drawable):iter()
    do
       if not self.overridenActors[actor] then
          --- @cast drawable Drawable
@@ -154,7 +154,7 @@ function Display:putAnimations(level, ...)
 
    for _, sense in ipairs(senses) do
       for actor, position, idleAnimation in
-         sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
+      sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
       do
          if not drawnActors[actor] then
             --- @cast idleAnimation IdleAnimation
@@ -244,7 +244,7 @@ end
 --- @param alpha number The transparency level for the drawn actors (0.0 to 1.0).
 function Display:_drawActors(drawnActors, senses, level, alpha)
    for actor, position, drawable in
-      senses:query(level, prism.components.Position, prism.components.Drawable):iter()
+   senses:query(level, prism.components.Position, prism.components.Drawable):iter()
    do
       --- @cast drawable Drawable
       if not drawnActors[actor] and not self.overridenActors[actor] then
@@ -392,20 +392,16 @@ end
 --- @param bg Color4 The background color to set.
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putBG(x, y, bg, layer)
-   if x < 1 or x > self.width or y < 1 or y > self.height then return end
-
    if self.pushed then
       x = x + self.camera.x
       y = y + self.camera.y
    end
 
+   if x < 1 or x > self.width or y < 1 or y > self.height then return end
+
    bg = bg or prism.Color4.TRANSPARENT
 
    local cell = self.cells[x][y]
-
-   if not cell then
-      return
-   end
 
    if not layer or layer >= cell.depth then
       bg:copy(cell.bg)
