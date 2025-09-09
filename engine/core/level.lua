@@ -171,11 +171,13 @@ end
 
 --- Adds an actor to the level. Handles updating the component cache and
 --- inserting the actor into the sparse map. It will also add the actor to the
---- scheduler if it has a controller.
+--- scheduler if it has a controller. Errors if the actor is already in a level.
 --- @param actor Actor The actor to add.
 --- @param x integer? The x coordinate to place the actor at.
 --- @param y integer? The y coordinate to place the actor at.
 function Level:addActor(actor, x, y)
+   assert(not actor.level, "Actor is already in a level!")
+
    if x and y then
       if actor:getPosition() then
          actor:give(prism.components.Position(prism.Vector2(x, y)))
