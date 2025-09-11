@@ -7,14 +7,16 @@
 --- @field _optional boolean
 --- @field inLevel boolean
 --- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
---- @field reqcomponents table<Component, boolean>
+--- @field requiredComponents table<Component, boolean>
+--- @field excludedComponents table<Component, boolean>
 --- @overload fun(...: Component): Target
 local Target = prism.Object:extend("Target")
 
 --- Creates a new Target and accepts components and sends them to with().
 function Target:__new(...)
    self.validators = {}
-   self.reqcomponents = {}
+   self.requiredComponents = {}
+   self.excludedComponents = {}
    self.inLevel = true
    self.hint = nil -- A hint that can be set to let the UI know how to handle the target.
    self._optional = false
@@ -60,17 +62,40 @@ end
 --- @param ... Component
 function Target:with(...)
    for _, comp in pairs({ ... }) do
-      self.reqcomponents[comp] = true
+      self.requiredComponents[comp] = true
    end
 
    --- @param target Entity
    self.validators["with"] = function(level, owner, target)
-      if not next(self.reqcomponents) then return true end
+      if not next(self.requiredComponents) then return true end
 
       if not prism.Entity:is(target) then return false end
 
-      for comp, _ in pairs(self.reqcomponents) do
+      for comp, _ in pairs(self.requiredComponents) do
          if not target:has(comp) then return false end
+      end
+
+      return true
+   end
+
+   return self
+end
+
+--- Adds a list of components that the target object must not have.
+--- @param ... Component
+function Target:without(...)
+   for _, comp in pairs({ ... }) do
+      self.excludedComponents[comp] = true
+   end
+
+   --- @param target Entity
+   self.validators["with"] = function(level, owner, target)
+      if not next(self.excludedComponents) then return true end
+
+      if not prism.Entity:is(target) then return false end
+
+      for comp, _ in pairs(self.excludedComponents) do
+         if target:has(comp) then return false end
       end
 
       return true
