@@ -45,8 +45,18 @@ function SensesSystem:triggerRebuild(level, actor)
       senses.remembered = senses.rememberedStorage[level]
    end
 
+   local temp = prism.Vector2(-1, -1)
    for x, y, cell in senses.cells:each() do
       senses.explored:set(x, y, cell)
+
+      --- @type Actor?
+      local remembered = senses.remembered:get(x, y)
+      if remembered then
+         remembered:getPosition(temp)
+         if remembered.level ~= level or not temp:equals(x, y) then
+            senses.remembered:set(x, y, nil)
+         end
+      end
    end
 
    for rememberedActor in
