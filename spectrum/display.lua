@@ -66,21 +66,22 @@ function Display:update(level, dt)
       local animation = self.animations[i]
       animation.animation:update(dt)
 
-      if animation.animation.status == "paused" then
-         if animation.actor and animation.animation:isCustom() then
-            self:unoverrideActor(animation.actor)
-         end
-         table.remove(self.animations, i)
-         if animation.blocking then self.blocking = false end
-      end
+      if animation.animation.status == "paused" then self:removeAnimation(i) end
    end
 
    for _, _, animation in
-   level:query(prism.components.Position, prism.components.IdleAnimation):iter()
+      level:query(prism.components.Position, prism.components.IdleAnimation):iter()
    do
       --- @cast animation IdleAnimation
       animation.animation:update(dt)
    end
+end
+
+function Display:removeAnimation(index)
+   local animation = self.animations[index]
+   if animation.actor then self:unoverrideActor(animation.actor) end
+   table.remove(self.animations, index)
+   if animation.blocking then self.blocking = false end
 end
 
 --- Draws the entire display to the screen. This function iterates through all cells
@@ -114,6 +115,8 @@ function Display:draw()
          end
       end
    end
+
+   love.graphics.setColor(1, 1, 1, 1)
 end
 
 --- Puts the drawable components of a level (cells and actors) onto the display.
@@ -133,7 +136,7 @@ function Display:putLevel(attachable)
    end
 
    for actor, position, drawable in
-   attachable:query(prism.components.Position, prism.components.Drawable):iter()
+      attachable:query(prism.components.Position, prism.components.Drawable):iter()
    do
       if not self.overridenActors[actor] then
          --- @cast drawable Drawable
@@ -154,9 +157,9 @@ function Display:putAnimations(level, ...)
 
    for _, sense in ipairs(senses) do
       for actor, position, idleAnimation in
-      sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
+         sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
       do
-         if not drawnActors[actor] then
+         if not drawnActors[actor] and not self.overridenActors[actor] then
             --- @cast idleAnimation IdleAnimation
             --- @cast position Position
             local x, y = position:getVector():decompose()
@@ -189,7 +192,7 @@ end
 function Display:skipAnimations()
    for i = #self.animations, 1, -1 do
       local animation = self.animations[i]
-      if animation.skippable then table.remove(self.animations, i) end
+      if animation.skippable then self:removeAnimation(i) end
    end
 end
 
@@ -198,7 +201,8 @@ end
 function Display:yieldAnimation(message)
    table.insert(self.animations, message)
    -- We override the actor immediately to prevent flickering
-   if message.actor and message.animation:isCustom() then self:overrideActor(message.actor) end
+
+   if message.actor then self:overrideActor(message.actor) end
    if message.blocking then self.blocking = true end
 end
 
@@ -244,7 +248,7 @@ end
 --- @param alpha number The transparency level for the drawn actors (0.0 to 1.0).
 function Display:_drawActors(drawnActors, senses, level, alpha)
    for actor, position, drawable in
-   senses:query(level, prism.components.Position, prism.components.Drawable):iter()
+      senses:query(level, prism.components.Position, prism.components.Drawable):iter()
    do
       --- @cast drawable Drawable
       if not drawnActors[actor] and not self.overridenActors[actor] then
