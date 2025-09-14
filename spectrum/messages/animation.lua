@@ -6,6 +6,7 @@
 --- @field y? integer A y position to play the animation at. If an actor is given, this is relative to their position.
 --- @field blocking boolean Whether to block other processes while the animation plays.
 --- @field skippable boolean Whether the animation can be skipped with input.
+--- @field override boolean Whether to override (hide the actor) during animation drawing.
 --- @overload fun(options: AnimationMessageOptions): AnimationMessage
 local AnimationMessage = prism.Message:extend "AnimationMessage"
 
@@ -16,6 +17,7 @@ local AnimationMessage = prism.Message:extend "AnimationMessage"
 --- @field y? integer
 --- @field blocking? boolean
 --- @field skippable? boolean
+--- @field override? boolean
 
 --- @param options AnimationMessageOptions
 function AnimationMessage:__new(options)
@@ -25,6 +27,7 @@ function AnimationMessage:__new(options)
    self.y = options.y or 0
    self.blocking = options.blocking or false
    self.skippable = options.skippable or false
+   self.override = options.override or false
 end
 
 return AnimationMessage

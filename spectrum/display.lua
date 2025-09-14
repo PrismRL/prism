@@ -79,7 +79,7 @@ end
 
 function Display:removeAnimation(index)
    local animation = self.animations[index]
-   if animation.actor then self:unoverrideActor(animation.actor) end
+   if animation.actor and animation.override then self:unoverrideActor(animation.actor) end
    table.remove(self.animations, index)
    if animation.blocking then self.blocking = false end
 end
@@ -202,7 +202,7 @@ function Display:yieldAnimation(message)
    table.insert(self.animations, message)
    -- We override the actor immediately to prevent flickering
 
-   if message.actor then self:overrideActor(message.actor) end
+   if message.actor and message.override then self:overrideActor(message.actor) end
    if message.blocking then self.blocking = true end
 end
 
