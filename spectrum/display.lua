@@ -9,11 +9,12 @@
 --- @field debug boolean
 
 --- @class Sprite
---- @field index string|integer
---- @field color Color4?
---- @field background Color4?
---- @field layer integer?
---- @field size integer?
+--- @field index? string|integer
+--- @field indices? (Sprite|string|integer)[]
+--- @field color? Color4
+--- @field background? Color4
+--- @field layer? integer
+--- @field size? integer
 
 --- @alias DisplayCell {char: (string|integer)?, fg: Color4, bg: Color4, depth: number}
 --- @class Display : Object
@@ -337,16 +338,34 @@ end
 --- @param layer number? An optional layer to use for depth sorting.
 function Display:putSprite(x, y, sprite, color, layer)
    local size = sprite.size or 1
-   for ox = 1, size do
-      for oy = 1, size do
-         self:put(
-            x + ox - 1,
-            y + oy - 1,
-            sprite.index,
-            color or sprite.color,
-            sprite.background,
-            layer or sprite.layer
-         )
+   if size > 1 and sprite.indices then
+      local i = 1
+      for y = y, y + size - 1 do
+         for x = x, x + size - 1 do
+            local isSprite = type(sprite.indices[i]) == "table"
+            self:put(
+               x,
+               y,
+               isSprite and sprite.indices[i].index or sprite.indices[i],
+               color or (isSprite and sprite.indices[i].color or sprite.color),
+               isSprite and sprite.indices[i].background or sprite.background,
+               layer or (isSprite and sprite.indices[i].layer or sprite.layer)
+            )
+            i = i + 1
+         end
+      end
+   else
+      for ox = 1, size do
+         for oy = 1, size do
+            self:put(
+               x + ox - 1,
+               y + oy - 1,
+               sprite.index,
+               color or sprite.color,
+               sprite.background,
+               layer or sprite.layer
+            )
+         end
       end
    end
 end

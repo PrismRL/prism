@@ -108,10 +108,9 @@ local function parseIntervals(durations)
 end
 
 --- @class MultiSprite : Sprite
---- @field index? any
---- @field indexes string An range string, e.g. "1-5" representing indexes 1, 2, 3, 4, 5.
+--- @field range string An range string, e.g. "1-5" representing indices 1, 2, 3, 4, 5.
 
---- Helper function to easily build a list of frames with the same settings over a range of indexes.
+--- Helper function to easily build a list of frames with the same settings over a range of indices.
 --- @param ... MultiSprite
 --- @return Sprite[]
 function Animation.buildFrames(...)
@@ -120,13 +119,13 @@ function Animation.buildFrames(...)
    local args = { ... }
 
    for a = 1, #args do
-      local min, max, step = parseInterval(args[a].indexes)
+      local min, max, step = parseInterval(args[a].range)
       for i = min, max, step do
          result[#result + 1] = {
             index = i,
             color = args[a].color,
             background = args[a].background,
-            size = args[a].size,
+            size = args[a].size or 1,
             layer = args[a].layer,
          }
       end
