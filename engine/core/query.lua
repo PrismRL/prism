@@ -77,7 +77,7 @@ end
 --- @return Query
 function Query:target(target, level, owner, previousTargets)
    -- Merge Target's required components into the query
-   for componentType in pairs(target.reqcomponents) do
+   for componentType in pairs(target.requiredComponents) do
       if not self.requiredComponents[componentType] then self:with(componentType) end
    end
 
