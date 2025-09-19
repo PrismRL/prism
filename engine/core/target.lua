@@ -153,6 +153,22 @@ function Target:isPrototype(type)
    return self
 end
 
+--- Shorthand for isPrototype(prism.Actor).
+function Target:isActor()
+   return self:isPrototype(prism.Actor)
+end
+
+--- Shorthand for isPrototype(prism.Cell).
+function Target:isCell()
+   return self:isPrototype(prism.Cell)
+end
+
+--- Shorthand for isPrototype(prism.Vector2).
+function Target:isVector2()
+   return self:isPrototype(prism.Vector2)
+end
+
+--- Checks if the target is specific Lua type.
 --- @param luaType type
 function Target:isType(luaType)
    self.validators["luatype"] = function(_, _, target)
