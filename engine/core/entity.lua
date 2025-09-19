@@ -229,4 +229,12 @@ function Entity:getRelationships(relationshipType)
    return self.relationships[relationshipType] or {}
 end
 
+--- Gets the first/random entity with the given relationship. This is mostly useful for exclusive relationships.
+--- @param relationshipType Relationship The relationship prototype.
+--- @return Entity?
+function Entity:getRelationship(relationshipType)
+   local entity = next(self.relationships[relationshipType] or {})
+   return entity
+end
+
 return Entity
