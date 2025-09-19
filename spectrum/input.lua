@@ -64,9 +64,10 @@ local modes = {
 --- @field key table<string, ControlState> Current state of keyboard presses.
 --- @field sc table<string, ControlState> Current state of keyboard presses, as scancodes.
 --- @field text table<string, ControlState> Current state of text input.
---- @field mouse table<string, ControlState> Current state of mouse presses.
+--- @field mouse table<string|integer, ControlState> Current state of mouse presses.
 --- @field button table<string, ControlState> Current state of gamepad button presses.
 --- @field axis table<string, ControlState> Current state of gamepad joysticks.
+--- @field get InputGetter Getters for other inputs.
 --- @field private _data table
 --- @field private _threshold number
 --- @field private _last number
@@ -442,7 +443,10 @@ local control_map = {
    ["rb"] = "rightshoulder", -- Xbox-style right bumper
 }
 
--- Metatable for input value getters
+--- Metatable for input value getters
+--- @class InputGetter
+--- @field _parent { _joystickId: integer, _mode: InputMode, _transform?: love.Transform }
+-- Input.get = setmetatable({ _parent = { _joystickId = 1, _mode = modes.both } }, get_mt)
 local get_mt = {}
 get_mt.__index = get_mt
 
@@ -452,7 +456,7 @@ get_mt.__index = get_mt
 --- @return number y The mouse y coordinate.
 function get_mt:mouse(transform)
    local x, y = Input._data.mouse.x or 0, Input._data.mouse.y or 0
-   transform = transform or self._transform
+   transform = transform or self._parent._transform
 
    if transform and transform.inverseTransformPoint then
       return transform:inverseTransformPoint(x, y)
@@ -468,7 +472,7 @@ function get_mt:wheel()
 end
 
 --- Gets the left analog stick position.
---- @param joystick number|love.Joystick Optional specific joystick to query
+--- @param joystick? number|love.Joystick Optional specific joystick to query
 --- @return number x The x-axis value (-1 to 1)
 --- @return number y The y-axis value (-1 to 1)
 function get_mt:left(joystick)
@@ -486,7 +490,7 @@ function get_mt:left(joystick)
 end
 
 --- Gets the right analog stick position
---- @param joystick number|love.Joystick Optional specific joystick to query
+--- @param joystick? number|love.Joystick Optional specific joystick to query
 --- @return number x The x-axis value (-1 to 1)
 --- @return number y The y-axis value (-1 to 1)
 function get_mt:right(joystick)
@@ -504,8 +508,8 @@ function get_mt:right(joystick)
 end
 
 --- Gets the left trigger value
---- @param joystick number|love.Joystick Optional specific joystick to query
---- @return number The trigger value (0 to 1)
+--- @param joystick? number|love.Joystick Optional specific joystick to query
+--- @return number -- The trigger value (0 to 1)
 function get_mt:lt(joystick)
    if self._parent._mode == modes.keyboard then return 0 end
 
@@ -522,8 +526,8 @@ end
 get_mt.triggerleft = get_mt.lt
 
 --- Gets the right trigger value
---- @param joystick number|love.Joystick Optional specific joystick to query
---- @return number The trigger value (0 to 1)
+--- @param joystick? number|love.Joystick Optional specific joystick to query
+--- @return number -- The trigger value (0 to 1)
 function get_mt:rt(joystick)
    if self._parent._mode == modes.keyboard then return 0 end
 
@@ -540,7 +544,7 @@ end
 get_mt.triggerright = get_mt.rt
 
 --- Gets both trigger values
---- @param joystick number|love.Joystick Optional specific joystick to query
+--- @param joystick? number|love.Joystick Optional specific joystick to query
 --- @return number left Left trigger value (0 to 1)
 --- @return number right Right trigger value (0 to 1)
 function get_mt:trigger(joystick)
@@ -561,6 +565,7 @@ end
 --- @field private _joystickId integer
 --- @field private _controls { name: string, list?: ControlState|ControlState[], state?: boolean, func?: (fun(): boolean, number, number) }[]
 --- @field private _pairs { name: string, triggers: string[] }[]
+--- @field get InputGetter Getters for other inputs.
 --- @field [string] ControlState The state of a named control.
 --- @overload fun(config: ControlsOptions): Controls
 local Controls = prism.Object:extend("Controls")

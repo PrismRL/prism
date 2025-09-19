@@ -133,9 +133,24 @@ function StateManager:hook(options)
    if options.exclude then callbacks = exclude(callbacks, options.exclude) end
    for _, callbackName in ipairs(callbacks) do
       local oldCallback = love[callbackName]
-      love[callbackName] = function(...)
-         if oldCallback then oldCallback(...) end
-         self:emit(callbackName, ...)
+
+      -- Since we call the oldCallback first and Input:update() resets the input state, Input
+      -- must be hooked first.
+      if oldCallback and callbackName == "update" then
+         prism.logger.warn(
+            "Callbacks existed before hook! Ensure spectrum.Input:hook() was called first if using."
+         )
+      end
+
+      if oldCallback then
+         love[callbackName] = function(...)
+            oldCallback(...)
+            self:emit(callbackName, ...)
+         end
+      else
+         love[callbackName] = function(...)
+            self:emit(callbackName, ...)
+         end
       end
    end
 end
