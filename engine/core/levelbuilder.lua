@@ -30,7 +30,7 @@ function LevelBuilder.fromLz4(file, initialCell)
    local data = prism.json.decode(json)
    --- @type LevelBuilder
    local builder = prism.Object.deserialize(data)
-   builder.initialValue = prism.cells.Wall
+   builder.initialValue = initialCell
    return builder
 end
 
