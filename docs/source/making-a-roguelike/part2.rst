@@ -11,7 +11,7 @@ Unfortunately for kobolds, they can't fly. In this section we're going to create
 Creating the void component
 ---------------------------
 
-First we'll need to create a component we'll put on cells to indicate they're a place you can fall.
+First we'll create a component to indicate cells where you can fall.
 
 1. Navigate to ``modules/game/components``
 2. Create a new file called ``void.lua``
@@ -24,9 +24,6 @@ Put the following into ``void.lua``:
    local Void = prism.Component:extend "Void"
 
    return Void
-
-This is a simple tag component that we'll use to mark tiles where actors can fall if they don’t have
-an allowed movement type.
 
 Adding void to our pit
 ----------------------
@@ -125,7 +122,7 @@ doesn't have a ``Mover`` component we'll default to falling.
       end
 
       function Fall:perform(level)
-         level:perform(prism.actions.Die(self.owner))
+         level:removeActor(self.owner)
       end
 
       return Fall
