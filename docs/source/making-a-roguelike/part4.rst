@@ -7,7 +7,7 @@ and have the kobolds attack them!
 Giving the player HP
 --------------------
 
-The first thing we're going to do is give the player a ``Health`` component.
+First, give the player a ``Health`` component.
 
 .. code-block:: lua
 
@@ -42,9 +42,8 @@ In ``kobold.lua``, add our new ``Attacker`` component to the list.
 The attack action
 -----------------
 
-Now let's make an attack action that the kobolds can use on the player. This is pretty
-straightforward. Anything with health is attackable, and we apply our ``Damage`` action based on the
-``Attacker`` component.
+Now let's make an attack action that the kobolds can use on the player. Anything with health is
+attackable, and we apply our ``Damage`` action based on the ``Attacker`` component.
 
 Note that here, ``AttackTarget`` is an Actor with a Health component, and is passed into ``perform``
 as ``attacked.`` This is more commonly how Targets are used, versus enforcing basic types like
@@ -52,9 +51,9 @@ as ``attacked.`` This is more commonly how Targets are used, versus enforcing ba
 
 .. code-block:: lua
 
-   local AttackTarget = prism.Target()
-      :isPrototype(prism.Actor)
-      :with(prism.components.Health)
+   local AttackTarget = prism.Target(prism.components.Health)
+      :isActor()
+      :range(1)
 
    ---@class Attack : Action
    ---@overload fun(owner: Actor, attacked: Actor): Attack
@@ -69,9 +68,7 @@ as ``attacked.`` This is more commonly how Targets are used, versus enforcing ba
       local attacker = self.owner:expect(prism.components.Attacker)
 
       local damage = prism.actions.Damage(attacked, attacker.damage)
-      if level:canPerform(damage) then
-         level:perform(damage)
-      end
+      level:tryPerform(damage)
    end
 
    return Attack
@@ -114,7 +111,7 @@ with :lua:func:`Level.yield` when the last player controlled actor dies.
 
    --- @class LoseMessage : Message
    --- @overload fun(): LoseMessage
-   local LoseMessage = prism.Object:extend("LoseMessage")
+   local LoseMessage = prism.Message:extend("LoseMessage")
    return LoseMessage
 
 This message just indicates that the game is over, so it doesn't need to hold any data. Next head
