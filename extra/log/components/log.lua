@@ -55,8 +55,12 @@ function Log.addMessageSensed(level, action, message, ...)
 
    for actor, _ in query:iter() do
       --- @cast actor Actor
-
-      if action.owner ~= actor then Log.addMessage(actor, message, ...) end
+      local valid = true
+      if action.owner == actor then valid = false end
+      for i = 1, action:getNumTargets() do
+         if action:getTargeted(i) == actor then valid = false end
+      end
+      if valid then Log.addMessage(actor, message, ...) end
    end
 end
 
