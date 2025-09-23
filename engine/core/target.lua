@@ -6,6 +6,7 @@
 --- @field hint any
 --- @field _optional boolean
 --- @field inLevel boolean
+--- @field rangeValue integer
 --- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
 --- @field requiredComponents table<Component, boolean>
 --- @field excludedComponents table<Component, boolean>
@@ -115,7 +116,7 @@ end
 --- @param range integer The maximum range to the target.
 --- @param distanceType? DistanceType Optional distance type.
 function Target:range(range, distanceType)
-   self.range = range
+   self.rangeValue = range
 
    --- @param owner Actor
    --- @param target any
@@ -125,12 +126,12 @@ function Target:range(range, distanceType)
       if prism.Actor:is(target) then
          if not target:getPosition() then return false end
          --- @cast target Actor
-         return owner:getRange(target, distanceType) <= self.range
+         return owner:getRange(target, distanceType) <= self.rangeValue
       end
 
       if prism.Vector2:is(target) then
          --- @cast target Vector2
-         return owner:getRangeVec(target, distanceType) <= self.range
+         return owner:getRangeVec(target, distanceType) <= self.rangeValue
       end
 
       return false
