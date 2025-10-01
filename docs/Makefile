@@ -30,6 +30,7 @@ build: install
 	$(MAKE) clean
 	python3 scripts/gen.py ../spectrum/ source/reference/spectrum
 	python3 scripts/gen.py ../engine/ source/reference/prism
+	python3 scripts/gen.py ../geometer/ source/reference/geometer
 	python3 scripts/gen.py ../extra/ source/reference/extra
 	$(MAKE) html
 
