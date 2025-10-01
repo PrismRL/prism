@@ -67,35 +67,40 @@ A couple keybinds
 -----------------
 
 Our game state still forces you to close the game manually, so let's add a couple keybinds to
-restart or close the game. In ``keybindingschema.lua``, add a couple entries:
+restart or close the game. In ``controls.lua``, add a couple entries:
 
 .. code-block:: lua
 
-   { key = "r", mode = "game-over", action = "restart", description = "Restarts the game." },
-   { key = "q", mode = "game-over", action = "quit", description = "Quits the game." },
+   restart        = "r",
+   quit           = "q",
 
-Back in ``gameoverstate.lua``, we'll add a ``keypressed`` callback to handle these:
+Back in ``gameoverstate.lua``, we'll add a ``update`` callback to handle these. Don't forget to
+``require`` our controls.
 
 .. code-block:: lua
 
-   local keybindings = require "keybindingschema"
+   local controls = require "controls"
+   ...
 
    function GameOverState:draw()
       ...
    end
 
-   function GameOverState:keypressed(key, scancode, isrepeat)
-      local action = keybindings:keypressed(key, "game-over")
+   function GameOverState:update(dt)
+      controls:update()
 
-      if action == "restart" then
-         love.event.restart()
-      elseif action == "quit" then
+      if controls.quit.pressed then
          love.event.quit()
+      elseif controls.restart.pressed then
+         love.event.restart()
       end
    end
 
-Don't forget to ``require`` our keybindings! We use a ``game-over`` mode to differentiate from the
-main game's controls. Finally, add some instructions:
+.. note::
+
+   See :doc:`../how-tos/controls` for a guide on input and controls.
+
+Finally, let's add some instructions.
 
 .. code-block:: lua
 

@@ -7,6 +7,10 @@ and get chased by.
 .. video:: ../_static/part1.mp4
    :caption: Kicking a kobold
    :align: center
+   :autoplay:
+   :nocontrols:
+   :loop:
+   :muted:
 
 The following sections will expand this into a complete game.
 
@@ -282,7 +286,7 @@ checking passability with a custom collision mask.
 
    .. code:: lua
 
-      local KickTarget = prism.Target():with(prism.components.Collider):range(1):sensed()
+      local KickTarget = prism.Target(prism.components.Collider):range(1):sensed()
 
       ---@class KickAction : Action
       local Kick = prism.Action:extend("KickAction")
