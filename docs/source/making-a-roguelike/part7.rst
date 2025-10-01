@@ -4,6 +4,13 @@ Carving out caverns
 In this section of the tutorial we'll create a more interesting place to kick kobolds, and put some
 in the game world to start.
 
+.. video:: ../_static/part7.mp4
+   :autoplay:
+   :nocontrols:
+   :loop:
+   :muted:
+   :width: 100%
+
 Getting started on a map
 ------------------------
 
@@ -18,8 +25,9 @@ from this module that takes a few parameters.
    --- @param player Actor
    --- @param width integer
    --- @param height integer
-   return function(rng, player, width, height)
-      local builder = prism.LevelBuilder(prism.cells.Wall)
+   --- @param builder? LevelBuilder
+   return function(rng, player, width, height, builder)
+      builder = builder or prism.LevelBuilder(prism.cells.Pit)
 
       -- world building code goes here!
 
@@ -28,8 +36,33 @@ from this module that takes a few parameters.
 
 We give the level building function an :lua:class:`RNG` which will be exclusive to it, the player we
 want to place, and the width and height of the map we want generated. Inside we create a
-:lua:class:`LevelBuilder` and return it. The constant ``PARTITIONS`` will define the grid size of the
-rooms.
+:lua:class:`LevelBuilder` and return it. The constant ``PARTITIONS`` will define the grid size of
+the rooms.
+
+Debugging
+---------
+
+Before we begin filling up the level, let's set up a :lua:class:`MapGeneratorState` so we can see
+how the level looks as it generates. In ``main.lua``, we'll check for an argument passed to decide
+whether we preview the level or not. Rather than loading our regular state, we'll load a
+:lua:class:`MapGeneratorState`, passing it a function used to generate the level, the
+``LevelBuilder``, and the ``Display``.
+
+.. code-block:: lua
+
+   function love.load(args)
+      if args[1] == "--debug" then
+         local levelgen = require "levelgen"
+         local builder = prism.LevelBuilder(prism.cells.Wall)
+         local seed = prism.RNG(love.timer.getTime())
+         local function generator()
+            levelgen(seed, prism.actors.Player(), 60, 30, builder)
+         end
+
+         manager:push(geometer.MapGeneratorState(generator, builder, display)
+      else
+         manager:push(GameLevelState(display))
+      end
 
 Populating the void
 -------------------
@@ -55,6 +88,9 @@ point and set a ``Wall`` for values greater than ``0.5``.
          builder:set(x, y, cell())
       end
    end
+
+Run the game with ``--debug``, e.g. ``love . --debug`` and hit the play button (or press ``\```).
+You should see the noise get filled out!
 
 Making room
 -----------
@@ -94,6 +130,8 @@ After that let's set some reasonable limits on the minimum and maximum room widt
 Next we loop through each of our partitions and build a room so long as it's not the one we're
 omitting. We create a :lua:class:`Rectangle`, hash its partition coordinates, and put it into our
 table of rooms. Finally we draw the room onto our map with :lua:func:`LevelBuilder.drawRectangle`.
+We use ``coroutine.yield()`` to return control back to Geometer, so we can see each rectangle get
+drawn.
 
 .. code-block:: lua
 
@@ -108,6 +146,7 @@ table of rooms. Finally we draw the room onto our map with :lua:func:`LevelBuild
             local roomRect = prism.Rectangle(x, y, rw, rh)
             rooms[prism.Vector2._hash(px, py)] = roomRect
 
+            coroutine.yield()
             builder:drawRectangle(x, y, x + rw, y + rh, prism.cells.Floor)
          end
       end
@@ -149,6 +188,7 @@ bottom. If either doesn't exist the hallway helper won't get past the guard and 
    for hash, currentRoom in pairs(rooms) do
       local px, py = prism.Vector2._unhash(hash)
 
+      coroutine.yield()
       createLShapedHallway(currentRoom, rooms[prism.Vector2._hash(px + 1, py)])
       createLShapedHallway(currentRoom, rooms[prism.Vector2._hash(px, py + 1)])
    end
@@ -167,6 +207,7 @@ Now to place the player. We'll select a random room and put the player on the ce
    end
 
    local playerPos = startRoom:center():floor()
+   coroutine.yield()
    builder:addActor(player, playerPos.x, playerPos.y)
 
 We're getting close now, but we need some kobolds to kick. Let's go through every room that's not
@@ -178,6 +219,7 @@ the starting room and spawn a kobold there.
       if room ~= startRoom then
          local cx, cy = room:center():floor():decompose()
 
+         coroutine.yield()
          builder:addActor(prism.actors.Kobold(), cx, cy)
       end
    end
@@ -185,13 +227,13 @@ the starting room and spawn a kobold there.
 Sending it back
 ---------------
 
+Finally we'll pad the entire map in some walls and return the finished :lua:class:`LevelBuilder`.
+
 .. code-block:: lua
 
    builder:addPadding(1, prism.cells.Wall)
 
    return builder
-
-Finally we'll pad the entire map in some walls and return the finished :lua:class:`LevelBuilder`.
 
 .. dropdown:: Complete levelgen.lua
 
@@ -301,8 +343,8 @@ map builder code there with this:
 
 .. code-block:: lua
 
-   local seed = tostring(os.time())
-   local mapbuilder = levelgen(prism.RNG(seed), prism.actors.Player(), 60, 30)
+   local seed = love.timer.getTime()
+   local builder = levelgen(prism.RNG(seed), prism.actors.Player(), 60, 30)
 
 Now run the game! You'll be exploring a map reminiscent of Rogue but with a lot more pits to kick
 kobolds into.
