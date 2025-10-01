@@ -25,7 +25,7 @@ Next we'll register a ``Stairs`` actor in ``modules/game/actors/stairs.lua`` wit
       return prism.Actor.fromComponents {
          prism.components.Name("Stairs"),
          prism.components.Position(),
-         prism.components.Drawable { char = ">" },
+         prism.components.Drawable { index = ">" },
          prism.components.Stair(),
          prism.components.Remembered(),
       }
@@ -71,7 +71,7 @@ need anything inside.
 
    --- @class DescendMessage : Message
    --- @overload fun(): DescendMessage
-   local DescendMessage = prism.Object:extend("DescendMessage")
+   local DescendMessage = prism.Message:extend("DescendMessage")
 
    return DescendMessage
 
@@ -104,8 +104,8 @@ considered.
 
 .. code-block:: lua
 
-   if keybindOffsets[action] then
-      local destination = owner:getPosition() + keybindOffsets[action]
+   if controls.move.pressed then
+      local destination = owner:getPosition() + controls.move.vector
 
       -- add this
       local descendTarget = self.level:query(prism.components.Stairs)
@@ -113,10 +113,7 @@ considered.
          :first()
 
       local descend = prism.actions.Descend(owner, descendTarget)
-      if self.level:canPerform(descend) then
-         decision:setAction(descend)
-         return
-      end
+      if self:setAction(descend) then return end
 
 Creating the next floor
 -----------------------
