@@ -4,7 +4,7 @@
 --- @field background Color4
 --- @field size integer
 --- @field indices? Sprite[]
---- @overload fun(index: string|integer|Sprite, color: Color4?, background: Color4?, layer: number?, size: integer?): Drawable
+--- @overload fun(sprite: Sprite): Drawable
 local Drawable = prism.Component:extend "Drawable"
 
 --- @param sprite Sprite
