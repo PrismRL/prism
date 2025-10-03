@@ -55,10 +55,10 @@ in the game world to start.</p>
 from this module that takes a few parameters.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">PARTITIONS</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="c1">--- @param rng RNG</span>
-<span class="c1">--- @param player Actor</span>
-<span class="c1">--- @param width integer</span>
-<span class="c1">--- @param height integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> rng RNG</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> player Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> width integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> height integer</span>
 <span class="kr">return</span> <span class="kr">function</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">MapBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
@@ -101,7 +101,7 @@ we start guarantees a random pattern.</p>
 <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> constant. First, create a table of <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangles</span></code></a> to hold our
 rooms.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Create rooms in each of the partitions.</span>
-<span class="c1">--- @type table&lt;number, Rectangle&gt;</span>
+<span class="cm">--- </span><span class="k k-Comment">@type</span><span class="cm"> table&lt;number, Rectangle&gt;</span>
 <span class="kd">local</span> <span class="n">rooms</span> <span class="o">=</span> <span class="p">{}</span>
 </pre></div>
 </div>
@@ -149,8 +149,8 @@ It accepts two <a class="reference internal" href="../reference/prism/math/recta
 <code class="docutils literal notranslate"><span class="pre">b</span></code> exist we draw a hallway between them. We use the level generator’s RNG to determine if we
 should start vertically or horizontally for a little bit of spice.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Helper function to connect two points with an L-shaped hallway.</span>
-<span class="c1">--- @param a Rectangle</span>
-<span class="c1">--- @param b Rectangle</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> a Rectangle</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> b Rectangle</span>
 <span class="kd">local</span> <span class="kr">function</span> <span class="nf">createLShapedHallway</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
    <span class="kr">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">b</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
 
@@ -216,10 +216,10 @@ the starting room and spawn a kobold there.</p>
 <span class="sd-summary-text">Complete levelgen.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">PARTITIONS</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="c1">--- @param rng RNG</span>
-<span class="c1">--- @param player Actor</span>
-<span class="c1">--- @param width integer</span>
-<span class="c1">--- @param height integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> rng RNG</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> player Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> width integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> height integer</span>
 <span class="kr">return</span> <span class="kr">function</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">MapBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
@@ -234,7 +234,7 @@ the starting room and spawn a kobold there.</p>
    <span class="kr">end</span>
 
    <span class="c1">-- Create rooms in each of the partitions.</span>
-   <span class="c1">--- @type table&lt;number, Rectangle&gt;</span>
+   <span class="cm">--- </span><span class="k k-Comment">@type</span><span class="cm"> table&lt;number, Rectangle&gt;</span>
    <span class="kd">local</span> <span class="n">rooms</span> <span class="o">=</span> <span class="p">{}</span>
 
    <span class="kd">local</span> <span class="n">missing</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
@@ -257,8 +257,8 @@ the starting room and spawn a kobold there.</p>
    <span class="kr">end</span>
 
    <span class="c1">-- Helper function to connect two points with an L-shaped hallway.</span>
-   <span class="c1">--- @param a Rectangle</span>
-   <span class="c1">--- @param b Rectangle</span>
+   <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> a Rectangle</span>
+   <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> b Rectangle</span>
    <span class="kd">local</span> <span class="kr">function</span> <span class="nf">createLShapedHallway</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
       <span class="kr">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">b</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
 

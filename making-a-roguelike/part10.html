@@ -83,14 +83,14 @@ during input handling.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">utf8</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;utf8&quot;</span>
 <span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
 
-<span class="c1">--- @class InventoryState : GameState</span>
-<span class="c1">--- @overload fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)</span>
 <span class="kd">local</span> <span class="n">InventoryState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;InventoryState&quot;</span>
 
-<span class="c1">--- @param display Display</span>
-<span class="c1">--- @param decision ActionDecision</span>
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param inventory Inventory</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> inventory Inventory</span>
 <span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">inventory</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
    <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
@@ -172,15 +172,15 @@ keypress and for now we just try to drop the item when we hit that button. <code
 <p class="sd-card-text"><a class="reference external" href="https://github.com/PrismRL/Kicking-Kobolds/blob/part10/gamestates/inventorystate.lua">Source</a></p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
 
-<span class="c1">--- @class InventoryState : GameState</span>
-<span class="c1">--- @field previousState GameState</span>
-<span class="c1">--- @overload fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> previousState GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)</span>
 <span class="kd">local</span> <span class="n">InventoryState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;InventoryState&quot;</span>
 
-<span class="c1">--- @param display Display</span>
-<span class="c1">--- @param decision ActionDecision</span>
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param inventory Inventory</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> inventory Inventory</span>
 <span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">inventory</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
    <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>

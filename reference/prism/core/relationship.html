@@ -47,7 +47,7 @@
             
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-Relationship">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><a class="headerlink" href="#lua-Relationship" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Relationship</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><a class="headerlink" href="#lua-Relationship" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The <cite>Relationship</cite> class represents a typed relationship between entities.
 Relationships describe social, hierarchical, or functional connections.
 For example, the <cite>Marriage</cite> relationship may enforce a 1-to-1 bond.
@@ -55,7 +55,7 @@ Relationships are usually attached via the <cite>relationships</cite> field of a
 as sparse maps of other entities to Relationship instances.</p>
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Relationship.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Relationship.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Relationship.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The default constructor for the class. Subclasses should override this.</p>
 <dl class="field-list simple">
 </dl>
@@ -63,25 +63,25 @@ as sparse maps of other entities to Relationship instances.</p>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Relationship.exclusive">
-<span class="sig-name descname"><span class="pre">exclusive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Relationship.exclusive" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">exclusive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Relationship.exclusive" title="Link to this definition">¶</a><br /></dt>
 <dd><p>(static) Whether the relationship excludes other relationship types of the same kind.</p>
 </dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Relationship.owner">
-<span class="sig-name descname"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.owner" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.owner" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The source entity holding this relationship instance.</p>
 </dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Relationship.target">
-<span class="sig-name descname"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.target" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Relationship.target" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The other entity involved in this relationship instance.</p>
 </dd></dl>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Relationship.generateInverse">
-<span class="sig-name descname"><span class="pre">generateInverse</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateInverse" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">generateInverse</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateInverse" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Generates the inverse relationship to this one. Parent -&gt; Child for instance.</p>
 <dl class="field-list simple">
 </dl>
@@ -89,7 +89,7 @@ as sparse maps of other entities to Relationship instances.</p>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Relationship.generateSymmetric">
-<span class="sig-name descname"><span class="pre">generateSymmetric</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateSymmetric" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">generateSymmetric</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Relationship.generateSymmetric" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Generates a symetric relationship to this one. Marriage -&gt; Marraige for the other entity.</p>
 <dl class="field-list simple">
 </dl>
@@ -97,7 +97,7 @@ as sparse maps of other entities to Relationship instances.</p>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Relationship.getBase">
-<span class="sig-name descname"><span class="pre">getBase</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Relationship</span></code></a><a class="headerlink" href="#lua-Relationship.getBase" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">getBase</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Relationship" title="Relationship"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Relationship</span></code></a><a class="headerlink" href="#lua-Relationship.getBase" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Gets the base prototype of this relationship type.
 Used to compare or check type consistency.</p>
 <dl class="field-list simple">
@@ -302,8 +302,11 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="../structures/bitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">BitmaskBuffer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/booleanbuffer.html"><code class="docutils literal notranslate"><span class="pre">BooleanBuffer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/cascadingbitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">CascadingBitmaskBuffer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/grid.html"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/priority_queue.html"><code class="docutils literal notranslate"><span class="pre">PriorityQueue</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/queue.html"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/sparsearray.html"><code class="docutils literal notranslate"><span class="pre">SparseArray</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/sparsegrid.html"><code class="docutils literal notranslate"><span class="pre">SparseGrid</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/sparsemap.html"><code class="docutils literal notranslate"><span class="pre">SparseMap</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../math/color.html"><code class="docutils literal notranslate"><span class="pre">Color4</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../math/rectangle.html"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>

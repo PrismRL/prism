@@ -53,7 +53,7 @@
 <h2>The stairs themselves<a class="headerlink" href="#the-stairs-themselves" title="Link to this heading">¶</a></h2>
 <p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components/</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">stair.lua</span></code>. This will be a
 simple tag component to indicate the actor can be descended.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Stair : Component</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Stair : Component</span>
 <span class="kd">local</span> <span class="n">Stair</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Stair&quot;</span><span class="p">)</span>
 
 <span class="kr">return</span> <span class="n">Stair</span>
@@ -81,7 +81,7 @@ after being seen. Handy for actors you want other actors to, well, remember.</p>
 <h2>Placing the stairs on the map<a class="headerlink" href="#placing-the-stairs-on-the-map" title="Link to this heading">¶</a></h2>
 <p>We’ve defined our stairs, it’s time to place them on the map. Navigate to <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code> and head
 to the bottom of the function right above return.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @type Rectangle[]</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@type</span><span class="cm"> Rectangle[]</span>
 <span class="kd">local</span> <span class="n">availableRooms</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">room</span> <span class="kr">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span> <span class="kr">do</span>
    <span class="kr">if</span> <span class="n">room</span> <span class="o">~=</span> <span class="n">startRoom</span> <span class="kr">then</span>
@@ -103,8 +103,8 @@ place the stairs in a random corner of that room for now.</p>
 <h2>Descending<a class="headerlink" href="#descending" title="Link to this heading">¶</a></h2>
 <p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/messages</span></code> and define a new message in <code class="docutils literal notranslate"><span class="pre">descend.lua</span></code>. For now we don’t
 need anything inside.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class DescendMessage : Message</span>
-<span class="c1">--- @overload fun(): DescendMessage</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> DescendMessage : Message</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): DescendMessage</span>
 <span class="kd">local</span> <span class="n">DescendMessage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;DescendMessage&quot;</span><span class="p">)</span>
 
 <span class="kr">return</span> <span class="n">DescendMessage</span>
@@ -115,8 +115,8 @@ need anything inside.</p>
    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Stair</span><span class="p">)</span>
    <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="c1">---@class Descend : Action</span>
-<span class="c1">---@overload fun(owner: Actor, stairs: Actor): Descend</span>
+<span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> Descend : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, stairs: Actor): Descend</span>
 <span class="kd">local</span> <span class="n">Descend</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Descend&quot;</span><span class="p">)</span>
 <span class="n">Descend</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">DescendTarget</span> <span class="p">}</span>
 

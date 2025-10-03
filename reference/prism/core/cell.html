@@ -47,14 +47,14 @@
             
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-Cell">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Cell" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><a class="headerlink" href="#lua-Cell" title="Link to this definition">¶</a><br /></dt>
 <dd><p>A single tile on the map.
 Like actors, they hold components that can be used to modify their behaviour.
 Cells are required to have a <a class="reference internal" href="components/collider.html#lua-Collider" title="Collider"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Collider</span></code></a>. <a class="reference internal" href="components/opaque.html#lua-Opaque" title="Opaque"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Opaque</span></code></a> can be
 used to block sight in the default field of view implementation.</p>
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Cell.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Constructor for the Cell class.</p>
 <dl class="field-list simple">
 </dl>
@@ -62,24 +62,24 @@ used to block sight in the default field of view implementation.</p>
 
 <dl class="lua staticmethod">
 <dt class="sig sig-object lua" id="lua-Cell.fromComponents">
-<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromComponents</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">[]</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.fromComponents" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">staticmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromComponents</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.fromComponents" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Initializes a cell from a list of components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>components</strong> (<a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p">[]</span>) – A list of components to give to the new cell.</p>
+<dd class="field-odd"><p><strong>components</strong> (<a class="reference internal" href="component.html#lua-Component" title="Component"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Component</span></code></a><span class="p">[</span><span class="p">]</span>) – A list of components to give to the new cell.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>cell</strong> (<a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Cell</span></code></a>) – The new actor.</p>
+<dd class="field-even"><p><strong>cell</strong> (<a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a>) – The new actor.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Cell.getCollisionMask">
-<span class="sig-name descname"><span class="pre">getCollisionMask</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.getCollisionMask" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">getCollisionMask</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Cell.getCollisionMask" title="Link to this definition">¶</a><br /></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mask</strong> (<code class="xref lua lua-obj docutils literal notranslate"><span class="pre">integer</span></code>) – The collision mask of the cell.</p>
+<dd class="field-odd"><p><strong>mask</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code>) – The collision mask of the cell.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,8 +279,11 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="../structures/bitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">BitmaskBuffer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/booleanbuffer.html"><code class="docutils literal notranslate"><span class="pre">BooleanBuffer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/cascadingbitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">CascadingBitmaskBuffer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/grid.html"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/priority_queue.html"><code class="docutils literal notranslate"><span class="pre">PriorityQueue</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/queue.html"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/sparsearray.html"><code class="docutils literal notranslate"><span class="pre">SparseArray</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../structures/sparsegrid.html"><code class="docutils literal notranslate"><span class="pre">SparseGrid</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../structures/sparsemap.html"><code class="docutils literal notranslate"><span class="pre">SparseMap</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../math/color.html"><code class="docutils literal notranslate"><span class="pre">Color4</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../math/rectangle.html"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>

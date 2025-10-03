@@ -54,9 +54,9 @@
 <li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code></p></li>
 <li><p>Create a new file named <code class="docutils literal notranslate"><span class="pre">health.lua</span></code></p></li>
 </ol>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Health : Component</span>
-<span class="c1">--- @field maxHP integer</span>
-<span class="c1">--- @field hp integer</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Health : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> maxHP integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> hp integer</span>
 <span class="kd">local</span> <span class="n">Health</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Health&quot;</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">maxHP</span><span class="p">)</span>
@@ -76,8 +76,8 @@
 <h2>Implementing the die action<a class="headerlink" href="#implementing-the-die-action" title="Link to this heading">¶</a></h2>
 <p>Next we’ll create a <code class="docutils literal notranslate"><span class="pre">Die</span></code> action to encapsulate the removal of actors. Create a file called
 <code class="docutils literal notranslate"><span class="pre">modules/game/actions/die.lua</span></code> and enter the following:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">---@class Die : Action</span>
-<span class="c1">---@overload fun(owner: Actor): Die</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> Die : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor): Die</span>
 <span class="kd">local</span> <span class="n">Die</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Die&quot;</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Die</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
@@ -110,8 +110,8 @@ representing the amount of damage we will apply.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DamageTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
    <span class="p">:</span><span class="n">isType</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span>
 
-<span class="c1">--- @class Damage : Action</span>
-<span class="c1">--- @overload fun(owner: Actor, damage: number): Damage</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Damage : Action</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, damage: number): Damage</span>
 <span class="kd">local</span> <span class="n">Damage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Damage&quot;</span><span class="p">)</span>
 <span class="n">Damage</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Damage&quot;</span>
 <span class="n">Damage</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">DamageTarget</span> <span class="p">}</span>

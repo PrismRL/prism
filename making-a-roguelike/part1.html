@@ -117,8 +117,8 @@ actions.</p>
 <li><p>Create a new file named <code class="docutils literal notranslate"><span class="pre">koboldcontroller.lua</span></code>.</p></li>
 <li><p>Add the following code:</p></li>
 </ol>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class KoboldController : Controller</span>
-<span class="c1">--- @overload fun(): KoboldController</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> KoboldController : Controller</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): KoboldController</span>
 <span class="kd">local</span> <span class="n">KoboldController</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KoboldController&quot;</span><span class="p">)</span>
 <span class="n">KoboldController</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KoboldController&quot;</span>
 
@@ -209,8 +209,8 @@ first position.</p>
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete koboldcontroller.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><a class="reference external" href="https://github.com/PrismRL/Kicking-Kobolds/blob/part1/modules/game/components/koboldcontroller.lua">Source</a></p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class KoboldController : Controller</span>
-<span class="c1">--- @overload fun(): KoboldController</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> KoboldController : Controller</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): KoboldController</span>
 <span class="kd">local</span> <span class="n">KoboldController</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KoboldController&quot;</span><span class="p">)</span>
 <span class="n">KoboldController</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KoboldController&quot;</span>
 
@@ -255,7 +255,7 @@ first action. Head over to <code class="docutils literal notranslate"><span clas
 <p>With this target we’re saying you can only kick actors at range one with a collider component. Then
 we can define the kick action, including our target. We will also require that any actor trying to
 perform the kick action have a controller.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">---@class KickAction : Action</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> KickAction : Action</span>
 <span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kick&quot;</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">KickTarget</span> <span class="p">}</span>
@@ -277,8 +277,8 @@ checking passability with a custom collision mask.</p>
 
 <span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">createBitmaskFromMovetypes</span><span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">}</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param kicked Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> kicked Actor</span>
 <span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">())</span>
 
@@ -302,7 +302,7 @@ checking passability with a custom collision mask.</p>
    <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
    <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
 
-<span class="c1">---@class KickAction : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> KickAction : Action</span>
 <span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kick&quot;</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">KickTarget</span> <span class="p">}</span>
@@ -314,8 +314,8 @@ checking passability with a custom collision mask.</p>
    <span class="kr">return</span> <span class="kc">true</span>
 <span class="kr">end</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param kicked Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> kicked Actor</span>
 <span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">())</span>
 

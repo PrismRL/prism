@@ -57,7 +57,7 @@
 <li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">void.lua</span></code></p></li>
 </ol>
 <p>Put the following into <code class="docutils literal notranslate"><span class="pre">void.lua</span></code>:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Void : Component</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Void : Component</span>
 <span class="kd">local</span> <span class="n">Void</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Void&quot;</span>
 
 <span class="kr">return</span> <span class="n">Void</span>
@@ -84,8 +84,8 @@ an allowed movement type.</p>
 <li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">fall.lua</span></code>.</p></li>
 <li><p>Define the <code class="docutils literal notranslate"><span class="pre">Fall</span></code> action:</p></li>
 </ol>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Fall : Action</span>
-<span class="c1">--- @overload fun(owner: Actor): Fall</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Fall : Action</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor): Fall</span>
 <span class="kd">local</span> <span class="n">Fall</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Fall&quot;</span>
 
 <span class="kr">return</span> <span class="n">Fall</span>
@@ -128,8 +128,8 @@ doesn’t have a <code class="docutils literal notranslate"><span class="pre">Mo
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete fall.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><a class="reference external" href="https://github.com/PrismRL/Kicking-Kobolds/blob/part2/modules/game/actions/fall.lua">Source</a></p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Fall : Action</span>
-<span class="c1">--- @overload fun(owner: Actor): Fall</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Fall : Action</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor): Fall</span>
 <span class="kd">local</span> <span class="n">Fall</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Fall&quot;</span>
 
 <span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
@@ -167,7 +167,7 @@ create a <a class="reference internal" href="../reference/prism/core/system.html
 <p>We want the actor to fall immediately when they land on a valid tile, so we’ll use the
 <a class="reference internal" href="../reference/prism/core/system.html#lua-System.onMove" title="System.onMove"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">System:onMove()</span></code></a> callback to apply the fall action whenever valid.
 <a class="reference internal" href="../reference/prism/core/level.html#lua-Level.tryPerform" title="Level.tryPerform"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:tryPerform()</span></code></a> will perform the action if it’s valid, but won’t error if it’s not.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class FallSystem : System</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> FallSystem : System</span>
 <span class="kd">local</span> <span class="n">FallSystem</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">System</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;FallSystem&quot;</span>
 
 <span class="kr">function</span> <span class="nc">FallSystem</span><span class="p">:</span><span class="nf">onMove</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>

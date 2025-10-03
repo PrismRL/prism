@@ -73,14 +73,14 @@ status effects.</p>
 StatusEffectInstance that will serve as a base prototype for all of our buffs/debuffs in the game.
 This is where we’ll define stuff that’s game specific to our status effects like durations.</p>
 <p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">statusinstance.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class GameStatusInstance : StatusEffectsInstance</span>
-<span class="c1">--- @field duration integer?</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameStatusInstance : StatusEffectsInstance</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> duration integer?</span>
 <span class="kd">local</span> <span class="n">GameStatusInstance</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Instance</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;GameStatusInstance&quot;</span>
 
-<span class="c1">--- @class GameStatusInstanceOptions : StatusEffectsInstanceOptions</span>
-<span class="c1">--- @field duration integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameStatusInstanceOptions : StatusEffectsInstanceOptions</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> duration integer</span>
 
-<span class="c1">--- @param options GameStatusInstanceOptions</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> options GameStatusInstanceOptions</span>
 <span class="kr">function</span> <span class="nc">GameStatusInstance</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Instance</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">options</span><span class="p">.</span><span class="n">duration</span> <span class="ow">or</span> <span class="kc">nil</span>
@@ -111,8 +111,8 @@ At the top of the file let’s add the following code.</p>
 </div>
 <p>Let’s quickly alias the StatusEffects component, we’re going to use one of it’s static methods later
 in the file.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class HealthModifier : StatusEffectsModifier</span>
-<span class="c1">--- @field maxHP integer</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> HealthModifier : StatusEffectsModifier</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> maxHP integer</span>
 <span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Modifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
 
 <span class="kr">function</span> <span class="nc">HealthModifier</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
@@ -122,14 +122,14 @@ in the file.</p>
 </div>
 <p>This defined a new StatusEffectsModifier. We’ll leave the constructor as it is, but let’s set maxHP
 to private.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Health : Component</span>
-<span class="c1">--- @field private maxHP integer</span>
-<span class="c1">--- @field hp integer</span>
-<span class="c1">--- @overload fun(maxHP: integer)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Health : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> private maxHP integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> hp integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(maxHP: integer)</span>
 </pre></div>
 </div>
 <p>Next let’s create a getMaxHP function that will take our new modifier into account.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @return integer maxHP</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@return</span><span class="cm"> integer maxHP</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">getMaxHP</span><span class="p">()</span>
    <span class="kd">local</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="n">StatusEffects</span><span class="p">.</span><span class="n">getActorModifiers</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">HealthModifier</span><span class="p">)</span>
 
@@ -144,7 +144,7 @@ to private.</p>
 </div>
 <p>We loop through each modifier, add it to our base maxHP, and return the modified value. While we’re
 here we’ll need to change a few more things. First let’s change heal to use our new getter function.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param amount integer</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> amount integer</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">heal</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">+</span> <span class="n">amount</span><span class="p">,</span> <span class="n">self</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span>
 <span class="kr">end</span>
@@ -174,14 +174,14 @@ accessing it directly let’s change this line in <code class="docutils literal 
 <section id="drinking">
 <h2>Drinking<a class="headerlink" href="#drinking" title="Link to this heading">¶</a></h2>
 <p>Let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code> called <code class="docutils literal notranslate"><span class="pre">drinkable.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class DrinkableOptions</span>
-<span class="c1">--- @field healing integer?</span>
-<span class="c1">--- @field status StatusEffectsInstance?</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> DrinkableOptions</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> healing integer?</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> status StatusEffectsInstance?</span>
 
-<span class="c1">--- @class Drinkable : Component</span>
-<span class="c1">--- @field healing integer?</span>
-<span class="c1">--- @field status StatusEffectsInstance?</span>
-<span class="c1">--- @overload fun(options: DrinkableOptions): Drinkable</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Drinkable : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> healing integer?</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> status StatusEffectsInstance?</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(options: DrinkableOptions): Drinkable</span>
 <span class="kd">local</span> <span class="n">Drinkable</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Drinkable&quot;</span>
 
 <span class="kr">function</span> <span class="nc">Drinkable</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
@@ -200,13 +200,13 @@ accessing it directly let’s change this line in <code class="docutils literal 
 </pre></div>
 </div>
 <p>First we define our target an item in the actor’s inventory with the Drinkable component.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Drink : Action</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Drink : Action</span>
 <span class="kd">local</span> <span class="n">Drink</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Drink&quot;</span>
 <span class="n">Drink</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span>
    <span class="n">DrinkTarget</span>
 <span class="p">}</span>
 
-<span class="c1">--- @param level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="kr">function</span> <span class="nc">Drink</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">drink</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">drinkable</span> <span class="o">=</span> <span class="n">drink</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span><span class="p">)</span>
 
@@ -258,20 +258,20 @@ doesn’t expire after 10 turns! Let’s fix that!</p>
 <section id="ticking-down-durations">
 <h2>Ticking down durations<a class="headerlink" href="#ticking-down-durations" title="Link to this heading">¶</a></h2>
 <p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Tick : Action</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Tick : Action</span>
 <span class="kd">local</span> <span class="n">Tick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Tick&quot;</span>
 <span class="n">Tick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span> <span class="p">}</span>
 </pre></div>
 </div>
 <p>Our tick action can only be taken by actors who have a status effect component.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param level Level</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="kr">function</span> <span class="nc">Tick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="c1">-- Handle status effect durations</span>
    <span class="kd">local</span> <span class="n">statusComponent</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">)</span>
 
    <span class="kd">local</span> <span class="n">expired</span> <span class="o">=</span> <span class="p">{}</span>
    <span class="kr">for</span> <span class="n">handle</span><span class="p">,</span> <span class="n">status</span> <span class="kr">in</span> <span class="n">statusComponent</span><span class="p">:</span><span class="nb">pairs</span><span class="p">()</span> <span class="kr">do</span>
-      <span class="c1">--- @cast status GameStatusInstance</span>
+      <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> status GameStatusInstance</span>
       <span class="kr">if</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="kr">then</span>
          <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span>
          <span class="kr">if</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="kr">then</span>
@@ -302,7 +302,7 @@ enforce minimums or maximums that might change. Without this if the player ends 
 buff with 15 health they’d end up keeping that health total and only see a reduction in their
 maximum.</p>
 <p>Now head over to <code class="docutils literal notranslate"><span class="pre">modules/game/systems</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class TickSystem : System</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> TickSystem : System</span>
 <span class="kd">local</span> <span class="n">TickSystem</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">System</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;TickSystem&quot;</span>
 
 <span class="kr">function</span> <span class="nc">TickSystem</span><span class="p">:</span><span class="nf">onTurn</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>

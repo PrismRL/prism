@@ -60,12 +60,12 @@ and have the kobolds attack them!</p>
 <h2>Creating the attack component<a class="headerlink" href="#creating-the-attack-component" title="Link to this heading">¶</a></h2>
 <p>We need a component to hold information about attackers. For now, it will just hold how much damage
 they deal.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Attacker : Component</span>
-<span class="c1">--- @field damage integer</span>
-<span class="c1">--- @overload fun(damage: integer)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Attacker : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> damage integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(damage: integer)</span>
 <span class="kd">local</span> <span class="n">Attacker</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Attacker&quot;</span><span class="p">)</span>
 
-<span class="c1">--- @param damage integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> damage integer</span>
 <span class="kr">function</span> <span class="nc">Attacker</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
 <span class="kr">end</span>
@@ -90,15 +90,15 @@ as <code class="docutils literal notranslate"><span class="pre">attacked.</span>
    <span class="p">:</span><span class="n">isPrototype</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">)</span>
    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
 
-<span class="c1">---@class Attack : Action</span>
-<span class="c1">---@overload fun(owner: Actor, attacked: Actor): Attack</span>
+<span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> Attack : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, attacked: Actor): Attack</span>
 <span class="kd">local</span> <span class="n">Attack</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Attack&quot;</span>
 <span class="n">Attack</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Attack&quot;</span>
 <span class="n">Attack</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">AttackTarget</span> <span class="p">}</span>
 <span class="n">Attack</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Attacker</span> <span class="p">}</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param attacked Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> attacked Actor</span>
 <span class="kr">function</span> <span class="nc">Attack</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">attacked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">attacker</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Attacker</span><span class="p">)</span>
 
@@ -142,8 +142,8 @@ with <a class="reference internal" href="../reference/prism/core/level.html#lua-
 <li><p>Create a new folder in <code class="docutils literal notranslate"><span class="pre">modules/game/</span></code> called <code class="docutils literal notranslate"><span class="pre">messages</span></code>.</p></li>
 <li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">lose.lua</span></code></p></li>
 </ol>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class LoseMessage : Message</span>
-<span class="c1">--- @overload fun(): LoseMessage</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> LoseMessage : Message</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): LoseMessage</span>
 <span class="kd">local</span> <span class="n">LoseMessage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;LoseMessage&quot;</span><span class="p">)</span>
 <span class="kr">return</span> <span class="n">LoseMessage</span>
 </pre></div>

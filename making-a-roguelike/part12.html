@@ -96,8 +96,8 @@ callback to <code class="docutils literal notranslate"><span class="pre">modules
 <h2>Creating containers<a class="headerlink" href="#creating-containers" title="Link to this heading">¶</a></h2>
 <p>For chests, we’ll start with a new tag. Navigate <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code> and create a new file
 there called <code class="docutils literal notranslate"><span class="pre">container.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Container : Component</span>
-<span class="c1">--- @overload fun(): Container</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Container : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): Container</span>
 <span class="kd">local</span> <span class="n">Container</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Container&quot;</span>
 
 <span class="kr">function</span> <span class="nc">Container</span><span class="p">:</span><span class="nf">getRequirements</span><span class="p">()</span>
@@ -121,13 +121,13 @@ can see.</p>
 </div>
 <p>In <code class="docutils literal notranslate"><span class="pre">perform</span></code>, we grab every item in the target container’s inventory and dump them on the ground,
 before removing the container and logging messages.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class OpenContainer : Action</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> OpenContainer : Action</span>
 <span class="kd">local</span> <span class="n">OpenContainer</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;OpenContainer&quot;</span>
 <span class="n">OpenContainer</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">OpenContainerTarget</span> <span class="p">}</span>
 <span class="n">OpenContainer</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Open&quot;</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param container Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> container Actor</span>
 <span class="kr">function</span> <span class="nc">OpenContainer</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">inventory</span> <span class="o">=</span> <span class="n">container</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Inventory</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">container</span><span class="p">:</span><span class="n">expectPosition</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
@@ -151,7 +151,7 @@ before removing the container and logging messages.</p>
 with. Let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">chest.lua</span></code>. We’ll accept a
 <code class="docutils literal notranslate"><span class="pre">contents</span></code> parameter to define the items in the chest.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;Chest&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
-   <span class="c1">--- @cast contents Actor[]</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> contents Actor[]</span>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Chest&quot;</span><span class="p">),</span>
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>

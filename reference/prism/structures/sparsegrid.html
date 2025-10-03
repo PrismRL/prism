@@ -45,7 +45,82 @@
 
           <div class="body" role="main">
             
-  
+  <dl class="lua class">
+<dt class="sig sig-object lua" id="lua-SparseGrid">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SparseGrid</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">V</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-SparseGrid" title="Link to this definition">¶</a><br /></dt>
+<dd><p>A sparse grid class that stores data using hashed coordinates. Similar to a SparseMap
+except here there is only one entry per grid coordinate. This is suitable for stuff like Cells.</p>
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SparseGrid.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><a class="headerlink" href="#lua-SparseGrid.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The constructor for the ‘SparseGrid’ class.
+Initializes the sparse grid with an empty data table.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-SparseGrid.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><a class="headerlink" href="#lua-SparseGrid.data" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SparseGrid.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-SparseGrid.set" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Sets the value at the specified coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code>) – The x-coordinate.</p></li>
+<li><p><strong>y</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code>) – The y-coordinate.</p></li>
+<li><p><strong>value</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code>) – The value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SparseGrid.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-SparseGrid.get" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Gets the value at the specified coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code>) – The x-coordinate.</p></li>
+<li><p><strong>y</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code>) – The y-coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>value</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code>) – The value at the specified coordinates, or nil if not set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SparseGrid.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-SparseGrid.clear" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Clears all values in the sparse grid.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-SparseGrid.each">
+<span class="sig-name descname"><span class="pre">each</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-SparseGrid" title="SparseGrid"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">V</span></code><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-SparseGrid.each" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Iterator function for the SparseGrid.
+Iterates over all entries in the sparse grid, returning the coordinates and value for each entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iter</strong> (<span class="k">fun</span><span class="p">(</span><span class="p">)</span><span class="p">:</span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p">,</span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p">,</span><span class="w"> </span><span class="p">&lt;</span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">V</span></code><span class="p">&gt;</span>) – An iterator function that returns the x-coordinate, y-coordinate, and value for each entry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="lua-inherited-members docutils container">
+</div>
+</dd></dl>
+
+
 
           </div>
           
@@ -164,8 +239,91 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Prism</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Prism</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.actors"><code class="docutils literal notranslate"><span class="pre">prism.actors</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.actions"><code class="docutils literal notranslate"><span class="pre">prism.actions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.components"><code class="docutils literal notranslate"><span class="pre">prism.components</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.cells"><code class="docutils literal notranslate"><span class="pre">prism.cells</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.targets"><code class="docutils literal notranslate"><span class="pre">prism.targets</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.messages"><code class="docutils literal notranslate"><span class="pre">prism.messages</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.systems"><code class="docutils literal notranslate"><span class="pre">prism.systems</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.decisions"><code class="docutils literal notranslate"><span class="pre">prism.decisions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/action.html"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/actor.html"><code class="docutils literal notranslate"><span class="pre">Actor</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/actorstorage.html"><code class="docutils literal notranslate"><span class="pre">ActorStorage</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior.html"><code class="docutils literal notranslate"><span class="pre">IBehavior</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/cell.html"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/component.html"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/map.html"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.loadModule"><code class="docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerActor"><code class="docutils literal notranslate"><span class="pre">prism.registerActor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerCell"><code class="docutils literal notranslate"><span class="pre">prism.registerCell()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerTarget"><code class="docutils literal notranslate"><span class="pre">prism.registerTarget()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.turn"><code class="docutils literal notranslate"><span class="pre">prism.turn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.advanceCoroutine"><code class="docutils literal notranslate"><span class="pre">prism.advanceCoroutine()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/controller.html"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/name.html"><code class="docutils literal notranslate"><span class="pre">Name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/opaque.html"><code class="docutils literal notranslate"><span class="pre">Opaque</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/player_controller.html"><code class="docutils literal notranslate"><span class="pre">PlayerController</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/position.html"><code class="docutils literal notranslate"><span class="pre">Position</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/remembered.html"><code class="docutils literal notranslate"><span class="pre">Remembered</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/components/senses.html"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btconditional.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Conditional</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btnode.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btroot.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Root</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btselector.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Selector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btsequence.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Sequence</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/behavior_tree/btsucceeder.html"><code class="docutils literal notranslate"><span class="pre">BehaviorTree.Succeeder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">BitmaskBuffer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="booleanbuffer.html"><code class="docutils literal notranslate"><span class="pre">BooleanBuffer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cascadingbitmaskbuffer.html"><code class="docutils literal notranslate"><span class="pre">CascadingBitmaskBuffer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="priority_queue.html"><code class="docutils literal notranslate"><span class="pre">PriorityQueue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.html"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparsearray.html"><code class="docutils literal notranslate"><span class="pre">SparseArray</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">SparseGrid</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.data"><code class="docutils literal notranslate"><span class="pre">data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.set"><code class="docutils literal notranslate"><span class="pre">set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.clear"><code class="docutils literal notranslate"><span class="pre">clear()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-SparseGrid.each"><code class="docutils literal notranslate"><span class="pre">each()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sparsemap.html"><code class="docutils literal notranslate"><span class="pre">SparseMap</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/color.html"><code class="docutils literal notranslate"><span class="pre">Color4</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/rectangle.html"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math/vector.html"><code class="docutils literal notranslate"><span class="pre">Vector2</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms/astar/path.html"><code class="docutils literal notranslate"><span class="pre">Path</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-PassableCallback"><code class="docutils literal notranslate"><span class="pre">PassableCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.Ellipse"><code class="docutils literal notranslate"><span class="pre">prism.Ellipse()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.Bresenham"><code class="docutils literal notranslate"><span class="pre">prism.Bresenham()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
 </ul>

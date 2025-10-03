@@ -54,9 +54,9 @@ screen.</p>
 <h2>Making a gamestate<a class="headerlink" href="#making-a-gamestate" title="Link to this heading">¶</a></h2>
 <p>Navigate to the <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> folder and create a new file called <code class="docutils literal notranslate"><span class="pre">gameoverstate.lua</span></code> with the
 following contents:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class GameOverState : GameState</span>
-<span class="c1">--- @field display Display</span>
-<span class="c1">--- @overload fun(display: Display): GameOverState</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameOverState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display): GameOverState</span>
 <span class="kd">local</span> <span class="n">GameOverState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;GameOverState&quot;</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">)</span>

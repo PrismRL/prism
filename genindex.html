@@ -143,6 +143,8 @@
 </li>
         <li><a href="reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.__new">(method in GameStateManager)</a>
 </li>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.__new">(method in Grid)</a>
+</li>
         <li><a href="reference/prism/core/behavior.html#lua-IBehavior.__new">(method in IBehavior)</a>
 </li>
         <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.__new">(method in Inventory)</a>
@@ -179,6 +181,8 @@
 </li>
         <li><a href="reference/prism/core/components/position.html#lua-Position.__new">(method in Position)</a>
 </li>
+        <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue.__new">(method in PriorityQueue)</a>
+</li>
         <li><a href="reference/prism/core/query.html#lua-Query.__new">(method in Query)</a>
 </li>
         <li><a href="reference/prism/structures/queue.html#lua-Queue.__new">(method in Queue)</a>
@@ -211,6 +215,8 @@
 </li>
         <li><a href="reference/prism/structures/sparsearray.html#lua-SparseArray.__new">(method in SparseArray)</a>
 </li>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.__new">(method in SparseGrid)</a>
+</li>
         <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap.__new">(method in SparseMap)</a>
 </li>
         <li><a href="reference/spectrum/display.html#lua-SpectrumAttachable.__new">(method in SpectrumAttachable)</a>
@@ -234,15 +240,23 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue._bubbleDown">_bubbleDown (method in PriorityQueue)</a>
+</li>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue._bubbleUp">_bubbleUp (method in PriorityQueue)</a>
+</li>
       <li><a href="reference/prism/structures/cascadingbitmaskbuffer.html#lua-CascadingBitmaskBuffer._cascade">_cascade (method in CascadingBitmaskBuffer)</a>
 </li>
       <li><a href="reference/spectrum/display.html#lua-Display._drawRemembered">_drawRemembered (method in Display)</a>
 </li>
       <li><a href="reference/prism/math/vector.html#lua-Vector2._hash">_hash (staticmethod in Vector2)</a>
 </li>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue._heap">_heap (data in PriorityQueue)</a>
+</li>
       <li><a href="reference/prism/core/target.html#lua-Target._optional">_optional (data in Target)</a>
 </li>
       <li><a href="reference/prism/core/object.html#lua-Object._serializationBlacklist">_serializationBlacklist (data in Object)</a>
+</li>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue._swap">_swap (method in PriorityQueue)</a>
 </li>
       <li><a href="reference/prism/math/vector.html#lua-Vector2._unhash">_unhash (staticmethod in Vector2)</a>
 </li>
@@ -475,6 +489,8 @@
 </li>
         <li><a href="reference/prism/structures/sparsearray.html#lua-SparseArray.clear">(method in SparseArray)</a>
 </li>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.clear">(method in SparseGrid)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -554,6 +570,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/prism/math/color.html#lua-Color4.DARKGRAY">DARKGRAY (data in Color4)</a>
 </li>
+      <li><a href="reference/prism/structures/grid.html#lua-Grid.data">data (data in Grid)</a>
+
+      <ul>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.data">(data in SparseGrid)</a>
+</li>
+      </ul></li>
       <li><a href="reference/spectrum/display.html#lua-SpectrumAttachable.debug">debug (data in SpectrumAttachable)</a>
 
       <ul>
@@ -594,10 +616,10 @@
 </li>
       <li><a href="reference/prism/math/vector.html#lua-Vector2.distanceChebyshev">distanceChebyshev (method in Vector2)</a>
 </li>
-      <li><a href="reference/prism/math/vector.html#lua-Vector2.distanceManhattan">distanceManhattan (method in Vector2)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/math/vector.html#lua-Vector2.distanceManhattan">distanceManhattan (method in Vector2)</a>
+</li>
       <li><a href="reference/prism/math/vector.html#lua-Vector2.DOWN">DOWN (data in Vector2)</a>
 </li>
       <li><a href="reference/prism/math/vector.html#lua-Vector2.DOWN_LEFT">DOWN_LEFT (data in Vector2)</a>
@@ -648,9 +670,13 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="reference/prism/core/query.html#lua-Query.each">each (method in Query)</a>
+      <li><a href="reference/prism/structures/grid.html#lua-Grid.each">each (method in Grid)</a>
 
       <ul>
+        <li><a href="reference/prism/core/query.html#lua-Query.each">(method in Query)</a>
+</li>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.each">(method in SparseGrid)</a>
+</li>
         <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap.each">(method in SparseMap)</a>
 </li>
       </ul></li>
@@ -676,10 +702,10 @@
 </li>
       <li><a href="reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.enter">enter (method in GameStateManager)</a>
 </li>
-      <li><a href="reference/prism/core/entity.html#lua-Entity">Entity (class in )</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/core/entity.html#lua-Entity">Entity (class in )</a>
+</li>
       <li><a href="reference/extra/droptable/components/droptable.html#lua-DropTableCategory.entries">entries (data in DropTableCategory)</a>
 </li>
       <li><a href="reference/extra/droptable/components/droptable.html#lua-DropTableCategory.entry">entry (data in DropTableCategory)</a>
@@ -720,6 +746,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.filedropped">filedropped (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.filedropped">[1]</a>
 </li>
+      <li><a href="reference/prism/structures/grid.html#lua-Grid.fill">fill (method in Grid)</a>
+</li>
       <li><a href="reference/prism/core/target.html#lua-Target.filter">filter (method in Target)</a>
 </li>
       <li><a href="reference/prism/core/level.html#lua-Level.findPath">findPath (method in Level)</a>
@@ -752,6 +780,8 @@
         <li><a href="reference/prism/core/cell.html#lua-Cell.fromComponents">(staticmethod in Cell)</a>
 </li>
       </ul></li>
+      <li><a href="reference/prism/structures/grid.html#lua-Grid.fromData">fromData (method in Grid)</a>
+</li>
       <li><a href="reference/spectrum/spriteatlas.html#lua-SpriteAtlas.fromGrid">fromGrid (staticmethod in SpriteAtlas)</a>
 </li>
       <li><a href="reference/prism/math/color.html#lua-Color4.fromHex">fromHex (staticmethod in Color4)</a>
@@ -795,7 +825,11 @@
       <ul>
         <li><a href="reference/prism/core/entity.html#lua-Entity.get">(method in Entity)</a>
 </li>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.get">(method in Grid)</a>
+</li>
         <li><a href="reference/prism/structures/sparsearray.html#lua-SparseArray.get">(method in SparseArray)</a>
+</li>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.get">(method in SparseGrid)</a>
 </li>
         <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap.get">(method in SparseMap)</a>
 </li>
@@ -872,6 +906,8 @@
 
       <ul>
         <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.getIndex">(method in BooleanBuffer)</a>
+</li>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.getIndex">(method in Grid)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -986,6 +1022,8 @@
 </li>
       <li><a href="reference/prism/math/color.html#lua-Color4.GREEN">GREEN (data in Color4)</a>
 </li>
+      <li><a href="reference/prism/structures/grid.html#lua-Grid">Grid (class in )</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -996,6 +1034,8 @@
 
       <ul>
         <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.h">(data in BooleanBuffer)</a>
+</li>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.h">(data in Grid)</a>
 </li>
       </ul></li>
       <li><a href="reference/spectrum/gamestates/levelstate.html#lua-LevelState.handleMessage">handleMessage (method in LevelState)</a>
@@ -1014,10 +1054,10 @@
         <li><a href="reference/prism/core/level.html#lua-Level.hasActor">(method in Level)</a>
 </li>
       </ul></li>
-      <li><a href="reference/prism/math/vector.html#lua-Vector2.hash">hash (method in Vector2)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/math/vector.html#lua-Vector2.hash">hash (method in Vector2)</a>
+</li>
       <li><a href="reference/extra/inventory/components/inventory.html#lua-Inventory.hasItem">hasItem (method in Inventory)</a>
 </li>
       <li><a href="reference/prism/core/entity.html#lua-Entity.hasRelationship">hasRelationship (method in Entity)</a>
@@ -1095,6 +1135,8 @@
       <li><a href="reference/prism/core/object.html#lua-Object.is">is (method in Object)</a>
 </li>
       <li><a href="reference/prism/core/action.html#lua-Action.isAbstract">isAbstract (method in Action)</a>
+</li>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue.isEmpty">isEmpty (method in PriorityQueue)</a>
 </li>
       <li><a href="reference/prism/core/map.html#lua-Map.isInBounds">isInBounds (method in Map)</a>
 </li>
@@ -1469,6 +1511,8 @@
 </li>
         <li><a href="reference/prism/algorithms/astar/path.html#lua-Path.pop">(method in Path)</a>
 </li>
+        <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue.pop">(method in PriorityQueue)</a>
+</li>
         <li><a href="reference/prism/structures/queue.html#lua-Queue.pop">(method in Queue)</a>
 </li>
       </ul></li>
@@ -1490,14 +1534,16 @@
       </ul></li>
       <li><a href="reference/prism/core/object.html#lua-Object.prettyprint">prettyprint (staticmethod in Object)</a>
 </li>
+      <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue">PriorityQueue (class in )</a>
+</li>
       <li><a href="reference/prism/index.html#lua-prism.actions">prism.actions (data in prism)</a>
 </li>
       <li><a href="reference/prism/index.html#lua-prism.actors">prism.actors (data in prism)</a>
 </li>
-      <li><a href="reference/prism/index.html#lua-prism.advanceCoroutine">prism.advanceCoroutine (function in prism)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/prism/index.html#lua-prism.advanceCoroutine">prism.advanceCoroutine (function in prism)</a>
+</li>
       <li><a href="reference/prism/index.html#lua-prism.Bresenham">prism.Bresenham (function in prism)</a>
 </li>
       <li><a href="reference/prism/index.html#lua-prism.cells">prism.cells (data in prism)</a>
@@ -1530,6 +1576,8 @@
         <li><a href="reference/spectrum/display.html#lua-Display.push">(method in Display)</a>
 </li>
         <li><a href="reference/spectrum/gamestates/statemanager.html#lua-GameStateManager.push">(method in GameStateManager)</a>
+</li>
+        <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue.push">(method in PriorityQueue)</a>
 </li>
         <li><a href="reference/prism/structures/queue.html#lua-Queue.push">(method in Queue)</a>
 </li>
@@ -1749,7 +1797,11 @@
       <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.set">set (method in BooleanBuffer)</a>
 
       <ul>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.set">(method in Grid)</a>
+</li>
         <li><a href="reference/spectrum/keybindings.html#lua-Keybinding.set">(method in Keybinding)</a>
+</li>
+        <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid.set">(method in SparseGrid)</a>
 </li>
       </ul></li>
       <li><a href="reference/prism/core/decisions/actiondecision.html#lua-ActionDecision.setAction">setAction (method in ActionDecision)</a>
@@ -1801,12 +1853,16 @@
 </li>
         <li><a href="reference/spectrum/components/drawable.html#lua-DrawableOptions.size">(data in DrawableOptions)</a>
 </li>
+        <li><a href="reference/prism/structures/priority_queue.html#lua-PriorityQueue.size">(method in PriorityQueue)</a>
+</li>
         <li><a href="reference/prism/structures/queue.html#lua-Queue.size">(method in Queue)</a>
 </li>
       </ul></li>
       <li><a href="reference/prism/core/system.html#lua-System.softRequirements">softRequirements (data in System)</a>
 </li>
       <li><a href="reference/prism/structures/sparsearray.html#lua-SparseArray">SparseArray (class in )</a>
+</li>
+      <li><a href="reference/prism/structures/sparsegrid.html#lua-SparseGrid">SparseGrid (class in )</a>
 </li>
       <li><a href="reference/prism/structures/sparsemap.html#lua-SparseMap">SparseMap (class in )</a>
 </li>
@@ -2013,6 +2069,8 @@
       <ul>
         <li><a href="reference/prism/structures/booleanbuffer.html#lua-BooleanBuffer.w">(data in BooleanBuffer)</a>
 </li>
+        <li><a href="reference/prism/structures/grid.html#lua-Grid.w">(data in Grid)</a>
+</li>
       </ul></li>
       <li><a href="reference/prism/lib/log.html#lua-Logger.warn">warn (staticmethod in Logger)</a>
 </li>
@@ -2020,10 +2078,10 @@
 </li>
       <li><a href="reference/extra/droptable/components/droptable.html#lua-DropTable.weights">weights (data in DropTable)</a>
 </li>
-      <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.wheelmoved">wheelmoved (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.wheelmoved">[1]</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="reference/spectrum/gamestates/gamestate.html#lua-GameState.wheelmoved">wheelmoved (method in GameState)</a>, <a href="reference/spectrum/gamestates/meta.html#lua-GameState.wheelmoved">[1]</a>
+</li>
       <li><a href="reference/prism/math/color.html#lua-Color4.WHITE">WHITE (data in Color4)</a>
 </li>
       <li><a href="reference/prism/structures/cascadingbitmaskbuffer.html#lua-CascadingBitmaskBuffer.width">width (data in CascadingBitmaskBuffer)</a>

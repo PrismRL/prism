@@ -53,7 +53,7 @@ and eating.</p>
 <h2>Modifying health<a class="headerlink" href="#modifying-health" title="Link to this heading">¶</a></h2>
 <p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">module/game/components/health.lua</span></code> and create a method to add health, so we
 don’t have to worry about going over the maximum.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param amount integer</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> amount integer</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">heal</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">+</span> <span class="n">amount</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span>
 <span class="kr">end</span>
@@ -69,12 +69,12 @@ don’t have to worry about going over the maximum.</p>
 <p>Let’s create a new component to define what’s edible. We’ll take a single integer in and set that to
 the component’s <code class="docutils literal notranslate"><span class="pre">healing</span></code> field. Head over to <code class="docutils literal notranslate"><span class="pre">module/game/components</span></code> and create a new file
 <code class="docutils literal notranslate"><span class="pre">edible.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class Edible : Component</span>
-<span class="c1">--- @field healing integer</span>
-<span class="c1">--- @overload fun(healing: integer): Edible</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Edible : Component</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> healing integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(healing: integer): Edible</span>
 <span class="kd">local</span> <span class="n">Edible</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Edible&quot;</span><span class="p">)</span>
 
-<span class="c1">--- @param healing integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> healing integer</span>
 <span class="kr">function</span> <span class="nc">Edible</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">healing</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">healing</span> <span class="o">=</span> <span class="n">healing</span>
 <span class="kr">end</span>
@@ -99,8 +99,8 @@ the <code class="docutils literal notranslate"><span class="pre">prism</span></c
 </div>
 <p>Now we create our eat action. You need a health component to eat, and the target has to be something
 edible in your inventory as we defined above.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">---@class Eat : Action</span>
-<span class="c1">---@overload fun(owner: Actor, food: Actor): Eat</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> Eat : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, food: Actor): Eat</span>
 <span class="kd">local</span> <span class="n">Eat</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Eat&quot;</span><span class="p">)</span>
 
 <span class="n">Eat</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span>
@@ -114,8 +114,8 @@ edible in your inventory as we defined above.</p>
 </div>
 <p>To perform the action we just add to the owner’s health with the <code class="docutils literal notranslate"><span class="pre">heal()</span></code> method we defined,
 making sure to remove the item with <a class="reference internal" href="../reference/extra/inventory/components/inventory.html#lua-Inventory.removeQuantity" title="Inventory.removeQuantity"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Inventory:removeQuantity()</span></code></a>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @param level Level</span>
-<span class="c1">--- @param food Actor</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> food Actor</span>
 <span class="kr">function</span> <span class="nc">Eat</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">food</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">edible</span> <span class="o">=</span> <span class="n">food</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Edible</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
@@ -141,8 +141,8 @@ making sure to remove the item with <a class="reference internal" href="../refer
 
 <span class="kd">local</span> <span class="n">EatTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Edible</span><span class="p">):</span><span class="n">inInventory</span><span class="p">()</span>
 
-<span class="c1">---@class Eat : Action</span>
-<span class="c1">---@overload fun(owner: Actor, food: Actor): Eat</span>
+<span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> Eat : Action</span>
+<span class="cm">---</span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, food: Actor): Eat</span>
 <span class="kd">local</span> <span class="n">Eat</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Eat&quot;</span><span class="p">)</span>
 
 <span class="n">Eat</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span>
@@ -153,8 +153,8 @@ making sure to remove the item with <a class="reference internal" href="../refer
    <span class="n">EatTarget</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="c1">--- @param level Level</span>
-<span class="c1">---@param food Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">---</span><span class="k k-Comment">@param</span><span class="cm"> food Actor</span>
 <span class="kr">function</span> <span class="nc">Eat</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">food</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">edible</span> <span class="o">=</span> <span class="n">food</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Edible</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
@@ -193,16 +193,16 @@ Create a new file called <code class="docutils literal notranslate"><span class=
 <p>Next we’ll create the new <code class="docutils literal notranslate"><span class="pre">GameState</span></code> and in the constructor we’ll loop through all the actions
 the active actor can do, and assign those to a letter if the actor can take that action with the
 inventory item as the first target.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">--- @class InventoryActionState : GameState</span>
-<span class="c1">--- @field decision ActionDecision</span>
-<span class="c1">--- @field previousState GameState</span>
-<span class="c1">--- @overload fun(display: Display, decision: ActionDecision, level: Level, item: Actor)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryActionState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> previousState GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, item: Actor)</span>
 <span class="kd">local</span> <span class="n">InventoryActionState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;InventoryActionState&quot;</span>
 
-<span class="c1">--- @param display Display</span>
-<span class="c1">--- @param decision ActionDecision</span>
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param item Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> item Actor</span>
 <span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
    <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
@@ -223,7 +223,7 @@ inventory item as the first target.</p>
 <p>Then we’re going to store the <a class="reference internal" href="../reference/spectrum/gamestates/levelstate.html#lua-LevelState" title="LevelState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelState</span></code></a> in our <code class="docutils literal notranslate"><span class="pre">previousState</span></code> field so that we can
 draw the level under this menu.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">load</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span>
-   <span class="c1">--- @cast previous InventoryState</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> previous InventoryState</span>
    <span class="n">self</span><span class="p">.</span><span class="n">previousState</span> <span class="o">=</span> <span class="n">previous</span><span class="p">.</span><span class="n">previousState</span>
 <span class="kr">end</span>
 </pre></div>
@@ -294,16 +294,16 @@ Let’s <a class="reference internal" href="../reference/spectrum/gamestates/sta
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
 
-<span class="c1">--- @class InventoryActionState : GameState</span>
-<span class="c1">--- @field decision ActionDecision</span>
-<span class="c1">--- @field previousState GameState</span>
-<span class="c1">--- @overload fun(display: Display, decision: ActionDecision, level: Level, item: Actor)</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryActionState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> previousState GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, item: Actor)</span>
 <span class="kd">local</span> <span class="n">InventoryActionState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;InventoryActionState&quot;</span>
 
-<span class="c1">--- @param display Display</span>
-<span class="c1">--- @param decision ActionDecision</span>
-<span class="c1">--- @param level Level</span>
-<span class="c1">--- @param item Actor</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> item Actor</span>
 <span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
    <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
@@ -319,7 +319,7 @@ Let’s <a class="reference internal" href="../reference/spectrum/gamestates/sta
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">load</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span>
-   <span class="c1">--- @cast previous InventoryState</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> previous InventoryState</span>
    <span class="n">self</span><span class="p">.</span><span class="n">previousState</span> <span class="o">=</span> <span class="n">previous</span><span class="p">.</span><span class="n">previousState</span>
 <span class="kr">end</span>
 
