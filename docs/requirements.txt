@@ -1,8 +1,7 @@
 pygments==2.17.0
 sphinx==8.2.3
 sphinx-autobuild==2024.10.3 
-# TODO: Update this when the build to PyPI goes through
-sphinx-lua-ls @ git+https://github.com/taminomara/sphinx-lua-ls/
+sphinx-lua-ls~=3.5
 sphinx-copybutton==0.5.2
 sphinxcontrib-video==0.4.1
 atsphinx-goto-top==0.2.0
