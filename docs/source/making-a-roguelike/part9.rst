@@ -16,7 +16,7 @@ First, let's update our ``DescendMessage`` to include the actor that's descendin
    --- @class DescendMessage : Message
    --- @field descender Actor
    --- @overload fun(descender: Actor): DescendMessage
-   local DescendMessage = prism.Object:extend("DescendMessage")
+   local DescendMessage = prism.Message:extend("DescendMessage")
 
    --- @param descender Actor
    function DescendMessage:__new(descender)
@@ -64,12 +64,13 @@ generation ensures that the game will be repeatable given the same seed.
    end
 
    --- @param player Actor
+   --- @param builder? LevelBuilder
    --- @return LevelBuilder builder
-   function Game:generateNextFloor(player)
+   function Game:generateNextFloor(player, builder)
       self.depth = self.depth + 1
 
       local genRNG = prism.RNG(self:getLevelSeed())
-      return levelgen(genRNG, player, 60, 30)
+      return levelgen(genRNG, player, 60, 30, builder)
    end
 
    return Game(tostring(os.time()))
@@ -77,10 +78,10 @@ generation ensures that the game will be repeatable given the same seed.
 This class will eventually track everything we need for the overall game. There should only be one
 instance of a ``Game``, so we return a seeded ``Game`` instance rather than the prototype.
 
-Modifying the levelstate
+Modifying the level state
 ------------------------
 
-The first thing we’ll do is remove the levelgen require:
+In ``gamelevelstate.lua``, the first thing we’ll do is remove the levelgen require:
 
 .. code-block:: diff
 
@@ -94,12 +95,12 @@ Next we'll change ``GameLevelState``'s constructor.
    --- @param builder LevelBuilder
    --- @param seed string
    function GameLevelState:__new(display, builder, seed)
+      builder:addSeed(seed)
       builder:addSystems(
          prism.systems.Senses(),
          prism.systems.Sight(),
          prism.systems.Fall(),
       )
-      builder:addSeed(seed)
 
       -- Initialize with the created level and display, the heavy lifting is done by
       -- the parent class.
@@ -155,6 +156,15 @@ In ``love.load()``, we'll generate the first level and pass a seed for the level
 
    local builder = Game:generateNextFloor(prism.actors.Player())
    manager:push(GameLevelState(display, builder, Game:getLevelSeed()))
+
+We can simplify the set up for our ``MapGeneratorState`` as well.
+
+.. code-block:: lua
+
+   local builder = prism.LevelBuilder(prism.cells.Pit)
+   local function generator()
+      Game:generateNextFloor(prism.actors.Player(), builder)
+   end
 
 Launch the game, and your health should be maintained between floors!
 
