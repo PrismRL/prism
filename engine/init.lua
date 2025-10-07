@@ -156,57 +156,103 @@ prism.BehaviorTree.Succeeder = prism.require "core.behavior_tree.btsucceeder"
 --- @module "engine.core.behavior_tree.btconditional"
 prism.BehaviorTree.Conditional = prism.require "core.behavior_tree.btconditional"
 
+--- @class Registry
+--- @field name string
+--- @field class Object
+--- @field manualRegistration boolean
+--- @field module string
+--- @field pattern string
+
+--- @type Registry[]
 prism.registries = {}
 
---- Registers a factory for a registry.
---- @param name string
---- @param type Object
---- @param moduleTable table
---- @param moduleName string
-local function registerFactory(name, type, moduleTable, moduleName)
-   local registry = moduleTable[name]
-
+local function writeDefinitions(...)
    if prism._currentDefinitions then
-      table.insert(
-         prism._currentDefinitions,
-         string.format("Registers a %s in the %s registry.", type.className, name)
+      for _, line in ipairs({ ... }) do
+         table.insert(prism._currentDefinitions, line)
+      end
+   end
+end
+
+--- Registers a factory for a registry.
+--- @param registry Registry
+local function registerFactory(registry)
+   local className = registry.class.className
+
+   writeDefinitions(
+      string.format("Registers a %s in the %s registry.", className, registry.name),
+      "--- @param name string A name for the factory",
+      string.format("--- @param factory %sFactory", className),
+      string.format("function %s.register%s(name, factory) end", registry.module, className)
+   )
+
+   local registryList = _G[registry.module][registry.name]
+
+   _G[registry.module]["register" .. className] = function(objectName, factory)
+      assert(
+         registryList[objectName] == nil,
+         className .. " " .. objectName .. " is already registered!"
       )
-      table.insert(prism._currentDefinitions, "--- @param name string A name for the factory")
-      table.insert(
-         prism._currentDefinitions,
-         string.format("--- @param factory %sFactory", type.className)
-      )
-      table.insert(
-         prism._currentDefinitions,
-         string.format("function %s.register%s(name, factory) end", moduleName, type.className)
+      registryList[objectName] = factory
+
+      writeDefinitions(
+         "--- @type fun(...): " .. className,
+         string.format("%s.%s.%s = nil", registry.module, registry.name, objectName)
       )
    end
+end
 
-   moduleTable["register" .. type.className] = function(objectName, factory)
+--- @param registry Registry
+local function registerRegistration(registry)
+   --- @type any[]
+   local registryList = _G[registry.module][registry.name]
+   local className = registry.class.className
+
+   writeDefinitions(
+      string.format("--- Registers a %s in the %s registry.", className, registry.name),
+      "--- @param prototype " .. className .. " A " .. className .. " prototype.",
+      string.format("function %s.register%s(prototype) end", registry.module, className)
+   )
+
+   _G[registry.module]["register" .. className] = function(object, skipDefinitions)
       assert(
-         registry[objectName] == nil,
-         type.className .. " " .. objectName .. " is already registered!"
+         registry.class:is(object),
+         "Tried to register a " .. className .. " but got " .. tostring(object) .. "!"
       )
-      registry[objectName] = factory
+      local objectName = object.className
+      if object.stripName then objectName = string.gsub(object.className, registry.pattern, "") end
 
-      if prism._currentDefinitions then
-         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type.className)
-         table.insert(
-            prism._currentDefinitions,
-            string.format("%s.%s.%s = nil", moduleName, name, objectName)
-         )
-      end
+      assert(
+         objectName ~= "",
+         string.format("Tried to register a %s wihout a valid stripped name!", className)
+      )
+      assert(
+         registryList[objectName] == nil,
+         string.format("Tried to register duplicate %s (%s)", className, objectName)
+      )
+
+      registryList[objectName] = object
+
+      if skipDefinitions then return end
+
+      writeDefinitions(
+         "--- @class " .. object.className,
+         "local " .. object.className .. " = nil",
+         registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
+      )
    end
 end
 
 --- Registers a registry, a global list of game objects.
 --- @param name string The name of the registry, e.g. "components".
 --- @param type Object The type of the object, e.g. "Component".
---- @param manual? boolean Whether objects in the registry are registered manually with a factory. Defaults to false.
+--- @param factory? boolean Whether objects in the registry are registered with a factory. Defaults to false.
 --- @param module? string The table to assign the registry to. Defaults to the prism global.
-function prism.registerRegistry(name, type, manual, module)
-   if prism.registries[name] then
-      error("A registry with name " .. name .. " is already registered!")
+function prism.registerRegistry(name, type, factory, module)
+   for _, registry in ipairs(prism.registries) do
+      if registry.name == name then
+         error("A registry with name " .. name .. " is already registered!")
+      end
    end
 
    local moduleTable = _G[module] or prism
@@ -221,12 +267,21 @@ function prism.registerRegistry(name, type, manual, module)
       pattern = string.format("%s[%s%s]", pattern, c:lower(), c:upper())
    end
 
-   table.insert(
-      prism.registries,
-      { name = name, type = type, manual = manual or false, module = module, pattern = pattern }
-   )
+   --- @type Registry
+   local registry = {
+      name = name,
+      class = type,
+      manualRegistration = factory or false,
+      module = module or "prism",
+      pattern = pattern,
+   }
+   table.insert(prism.registries, registry)
 
-   if manual then registerFactory(name, type, moduleTable, module or "prism") end
+   if factory then
+      registerFactory(registry)
+   else
+      registerRegistration(registry)
+   end
 end
 
 prism.registerRegistry("components", prism.Component)
@@ -238,6 +293,55 @@ prism.registerRegistry("actors", prism.Actor, true)
 prism.registerRegistry("messages", prism.Message)
 prism.registerRegistry("decisions", prism.Decision)
 prism.registerRegistry("systems", prism.System)
+
+--- @param component string|Component
+--- @param fields table<string, string>
+function prism.registerComponent(component, fields, skipDefinitions)
+   if type(component) == "string" then
+      component = prism.Component:extend(component)
+      if fields then
+         function component:__new(options)
+            for k, _ in pairs(fields) do
+               self[k] = options[k]
+            end
+         end
+      end
+   end
+   --- @cast component Component
+
+   local name = component.className
+   --- @diagnostic disable-next-line
+   if component.stripName then
+      name = string.gsub(component.className, prism.registries[1].pattern, "")
+   end
+
+   assert(
+      prism.components[name] == nil,
+      string.format("A component with name %s is already registered!", name)
+   )
+
+   prism.components[name] = component
+
+   if skipDefinitions then return end
+
+   local class = "--- @class " .. component.className .. " : Component"
+   local constructor = "--- @overload fun("
+   if fields then
+      local options = component.className .. "Options"
+      writeDefinitions("--- @class " .. options)
+      constructor = constructor .. "options: " .. options
+      for field, type in pairs(fields) do
+         writeDefinitions("--- @field " .. field .. " " .. type)
+      end
+      writeDefinitions(class .. ", " .. options)
+   end
+
+   writeDefinitions(
+      constructor .. "): " .. component.className,
+      "local " .. component.className .. " = nil",
+      "prism." .. "components" .. "." .. name .. " = " .. component.className
+   )
+end
 
 --- @module "engine.core.systems.senses"
 prism.systems.Senses = prism.require "core.systems.senses"
@@ -282,9 +386,11 @@ prism.relationships.Senses = prism.require "core.relationships.senses"
 prism.relationships.SensedBy = prism.require "core.relationships.sensedby"
 
 --- @param path string The path to load into the registry from.
+--- @param registry Registry
+--- @param recurse boolean
+--- @param definitions string[]
 local function loadRegistry(path, registry, recurse, definitions)
    local info = {}
-   local items = prism[registry.name]
 
    for _, itemPath in pairs(love.filesystem.getDirectoryItems(path)) do
       local fileName = path .. "/" .. itemPath
@@ -296,41 +402,14 @@ local function loadRegistry(path, registry, recurse, definitions)
 
          local item = require(requireName)
 
-         if not registry.manual then
-            assert(
-               registry.type:is(item),
-               "Expected a "
-                  .. registry.type.className
-                  .. " from "
-                  .. fileName
-                  .. " but received a "
-                  .. type(item)
-                  .. "!"
-            )
-            local name = item.className
-            if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
-
-            assert(
-               name ~= "",
-               string.format(
-                  "File %s contains type %s wihout a valid stripped name!",
-                  fileName,
-                  registry.type.className
-               )
-            )
-            assert(
-               items[name] == nil,
-               string.format(
-                  "File %s contains type %s with duplicate name",
-                  fileName,
-                  registry.type.className
-               )
-            )
-
-            items[name] = item
-
+         if not registry.manualRegistration then
+            prism["register" .. registry.class.className](item, true, true)
             table.insert(definitions, '--- @module "' .. requireName .. '"')
-            table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
+            local objectName = item.className
+            if item.stripName then
+               objectName = string.gsub(item.className, registry.pattern, "")
+            end
+            table.insert(definitions, "prism." .. registry.name .. "." .. objectName .. " = nil")
          end
       elseif info.type == "directory" and recurse then
          loadRegistry(fileName, registry, recurse, definitions)
@@ -352,16 +431,16 @@ function prism.loadModule(directory)
    )
    table.insert(prism.modules, directory)
 
+   local sourceDir = love.filesystem.getSource() -- Get the source directory
+   local definitions = { "---@meta " .. string.lower(directory) }
+   prism._currentDefinitions = definitions
+
    if love.filesystem.read(directory .. "/module.lua") then
       local filename = directory:gsub("/", ".") .. ".module"
       require(filename)
    end
 
-   local sourceDir = love.filesystem.getSource() -- Get the source directory
-   local definitions = { "---@meta " .. string.lower(directory) }
-   prism._currentDefinitions = definitions
-
-   for _, registry in ipairs(prism.registries) do
+   for _, registry in pairs(prism.registries) do
       loadRegistry(directory .. "/" .. registry.name, registry, true, definitions)
    end
 
