@@ -71,8 +71,8 @@ end
 function Rectangle:contains(point)
    local min = self:min()
    local max = self:max()
-   return point.x >= min.x and point.x <= max.x and
-          point.y >= min.y and point.y <= max.y
+   return point.x >= min.x and point.x < max.x and
+          point.y >= min.y and point.y < max.y
 end
 
 --- Checks if this rectangle intersects with another rectangle.
@@ -109,6 +109,30 @@ function Rectangle:union(other)
    local newHeight = maxY - minY
    return Rectangle(minX, minY, newWidth, newHeight)
 end
+
+--- Creates a new rectangle that is the intersection of this rectangle and another.
+--- The intersection is the overlapping area between the two rectangles.
+--- Returns nil if there is no overlap.
+---@param other Rectangle The other rectangle to intersect with.
+---@return Rectangle? intersection A new Rectangle instance representing the intersection, or nil if none.
+function Rectangle:intersection(other)
+   local selfMin = self:min()
+   local selfMax = self:max()
+   local otherMin = other:min()
+   local otherMax = other:max()
+
+   local minX = math.max(selfMin.x, otherMin.x)
+   local minY = math.max(selfMin.y, otherMin.y)
+   local maxX = math.min(selfMax.x, otherMax.x)
+   local maxY = math.min(selfMax.y, otherMax.y)
+
+   if maxX > minX and maxY > minY then
+      return Rectangle(minX, minY, maxX - minX, maxY - minY)
+   else
+      return nil -- no intersection
+   end
+end
+
 
 --- Returns the four corner points of the rectangle.
 --- The order is typically top-left, top-right, bottom-right, bottom-left.

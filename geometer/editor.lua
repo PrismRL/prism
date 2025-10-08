@@ -2,6 +2,9 @@
 local controls = geometer.require "controls"
 local PenTool = geometer.require "tools.pen"
 
+--- @type UI
+local UI = spectrum.UI()
+
 ---@alias Placeable { entity: Entity, factory: fun(): Entity }
 
 ---@class Editor : Object
@@ -9,7 +12,6 @@ local PenTool = geometer.require "tools.pen"
 ---@field display Display
 ---@field camera Camera
 ---@field active boolean
----@field editorRoot EditorRoot
 ---@field undoStack Modification[]
 ---@field redoStack Modification[]
 ---@field placeable Placeable|nil
@@ -41,14 +43,6 @@ function Editor:__new(attachable, display, fileEnabled)
    }
 end
 
-local Inky = geometer.require "inky"
-local EditorRoot = geometer.require "elements.editorroot"
-
----@type Inky.Scene
-local scene
----@type Inky.Pointer
-local pointer
-
 local scaler = math.floor(math.min(love.graphics.getWidth() / 320, love.graphics.getHeight() / 200))
 local scale = prism.Vector2(scaler, scaler)
 
@@ -58,13 +52,6 @@ end
 
 function Editor:startEditing()
    self.active = true
-   scene = Inky.scene()
-   pointer = Inky.pointer(scene)
-   self.editorRoot = EditorRoot(scene)
-   self.editorRoot.props.display = self.display
-   self.editorRoot.props.attachable = self.attachable
-   self.editorRoot.props.scale = scale
-   self.editorRoot.props.editor = self
 
    self.undoStack = {}
    self.redoStack = {}
@@ -77,37 +64,13 @@ end
 ---@param attachable SpectrumAttachable
 function Editor:setAttachable(attachable)
    self.attachable = attachable
-   self.editorRoot.props.attachable = attachable
-   self.editorRoot.props.display = self.display
 end
 
 function Editor:update(dt)
-   local mx, my = love.mouse.getX(), love.mouse.getY()
-   pointer:setPosition(mx / scale.x, my / scale.y)
-
-   if self.editorRoot.props.quit then
-      self.active = false
-      self.editorRoot.props.quit = false
-   end
-
-   scene:raise("controls", pointer, controls)
-   if controls.undo.pressed then
-      self:undo()
-   elseif controls.redo.pressed then
-      self:redo()
-   elseif controls.fill.pressed then
-      self.fillMode = not self.fillMode
-      scene:raise("fillMode", self.fillMode)
-   elseif controls.copy.pressed then
-      if self.tool.copy then self.tool:copy(self.attachable) end
-   elseif controls.paste.pressed then
-      if self.tool.paste then self.tool:paste(self.attachable) end
-   end
-
-   scene:raise("update", dt)
-   pointer:raise("update", dt)
-
    self.tool:update(dt, self)
+   local cx, cy = self.display:getCellUnderMouseRaw()
+   UI:feedMouse(cx, cy, spectrum.Input.mouse["1"].down, spectrum.Input.mouse["1"].pressed,
+   spectrum.Input.mouse["1"].released)
 end
 
 --- @param modification Modification
@@ -133,35 +96,130 @@ function Editor:redo()
 end
 
 function Editor:draw()
-   scene:beginFrame()
+   self.display:clear()
+   self.display:putLevel(self.attachable)
+   self:ui()
+   self.display:draw()
+end
 
-   self.editorRoot:render(0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
-   scene:finishFrame()
+local totalPlaceables = {}
+local totalPlaceablesMap = {}
+
+local placeables = totalPlaceables
+local placeablesMap = {}
+local function filter(str)
+   if str == "" then
+      placeables = totalPlaceables
+      placeablesMap = totalPlaceablesMap
+   end
+
+   local filtered = {}
+   local map = {}
+
+   for k, v in pairs(totalPlaceables) do
+      if string.match(v, str) then
+         table.insert(filtered, v)
+         map[#filtered] = totalPlaceablesMap[k]
+      end
+   end
+
+   placeables = filtered
+   placeablesMap = map
+end
+
+local selection, yes = nil, false
+function Editor:placeableInit()
+   if self.placeableInited then return end
+
+   for k, v in pairs(prism.actors) do
+      table.insert(totalPlaceables, k)
+      totalPlaceablesMap[#totalPlaceables] = v
+   end
+
+   for k, v in pairs(prism.cells) do
+      table.insert(totalPlaceables, k)
+      totalPlaceablesMap[#totalPlaceables] = v
+   end
+
+   self.placeableInited = true
+end
+
+local searchText = ""
+function Editor:placeableSelection()
+   self:placeableInit()
+
+   local dh = self.display.height
+   local dw = self.display.width
+   local w = math.floor(dw / 4)
+   UI:beginWindow("Select Placeable:", dw - w + 2, 0, w, dh + 2, {
+      resizable = false,
+      moveable = false,
+      title = false,
+   })
+      searchText = UI:textInput(searchText, w - 3)
+      filter(searchText)
+      UI:newLine(1)
+
+      selection, yes = UI:list("placeables", placeables, selection, w - 3, dh - 1)
+
+      if yes and placeablesMap[selection] then
+         self.placeable = {factory = placeablesMap[selection], entity = placeablesMap[selection]()}
+      end
+   UI:endWindow()
+end
+
+local checked = false
+local value = 0
+function Editor:ui()
+   UI:beginFrame(self.display)
+      --self:placeableSelection()
+
+      UI:beginWindow("poop", 1, 1, 10, 10)
+         if UI:beginCollapsibleCategory("Test", 20, 5) then
+            UI:label("Hello!")
+            UI:label("Hola!")
+            UI:button("Check")
+            UI:endCollapsibleCategory()
+         end
+
+         UI:label("SEPERATOR")
+
+         if UI:beginCollapsibleCategory("Test2", 20, 5) then
+            UI:label("Goodbye!")
+            UI:endCollapsibleCategory()
+         end
+
+         UI:label("WOW")
+      UI:endWindow()
+   UI:endFrame()
+end
+
+function Editor:toolbar()
 end
 
 function Editor:mousereleased(x, y, button)
-   if button == 1 then pointer:raise("release") end
-   if button == 2 then pointer:raise("releasedrag") end
 end
 
 function Editor:mousepressed(x, y, button)
-   if button == 1 then pointer:raise("press") end
+   local x, y = self.display:getCellUnderMouse(x, y)
+   self.tool:mouseclicked(self, self.attachable, x, y)
 end
 
 function Editor:mousemoved(x, y, dx, dy, istouch)
-   if love.mouse.isDown(2) then
-      pointer:setPosition(x, y)
-      pointer:raise("drag", dx, dy)
-   end
+   local x, y = self.display:getCellUnderMouse(x, y)
+   self.tool:mousereleased(self, self.attachable, x, y)
+end
+
+function Editor:keypressed(key)
+   UI:feedKey(key, true)
 end
 
 function Editor:textinput(text)
-   pointer:raise("textinput", text)
+   UI:feedText(text)
 end
 
 function Editor:wheelmoved(dx, dy)
-   pointer:raise("scroll", dx, dy)
 end
 
 return Editor

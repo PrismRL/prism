@@ -69,7 +69,6 @@ end
 --- @return any|nil The item at the given handle, or nil if not found or stale.
 function SparseArray:get(handle)
    local index, gen = unpack_handle(handle)
-   print(index, gen)
    if self.generations[index] == gen then
       return self.data[index]
    end

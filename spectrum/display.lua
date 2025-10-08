@@ -25,6 +25,7 @@
 --- @field pushed boolean Whether to draw with the camera offset applied or not.
 --- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
 --- @field animations AnimationMessage[]
+--- @field clip Rectangle
 --- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
@@ -42,6 +43,7 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.pushed = false
    self.overridenActors = {}
    self.animations = {}
+   self.clip = nil
 
    self.cells = { {} }
 
@@ -118,6 +120,24 @@ function Display:draw()
    end
 
    love.graphics.setColor(1, 1, 1, 1)
+end
+
+--- Sets or clears the clip rectangle for subsequent drawing.
+--- Coordinates are in DISPLAY GRID space (after camera), using half-open edges.
+--- Pass nil to clear: setClip(nil)
+function Display:setClip(x, y, w, h)
+   if x == nil then
+      self.clip = nil
+      return
+   end
+
+   assert(w and h and w >= 0 and h >= 0, "clip width/height must be non-negative")
+   self.clip = prism.Rectangle(x, y, w, h)
+end
+
+function Display:_cellInClip(x, y)
+   if not self.clip then return true end
+   return self.clip:contains(prism.Vector2(x, y))
 end
 
 --- Puts the drawable components of a level (cells and actors) onto the display.
@@ -395,16 +415,16 @@ function Display:put(x, y, char, fg, bg, layer)
       y = y + self.camera.y
    end
    if x < 1 or x > self.width or y < 1 or y > self.height then return end
+   if not self:_cellInClip(x, y) then return end
 
    fg = fg or prism.Color4.WHITE
-   bg = bg or prism.Color4.TRANSPARENT
 
    local cell = self.cells[x][y]
 
    if not layer or layer >= cell.depth then
       cell.char = char
       fg:copy(cell.fg)
-      bg:copy(cell.bg)
+      if bg then bg:copy(cell.bg) end
       cell.depth = layer or -math.huge
    end
 end
@@ -421,6 +441,7 @@ function Display:putBG(x, y, bg, layer)
    end
 
    if x < 1 or x > self.width or y < 1 or y > self.height then return end
+   if not self:_cellInClip(x, y) then return end
 
    bg = bg or prism.Color4.TRANSPARENT
 
@@ -454,7 +475,6 @@ function Display:print(x, y, str, fg, bg, layer, align, width)
    end
 
    fg = fg or prism.Color4.WHITE
-   bg = bg or prism.Color4.TRANSPARENT
    for i = 1, #str do
       local char = str:sub(i, i)
       self:put(x + i - 1, y, char, fg, bg, layer)
@@ -534,6 +554,15 @@ function Display:getCellUnderMouse(mx, my)
 
    local gx = math.floor((mx or mmx) / self.cellSize.x) - x + 1
    local gy = math.floor((my or mmy) / self.cellSize.y) - y + 1
+
+   return gx, gy
+end
+
+function Display:getCellUnderMouseRaw(mx, my)
+   local mmx, mmy = love.mouse.getPosition()
+
+   local gx = math.floor((mx or mmx) / self.cellSize.x) + 1
+   local gy = math.floor((my or mmy) / self.cellSize.y) + 1
 
    return gx, gy
 end

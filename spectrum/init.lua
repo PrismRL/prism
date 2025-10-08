@@ -23,11 +23,8 @@ spectrum.Input = spectrum.require "input"
 --- @module "spectrum.animation"
 spectrum.Animation = spectrum.require "animation"
 
---- @module "spectrum.gamestate"
-spectrum.GameState = spectrum.require "gamestate"
-
---- @module "spectrum.statemanager"
-spectrum.StateManager = spectrum.require "statemanager"
+--- @module "spectrum.ui.ui"
+spectrum.UI = spectrum.require "ui.ui"
 
 prism.registerRegistry("animations", spectrum.Animation, true, "spectrum")
 prism.registerRegistry("gamestates", spectrum.GameState, false, "spectrum")
