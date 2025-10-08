@@ -58,6 +58,10 @@ function EditorState:textinput(text)
    self.editor:textinput(text)
 end
 
+function EditorState:keypressed(key)
+   self.editor:keypressed(key)
+end
+
 function EditorState:unload()
    love.keyboard.setKeyRepeat(self.keyRepeat)
    love.keyboard.setTextInput(self.textInput)

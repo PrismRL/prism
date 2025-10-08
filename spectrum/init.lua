@@ -31,4 +31,7 @@ spectrum.LevelState = spectrum.require "gamestates.levelstate"
 --- @module "spectrum.animation"
 spectrum.Animation = spectrum.require "animation"
 
+--- @module "spectrum.ui.ui"
+spectrum.UI = spectrum.require "ui.ui"
+
 prism.registerRegistry("animations", spectrum.Animation, true, "spectrum")
