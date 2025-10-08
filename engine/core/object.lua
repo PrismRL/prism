@@ -6,17 +6,13 @@ prism._ISCLASS = {}
 --- @field private __index any
 --- @field private __call any
 --- @field className string (static) A unique name for this class. By convention this should match the annotation name you use.
---- @field private stripName boolean
 --- @field private _isInstance boolean
 --- @field serializationBlacklist table<string, boolean>
 local Object = {}
 Object.className = "Object"
-Object.stripName = true
 Object._isInstance = false
-
 Object._serializationBlacklist = {
    className = true,
-   stripName = true,
 }
 
 --- Creates a new class and sets its metatable to the extended class.

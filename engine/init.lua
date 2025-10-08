@@ -161,7 +161,6 @@ prism.BehaviorTree.Conditional = prism.require "core.behavior_tree.btconditional
 --- @field class Object
 --- @field manualRegistration boolean
 --- @field module string
---- @field pattern string
 
 --- @type Registry[]
 prism.registries = {}
@@ -261,19 +260,12 @@ function prism.registerRegistry(name, type, factory, module)
    end
    moduleTable[name] = {}
 
-   local pattern = ""
-   for i = 1, #type.className do
-      local c = type.className:sub(i, i)
-      pattern = string.format("%s[%s%s]", pattern, c:lower(), c:upper())
-   end
-
    --- @type Registry
    local registry = {
       name = name,
       class = type,
       manualRegistration = factory or false,
       module = module or "prism",
-      pattern = pattern,
    }
    table.insert(prism.registries, registry)
 
@@ -406,9 +398,6 @@ local function loadRegistry(path, registry, recurse, definitions)
             prism["register" .. registry.class.className](item, true, true)
             table.insert(definitions, '--- @module "' .. requireName .. '"')
             local objectName = item.className
-            if item.stripName then
-               objectName = string.gsub(item.className, registry.pattern, "")
-            end
             table.insert(definitions, "prism." .. registry.name .. "." .. objectName .. " = nil")
          end
       elseif info.type == "directory" and recurse then
@@ -462,7 +451,7 @@ function prism.loadModule(directory)
    -- Write the concatenated definitions to the file
    local file, err = io.open(outputFile, "w")
    if not file then
-      print("Failed to open file for writing: " .. (err or "Unknown error"))
+      prism.logger.error("Failed to open file for writing: " .. (err or "Unknown error"))
       return
    end
 
