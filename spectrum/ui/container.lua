@@ -3,23 +3,26 @@
 ---@field minH        integer|nil   # Minimum height (defaults to 1)
 ---@field maxW        integer|nil   # Maximum width (no cap if nil)
 ---@field maxH        integer|nil   # Maximum height (no cap if nil)
----@field autoSize    integer?
+---@field autoSize    boolean?
+---@field autoSizeW   boolean
+---@field autoSizeH   boolean
+---@field expand      boolean
+---@field expandW     boolean
+---@field expandH     boolean
 ---@field style       Style|nil     # Optional per-container style reference
 
 ---@class UIContainer : Object
+---@field opts UIContainerOpts
 ---@field w integer
 ---@field h integer
 ---@field minW integer
 ---@field minH integer
----@field maxW integer|nil
----@field maxH integer|nil
 ---@field innerW integer
 ---@field innerH integer
 ---@field contentW integer
 ---@field contentH integer
 ---@field scrollX integer
 ---@field scrollY integer
----@field style Style
 ---@field _sbDraggingH boolean
 ---@field _sbDraggingV boolean
 ---@field _sbGrabDX integer
@@ -29,7 +32,6 @@
 ---@field z integer
 ---@field innerX integer
 ---@field innerY integer
----@field autoSize boolean
 local UIContainer = prism.Object:extend("UIContainer", true)
 
 ---Creates a new UIContainer instance.
@@ -42,9 +44,9 @@ function UIContainer:__new(w, h, opts)
    self.h                               = math.max(1, h or 6)
    self.minW                            = math.max(1, opts.minW or 1)
    self.minH                            = math.max(1, opts.minH or 1)
-   self.maxW                            = opts.maxW
-   self.maxH                            = opts.maxH
-   self.autoSize                        = not not opts.autoSize
+
+   self.opts = opts
+
    self.scrollX, self.scrollY           = 0, 0
    self.contentW, self.contentH         = 0, 0
    self.innerW, self.innerH             = 0, 0
@@ -75,30 +77,78 @@ end
 ---@param w integer|nil
 ---@param h integer|nil
 function UIContainer:setSize(w, h)
+   local opts = self.opts
    if w then
       w = math.max(self.minW, w)
-      if self.maxW then w = math.min(self.maxW, w) end
+      if opts.maxW then w = math.min(opts.maxW, w) end
       self.w = w
    end
    if h then
       h = math.max(self.minH, h)
-      if self.maxH then h = math.min(self.maxH, h) end
+      if opts.maxH then h = math.min(opts.maxH, h) end
       self.h = h
    end
 end
 
+--- Returns numeric flags for container borders (1 if present, 0 if not).
+--- @param style table The style object containing container and border definitions.
+--- @return integer tb, integer bb, integer lb, integer rb
+local function getBorderFlags(style)
+   if not style or not style.container or not style.border then
+      return 0, 0, 0, 0
+   end
+
+   local hasTop    = style.container.hasBorder and style.border.sides.top
+   local hasBottom = style.container.hasBorder and style.border.sides.bottom
+   local hasLeft   = style.container.hasBorder and style.border.sides.left
+   local hasRight  = style.container.hasBorder and style.border.sides.right
+
+   local tb = hasTop and 1 or 0
+   local bb = hasBottom and 1 or 0
+   local lb = hasLeft and 1 or 0
+   local rb = hasRight and 1 or 0
+
+   return tb, bb, lb, rb
+end
+
 ---Computes layout metrics and absolute positioning for this container.
----@param style Style
+---@param ui UI
 ---@param absX integer
 ---@param absY integer
 ---@param z integer
-function UIContainer:layout(style, absX, absY, z)
+function UIContainer:layout(ui, absX, absY, z)
+   local style = ui:getStyle()
+
+   local tb, bb, lb, rb = getBorderFlags(style)
+
+   if self.opts.autoSizeW or self.opts.autoSize then
+      self.w = self.contentW + lb + rb
+      self.innerW = self.contentW
+   end
+
+   if self.opts.autoSizeH or self.opts.autoSize then
+      self.h = self.contentH + tb + bb
+      self.innerH = self.contentH
+   end
+
+   local scope = ui:_currentScope()
+   if self.opts.expand or self.opts.expandW then
+      self.w = scope.innerW
+      self.innerW = self.w - lb - rb
+   end
+
+   local scope = ui:_currentScope()
+   if self.opts.expand or self.opts.expandH then
+      self.h = scope.innerH
+      self.innerH = self.h - tb - bb
+   end
+
    self.absX, self.absY, self.z = absX, absY, z
-   local border = style.container.hasBorder and 1 or 0
-   self.innerW = math.max(0, self.w) - border * 2
-   self.innerH = math.max(0, self.h) - border * 2
-   self.innerX = absX + border
-   self.innerY = absY + border
+
+   self.innerW = math.max(0, self.w) - lb - rb
+   self.innerH = math.max(0, self.h) - tb - bb
+   self.innerX = absX + lb
+   self.innerY = absY + tb
    self.contentW, self.contentH = 0, 0
 end
 
@@ -202,34 +252,45 @@ end
 ---Paints the container, including background, border, and scrollbars.
 ---@param ui UI
 function UIContainer:paint(ui)
-   local style = ui:getStyle()
-   local z = self.z
+   local style   = ui:getStyle()
    local content = self.className ~= "UIWindow"
-   print(content)
+
+   -- Clamp scroll offsets
    self:clampScroll()
-   do
-      local g = self:computeScrollbar("vertical")
-      if g.maxScroll > 0 then
-         ui:_bgRect(g.thumbX, g.thumbY, g.thumbW, g.thumbH, style.scrollbar.thumb, content)
-         ui:_bgRect(g.trackX, g.trackY, g.trackW, g.trackH, style.scrollbar.track, content)
-      end
+
+   -- Vertical scrollbar
+   local gv = self:computeScrollbar("vertical")
+   if gv.maxScroll > 0 then
+      ui:_bgRect(gv.thumbX, gv.thumbY, gv.thumbW, gv.thumbH, style.scrollbar.thumb, content)
+      ui:_bgRect(gv.trackX, gv.trackY, gv.trackW, gv.trackH, style.scrollbar.track, content)
    end
-   do
-      local g = self:computeScrollbar("horizontal")
-      if g.maxScroll > 0 then
-         ui:_bgRect(g.thumbX, g.thumbY, g.thumbW, g.thumbH, style.scrollbar.thumb, content)
-         ui:_bgRect(g.trackX, g.trackY, g.trackW, g.trackH, style.scrollbar.track, content)
-      end
+
+   -- Horizontal scrollbar
+   local gh = self:computeScrollbar("horizontal")
+   if gh.maxScroll > 0 then
+      ui:_bgRect(gh.thumbX, gh.thumbY, gh.thumbW, gh.thumbH, style.scrollbar.thumb, content)
+      ui:_bgRect(gh.trackX, gh.trackY, gh.trackW, gh.trackH, style.scrollbar.track, content)
    end
+
+   -- Container background
    if style.container.hasBg then
       print(self.innerX, self.innerY)
       ui:_bgRect(self.innerX, self.innerY, self.innerW, self.innerH, style.container.bg, content)
    end
+
+   -- Container border
    if style.container.hasBorder then
-      ui:_border(self.absX, self.absY, self.w - 1, self.h - 1,
-                 style.border.bg, style.border.chars, style.border.fg, style.border.sides, content)
+      ui:_border(
+         self.absX, self.absY, self.w - 1, self.h - 1,
+         style.border.bg,
+         style.border.chars,
+         style.border.fg,
+         style.border.sides,
+         content
+      )
    end
 end
+
 
 ---Handles mouse interaction for both scrollbars and updates scroll state.
 ---@param ui UI
@@ -239,7 +300,8 @@ end
 ---@return boolean capturedMouse
 function UIContainer:handleScrollbars(ui, top, io, style)
    local capturedMouse = false
-   style = style or self.style
+   style = ui:getStyle()
+
    local function processAxis(axis)
       local g = self:computeScrollbar(axis)
       if g.maxScroll <= 0 then
