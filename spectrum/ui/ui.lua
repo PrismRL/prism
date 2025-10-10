@@ -36,6 +36,7 @@ local DEFAULTSTYLE = spectrum.require "ui/style"
 ---@field orderCounter integer
 ---@field currentClip Rectangle?
 ---@field containerStack ContainerInfo[]
+---@field containers UIContainer[]
 local UI = prism.Object:extend "UI"
 
 ---Creates a new UI instance.
@@ -76,16 +77,23 @@ function UI:setBaseStyle(style)
    self.baseStyle = style or DEFAULTSTYLE
 end
 
+local function meta(parent, t)
+   for k, v in pairs(t) do
+      if type(v) == "table" then
+         setmetatable(v, { __index = parent[k] })
+         meta(parent[k], v)
+      end
+   end
+end
+
 ---Pushes a shallow style override table onto the stack.
 ---@param overrides table
 function UI:pushStyle(overrides)
    local parent = self:getStyle()
    local frame  = overrides or {}
-   for k, v in pairs(frame) do
-      if type(v) == "table" then
-         setmetatable(v, { __index = parent[k] })
-      end
-   end
+
+   meta(parent, frame)
+
    setmetatable(frame, { __index = parent })
    table.insert(self.styleStack, frame)
 end
@@ -499,7 +507,7 @@ function UI:beginWindow(title, x, y, w, h, opts)
       or win:handleScrollbars(self, isTop, self.io, style)
       or win:handleDrag(self, isTop, self.io)
       or win:handleResize(self, isTop, self.io)
-   win:layout(style)
+   win:layout(self)
    win:pushClip(self)
    win:setCursor(self)
    self.curWindow = win
@@ -587,14 +595,13 @@ function UI:beginContainer(name, w, h, opts)
    local z = parent.z
    local isTop = self:_scopeAcceptsMouse()
    container:handleScrollbars(self, isTop, self.io, curStyle)
-   container:layout(curStyle, cx, cy, z)
+   container:layout(self, cx, cy, z)
    self:pushContainer(container)
    return container
 end
 
 ---Ends the current container scope.
 function UI:endContainer()
-   self:_currentScope():paint(self)
    self:popContainer()
    self:popID()
    self:popStyle()
@@ -613,21 +620,35 @@ function UI:_getCollapsibleState(id, defaultOpen)
    return s
 end
 
+local collapsibleOpts = {
+   autoSizeH = true,
+   expandW = true
+}
+
+local collapsibleStyle = {
+   border = {
+      sides = {
+         top = false
+      }
+   }
+}
+
 ---Begins a collapsible category with persistent state.
 ---@param title string
----@param w integer
----@param h integer
 ---@param opts table|nil
 ---@return boolean open
-function UI:beginCollapsibleCategory(title, w, h, opts)
+function UI:beginCollapsibleCategory(title, opts)
    opts = opts or {}
    self:pushID(("collapsible:%s"):format(title))
+   local scope = self:_currentScope()
+   local w = scope.innerW
    local id = self:makeID()
    local st = self:_getCollapsibleState(id, opts.open)
    local arrow = st.open and " V" or " >"
    local clicked = self:button(title .. arrow, w, 1)
    if st.open then
-      self:beginContainer(title .. ":content", w, h)
+      self:pushStyle(collapsibleStyle)
+      self:beginContainer(title .. ":content", w, 5, collapsibleOpts)
    else
       self:popID()
    end
@@ -639,6 +660,7 @@ end
 ---Ends a collapsible category scope.
 function UI:endCollapsibleCategory()
    self:endContainer()
+   self:popStyle()
    self:popID()
 end
 

@@ -169,31 +169,43 @@ function Editor:placeableSelection()
    UI:endWindow()
 end
 
-local checked = false
-local value = 0
+local maxHP = 100
+local hp = 75
+local damage = 5
+local speed = 3
+local range = 1.5
+
 function Editor:ui()
    UI:beginFrame(self.display)
-      --self:placeableSelection()
+      self:placeableSelection()
+      UI:beginWindow("Actor", 1, 1, 30, 20)
 
-      UI:beginWindow("poop", 1, 1, 10, 10)
-         if UI:beginCollapsibleCategory("Test", 20, 5) then
-            UI:label("Hello!")
-            UI:label("Hola!")
-            UI:button("Check")
+         -- Health component
+         if UI:beginCollapsibleCategory("Health") then
+            local numMaxHP = tonumber(maxHP) or 0
+            hp, _ = UI:slider("hp", hp, 0, numMaxHP, 10)
+
             UI:endCollapsibleCategory()
          end
 
-         UI:label("SEPERATOR")
-
-         if UI:beginCollapsibleCategory("Test2", 20, 5) then
-            UI:label("Goodbye!")
+         -- Attacker component
+         if UI:beginCollapsibleCategory("Attacker") then
+            damage, _ = UI:slider("damage", damage, 1, 10, 10)
             UI:endCollapsibleCategory()
          end
 
-         UI:label("WOW")
+         -- Movement component
+         if UI:beginCollapsibleCategory("Movement") then
+            speed, _ = UI:slider("speed", speed, 0, 10, 10)
+            range, _ = UI:slider("range", range, 0, 5, 10)
+
+            UI:endCollapsibleCategory()
+         end
+
       UI:endWindow()
    UI:endFrame()
 end
+
 
 function Editor:toolbar()
 end
@@ -203,12 +215,12 @@ end
 
 function Editor:mousepressed(x, y, button)
    local x, y = self.display:getCellUnderMouse(x, y)
-   self.tool:mouseclicked(self, self.attachable, x, y)
+   --self.tool:mouseclicked(self, self.attachable, x, y)
 end
 
 function Editor:mousemoved(x, y, dx, dy, istouch)
    local x, y = self.display:getCellUnderMouse(x, y)
-   self.tool:mousereleased(self, self.attachable, x, y)
+   --self.tool:mousereleased(self, self.attachable, x, y)
 end
 
 function Editor:keypressed(key)

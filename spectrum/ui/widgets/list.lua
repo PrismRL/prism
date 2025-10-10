@@ -38,23 +38,24 @@ local function list(self, name, items, selected, w, h, opts)
 
       local ry = y + (i - 1) * rowH
 
-      -- Base checkered row background first (so highlights overlay cleanly)
-      local baseRowBg = ((i % 2) == 1) and rowBgA or rowBgB
-      if baseRowBg then
-         self:_bgRect(x, ry, iw, rowH, baseRowBg, baseZ + 1)
-      end
+      self:_text(x + padX, ry, label, fg, "left", iw - padX)
+
 
       local rowHovered = self:_scopeAcceptsMouse() and self:_mouseOver(x, ry, iw, rowH)
       local isSel      = (newSel == i)
-
+      
       -- Overlays: selection beats hover
       if isSel then
-         self:_bgRect(x, ry, iw, rowH, selBg, baseZ + 2)
+         self:_bgRect(x, ry, iw, rowH, selBg)
       elseif rowHovered then
-         self:_bgRect(x, ry, iw, rowH, hotBg, baseZ + 2)
+         self:_bgRect(x, ry, iw, rowH, hotBg)
       end
 
-      self:_text(x + padX, ry, label, fg, baseZ + 3, "left", iw - padX)
+      -- Base checkered row background first (so highlights overlay cleanly)
+      local baseRowBg = ((i % 2) == 1) and rowBgA or rowBgB
+      if baseRowBg then
+         self:_bgRect(x, ry, iw, rowH, baseRowBg)
+      end
 
       if rowHovered then
          local rid = ("list@%s#row%d"):format(name, i)

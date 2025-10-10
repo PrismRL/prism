@@ -21,8 +21,6 @@ local function textInput(self, text, w, h, opts)
    self._editors[id] = st
    if st.caret > #text then st.caret = #text end
 
-   self:_bgRect(x, y, iw, ih, style.textinput.bg)
-
    -- Hover/focus
    local hovered = self:_scopeAcceptsMouse() and self:_mouseOver(x, y, iw, ih)
    if hovered and self.io.mpressed then
@@ -77,7 +75,6 @@ local function textInput(self, text, w, h, opts)
    local visibleText = (n == 0) and "" or curText:sub(start1, end1)
 
    -- Placeholder (only when unfocused and empty)
-   local zText = self:_currentScope().z
    if visibleText == "" and not focused and opts.placeholder then
       self:_text(x + style.textinput.pad, y, opts.placeholder, style.colors.textDim, "left")
    else
@@ -91,6 +88,8 @@ local function textInput(self, text, w, h, opts)
       caretColLocal = math.max(0, math.min(caretColLocal, windowCols))
       self:_text(x + style.textinput.pad + caretColLocal, y, style.textinput.caretGlyph, style.textinput.caretColor, "left")
    end
+
+   self:_bgRect(x, y, iw, ih, style.textinput.bg)
 
    self:_advanceCursor(iw, ih)
    self:popID()

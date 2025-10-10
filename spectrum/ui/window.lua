@@ -220,9 +220,9 @@ function Window:handleResize(ui, topmost, io)
 end
 
 ---Performs layout for the window, computing inner bounds.
----@param style Style
-function Window:layout(style)
-   Container.layout(self, style, self.x, self.y, self.z)
+---@param ui UI
+function Window:layout(ui)
+   Container.layout(self, ui, self.x, self.y, self.z)
 end
 
 ---Renders the window, title bar, and scrollbars.
