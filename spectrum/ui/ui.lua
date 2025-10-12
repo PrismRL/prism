@@ -37,6 +37,7 @@ local DEFAULTSTYLE = spectrum.require "ui/style"
 ---@field currentClip Rectangle?
 ---@field containerStack ContainerInfo[]
 ---@field containers UIContainer[]
+---@field cursor love.mouse.CursorType
 local UI = prism.Object:extend "UI"
 
 ---Creates a new UI instance.
@@ -62,6 +63,12 @@ function UI:__new(style)
    self.drawList       = {}
    self.orderCounter   = 0
    self._collapsible   = {}
+   self.cursor         = nil
+end
+
+--- @param str love.mouse.CursorType
+function UI:setMouseCursor(str)
+   self.cursor = str
 end
 
 ---Returns the current active style (top override or base style).
@@ -189,6 +196,7 @@ function UI:beginFrame(display)
    self.orderCounter = 0
    self.clipStack = {}
    self.currentClip = nil
+   self.cursor = nil
 end
 
 ---Tracks draw commands to update container content sizes.
@@ -233,6 +241,7 @@ function UI:_emit(cmd)
    cmd.clip = self:getClip()
    self:_trackContentFromCmd(cmd)
    if cmd.content then
+      print(cmd.text, cmd.content)
       local x, y = self:getScroll()
       cmd.x = cmd.x - x
       cmd.y = cmd.y - y
@@ -288,6 +297,34 @@ function UI:_text(x, y, str, fg, align, width, content)
    })
 end
 
+---Queues an image draw command.
+---@param x integer
+---@param y integer
+---@param w integer
+---@param h integer
+---@param texture love.graphics.Texture
+---@param quad love.graphics.Quad
+---@param mode '"fit"'|nil  -- "fit" (contain) or stretch (nil)
+---@param tint Color4|nil   -- per-slice tint (defaults to white)
+---@param content boolean|nil
+function UI:_image(x, y, w, h, texture, quad, mode, tint, content)
+   local scope = self:_currentScope()
+   self:_emit({
+      kind    = "image",
+      x       = x,
+      y       = y,
+      w       = w,
+      h       = h,
+      texture = texture,
+      quad    = quad,
+      mode    = mode,
+      fg      = tint, -- matches usage in endFrame -> Display:putImage(fg=cmd.fg)
+      layer   = scope and scope.z or 0,
+      clip    = self:getClip(),
+      content = content ~= false
+   })
+end
+
 ---Queues a border rectangle draw command.
 ---@param x integer
 ---@param y integer
@@ -321,6 +358,13 @@ local DEFAULT_CHARS = {}
 
 ---Ends the frame, sorts and flushes draw commands to the Display.
 function UI:endFrame()
+   local cursorstr = self.cursor
+   local cursor
+   if cursorstr then
+      cursor = love.mouse.getSystemCursor(cursorstr)
+   end
+   love.mouse.setCursor(cursor)
+
    table.sort(self.drawList, function(a, b)
       if a.layer ~= b.layer then return a.layer < b.layer end
       return a.order > b.order
@@ -366,6 +410,10 @@ function UI:endFrame()
       elseif cmd.kind == "text" then
          d:setClip(cx, cy, cw, ch)
          d:putString(cmd.x, cmd.y, cmd.text, cmd.fg, nil, cmd.layer, cmd.align, cmd.width)
+         d:setClip()
+      elseif cmd.kind == "image" then
+         d:setClip(cx, cy, cw, ch)
+         d:putImage(cmd.texture, cmd.quad, cmd.x, cmd.y, cmd.w, cmd.h, cmd.mode, cmd.fg, nil, cmd.layer)
          d:setClip()
       end
    end
@@ -503,10 +551,10 @@ function UI:beginWindow(title, x, y, w, h, opts)
    local isTop = self.winAtMouse == win
    win:bringToFrontOnPress(self, self.io, maxz)
    local captured =
-      win:handleCollapse(self, self.io)
-      or win:handleScrollbars(self, isTop, self.io, style)
-      or win:handleDrag(self, isTop, self.io)
-      or win:handleResize(self, isTop, self.io)
+       win:handleCollapse(self, self.io)
+       or win:handleScrollbars(self, isTop, self.io, style)
+       or win:handleDrag(self, isTop, self.io)
+       or win:handleResize(self, isTop, self.io)
    win:layout(self)
    win:pushClip(self)
    win:setCursor(self)
@@ -516,14 +564,17 @@ end
 
 ---Ends the current window scope.
 function UI:endWindow()
-   self:popID()
-   self:popClip()
-   self:_currentScope():paint(self)
    if not self.curWindow then
       error("UI:endWindow() called without matching beginWindow()")
    end
    assert(#self.containerStack == 0, "endWindow() with non-empty container stack")
+
+   self:popID()
+   self:popClip()
+   local win = self:_currentScope()
    self.curWindow = nil
+   win:paint(self)
+
    self:popStyle()
 end
 
@@ -669,6 +720,7 @@ local uibutton = spectrum.require "ui.widgets.button"
 local uitextinput = spectrum.require "ui.widgets.textinput"
 local uicheckbox = spectrum.require "ui.widgets.checkbox"
 local uislider = spectrum.require "ui.widgets.slider"
+local uiimage = spectrum.require "ui.widgets.image"
 
 ---Draws a list widget.
 ---@param name string
@@ -724,14 +776,112 @@ function UI:slider(label, value, min, max, w, h, opts)
    return uislider(self, label, value, min, max, w, opts)
 end
 
----Draws a text label.
+--- Draws an image button. Returns true if clicked.
+---@param texture love.graphics.Texture
+---@param quad love.graphics.Quad
+---@param w integer|nil
+---@param h integer|nil
+---@return boolean clicked
+function UI:imageQuad(texture, quad, w, h)
+   return uiimage(self, texture, quad, w, h)
+end
+
+--- Draws a clickable image using the full texture as its quad.
+--- Convenience wrapper around UI:imageQuad().
+---@param texture love.graphics.Texture
+---@param w integer|nil
+---@param h integer|nil
+---@return boolean clicked
+function UI:image(texture, w, h)
+   local texW, texH = texture:getDimensions()
+   local fullQuad = love.graphics.newQuad(0, 0, texW, texH, texW, texH)
+   return self:imageQuad(texture, fullQuad, w, h)
+end
+
+--- Draws a text label with wrapping that preserves intra-line whitespace.
 ---@param text string
 ---@param color Color4|nil
 function UI:label(text, color)
-   local x, y, w, h = self:_itemRect(#text, 1)
+   if text == "" then return end
+
    local style = self:getStyle()
-   self:_text(x, y, text, color or style.colors.text)
-   self:_advanceCursor(w, h)
+   local scope = self:_currentScope()
+   assert(scope, "UI:label() requires an active scope")
+
+   local fg    = color or style.colors.text
+   local wrapW = scope.innerW
+   local x, y  = self:getCursor()
+
+   local function emit_line(line)
+      self:_text(x, y, line, fg)
+      self:newLine()
+      x, y = self:getCursor()
+   end
+
+   local function process_token(line, tok, is_space)
+      -- If starting a new line, trim leading spaces
+      if line == "" and is_space then
+         tok = tok:gsub("%s+", "")
+         if tok == "" then return line end
+      end
+
+      local remaining = wrapW - #line
+      if #tok <= remaining then
+         -- Fits on this line
+         return line .. tok
+      end
+
+      -- Would overflow
+      if line ~= "" then
+         emit_line(line)
+         line = ""
+         if tok:match("^%s") then
+            tok = tok:gsub("^%s+", "")
+         end
+      end
+
+      -- Hard-break long tokens
+      while #tok > wrapW do
+         emit_line(tok:sub(1, wrapW))
+         tok = tok:sub(wrapW + 1)
+      end
+
+      return tok
+   end
+
+   -- Split by paragraphs (respect explicit newlines)
+   for para in tostring(text):gmatch("([^\n]*)\n?") do
+      if para == "" then
+         self:newLine(1)
+         x, y = self:getCursor()
+      else
+         local i, n = 1, #para
+         local line = ""
+
+         local function take_run(is_space)
+            local j = i
+            while j <= n do
+               local ch = para:sub(j, j)
+               if (ch:match("%s") ~= nil) ~= is_space then break end
+               j = j + 1
+            end
+            local run = para:sub(i, j - 1)
+            i = j
+            return run
+         end
+
+         while i <= n do
+            local ch = para:sub(i, i)
+            local is_space = ch:match("%s") ~= nil
+            local tok = take_run(is_space)
+            line = process_token(line, tok, is_space)
+         end
+
+         if line ~= "" then
+            emit_line(line)
+         end
+      end
+   end
 end
 
 return UI

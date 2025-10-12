@@ -95,6 +95,9 @@ function Editor:redo()
    table.insert(self.undoStack, modification)
 end
 
+local berg = love.graphics.newImage("display/berg.png")
+local berquad = love.graphics.newQuad(0, 0, berg:getWidth(), berg:getHeight(), berg)
+
 function Editor:draw()
    self.display:clear()
    self.display:putLevel(self.attachable)
@@ -202,6 +205,7 @@ function Editor:ui()
             UI:endCollapsibleCategory()
          end
 
+         UI:image(berg, 10, 10)
       UI:endWindow()
    UI:endFrame()
 end

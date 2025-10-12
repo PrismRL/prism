@@ -32,6 +32,8 @@ local function checkbox(self, label, value, opts)
    if self:_scopeAcceptsMouse() then
       hovered = self:_mouseOver(x, y, iw, ih)
       if hovered then
+         self:setMouseCursor("hand")
+
          self.hot = id
          if self.io.mpressed then
             self.active = id

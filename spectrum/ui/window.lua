@@ -172,6 +172,10 @@ end
 ---@param io {mx: integer, my: integer, mpressed: boolean}
 ---@return boolean captured
 function Window:handleCollapse(ui, io)
+   if self:collapseHit(io.mx, io.my)then
+      ui:setMouseCursor("hand")
+   end
+   
    if io.mpressed and self:collapseHit(io.mx, io.my) then
       self.collapsed = not self.collapsed
       ui.focus = self.id
@@ -193,6 +197,9 @@ function Window:handleResize(ui, topmost, io)
       return false
    end
    local captured = false
+   if not self.dragging and topmost and not io.mpressed and self:resizeHit(io.mx, io.my) then
+      ui:setMouseCursor("sizenwse")
+   end
    if not self.dragging and topmost and io.mpressed and self:resizeHit(io.mx, io.my) then
       self.resizing = true
       self.rsStartMX, self.rsStartMY = io.mx, io.my
@@ -202,6 +209,7 @@ function Window:handleResize(ui, topmost, io)
    end
    if self.resizing then
       if io.mdown then
+         ui:setMouseCursor("sizenwse")
          local dx = io.mx - self.rsStartMX
          local dy = io.my - self.rsStartMY
          local newW = math.max(self.rsStartW + dx, self.minW)
@@ -235,12 +243,12 @@ function Window:paint(ui)
          ui:_text(self.x + 1, self.y, self.title, style.window.titleFg, style.window.titleAlign, self.w, false)
       end
       ui:popClip()
-      ui:_bgRect(self.x, self.y, self.w, 1, style.window.titleBg, false)
       local glyph = self.collapsed and "+" or "-"
       ui:_text(self.x + self.w - 1, self.y, glyph, style.colors.textDim or style.colors.text, nil, nil, false)
       if not self.collapsed and self:isResizable() then
          ui:_text(self.x + self.w - 1, self.y + self.h - 1, "/", style.colors.textDim or style.colors.text, nil, nil, false)
       end
+      ui:_bgRect(self.x, self.y, self.w, 1, style.window.titleBg, false)
    end
    if not self.collapsed then
       Container.paint(self, ui)

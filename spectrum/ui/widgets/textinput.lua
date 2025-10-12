@@ -23,6 +23,7 @@ local function textInput(self, text, w, h, opts)
 
    -- Hover/focus
    local hovered = self:_scopeAcceptsMouse() and self:_mouseOver(x, y, iw, ih)
+   if hovered then self:setMouseCursor("ibeam") end
    if hovered and self.io.mpressed then
       self.active, self.focus = id, id
       st._wantClickCol = math.max(0, self.io.mx - (x + style.textinput.pad))

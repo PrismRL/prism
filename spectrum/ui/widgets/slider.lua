@@ -14,7 +14,6 @@ local function slider(self, label, value, min, max, w, opts)
 
    if opts and opts.style then self:pushStyle(opts.style) end
    local style = self:getStyle()
-   local win   = self:_currentScope()
 
    local totalW = w or style.layout.itemW
    local x, y, iw, ih = self:_itemRect(totalW, 1)
@@ -46,6 +45,7 @@ local function slider(self, label, value, min, max, w, opts)
          value = toValue(self.io.mx)
       end
       if self.active == id then
+         self:setMouseCursor("sizewe")
          active = true
          value = toValue(self.io.mx)
          if self.io.mreleased then self.active = nil end
