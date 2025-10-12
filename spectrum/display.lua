@@ -16,7 +16,14 @@
 --- @field layer? integer
 --- @field size? integer
 
---- @alias DisplayCell {texture: love.graphics.Texture, quad: love.graphics.Quad, fg: Color4, bg: Color4, depth: number}
+--- @alias DisplayCell {
+---   texture: love.graphics.Texture,
+---   quad: love.graphics.Quad,
+---   fg: Color4, bg: Color4,
+---   depth: number,
+---   tx: number, ty: number,
+---   sx: number, sy: number }
+
 --- @class Display : Object
 --- @field width integer The width of the display in cells.
 --- @field height integer The height of the display in cells.
@@ -134,7 +141,9 @@ function Display:draw()
          if quad then
             local batch = self:getBatchForImage(cell.texture)
             batch:setColor(cell.fg:decompose())
-            batch:add(cell.quad, dx * cSx, dy * cSy)
+            local tx, ty = cell.tx or 0, cell.ty or 0
+            local sx, sy = cell.sx or 1, cell.sy or 1
+            batch:add(cell.quad, dx * cSx + tx, dy * cSy + ty, 0, sx, sy)
          end
       end
    end
@@ -415,6 +424,128 @@ function Display:putSprite(x, y, sprite, color, layer)
    end
 end
 
+--- Slices a texture quad into cell-sized pieces and paints them across a w×h cell
+--- rectangle starting at (x,y). Mode "fit" = contain, preserve aspect, center.
+--- Cells that fall into letterbox margins are left unchanged.
+--- @param texture love.graphics.Texture
+--- @param quad love.graphics.Quad
+--- @param x integer @grid X (1-based)
+--- @param y integer @grid Y (1-based)
+--- @param w integer @width in cells
+--- @param h integer @height in cells
+--- @param mode "fit"|nil
+--- @param fg Color4? @tint color (defaults to white/no tint)
+--- @param bg Color4? @background color for affected cells (optional)
+--- @param layer number? @z / depth (overwrites only if >= existing cell.depth)
+function Display:putImage(texture, quad, x, y, w, h, mode, fg, bg, layer)
+   local cSx, cSy = self.cellSize.x, self.cellSize.y
+
+   -- destination pixel rect for the whole image region (grid -> pixels)
+   local destX = (self.pushed and (x + self.camera.x) or x) - 1
+   local destY = (self.pushed and (y + self.camera.y) or y) - 1
+   destX = destX * cSx
+   destY = destY * cSy
+   local destW = w * cSx
+   local destH = h * cSy
+
+   -- source rect from the provided quad
+   local qx, qy, qw, qh = quad:getViewport()
+   local texW, texH = texture:getDimensions()
+
+   -- scaling & letterbox offsets
+   local scaleX, scaleY = 1, 1
+   local imgW, imgH = qw, qh
+   local offX, offY = 0, 0
+
+   if mode == "fit" then
+      local s = math.min(destW / qw, destH / qh)
+      scaleX, scaleY = s, s
+      imgW = math.floor(qw * s + 0.5)
+      imgH = math.floor(qh * s + 0.5)
+      offX = math.floor((destW - imgW) / 2)
+      offY = math.floor((destH - imgH) / 2)
+   else
+      -- stretch to fill the full destination rect
+      scaleX = destW / qw
+      scaleY = destH / qh
+      imgW = destW
+      imgH = destH
+      offX, offY = 0, 0
+   end
+
+   local tint = fg or prism.Color4.WHITE
+
+   -- iterate destination cells
+   for cx = 0, w - 1 do
+      for cy = 0, h - 1 do
+         local cellGridX = x + cx
+         local cellGridY = y + cy
+
+         -- bounds/clip checks in grid space
+         local gx, gy = cellGridX, cellGridY
+         if self.pushed then
+            gx = gx + self.camera.x
+            gy = gy + self.camera.y
+         end
+         if gx >= 1 and gx <= self.width and gy >= 1 and gy <= self.height and self:_cellInClip(gx, gy) then
+            -- cell's local pixel rect within the destination region
+            local cellLocalX0 = cx * cSx
+            local cellLocalY0 = cy * cSy
+            local cellLocalX1 = cellLocalX0 + cSx
+            local cellLocalY1 = cellLocalY0 + cSy
+
+            -- image rect (inside destination)
+            local imgLocalX0 = offX
+            local imgLocalY0 = offY
+            local imgLocalX1 = offX + imgW
+            local imgLocalY1 = offY + imgH
+
+            -- overlap between this cell and the (possibly letterboxed) image area
+            local ix0 = math.max(cellLocalX0, imgLocalX0)
+            local iy0 = math.max(cellLocalY0, imgLocalY0)
+            local ix1 = math.min(cellLocalX1, imgLocalX1)
+            local iy1 = math.min(cellLocalY1, imgLocalY1)
+
+            if ix1 > ix0 and iy1 > iy0 then
+               -- map overlap back to source pixels
+               local srcX = qx + (ix0 - imgLocalX0) / scaleX
+               local srcY = qy + (iy0 - imgLocalY0) / scaleY
+               local srcW = (ix1 - ix0) / scaleX
+               local srcH = (iy1 - iy0) / scaleY
+
+               -- clamp to source quad (safety against rounding)
+               local clampX = math.max(qx, math.min(srcX, qx + qw))
+               local clampY = math.max(qy, math.min(srcY, qy + qh))
+               local clampW = math.max(0, math.min(srcW, qx + qw - clampX))
+               local clampH = math.max(0, math.min(srcH, qy + qh - clampY))
+
+               if clampW > 0 and clampH > 0 then
+                  local sub = love.graphics.newQuad(clampX, clampY, clampW, clampH, texW, texH)
+
+                  -- destination offset inside this cell (pixels, relative to cell)
+                  local localTx = ix0 - cellLocalX0
+                  local localTy = iy0 - cellLocalY0
+
+                  -- write into the cell with depth check
+                  local cell = self.cells[gx][gy]
+                  if not layer or layer >= cell.depth then
+                     tint:copy(cell.fg)
+                     if bg then bg:copy(cell.bg) end
+                     cell.texture = texture
+                     cell.quad = sub
+                     cell.tx = localTx
+                     cell.ty = localTy
+                     cell.sx = scaleX
+                     cell.sy = scaleY
+                     cell.depth = layer or -math.huge
+                  end
+               end
+            end
+         end
+      end
+   end
+end
+
 --- Puts a Drawable onto the display grid at specified coordinates, considering its depth.
 --- If a `color` or `layer` is provided, they will override the drawable's default values.
 --- @param x integer The X grid coordinate.
@@ -452,6 +583,8 @@ function Display:put(x, y, char, fg, bg, layer)
       fg:copy(cell.fg)
       if bg then bg:copy(cell.bg) end
       cell.depth = layer or -math.huge
+      cell.tx, cell.ty = nil, nil
+      cell.sx, cell.sy = nil, nil
    end
 end
 
@@ -531,6 +664,8 @@ function Display:clear(bg)
          cell.quad = nil
          bg:copy(cell.bg)
          cell.depth = -math.huge
+         cell.tx, cell.ty = nil, nil
+         cell.sx, cell.sy = nil, nil
       end
    end
 end

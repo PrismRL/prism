@@ -17,13 +17,13 @@ local function button(self, text, w, h, opts)
    self:pushID(("button@%d,%d:%s"):format(x, y, text))
    local id = self:makeID()
 
-   local win = self:_currentScope()
    local bg = style.button.bg
    local clicked = false
    if self:_scopeAcceptsMouse() then
       local hovered = self:_mouseOver(x, y, iw, ih)
 
       if hovered then
+         self:setMouseCursor("hand")
          self.hot = id
          if self.io.mpressed then
             self.active = id

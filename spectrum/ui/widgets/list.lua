@@ -58,6 +58,7 @@ local function list(self, name, items, selected, w, h, opts)
       end
 
       if rowHovered then
+         self:setMouseCursor("hand")
          local rid = ("list@%s#row%d"):format(name, i)
          self.hot = rid
          if self.io.mpressed then self.active = rid end

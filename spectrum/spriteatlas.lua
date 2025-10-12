@@ -2,7 +2,7 @@ local utf8 = require "utf8"
 
 --- A simple sprite atlas. Used by spectrum.Display to render cells and actors.
 ---@class SpriteAtlas : Object
----@field image any The texture atlas love image
+---@field image love.graphics.Texture The texture atlas love image
 ---@field quadsByName table<string, love.Quad> A table of quads indexed by sprite names
 ---@field quadsByIndex table<number, love.Quad> A table of quads indexed by sprite indices
 ---@overload fun(imagePath: string, spriteData: {x: integer, y: integer, width: integer, height:integer}, names?: string[]): SpriteAtlas
