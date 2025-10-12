@@ -16,7 +16,7 @@
 --- @field layer? integer
 --- @field size? integer
 
---- @alias DisplayCell {char: (string|integer)?, fg: Color4, bg: Color4, depth: number}
+--- @alias DisplayCell {texture: love.graphics.Texture, quad: love.graphics.Quad, fg: Color4, bg: Color4, depth: number}
 --- @class Display : Object
 --- @field width integer The width of the display in cells.
 --- @field height integer The height of the display in cells.
@@ -26,6 +26,7 @@
 --- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
 --- @field animations AnimationMessage[]
 --- @field clip Rectangle
+--- @field batches table<love.graphics.Texture, love.graphics.SpriteBatch>
 --- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
@@ -47,6 +48,8 @@ function Display:__new(width, height, spriteAtlas, cellSize)
 
    self.cells = { {} }
 
+   self.batches = {}
+
    -- Initialize the grid with empty cells
    for x = 1, self.width do
       self.cells[x] = {}
@@ -59,6 +62,19 @@ function Display:__new(width, height, spriteAtlas, cellSize)
          }
       end
    end
+end
+
+--- @private
+function Display:getBatchForImage(img)
+   local b = self.batches[img]
+   if not b then
+      -- heuristic: capacity ≈ number of cells; tweak as you like
+      b = love.graphics.newSpriteBatch(img, self.width * self.height)
+      self.batches[img] = b
+   else
+      b:clear()
+   end
+   return b
 end
 
 --- Updates animations in the display.
@@ -110,11 +126,11 @@ function Display:draw()
       for y = 1, self.height do
          local cell = self.cells[x][y]
          local dx, dy = x - 1, y - 1
-         local quad = self:getQuad(cell.char)
+         local quad = cell.quad
 
          if quad then
             love.graphics.setColor(cell.fg:decompose())
-            love.graphics.draw(self.spriteAtlas.image, quad, dx * cSx, dy * cSy)
+            love.graphics.draw(cell.texture, quad, dx * cSx, dy * cSy)
          end
       end
    end
@@ -422,7 +438,8 @@ function Display:put(x, y, char, fg, bg, layer)
    local cell = self.cells[x][y]
 
    if not layer or layer >= cell.depth then
-      cell.char = char
+      cell.texture = self.spriteAtlas.image
+      cell.quad = self:getQuad(char)
       fg:copy(cell.fg)
       if bg then bg:copy(cell.bg) end
       cell.depth = layer or -math.huge
@@ -501,7 +518,8 @@ function Display:clear(bg)
    for x = 1, self.width do
       for y = 1, self.height do
          local cell = self.cells[x][y]
-         cell.char = nil
+         cell.texture = nil
+         cell.quad = nil
          bg:copy(cell.bg)
          cell.depth = -math.huge
       end
