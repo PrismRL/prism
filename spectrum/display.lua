@@ -66,15 +66,17 @@ end
 
 --- @private
 function Display:getBatchForImage(img)
-   local b = self.batches[img]
-   if not b then
-      -- heuristic: capacity ≈ number of cells; tweak as you like
-      b = love.graphics.newSpriteBatch(img, self.width * self.height)
-      self.batches[img] = b
-   else
-      b:clear()
+   if not self.batches[img] then
+      self.batches[img] = love.graphics.newSpriteBatch(img, self.width * self.height)
    end
-   return b
+
+   return self.batches[img]
+end
+
+function Display:clearBatches()
+   for _, v in pairs(self.batches) do
+      v:clear()
+   end
 end
 
 --- Updates animations in the display.
@@ -106,6 +108,7 @@ end
 --- Draws the entire display to the screen. This function iterates through all cells
 --- and draws their background colors and then their characters.
 function Display:draw()
+   self:clearBatches()
    local cSx, cSy = self.cellSize.x, self.cellSize.y
 
    -- draw bgs
@@ -129,10 +132,16 @@ function Display:draw()
          local quad = cell.quad
 
          if quad then
-            love.graphics.setColor(cell.fg:decompose())
-            love.graphics.draw(cell.texture, quad, dx * cSx, dy * cSy)
+            local batch = self:getBatchForImage(cell.texture)
+            batch:setColor(cell.fg:decompose())
+            batch:add(cell.quad, dx * cSx, dy * cSy)
          end
       end
+   end
+
+   love.graphics.setColor(prism.Color4.WHITE:decompose())
+   for _, batch in pairs(self.batches) do
+      love.graphics.draw(batch)
    end
 
    love.graphics.setColor(1, 1, 1, 1)
