@@ -38,6 +38,8 @@ local DEFAULTSTYLE = spectrum.require "ui/style"
 ---@field containerStack ContainerInfo[]
 ---@field containers UIContainer[]
 ---@field cursor love.mouse.CursorType
+---@field lastLineMaxH integer
+---@field lastLineW integer
 local UI = prism.Object:extend "UI"
 
 ---Creates a new UI instance.
@@ -53,6 +55,9 @@ function UI:__new(style)
    self.cursorX        = 0
    self.cursorY        = 0
    self.lineMaxH       = 1
+   self.lastLineMaxH = 0
+   self.lineW          = 0
+   self.lastLineW = 0
    self.clipStack      = {}
    self.containers     = {}
    self.containerStack = {}
@@ -241,7 +246,6 @@ function UI:_emit(cmd)
    cmd.clip = self:getClip()
    self:_trackContentFromCmd(cmd)
    if cmd.content then
-      print(cmd.text, cmd.content)
       local x, y = self:getScroll()
       cmd.x = cmd.x - x
       cmd.y = cmd.y - y
@@ -442,16 +446,31 @@ end
 ---@param w integer
 ---@param h integer
 function UI:_advanceCursor(w, h)
+   local style = self:getStyle()
+
    local scope = self:_currentScope()
-   scope:advanceCursor(self, w, h)
+   local lineStartX = scope.innerX
+
+   self.lineMaxH = math.max(self.lineMaxH, h)
+
+   local right = (self.cursorX - lineStartX) + w
+   self.lineW = math.max(self.lineW, right)
+
+   self.cursorX = self.cursorX + w
+
+   if style.container.layoutDir == "vertical" then
+      self:newLine()
+   end
 end
+
 
 ---Continues placing widgets on the same line.
 ---@param spacing integer|nil
 function UI:sameLine(spacing)
    local style = self:getStyle()
-   self.cursorY = self.cursorY - (self.lineMaxH + style.layout.spacingY)
-   self.cursorX = self.cursorX + (spacing or style.layout.spacingX)
+   self.cursorY = self.cursorY - (self.lastLineMaxH + style.layout.spacingY)
+   print(self.lastLineW)
+   self.cursorX = self.cursorX + (spacing or style.layout.spacingX) + self.lastLineW
 end
 
 ---Moves to the next layout line.
@@ -460,7 +479,10 @@ function UI:newLine(h)
    local style = self:getStyle()
    self.cursorX = self:_currentScope() and self:_currentScope().innerX
    self.cursorY = self.cursorY + (h or self.lineMaxH) + style.layout.spacingY
+   self.lastLineMaxH = self.lineMaxH
    self.lineMaxH = 1
+   self.lastLineW = self.lineW
+   self.lineW = 0
 end
 
 ---Computes the rectangle for the next layout item.
@@ -605,6 +627,7 @@ function UI:pushContainer(container)
       cursorX   = self.cursorX,
       cursorY   = self.cursorY,
       lineMaxH  = self.lineMaxH,
+      lineW     = self.lineW
    }
    table.insert(self.containerStack, saved)
    container:pushClip(self)
@@ -621,6 +644,7 @@ function UI:popContainer()
    self.cursorX  = saved.cursorX
    self.cursorY  = saved.cursorY
    self.lineMaxH = saved.lineMaxH
+   self.lineW    = saved.lineW
    self:_advanceCursor(container.w, container.h)
 end
 

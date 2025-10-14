@@ -179,7 +179,11 @@ function Editor:ui()
    UI:beginFrame(self.display)
       self:placeableSelection()
       UI:beginWindow("Actor", 1, 1, 30, 20)
-
+         UI:button("Hello")
+         --UI:sameLine()
+         UI:button("World")
+         UI:sameLine()
+         UI:button("Hola")
          -- Health component
          if UI:beginCollapsibleCategory("Health") then
             local numMaxHP = tonumber(maxHP) or 0

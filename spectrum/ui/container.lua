@@ -56,23 +56,6 @@ function UIContainer:__new(w, h, opts)
    self.innerX, self.innerY             = 0, 0
 end
 
----Advances the cursor position in the layout according to the container direction.
----@param ui UI
----@param w integer|nil
----@param h integer|nil
-function UIContainer:advanceCursor(ui, w, h)
-   local style = ui:getStyle()
-   w = w or style.layout.itemW
-   h = h or style.layout.itemH
-   if style.container.layoutDir == "vertical" then
-      ui.cursorY  = ui.cursorY + h + style.layout.spacingY
-      ui.lineMaxH = 1
-      return
-   end
-   ui.cursorX  = ui.cursorX + w + style.layout.spacingX
-   ui.lineMaxH = math.max(ui.lineMaxH or 1, h)
-end
-
 ---Sets the container size while enforcing min and max constraints.
 ---@param w integer|nil
 ---@param h integer|nil
@@ -274,7 +257,6 @@ function UIContainer:paint(ui)
 
    -- Container background
    if style.container.hasBg then
-      print(self.innerX, self.innerY)
       ui:_bgRect(self.innerX, self.innerY, self.innerW, self.innerH, style.container.bg, content)
    end
 
