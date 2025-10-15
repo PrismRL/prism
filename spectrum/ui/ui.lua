@@ -10,6 +10,9 @@ local IO = spectrum.require "ui/io"
 --- @type Style
 local DEFAULTSTYLE = spectrum.require "ui/style"
 
+--- @type StyleProxy
+local StyleProxy = spectrum.require "ui/styleproxy"
+
 ---Holds cursor position and active container during layout.
 ---@class ContainerInfo
 ---@field cursorX integer
@@ -47,27 +50,33 @@ local UI = prism.Object:extend "UI"
 function UI:__new(style)
    self.baseStyle      = style or DEFAULTSTYLE
    self.styleStack     = {}
+   self.styleProxy = StyleProxy.new(self)
+
    self.frame          = 0
    self.display        = nil
    self.io             = IO()
    self.windows        = {}
    self.curWindow      = nil
+
    self.cursorX        = 0
    self.cursorY        = 0
    self.lineMaxH       = 1
    self.lastLineMaxH = 0
    self.lineW          = 0
    self.lastLineW = 0
+
    self.clipStack      = {}
    self.containers     = {}
    self.containerStack = {}
    self.idStack        = {}
+   self._collapsible   = {}
+
    self.hot            = nil
    self.active         = nil
    self.focus          = nil
+
    self.drawList       = {}
    self.orderCounter   = 0
-   self._collapsible   = {}
    self.cursor         = nil
 end
 
@@ -79,8 +88,7 @@ end
 ---Returns the current active style (top override or base style).
 ---@return Style
 function UI:getStyle()
-   local top = self.styleStack[#self.styleStack]
-   return top or self.baseStyle
+   return self.styleProxy
 end
 
 ---Replaces the base style without clearing overrides.
@@ -89,25 +97,10 @@ function UI:setBaseStyle(style)
    self.baseStyle = style or DEFAULTSTYLE
 end
 
-local function meta(parent, t)
-   for k, v in pairs(t) do
-      if type(v) == "table" then
-         setmetatable(v, { __index = parent[k] })
-         meta(parent[k], v)
-      end
-   end
-end
-
 ---Pushes a shallow style override table onto the stack.
 ---@param overrides table
 function UI:pushStyle(overrides)
-   local parent = self:getStyle()
-   local frame  = overrides or {}
-
-   meta(parent, frame)
-
-   setmetatable(frame, { __index = parent })
-   table.insert(self.styleStack, frame)
+   table.insert(self.styleStack, overrides or {})
 end
 
 ---Pops the last pushed style override.
