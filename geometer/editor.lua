@@ -1,15 +1,15 @@
---- @type Controls
-local controls = geometer.require "controls"
 local PenTool = geometer.require "tools.pen"
+local style = geometer.require "style"
 
 --- @type UI
-local UI = spectrum.UI()
+local UI = spectrum.UI(style.default)
 
 ---@alias Placeable { entity: Entity, factory: fun(): Entity }
 
 ---@class Editor : Object
 ---@field attachable SpectrumAttachable
 ---@field display Display
+---@field levelDisplay Display
 ---@field camera Camera
 ---@field active boolean
 ---@field undoStack Modification[]
@@ -23,9 +23,15 @@ local UI = spectrum.UI()
 ---@field keybindsEnabled boolean
 local Editor = prism.Object:extend("Geometer")
 
+love.graphics.setDefaultFilter("nearest", "nearest")
+local spriteAtlas =
+   spectrum.SpriteAtlas.fromASCIIGrid(geometer.assetPath .. "/assets/tileset.png", 8, 8)
+
 function Editor:__new(attachable, display, fileEnabled)
    self.attachable = attachable
-   self.display = display
+   self.levelDisplay = display
+   self.display = spectrum.Display(display.width, display.height, spriteAtlas, prism.Vector2(8, 8))
+   self.display.spriteAtlas = spriteAtlas
    self.active = false
    for _, v in pairs(prism.cells) do
       self.placeable = v()
@@ -66,11 +72,18 @@ function Editor:setAttachable(attachable)
    self.attachable = attachable
 end
 
-function Editor:update(dt)
+--- @param controls Controls
+function Editor:update(dt, controls)
    self.tool:update(dt, self)
-   local cx, cy = self.display:getCellUnderMouseRaw()
-   UI:feedMouse(cx, cy, spectrum.Input.mouse["1"].down, spectrum.Input.mouse["1"].pressed,
-   spectrum.Input.mouse["1"].released)
+   local cx, cy = self.display:getCellUnderMouseRaw(controls.get:mouse())
+   self.levelDisplay:setCamera(cx, cy)
+   UI:feedMouse(
+      cx,
+      cy,
+      spectrum.Input.mouse["1"].down,
+      spectrum.Input.mouse["1"].pressed,
+      spectrum.Input.mouse["1"].released
+   )
 end
 
 --- @param modification Modification
@@ -97,11 +110,15 @@ end
 
 function Editor:draw()
    self.display:clear()
-   self.display:putLevel(self.attachable)
+   self.levelDisplay:clear()
+
+   self.levelDisplay:putLevel(self.attachable)
    self:ui()
+
+   self.levelDisplay:draw()
+   love.graphics.scale(2)
    self.display:draw()
 end
-
 
 local totalPlaceables = {}
 local totalPlaceablesMap = {}
@@ -157,64 +174,46 @@ function Editor:placeableSelection()
       moveable = false,
       title = false,
    })
-      searchText = UI:textInput(searchText, w - 3)
-      filter(searchText)
-      UI:newLine(1)
+   searchText = UI:textInput(searchText, w - 3)
+   filter(searchText)
+   UI:newLine(1)
 
-      selection, yes = UI:list("placeables", placeables, selection, w - 3, dh - 1)
+   selection, yes = UI:list("placeables", placeables, selection, w - 3, dh - 1)
 
-      if yes and placeablesMap[selection] then
-         self.placeable = {factory = placeablesMap[selection], entity = placeablesMap[selection]()}
-      end
+   if yes and placeablesMap[selection] then
+      self.placeable = { factory = placeablesMap[selection], entity = placeablesMap[selection]() }
+   end
    UI:endWindow()
 end
 
-local maxHP = 100
-local hp = 75
-local damage = 5
-local speed = 3
-local range = 1.5
-
 function Editor:ui()
+   -- stylua: ignore start
    UI:beginFrame(self.display)
-      self:placeableSelection()
-      UI:beginWindow("Actor", 1, 1, 30, 20)
-         UI:button("Hello")
-         --UI:sameLine()
-         UI:button("World")
+      UI:pushStyle(style.mainPanel)
+      UI:beginWindow(
+         "",
+         1,
+         self.display.height - 2,
+         self.display.width - 15,
+         3,
+         { moveable = false, title = false, resizable = false }
+      )
+         UI:pushStyle(style.playButton)
+         if UI:button(string.char(26), 3, 1) then self.active = false end
+         UI:popStyle()
          UI:sameLine()
-         UI:button("Hola")
-         -- Health component
-         if UI:beginCollapsibleCategory("Health") then
-            local numMaxHP = tonumber(maxHP) or 0
-            hp, _ = UI:slider("hp", hp, 0, numMaxHP, 10)
-
-            UI:endCollapsibleCategory()
-         end
-
-         -- Attacker component
-         if UI:beginCollapsibleCategory("Attacker") then
-            damage, _ = UI:slider("damage", damage, 1, 10, 10)
-            UI:endCollapsibleCategory()
-         end
-
-         -- Movement component
-         if UI:beginCollapsibleCategory("Movement") then
-            speed, _ = UI:slider("speed", speed, 0, 10, 10)
-            range, _ = UI:slider("range", range, 0, 5, 10)
-
-            UI:endCollapsibleCategory()
-         end
-      UI:endWindow()
+         UI:button("B", 3, 1)
+         UI:sameLine()
+         UI:button("C", 3, 1)
+         UI:endWindow()
+      UI:popStyle()
    UI:endFrame()
+   -- stylua: ignore end
 end
 
+function Editor:toolbar() end
 
-function Editor:toolbar()
-end
-
-function Editor:mousereleased(x, y, button)
-end
+function Editor:mousereleased(x, y, button) end
 
 function Editor:mousepressed(x, y, button)
    local x, y = self.display:getCellUnderMouse(x, y)
@@ -234,7 +233,6 @@ function Editor:textinput(text)
    UI:feedText(text)
 end
 
-function Editor:wheelmoved(dx, dy)
-end
+function Editor:wheelmoved(dx, dy) end
 
 return Editor

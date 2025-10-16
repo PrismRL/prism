@@ -23,6 +23,7 @@ function EditorState:load()
    self.camera = self.editor.display.camera:copy()
    love.keyboard.setTextInput(true)
    love.keyboard.setKeyRepeat(true)
+   controls:setTransform(love.math.newTransform(0, 0, nil, 2, 2))
 
    self.editor:startEditing()
 end
@@ -31,7 +32,7 @@ function EditorState:update(dt)
    controls:update()
    if not self.editor.active or controls.close.pressed then self.manager:pop() end
 
-   self.editor:update(dt)
+   self.editor:update(dt, controls)
 end
 
 function EditorState:draw()
