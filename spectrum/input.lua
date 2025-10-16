@@ -71,6 +71,7 @@ local modes = {
 --- @field private _data table
 --- @field private _threshold number
 --- @field private _last number
+--- @field private _transform love.Transform
 local Input = {}
 
 -- Internal state tracking
@@ -423,6 +424,24 @@ function Input.reset()
    Input._data.wheel.y = 0
 end
 
+--- Sets the transform to be used by the mash module.
+--- The transform must be a valid LÖVE Transform object or nil.
+--- @param transform? love.Transform The transform to set, or nil to unset.
+function Input.setTransform(transform)
+   assert(
+      not transform or (transform and transform.inverseTransformPoint),
+      "Transform must be a valid LÖVE Transform object or nil"
+   )
+
+   Input._transform = transform
+end
+
+--- Returns the current transform used by the mash module.
+--- @return love.Transform? -- The current transform, or nil if none is set.
+function Input.getTransform()
+   return Input._transform
+end
+
 --- Sets the deadzone threshold for analog inputs.
 --- @param threshold number The new threshold value (0-1), default is 0.5.
 function Input.setThreshold(threshold)
@@ -450,13 +469,21 @@ local control_map = {
 local get_mt = {}
 get_mt.__index = get_mt
 
---- Gets the current mouse position, optionally transformed.
---- @param transform? love.Transform Optional transform to apply (overrides instance transform).
---- @return number x The mouse x coordinate.
---- @return number y The mouse y coordinate.
+--- Gets the current mouse position, optionally transformed
+--- @param transform (love.Transform|nil) Optional transform to apply (overrides instance transform)
+--- @return number x The mouse x coordinate
+--- @return number y The mouse y coordinate
 function get_mt:mouse(transform)
    local x, y = Input._data.mouse.x or 0, Input._data.mouse.y or 0
    transform = transform or self._parent._transform
+
+   if Input._transform then
+      if transform and transform ~= Input._transform then
+         transform = Input._transform:clone():apply(transform)
+      else
+         transform = Input._transform
+      end
+   end
 
    if transform and transform.inverseTransformPoint then
       return transform:inverseTransformPoint(x, y)
