@@ -22,6 +22,7 @@ local StyleProxy = spectrum.require "ui/styleproxy"
 ---Represents the main immediate-mode UI system for Spectrum.
 ---@class UI : Object
 ---@field baseStyle Style
+---@field styleProxy StyleProxy
 ---@field frame integer
 ---@field display Display
 ---@field io IO
@@ -86,7 +87,7 @@ function UI:setMouseCursor(str)
 end
 
 ---Returns the current active style (top override or base style).
----@return Style
+---@return StyleProxy
 function UI:getStyle()
    return self.styleProxy
 end
