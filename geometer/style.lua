@@ -151,7 +151,7 @@ local mainPanel = {
 }
 
 local playButton = {
-   button = { bg = palette[4] },
+   button = { bg = palette[13] },
 }
 
 return { default = default, mainPanel = mainPanel, playButton = playButton }
