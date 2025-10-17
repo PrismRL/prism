@@ -148,12 +148,10 @@ function Display:draw()
       end
    end
 
-   love.graphics.setColor(prism.Color4.WHITE:decompose())
+   love.graphics.setColor(1, 1, 1, 1)
    for _, batch in pairs(self.batches) do
       love.graphics.draw(batch)
    end
-
-   love.graphics.setColor(1, 1, 1, 1)
 end
 
 --- Sets or clears the clip rectangle for subsequent drawing.
