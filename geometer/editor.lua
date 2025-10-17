@@ -186,6 +186,7 @@ function Editor:placeableSelection()
    UI:endWindow()
 end
 
+local pressed
 function Editor:ui()
    -- stylua: ignore start
    UI:beginFrame(self.display)
@@ -202,9 +203,9 @@ function Editor:ui()
          if UI:button(string.char(26), 3, 1) then self.active = false end
          UI:popStyle()
          UI:sameLine()
-         UI:button("B", 3, 1)
+         if UI:button("B", 3, 1, pressed == "B") then pressed = "B" end
          UI:sameLine()
-         UI:button("C", 3, 1)
+         if UI:button("C", 3, 1, pressed == "C") then pressed = "C" end
          UI:endWindow()
       UI:popStyle()
    UI:endFrame()

@@ -756,10 +756,11 @@ end
 ---@param text string
 ---@param w integer|nil
 ---@param h integer|nil
+---@param pressed boolean?
 ---@param opts table|nil
 ---@return boolean clicked
-function UI:button(text, w, h, opts)
-   return uibutton(self, text, w, h, opts)
+function UI:button(text, w, h, pressed, opts)
+   return uibutton(self, text, w, h, pressed, opts)
 end
 
 ---Draws a text input field.

@@ -1,9 +1,11 @@
 --- @param self UI
 --- @param text string
---- @param w integer
---- @param h integer
---- @param opts any
-local function button(self, text, w, h, opts)
+--- @param w integer|nil
+--- @param h integer|nil
+--- @param pressed boolean|nil  -- visually pressed (toggle state)
+--- @param opts { style?: Style }|nil
+--- @return boolean clicked
+local function button(self, text, w, h, pressed, opts)
    text = tostring(text or "")
 
    if opts and opts.style then
@@ -17,8 +19,9 @@ local function button(self, text, w, h, opts)
    self:pushID(("button@%d,%d:%s"):format(x, y, text))
    local id = self:makeID()
 
-   local bg = style.button.bg
+   local bg = pressed and style.button.activeBg or style.button.bg
    local clicked = false
+
    if self:_scopeAcceptsMouse() then
       local hovered = self:_mouseOver(x, y, iw, ih)
 
@@ -34,7 +37,6 @@ local function button(self, text, w, h, opts)
          if hovered then clicked = true end
          self.active = nil
       end
-
 
       if self.active == id then
          bg = style.button.activeBg
