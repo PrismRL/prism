@@ -1,15 +1,15 @@
 ---@class UIContainerOpts
----@field minW        integer|nil   # Minimum width (defaults to 1)
----@field minH        integer|nil   # Minimum height (defaults to 1)
----@field maxW        integer|nil   # Maximum width (no cap if nil)
----@field maxH        integer|nil   # Maximum height (no cap if nil)
+---@field minW        integer?   # Minimum width (defaults to 1)
+---@field minH        integer?   # Minimum height (defaults to 1)
+---@field maxW        integer?   # Maximum width (no cap if nil)
+---@field maxH        integer?   # Maximum height (no cap if nil)
 ---@field autoSize    boolean?
----@field autoSizeW   boolean
----@field autoSizeH   boolean
----@field expand      boolean
----@field expandW     boolean
----@field expandH     boolean
----@field style       Style|nil     # Optional per-container style reference
+---@field autoSizeW   boolean?
+---@field autoSizeH   boolean?
+---@field expand      boolean?
+---@field expandW     boolean?
+---@field expandH     boolean?
+---@field style       Style?     # Optional per-container style reference
 
 ---@class UIContainer : Object
 ---@field opts UIContainerOpts
