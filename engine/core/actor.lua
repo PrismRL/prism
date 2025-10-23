@@ -160,4 +160,15 @@ function Actor:getRangeVec(vector, type)
    return point1:getRange(point2, type)
 end
 
+function Actor:clone()
+   local clone = Actor()
+
+   for _, comp in pairs(self.components) do
+      --- @cast comp Component
+      clone:give(comp:clone())
+   end
+
+   return clone
+end
+
 return Actor

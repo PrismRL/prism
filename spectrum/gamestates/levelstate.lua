@@ -71,7 +71,7 @@ function LevelState:handleMessage(message)
       self.decision = message
    elseif prism.messages.DebugMessage:is(message) then
       self.manager:push(self.geometer)
-   elseif prism.messages.Animation:is(message) then
+   elseif prism.messages.AnimationMessage:is(message) then
       --- @cast message AnimationMessage
       self.display:yieldAnimation(message)
    end

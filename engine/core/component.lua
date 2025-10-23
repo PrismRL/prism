@@ -35,4 +35,24 @@ function Component:getBase()
    return proto
 end
 
+-- Fields that should not be cloned (transient/runtime-only)
+local TRANSIENT_FIELDS = {
+   owner = true,
+}
+
+--- Creates a shallow copy of this component. If your component needs a deep
+--- copy or other considerations make sure to override this method on that component!
+--- @return Component clone A new component instance with copied fields.
+function Component:clone()
+   local copy = {}
+
+   for k, v in pairs(self) do
+      if not TRANSIENT_FIELDS[k] then
+         copy[k] = v
+      end
+   end
+
+   return setmetatable(copy, getmetatable(self))
+end
+
 return Component

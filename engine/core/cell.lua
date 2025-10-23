@@ -29,4 +29,15 @@ function Cell:getCollisionMask()
    return self:expect(prism.components.Collider):getMask()
 end
 
+function Cell:clone()
+   local clone = Cell()
+
+   for _, comp in self.components do
+      --- @cast comp Component
+      clone:give(comp:clone())
+   end
+
+   return clone
+end
+
 return Cell
