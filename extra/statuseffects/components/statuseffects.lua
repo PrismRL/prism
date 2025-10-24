@@ -86,8 +86,9 @@ function StatusEffects:getInstance(handle)
    return self.instances:get(handle)
 end
 
+local ignore = { owner = true }
 function StatusEffects:clone()
-   return self:deepcopy()
+   return self:deepcopy(ignore)
 end
 
 local dummy = {}

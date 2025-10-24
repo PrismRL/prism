@@ -324,8 +324,9 @@ end
 --- Performs a deep copy of this object.
 --- @generic T
 --- @param self T
+--- @param ignore table<string, boolean>?
 --- @return T copy
-function Object:deepcopy()
+function Object:deepcopy(ignore)
    local seen = {}
 
    local function _copy(v)
@@ -345,7 +346,9 @@ function Object:deepcopy()
 
    local out = {}
    for k, v in pairs(self) do
-      out[_copy(k)] = _copy(v)
+      if not ignore[k] then
+         out[_copy(k)] = _copy(v)
+      end
    end
 
    return setmetatable(out, getmetatable(self))
