@@ -86,6 +86,10 @@ function StatusEffects:getInstance(handle)
    return self.instances:get(handle)
 end
 
+function StatusEffects:clone()
+   return self:deepcopy()
+end
+
 local dummy = {}
 
 --- @generic T

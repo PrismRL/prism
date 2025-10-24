@@ -321,6 +321,36 @@ function Object.prettyprint(obj, indent, visited)
    return result
 end
 
+--- Performs a deep copy of this object.
+--- @generic T
+--- @param self T
+--- @return T copy
+function Object:deepcopy()
+   local seen = {}
+
+   local function _copy(v)
+      if type(v) ~= "table" then
+         return v
+      end
+      if seen[v] then
+         return seen[v]
+      end
+      local t = {}
+      seen[v] = t
+      for k, val in pairs(v) do
+         t[_copy(k)] = _copy(val)
+      end
+      return setmetatable(t, getmetatable(v))
+   end
+
+   local out = {}
+   for k, v in pairs(self) do
+      out[_copy(k)] = _copy(v)
+   end
+
+   return setmetatable(out, getmetatable(self))
+end
+
 --- @type Object
 local ret = Object:__call()
 return ret

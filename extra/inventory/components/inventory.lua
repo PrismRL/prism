@@ -2,6 +2,7 @@
 
 --- A configurable inventory.
 --- @class Inventory : Component, IQueryable
+--- @field inventory ActorStorage
 --- @field totalCount integer The current item/stack count in the inventory.
 --- @field totalWeight number The current weight in the inventory.
 --- @field totalVolume number The current volume in the inventory.
@@ -174,6 +175,19 @@ function Inventory:updateLimits()
       self.totalVolume = self.totalVolume + item:getVolume()
       self.totalWeight = self.totalWeight + item:getWeight()
    end
+end
+
+function Inventory:clone()
+   local clone = prism.Component.clone(self)
+   --- @cast clone Inventory
+   
+   clone.inventory = prism.ActorStorage()
+
+   for actor in self:query():iter() do
+      clone:addItem(actor:clone())
+   end
+
+   return clone
 end
 
 return Inventory

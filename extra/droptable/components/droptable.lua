@@ -62,7 +62,7 @@ function DropTable:quantifyItem(quantity, item)
          prism.logger.warn("DropTable entry had specific actor and quantity >1 dropping 1 instead!")
       end
 
-      return { item }
+      return { item:clone() }
    end
 
    local dummy = prism.actors[item]()
@@ -119,6 +119,11 @@ function DropTable:getDrops(rng)
    end
 
    return drops
+end
+
+--- @return DropTable clone
+function DropTable:clone()
+   return self:deepcopy()
 end
 
 return DropTable

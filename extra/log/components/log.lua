@@ -64,4 +64,8 @@ function Log.addMessageSensed(level, action, message, ...)
    end
 end
 
+function Log:clone()
+   return Log(self.messageLimit)
+end
+
 return Log
