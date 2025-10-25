@@ -21,7 +21,7 @@ function RectTool:mouseclicked(editor, attachable, x, y)
 end
 
 function RectTool:update(dt, editor)
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    if not editor.attachable:inBounds(x, y) then return end
 
    self.second = prism.Vector2(x, y)

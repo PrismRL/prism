@@ -38,7 +38,7 @@ end
 --- @param dt number
 ---@param editor Editor
 function Line:update(dt, editor)
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    if not editor.attachable:inBounds(x, y) then return end
 
    self.to = prism.Vector2(x, y)

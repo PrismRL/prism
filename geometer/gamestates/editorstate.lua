@@ -20,7 +20,7 @@ end
 function EditorState:load()
    self.textInput = love.keyboard.hasTextInput()
    self.keyRepeat = love.keyboard.hasKeyRepeat()
-   self.camera = self.editor.display.camera:copy()
+   self.camera = self.editor.levelDisplay.camera:copy()
    love.keyboard.setTextInput(true)
    love.keyboard.setKeyRepeat(true)
    controls:setTransform(love.math.newTransform(0, 0, nil, 2, 2))
@@ -66,7 +66,7 @@ end
 function EditorState:unload()
    love.keyboard.setKeyRepeat(self.keyRepeat)
    love.keyboard.setTextInput(self.textInput)
-   self.editor.display:setCamera(self.camera:decompose())
+   self.editor.levelDisplay:setCamera(self.camera:decompose())
 end
 
 return EditorState

@@ -45,7 +45,7 @@ end
 function Fill:update(dt, editor)
    if not self.locations then return end
 
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    if not editor.attachable:inBounds(x, y) then return end
 
    self:bucket(editor.attachable, x, y)

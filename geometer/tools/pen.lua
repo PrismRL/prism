@@ -19,7 +19,7 @@ end
 function Pen:update(dt, editor)
    if not self.locations then return end
 
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    if not editor.attachable:inBounds(x, y) then return end
 
    self.locations:set(x, y, true)
@@ -28,7 +28,7 @@ end
 ---@param editor Editor
 ---@param display Display
 function Pen:draw(editor, display)
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    local drawable = self:getDrawable(editor.placeable)
 
    self:drawCell(display, drawable, x, y)

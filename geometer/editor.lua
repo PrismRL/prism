@@ -8,8 +8,9 @@ local UI = spectrum.UI(style.default)
 
 ---@class Editor : Object
 ---@field attachable SpectrumAttachable
----@field display Display
 ---@field levelDisplay Display
+---@field pickerOpen boolean
+---@field display Display
 ---@field camera Camera
 ---@field active boolean
 ---@field undoStack Modification[]
@@ -31,10 +32,10 @@ function Editor:__new(attachable, display, fileEnabled)
    self.attachable = attachable
    self.levelDisplay = display
    self.display = spectrum.Display(display.width, display.height, spriteAtlas, prism.Vector2(8, 8))
-   self.display.spriteAtlas = spriteAtlas
+   -- self.levelDisplay.spriteAtlas = spriteAtlas
    self.active = false
    for _, v in pairs(prism.cells) do
-      self.placeable = v()
+      self.placeable = { entity = v(), factory = v }
       break
    end
    self.tool = PenTool()
@@ -76,7 +77,19 @@ end
 function Editor:update(dt, controls)
    self.tool:update(dt, self)
    local cx, cy = self.display:getCellUnderMouseRaw(controls.get:mouse())
-   self.levelDisplay:setCamera(cx, cy)
+   local levelX, levelY = self.display:getCellUnderMouseRaw()
+
+   if spectrum.Input.mouse[1].pressed then
+      self.tool:mouseclicked(self, self.attachable, levelX, levelY)
+   end
+
+   if spectrum.Input.mouse[1].released then
+      self.tool:mousereleased(self, self.attachable, levelX, levelY)
+   end
+
+   self.tool:update(dt, self)
+
+   -- self.levelDisplay:setCamera(cx, cy)
    UI:feedMouse(
       cx,
       cy,
@@ -113,6 +126,7 @@ function Editor:draw()
    self.levelDisplay:clear()
 
    self.levelDisplay:putLevel(self.attachable)
+   self.tool:draw(self, self.levelDisplay)
    self:ui()
 
    self.levelDisplay:draw()
@@ -200,14 +214,15 @@ function Editor:ui()
          { moveable = false, title = false, resizable = false }
       )
          UI:pushStyle(style.playButton)
-         if UI:button(string.char(26), 3, 1) then self.active = false end
+         if UI:button(string.char(26), 3, 1, pressed == ) then self.active = false end
          UI:popStyle()
          UI:sameLine()
          if UI:button("B", 3, 1, pressed == "B") then pressed = "B" end
          UI:sameLine()
-         if UI:button("C", 3, 1, pressed == "C") then pressed = "C" end
-         UI:endWindow()
+         UI:button("C", 3, 1)
+      UI:endWindow()
       UI:popStyle()
+      self:placeableSelection()
    UI:endFrame()
    -- stylua: ignore end
 end
@@ -218,11 +233,10 @@ function Editor:mousereleased(x, y, button) end
 
 function Editor:mousepressed(x, y, button)
    local x, y = self.display:getCellUnderMouse(x, y)
-   --self.tool:mouseclicked(self, self.attachable, x, y)
 end
 
 function Editor:mousemoved(x, y, dx, dy, istouch)
-   local x, y = self.display:getCellUnderMouse(x, y)
+   local x, y = self.levelDisplay:getCellUnderMouse(x, y)
    --self.tool:mousereleased(self, self.attachable, x, y)
 end
 

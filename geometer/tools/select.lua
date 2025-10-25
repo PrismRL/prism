@@ -47,7 +47,7 @@ function Select:mouseclicked(editor, attachable, x, y)
 end
 
 function Select:update(dt, editor)
-   local x, y = editor.display:getCellUnderMouse()
+   local x, y = editor.levelDisplay:getCellUnderMouse()
    if not x or not y then return end
    if not editor.attachable:inBounds(x, y) then return end
 
