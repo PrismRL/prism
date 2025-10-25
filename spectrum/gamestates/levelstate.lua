@@ -58,7 +58,7 @@ end
 --- @return boolean success True if the action was successfully set; false otherwise.
 --- @return string? error An error message if the action could not be set.
 function LevelState:setAction(action)
-   if self.decision then self.decision:setAction(action, self.level) end
+   if self.decision then return self.decision:setAction(action, self.level) end
    return false, "No decision to set action for."
 end
 

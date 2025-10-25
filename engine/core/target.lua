@@ -188,7 +188,7 @@ function Target:sensed()
 
       if prism.Actor:is(target) then
          --- @cast target Actor
-         return owner:hasRelationship(prism.relationships.Senses, target)
+         return owner:hasRelation(prism.relations.SensesRelation, target)
       end
 
       if prism.Vector2:is(target) then
@@ -251,15 +251,15 @@ function Target:unique()
    return self
 end
 
---- Requires that the target is related to the action owner via a specific relationship type.
---- @param relationshipType Relationship
-function Target:related(relationshipType)
-   assert(relationshipType, "Missing relationship type")
+--- Requires that the target is related to the action owner via a specific relation type.
+--- @param relationType Relation
+function Target:related(relationType)
+   assert(relationType, "Missing relation type")
 
    --- @param owner Actor
    self.validators["related"] = function(_, owner, target)
       if not prism.Entity:is(target) then return false end
-      return owner:hasRelationship(relationshipType, target)
+      return owner:hasRelation(relationType, target)
    end
 
    return self

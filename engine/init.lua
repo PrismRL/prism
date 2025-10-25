@@ -109,8 +109,8 @@ prism.SimpleScheduler = prism.require "core.scheduler.simple_scheduler"
 prism.Action = prism.require "core.action"
 --- @module "engine.core.component"
 prism.Component = prism.require "core.component"
---- @module "engine.core.relationship"
-prism.Relationship = prism.require "core.relationship"
+--- @module "engine.core.relation"
+prism.Relation = prism.require "core.relation"
 --- @module "engine.core.entity"
 prism.Entity = prism.require "core.entity"
 --- @module "engine.core.actor"
@@ -219,7 +219,6 @@ local function registerRegistration(registry)
          "Tried to register a " .. className .. " but got " .. tostring(object) .. "!"
       )
       local objectName = object.className
-      if object.stripName then objectName = string.gsub(object.className, registry.pattern, "") end
 
       assert(
          objectName ~= "",
@@ -277,7 +276,7 @@ function prism.registerRegistry(name, type, factory, module)
 end
 
 prism.registerRegistry("components", prism.Component)
-prism.registerRegistry("relationships", prism.Relationship)
+prism.registerRegistry("relations", prism.Relation)
 prism.registerRegistry("targets", prism.Target, true)
 prism.registerRegistry("cells", prism.Cell, true)
 prism.registerRegistry("actions", prism.Action)
@@ -302,10 +301,6 @@ function prism.registerComponent(component, fields, skipDefinitions)
    --- @cast component Component
 
    local name = component.className
-   --- @diagnostic disable-next-line
-   if component.stripName then
-      name = string.gsub(component.className, prism.registries[1].pattern, "")
-   end
 
    assert(
       prism.components[name] == nil,
@@ -336,7 +331,7 @@ function prism.registerComponent(component, fields, skipDefinitions)
 end
 
 --- @module "engine.core.systems.senses"
-prism.systems.Senses = prism.require "core.systems.senses"
+prism.systems.SensesSystem = prism.require "core.systems.senses"
 
 --- @module "engine.core.components.collider"
 prism.components.Collider = prism.require "core.components.collider"
@@ -371,11 +366,11 @@ prism.messages.ActionMessage = prism.require "core.messages.actionmessage"
 --- @module "engine.core.messages.debugmessage"
 prism.messages.DebugMessage = prism.require "core.messages.debugmessage"
 
---- @module "engine.core.relationships.senses"
-prism.relationships.Senses = prism.require "core.relationships.senses"
+--- @module "engine.core.relations.senses"
+prism.relations.SensesRelation = prism.require "core.relations.senses"
 
---- @module "engine.core.relationships.sensedby"
-prism.relationships.SensedBy = prism.require "core.relationships.sensedby"
+--- @module "engine.core.relations.sensedby"
+prism.relations.SensedByRelation = prism.require "core.relations.sensedby"
 
 --- @param path string The path to load into the registry from.
 --- @param registry Registry

@@ -24,8 +24,8 @@ prism.systems = {}
 --- The decision registry.
 prism.decisions = {}
 
---- THe relationships registry
-prism.relationships = {}
+--- THe relations registry
+prism.relations = {}
 
 --- Registers a CellFactory in the cells registry.
 --- @param name string
