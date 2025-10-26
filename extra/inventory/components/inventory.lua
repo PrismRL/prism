@@ -53,7 +53,7 @@ end
 --- Gets any current actor that can stack with the stackable
 --- type specified. If multipleStacks is false it will return
 --- full stacks.
---- @param stackable ActorFactory
+--- @param stackable string
 --- @return Actor? stack
 function Inventory:getStack(stackable)
    if not stackable then return end
@@ -80,7 +80,7 @@ function Inventory:canAddItem(actor)
    local item = actor:expect(prism.components.Item)
    local stack = self:getStack(item.stackable)
 
-   if item.stackable and stack then
+   if stack then
       local stackItem = stack:expect(prism.components.Item)
       if stackItem.stackCount + item.stackCount > stackItem.stackLimit then
          if not self.multipleStacks then return false, "Stack limit exceeded" end

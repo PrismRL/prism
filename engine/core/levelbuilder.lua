@@ -230,34 +230,74 @@ function LevelBuilder:getBounds()
    return prism.Vector2(minX, minY), prism.Vector2(maxX, maxY)
 end
 
+--- Shifts all cells and actors so the minimum bound is (0, 0).
+function LevelBuilder:normalize()
+   local min = self:getBounds()
+   local minX, minY = min:decompose()
+   if minX == 0 and minY == 0 then return end
+
+   local shifted = prism.SparseGrid()
+   for x, y, value in self:each() do
+      shifted:set(x - minX, y - minY, value)
+   end
+   self.cells = shifted.cells
+
+   for actor in self.actors:query():iter() do
+      local pos = actor:getPosition()
+      if pos then
+         actor:give(prism.components.Position(prism.Vector2(pos.x - minX, pos.y - minY)))
+      end
+   end
+end
+
+--- Shifts all cells and actors so the minimum bound is (0, 0).
+function LevelBuilder:normalize()
+   local min = self:getBounds()
+   local minX, minY = min:decompose()
+   if minX == 0 and minY == 0 then return end
+
+   local shifted = prism.SparseGrid()
+   for x, y, value in self:each() do
+      shifted:set(x - minX, y - minY, value)
+   end
+   self.cells = shifted.cells
+
+   for actor in self.actors:query():iter() do
+      local pos = actor:getPosition()
+      if pos then
+         actor:give(prism.components.Position(prism.Vector2(pos.x - minX, pos.y - minY)))
+      end
+   end
+end
+
 --- Blits the source LevelBuilder onto this LevelBuilder at the specified coordinates.
 --- @param source LevelBuilder The source LevelBuilder to copy from.
 --- @param destX number The x-coordinate of the top-left corner in the destination LevelBuilder.
 --- @param destY number The y-coordinate of the top-left corner in the destination LevelBuilder.
 --- @param maskFn fun(x: integer, y: integer, source: Cell, dest: Cell)|nil A callback function for masking. Should return true if the cell should be copied, false otherwise.
 function LevelBuilder:blit(source, destX, destY, maskFn)
-   maskFn = maskFn or function()
-      return true
-   end
+   maskFn = maskFn or function() return true end
 
-   local min = source:getBounds()
-   local minX, minY = min:decompose()
+   local src = source:clone()
+   src:normalize()
 
-   for x, y, value in source:each() do
-      if maskFn(x, y, value, self:get(x, y)) then
-         self:set(destX + (x - minX), destY + (y - minY), source:get(x, y))
+   -- Copy cells (already cloned by source:clone)
+   for x, y, value in src:each() do
+      local mx, my = destX + x, destY + y
+      if maskFn(mx, my, value, self:get(mx, my)) then
+         self:set(mx, my, value)
       end
    end
 
-   -- Adjust actor positions
-   for actor in source.actors:query():iter() do
-      ---@diagnostic disable-next-line
-      local sourcePosition = actor:getPosition()
-      if sourcePosition then
-         local adjustedSourcePosition = sourcePosition - min
-         actor:give(prism.components.Position(adjustedSourcePosition + prism.Vector2(destX, destY)))
+   -- Copy actors (already cloned by source:clone)
+   for actor in src.actors:query():iter() do
+      local pos = actor:getPosition()
+      if pos then
+         local mx, my = destX + pos.x, destY + pos.y
+         if maskFn(mx, my, src:get(pos.x, pos.y), self:get(mx, my)) then
+            actor:give(prism.components.Position(prism.Vector2(mx, my)))
+         end
       end
-
       self.actors:addActor(actor)
    end
 end
@@ -325,5 +365,35 @@ end
 function LevelBuilder:query(...)
    return self.actors:query(...)
 end
+
+--- Creates a deep copy of this LevelBuilder, including cells and actors.
+--- @return LevelBuilder clone
+function LevelBuilder:clone()
+   --- @type LevelBuilder
+   local clone = LevelBuilder(self.initialValue)
+
+   -- Copy grid cells
+   for x, y, cell in self:each() do
+      clone:set(x, y, cell:clone())
+   end
+
+   -- Copy actors
+   for actor in self.actors:query():iter() do
+      clone.actors:addActor(actor:clone())
+   end
+
+   -- Copy other fields
+   clone.systems = {}
+   for i, system in ipairs(self.systems) do
+      clone.systems[i] = system
+   end
+   clone.scheduler = self.scheduler
+   clone.turn = self.turn
+   clone.maximumActorSize = self.maximumActorSize
+   clone.seed = self.seed
+
+   return clone
+end
+
 
 return LevelBuilder

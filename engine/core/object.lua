@@ -13,6 +13,7 @@ Object.className = "Object"
 Object._isInstance = false
 Object._serializationBlacklist = {
    className = true,
+   _isInstance = true,
 }
 
 --- Creates a new class and sets its metatable to the extended class.
@@ -143,7 +144,6 @@ function Object.serialize(object)
       rootId = nil,
    }
 
-   -- Helper function to get or assign ID for any table
    local function getObjectId(obj)
       if not objectToId[obj] then
          objectToId[obj] = nextId
@@ -152,22 +152,18 @@ function Object.serialize(object)
       return objectToId[obj]
    end
 
-   -- Helper function to determine if a value should be serialized
+   local function isSerializableObject(value)
+      return type(value) == "table" and getmetatable(value) and Object:is(value)
+   end
+
    local function shouldSerialize(obj, key, value)
       local serializable = value ~= nil and type(value) ~= "function"
       if obj.serializationBlacklist and obj.serializationBlacklist[key] then return false end
 
       if Object._serializationBlacklist[key] then return false end
-
       return serializable
    end
 
-   -- Helper function to determine if a value is a SerializableObject
-   local function isSerializableObject(value)
-      return type(value) == "table" and getmetatable(value) and Object:is(value)
-   end
-
-   -- Helper function to serialize a single value
    local function serializeValue(v)
       if prism._ISCLASS[v] then return { prototype = prism._ISCLASS[v] } end
       if type(v) == "table" then
@@ -177,7 +173,17 @@ function Object.serialize(object)
       end
    end
 
-   -- Assign ID to root object first
+   local ctx = {
+      getObjectId = getObjectId,
+      serializeValue = serializeValue,
+      isSerializableObject = isSerializableObject,
+      queue = function(v)
+         if type(v) == "table" and not visited[v] and not prism._ISCLASS[v] then
+            table.insert(stack, v)
+         end
+      end,
+   }
+
    result.rootId = getObjectId(object)
 
    while #stack > 0 do
@@ -185,19 +191,23 @@ function Object.serialize(object)
       if not visited[obj] then
          visited[obj] = true
 
+         local sourceTable = obj
+         local className
+
+         if isSerializableObject(obj) then
+            className = obj.className
+            if obj.__serialize then
+               sourceTable = obj:__serialize(ctx)
+            end
+         end
+
          local objData = {
             id = getObjectId(obj),
+            className = className,
             entries = {},
          }
 
-         if isSerializableObject(obj) then
-            objData.className = obj.className
-         else
-            objData.className = "table"
-         end
-
-         -- Process all pairs uniformly
-         for k, v in pairs(obj) do
+         for k, v in pairs(sourceTable) do
             if shouldSerialize(obj, k, v) then
                table.insert(objData.entries, {
                   key = serializeValue(k),
@@ -205,23 +215,18 @@ function Object.serialize(object)
                })
 
                if type(v) == "table" and not visited[v] and not prism._ISCLASS[v] then
-                  --print(obj.className, v.className)
                   table.insert(stack, v)
                end
-
                if type(k) == "table" and not visited[k] and not prism._ISCLASS[k] then
-                  --print(obj.className, k.className)
                   table.insert(stack, k)
                end
             end
          end
 
-         -- Ensure references is a numerically indexed array
          result.references[objData.id] = objData
       end
    end
 
-   -- Validate IDs are sequential
    for i = 1, nextId - 1 do
       assert(result.references[i], "Missing reference for ID: " .. i)
    end
@@ -234,64 +239,86 @@ function Object.deserialize(data)
    assert(data.rootId, "Deserialization data must have a rootId")
    assert(data.references, "Deserialization data must have a references table")
 
+   local refs = data.references
    local idToObject = {}
 
-   -- Forward declare all objects first
-   for id, objData in ipairs(data.references) do
-      local obj
-      if objData.className == "table" then
-         obj = {}
-      else
-         local class = prism._OBJECTREGISTRY[objData.className]
-         assert(class, "Could not find class " .. objData.className .. " in registry")
-         obj = {} -- Initially, just create a plain table
-      end
-      idToObject[id] = obj
+   -- 1) Allocate plain shells for all ids 
+   for id, _ in ipairs(refs) do
+      idToObject[id] = {}
    end
 
-   -- Helper function to resolve references
    local function resolveValue(value)
-      if type(value) == "table" and value.prototype then
-         return prism._OBJECTREGISTRY[value.prototype]
+      if type(value) ~= "table" then return value end
+      if value.prototype then
+         local proto = prism._OBJECTREGISTRY[value.prototype]
+         assert(proto, "Unknown prototype tag: " .. tostring(value.prototype))
+         return proto
       end
-      if type(value) == "table" and value.ref then
+      if value.ref then
          local resolved = idToObject[value.ref]
-         assert(resolved, "Could not resolve reference: " .. value.ref)
+         assert(resolved, "Could not resolve reference: " .. tostring(value.ref))
          return resolved
       end
       return value
    end
 
-   -- Now populate all objects with their data
-   for id, objData in pairs(data.references) do
-      id = tonumber(id)
-      local obj = idToObject[id]
-
-      for _, entry in pairs(objData.entries) do
-         local key = resolveValue(entry.key)
-         local value = resolveValue(entry.value)
-         obj[key] = value
+   -- 2) Adopt class metatables for typed objects
+   for id, objData in ipairs(refs) do
+      local className = objData.className
+      if className then
+         local class = prism._OBJECTREGISTRY[className]
+         assert(class, "Could not find class " .. tostring(className) .. " in registry")
+         Object.adopt(class, idToObject[id])
       end
    end
 
-   -- Apply metatables using adopt
-   for id, objData in pairs(data.references) do
-      id = tonumber(id)
+   -- Hook context
+   local ctx = {
+      revive = resolveValue,
+      getById = function(i) return idToObject[i] end,
+   }
+
+   -- 3) Fill fields (use __deserialize if provided; otherwise assign directly)
+   for id, objData in ipairs(refs) do
       local obj = idToObject[id]
-      if objData.className ~= "table" then
-         local class = prism._OBJECTREGISTRY[objData.className]
-         Object.adopt(class, obj)
+
+      -- Build revived view
+      local view = {}
+      for _, entry in ipairs(objData.entries or {}) do
+         local k = resolveValue(entry.key)
+         local v = resolveValue(entry.value)
+         view[k] = v
+      end
+
+      if obj.__deserialize then
+         obj:__deserialize(view, ctx)
+      else
+         for k, v in pairs(view) do
+            obj[k] = v
+         end
       end
    end
+   
 
-   for id, objData in pairs(data.references) do
-      id = tonumber(id)
-      local obj = idToObject[id]
-
+   -- 4) Post-deserialize hook (optional)
+   for _, obj in ipairs(idToObject) do
       if obj.onDeserialize then obj:onDeserialize() end
    end
 
    return idToObject[data.rootId]
+end
+
+--- @param ctx table
+function Object:__serialize(ctx)
+   return self
+end
+
+---@param view table
+---@param ctx table
+function Object:__deserialize(view, ctx)
+   for k, v in pairs(view) do
+      self[k] = v
+   end
 end
 
 --- Pretty-prints an object for debugging or visualization.
@@ -346,7 +373,7 @@ function Object:deepcopy(ignore)
 
    local out = {}
    for k, v in pairs(self) do
-      if not ignore[k] then
+      if not ignore or not ignore[k] then
          out[_copy(k)] = _copy(v)
       end
    end

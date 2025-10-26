@@ -9,6 +9,9 @@ end
 --- @module "engine.lib.json"
 prism.json = prism.require "lib.json"
 
+--- @module "engine.lib.messagepack"
+prism.messagepack = prism.require "lib.messagepack"
+
 --- @module "engine.lib.log"
 prism.logger = prism.require "lib.log"
 
@@ -186,19 +189,34 @@ local function registerFactory(registry)
    )
 
    local registryList = _G[registry.module][registry.name]
-
+   local registryStr = registry.module .. "." .. registry.name
    _G[registry.module]["register" .. className] = function(objectName, factory)
       assert(
          registryList[objectName] == nil,
          className .. " " .. objectName .. " is already registered!"
       )
-      registryList[objectName] = factory
+
+      local classStr = registryStr .. "." .. objectName
+      registryList[objectName] = function(...)
+         local o = factory(...)
+         if type(o) == "table" then o.__factory = classStr end
+         return o
+      end
 
       writeDefinitions(
          "--- @type fun(...): " .. className,
          string.format("%s.%s.%s = nil", registry.module, registry.name, objectName)
       )
    end
+end
+
+function prism.resolveFactory(path)
+   local node = _G
+   for seg in string.gmatch(path, "[^%.]+") do
+      node = node[seg]
+   end
+
+   return node
 end
 
 --- @param registry Registry

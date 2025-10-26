@@ -121,10 +121,4 @@ function DropTable:getDrops(rng)
    return drops
 end
 
-local ignore = { owner = true }
---- @return DropTable clone
-function DropTable:clone()
-   return self:deepcopy(ignore)
-end
-
 return DropTable
