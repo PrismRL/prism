@@ -390,7 +390,7 @@ local function loadRegistry(path, registry, recurse, definitions)
          local item = require(requireName)
 
          if not registry.manualRegistration then
-            prism["register" .. registry.class.className](item, true, true)
+            _G[registry.module]["register" .. registry.class.className](item, true, true)
             table.insert(definitions, '--- @module "' .. requireName .. '"')
             local objectName = item.className
             table.insert(definitions, "prism." .. registry.name .. "." .. objectName .. " = nil")
