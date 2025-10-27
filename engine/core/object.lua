@@ -3,6 +3,7 @@ prism._ISCLASS = {}
 
 --- A simple class system for Lua. This is the base class for all other classes in PRISM.
 --- @class Object
+--- @field protected super any The superclass of the object.
 --- @field private __index any
 --- @field private __call any
 --- @field className string (static) A unique name for this class. By convention this should match the annotation name you use.
@@ -28,6 +29,7 @@ function Object:extend(className, ignoreclassName)
    self.__call = self.__call or Object.__call
    o._isInstance = false
    o.className = className
+   o.super = self
 
    --print(className, not ignoreclassName, not prism._OBJECTREGISTRY[className])
    assert(
@@ -330,12 +332,8 @@ function Object:deepcopy(ignore)
    local seen = {}
 
    local function _copy(v)
-      if type(v) ~= "table" then
-         return v
-      end
-      if seen[v] then
-         return seen[v]
-      end
+      if type(v) ~= "table" then return v end
+      if seen[v] then return seen[v] end
       local t = {}
       seen[v] = t
       for k, val in pairs(v) do
@@ -346,9 +344,7 @@ function Object:deepcopy(ignore)
 
    local out = {}
    for k, v in pairs(self) do
-      if not ignore[k] then
-         out[_copy(k)] = _copy(v)
-      end
+      if not ignore[k] then out[_copy(k)] = _copy(v) end
    end
 
    return setmetatable(out, getmetatable(self))

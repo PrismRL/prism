@@ -12,7 +12,7 @@ local MapGeneratorState = geometer.EditorState:extend "MapGeneratorState"
 --- @param display Display
 --- @param onFinish? fun(builder: LevelBuilder)
 function MapGeneratorState:__new(generator, builder, display, onFinish)
-   geometer.EditorState.__new(self, builder, display)
+   self.super.__new(self, builder, display)
    self.onFinish = onFinish
    self.co = coroutine.create(generator)
 end
