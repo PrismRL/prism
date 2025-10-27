@@ -441,7 +441,7 @@ end
 --- @param layer number? The draw layer (optional).
 --- @param align "left"|"center"|"right"? The alignment of the string within the specified width.
 --- @param width integer? The width within which to align the string.
-function Display:putString(x, y, str, fg, bg, layer, align, width)
+function Display:print(x, y, str, fg, bg, layer, align, width)
    local strLen = #str
    width = width or self.width
 
@@ -565,6 +565,7 @@ function Display:pop()
 end
 
 --- Draws a hollow rectangle on the display grid using specified characters and colors.
+--- @param mode "fill"|"line" The mode to draw the rectangle in.
 --- @param x integer The starting X grid coordinate of the rectangle.
 --- @param y integer The starting Y grid coordinate of the rectangle.
 --- @param w integer The width of the rectangle.
@@ -573,30 +574,21 @@ end
 --- @param fg Color4? The foreground color.
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
-function Display:putRect(x, y, w, h, char, fg, bg, layer)
-   for dx = 0, w - 1 do
-      self:put(x + dx, y, char, fg, bg, layer)
-      self:put(x + dx, y + h - 1, char, fg, bg, layer)
-   end
-   for dy = 1, h - 2 do
-      self:put(x, y + dy, char, fg, bg, layer)
-      self:put(x + w - 1, y + dy, char, fg, bg, layer)
-   end
-end
-
---- Draws a filled rectangle on the display grid using specified characters and colors.
---- @param x integer The starting X grid coordinate of the rectangle.
---- @param y integer The starting Y grid coordinate of the rectangle.
---- @param w integer The width of the rectangle.
---- @param h integer The height of the rectangle.
---- @param char string|integer The character or index to fill the rectangle with.
---- @param fg Color4? The foreground color.
---- @param bg Color4? The background color.
---- @param layer number? The draw layer.
-function Display:putFilledRect(x, y, w, h, char, fg, bg, layer)
-   for dx = 0, w - 1 do
-      for dy = 0, h - 1 do
-         self:put(x + dx, y + dy, char, fg, bg, layer)
+function Display:rectangle(mode, x, y, w, h, char, fg, bg, layer)
+   if mode == "fill" then
+      for dx = 0, w - 1 do
+         self:put(x + dx, y, char, fg, bg, layer)
+         self:put(x + dx, y + h - 1, char, fg, bg, layer)
+      end
+      for dy = 1, h - 2 do
+         self:put(x, y + dy, char, fg, bg, layer)
+         self:put(x + w - 1, y + dy, char, fg, bg, layer)
+      end
+   else
+      for dx = 0, w - 1 do
+         for dy = 0, h - 1 do
+            self:put(x + dx, y + dy, char, fg, bg, layer)
+         end
       end
    end
 end
@@ -610,25 +602,10 @@ end
 --- @param fg Color4? The foreground color.
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
-function Display:putLine(x0, y0, x1, y1, char, fg, bg, layer)
-   local dx = math.abs(x1 - x0)
-   local dy = math.abs(y1 - y0)
-   local sx = x0 < x1 and 1 or -1
-   local sy = y0 < y1 and 1 or -1
-   local err = dx - dy
-
-   while true do
-      self:put(x0, y0, char, fg, bg, layer)
-      if x0 == x1 and y0 == y1 then break end
-      local e2 = 2 * err
-      if e2 > -dy then
-         err = err - dy
-         x0 = x0 + sx
-      end
-      if e2 < dx then
-         err = err + dx
-         y0 = y0 + sy
-      end
+function Display:line(x0, y0, x1, y1, char, fg, bg, layer)
+   local line = prism.Bresenham(x0, y0, x1, y1)
+   for _, position in ipairs(line) do
+      self:put(position[1], position[2], char, fg, bg, layer)
    end
 end
 
