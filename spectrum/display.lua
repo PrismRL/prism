@@ -1,3 +1,5 @@
+local utf8 = require "utf8"
+
 --- @class SpectrumAttachable : Object, IQueryable
 --- @field getCell fun(self, x:integer, y:integer): Cell
 --- @field setCell fun(self, x:integer, y:integer, cell: Cell|nil)
@@ -485,7 +487,13 @@ function Display:putImage(texture, quad, x, y, w, h, mode, fg, bg, layer)
             gx = gx + self.camera.x
             gy = gy + self.camera.y
          end
-         if gx >= 1 and gx <= self.width and gy >= 1 and gy <= self.height and self:_cellInClip(gx, gy) then
+         if
+            gx >= 1
+            and gx <= self.width
+            and gy >= 1
+            and gy <= self.height
+            and self:_cellInClip(gx, gy)
+         then
             -- cell's local pixel rect within the destination region
             local cellLocalX0 = cx * cSx
             local cellLocalY0 = cy * cSy
@@ -620,7 +628,7 @@ end
 --- @param align "left"|"center"|"right"? The alignment of the string within the specified width.
 --- @param width integer? The width within which to align the string.
 function Display:print(x, y, str, fg, bg, layer, align, width)
-   local strLen = #str
+   local strLen = utf8.len(str)
    width = width or self.width
 
    if align == "center" then
@@ -632,8 +640,8 @@ function Display:print(x, y, str, fg, bg, layer, align, width)
    end
 
    fg = fg or prism.Color4.WHITE
-   for i = 1, #str do
-      local char = str:sub(i, i)
+   for i, code in utf8.codes(str) do
+      local char = utf8.char(code)
       self:put(x + i - 1, y, char, fg, bg, layer)
    end
 end
