@@ -165,9 +165,9 @@ function Object.serialize(object)
    end
 
    local function serializeValue(v)
-      if prism._ISCLASS[v] then return { prototype = prism._ISCLASS[v] } end
+      if prism._ISCLASS[v] then return { p = prism._ISCLASS[v] } end
       if type(v) == "table" then
-         return { ref = getObjectId(v) }
+         return { r = getObjectId(v) }
       else
          return v
       end
@@ -203,15 +203,15 @@ function Object.serialize(object)
 
          local objData = {
             id = getObjectId(obj),
-            className = className,
-            entries = {},
+            c = className,
+            e = {},
          }
 
          for k, v in pairs(sourceTable) do
             if shouldSerialize(obj, k, v) then
-               table.insert(objData.entries, {
-                  key = serializeValue(k),
-                  value = serializeValue(v),
+               table.insert(objData.e, {
+                  k = serializeValue(k),
+                  v = serializeValue(v),
                })
 
                if type(v) == "table" and not visited[v] and not prism._ISCLASS[v] then
@@ -249,14 +249,14 @@ function Object.deserialize(data)
 
    local function resolveValue(value)
       if type(value) ~= "table" then return value end
-      if value.prototype then
-         local proto = prism._OBJECTREGISTRY[value.prototype]
-         assert(proto, "Unknown prototype tag: " .. tostring(value.prototype))
+      if value.p then
+         local proto = prism._OBJECTREGISTRY[value.p]
+         assert(proto, "Unknown prototype tag: " .. tostring(value.p))
          return proto
       end
-      if value.ref then
-         local resolved = idToObject[value.ref]
-         assert(resolved, "Could not resolve reference: " .. tostring(value.ref))
+      if value.r then
+         local resolved = idToObject[value.r]
+         assert(resolved, "Could not resolve reference: " .. tostring(value.r))
          return resolved
       end
       return value
@@ -264,7 +264,7 @@ function Object.deserialize(data)
 
    -- 2) Adopt class metatables for typed objects
    for id, objData in ipairs(refs) do
-      local className = objData.className
+      local className = objData.c
       if className then
          local class = prism._OBJECTREGISTRY[className]
          assert(class, "Could not find class " .. tostring(className) .. " in registry")
@@ -284,21 +284,21 @@ function Object.deserialize(data)
 
       -- Build revived view
       local view = {}
-      for _, entry in ipairs(objData.entries or {}) do
-         local k = resolveValue(entry.key)
-         local v = resolveValue(entry.value)
+      for _, entry in ipairs(objData.e or {}) do
+         local k = resolveValue(entry.k)
+         local v = resolveValue(entry.v)
          view[k] = v
       end
 
-      if obj.__deserialize then
-         obj:__deserialize(view, ctx)
-      else
-         for k, v in pairs(view) do
-            obj[k] = v
-         end
+      for k, v in pairs(view) do
+         obj[k] = v
       end
    end
    
+
+   for _, obj in ipairs(idToObject) do
+      if obj.__deserialize then obj:__deserialize(ctx) end
+   end
 
    -- 4) Post-deserialize hook (optional)
    for _, obj in ipairs(idToObject) do

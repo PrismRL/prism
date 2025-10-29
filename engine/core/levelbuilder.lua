@@ -1,36 +1,31 @@
 --- A builder for a level. Used to define the map, actors, systems, and other settings for levels.
 --- @class LevelBuilder : SparseGrid, IQueryable, SpectrumAttachable
 --- @field actors ActorStorage A list of actors present in the map.
---- @field initialValue CellFactory The initial value to fill the map with.
 --- @field scheduler? Scheduler
 --- @field turn? TurnHandler
 --- @field maximumActorSize integer
 --- @field seed any
 --- @field systems System[]
---- @overload fun(initialCell: CellFactory): LevelBuilder
+--- @overload fun(): LevelBuilder
 local LevelBuilder = prism.SparseGrid:extend("LevelBuilder")
 LevelBuilder._serializationBlacklist.initialValue = true
 
 --- Initialize a new LevelBuilder.
---- @param initialCell CellFactory A cell factory to define the default value of the map.
-function LevelBuilder:__new(initialCell)
+function LevelBuilder:__new()
    prism.SparseGrid.__new(self)
    self.actors = prism.ActorStorage()
-   self.initialValue = initialCell
    self.systems = {}
 end
 
 --- Creates a LevelBuilder from an LZ4-compressed JSON file.
 --- @param file string The path to the LZ4-compressed JSON file.
---- @param initialCell CellFactory A cell factory to define the default value of the map.
 --- @return LevelBuilder
-function LevelBuilder.fromLz4(file, initialCell)
+function LevelBuilder.fromLz4(file)
    local contents = love.filesystem.read(file)
    local json = love.data.decompress("string", "lz4", contents)
    local data = prism.json.decode(json)
    --- @type LevelBuilder
    local builder = prism.Object.deserialize(data)
-   builder.initialValue = initialCell
    return builder
 end
 
@@ -172,7 +167,6 @@ end
 --- @return Cell -- The cell at the specified coordinates, or the initialValue if not set.
 function LevelBuilder:get(x, y)
    local value = prism.SparseGrid.get(self, x, y)
-   if value == nil then value = self.initialValue() end
    return value
 end
 
@@ -240,27 +234,12 @@ function LevelBuilder:normalize()
    for x, y, value in self:each() do
       shifted:set(x - minX, y - minY, value)
    end
-   self.cells = shifted.cells
+   
+   self:clear()
 
-   for actor in self.actors:query():iter() do
-      local pos = actor:getPosition()
-      if pos then
-         actor:give(prism.components.Position(prism.Vector2(pos.x - minX, pos.y - minY)))
-      end
+   for x, y, value in shifted:each() do
+      self:set(x, y, value)
    end
-end
-
---- Shifts all cells and actors so the minimum bound is (0, 0).
-function LevelBuilder:normalize()
-   local min = self:getBounds()
-   local minX, minY = min:decompose()
-   if minX == 0 and minY == 0 then return end
-
-   local shifted = prism.SparseGrid()
-   for x, y, value in self:each() do
-      shifted:set(x - minX, y - minY, value)
-   end
-   self.cells = shifted.cells
 
    for actor in self.actors:query():iter() do
       local pos = actor:getPosition()
@@ -318,7 +297,7 @@ function LevelBuilder:getEntities()
    local height = maxY - minY + 1
 
    -- Create a new Map and populate it with the sparse grid data
-   local map = prism.Map(width, height, self.initialValue)
+   local map = prism.Map(width, height, self.defaultCell)
 
    for x, y, _ in self:each() do
       map:set(x - minX + 1, y - minY + 1, self:get(x, y))
@@ -334,8 +313,10 @@ function LevelBuilder:getEntities()
    return map, self.actors:getAllActors()
 end
 
+--- @param defaultCell CellFactory
 --- @return Level
-function LevelBuilder:build()
+function LevelBuilder:build(defaultCell)
+   self.defaultCell = defaultCell -- ephemeral
    return prism.Level(self)
 end
 
@@ -370,7 +351,7 @@ end
 --- @return LevelBuilder clone
 function LevelBuilder:clone()
    --- @type LevelBuilder
-   local clone = LevelBuilder(self.initialValue)
+   local clone = LevelBuilder()
 
    -- Copy grid cells
    for x, y, cell in self:each() do

@@ -42,10 +42,9 @@ function Level:__new(builder)
 end
 
 --- Initialize a builder for a Level.
---- @param initialCell CellFactory A default cell factory for the map.
 --- @return LevelBuilder
-function Level.builder(initialCell)
-   return prism.LevelBuilder(initialCell)
+function Level.builder()
+   return prism.LevelBuilder()
 end
 
 --- @param actors Actor[]

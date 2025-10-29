@@ -62,11 +62,6 @@ end
 --- @param other Component
 --- @return { set?: table<string, any>, unset?: table<string, boolean> }|nil diff
 function Component:diff(other)
-   assert(other, "Component:diff expected another component")
-   local selfName = self.className or self.__name
-   local otherName = other.className or other.__name
-   assert(selfName == otherName, ("Component:diff class mismatch: %s vs %s"):format(tostring(selfName), tostring(otherName)))
-
    local function deepEqual(a, b, seen)
       if a == b then return true end
       if type(a) ~= type(b) then return false end
@@ -87,7 +82,6 @@ function Component:diff(other)
    end
 
    local function is_ignored_key(k, v)
-      print(k, TRANSIENT_FIELDS[k])
       if TRANSIENT_FIELDS[k] then return true end
       local t = type(v)
       return t == "function" or t == "userdata"
@@ -110,7 +104,6 @@ function Component:diff(other)
    -- Fields present only on other: detect additions
    for k, ov in pairs(other) do
       if not is_ignored_key(k, ov) and self[k] == nil then
-         print(k, ov)
          set[k] = ov
       end
    end

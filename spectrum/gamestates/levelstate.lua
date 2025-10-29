@@ -14,6 +14,15 @@ local LevelState = spectrum.GameState:extend("LevelState")
 --- @param display Display The display object for rendering the level.
 function LevelState:__new(level, display)
    assert(level and display)
+
+   level = level:serialize()
+   level = prism.messagepack.pack(level)
+   level = love.data.compress("string", "lz4", level)
+   print(#level)
+   level = love.data.decompress("string", "lz4", level)
+   level = prism.messagepack.unpack(level)
+   level = prism.Object.deserialize(level)
+   
    self.level = level
    self.updateCoroutine = coroutine.create(level.run)
    self.decision = nil

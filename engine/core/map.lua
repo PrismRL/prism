@@ -16,7 +16,7 @@ Map.serializationBlacklist = {
 --- @param h number The height of the map.
 --- @param cellFactory CellFactory The initial value to fill the map with.
 function Map:__new(w, h, cellFactory)
-   prism.Grid.__new(self, w, h, cellFactory())
+   prism.Grid.__new(self, w, h, cellFactory)
 
    self.opacityCache = prism.BooleanBuffer(w, h)
    self.passableCache = prism.BitmaskBuffer(w, h)

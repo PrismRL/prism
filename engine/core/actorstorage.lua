@@ -19,6 +19,11 @@
 --- @overload fun(insertSparseMapCallback?: function, removeSparseMapCallback?: function): ActorStorage
 local ActorStorage = prism.Object:extend("ActorStorage")
 
+ActorStorage._serializationBlacklist = {
+   componentCache = true,
+   componentCounts = true,
+}
+
 --- The constructor for the 'ActorStorage' class.
 --- Initializes the list, spatial map, and component cache.
 function ActorStorage:__new(insertSparseMapCallback, removeSparseMapCallback)
@@ -169,11 +174,17 @@ function ActorStorage:merge(other)
       self:addActor(actor)
    end
 end
-
 function ActorStorage:onDeserialize()
    self:setCallbacks(self.insertSparseMapCallback, self.removeSparseMapCallback)
+
+   -- rebuild runtime-only caches
+   self.componentCache  = {}
+   self.componentCounts = {}
+
    for _, actor in pairs(self.actors) do
+      print(_, actor)
       self:insertSparseMapEntries(actor)
+      self:updateComponentCache(actor)
    end
 end
 
