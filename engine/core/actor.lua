@@ -13,7 +13,7 @@ local Actor = prism.Entity:extend("Actor")
 --- Initializes and copies the actor's fields from its prototype.
 --- @param self Actor
 function Actor:__new()
-   prism.Entity.__new(self)
+   self.super.__new(self)
 end
 
 --
@@ -25,7 +25,7 @@ end
 --- @param component Component The component to add to the entity.
 --- @return Entity actor The actor given the component for chaining.
 function Actor:give(component)
-   prism.Entity.give(self, component)
+   self.super.give(self, component)
    if self.level then
       ---@diagnostic disable-next-line
       self.level:__addComponent(self, component)
@@ -39,7 +39,7 @@ end
 --- @param component Component The component to remove from the actor.
 --- @return Entity actor The actor removing the component for chaining.
 function Actor:remove(component)
-   prism.Entity.remove(self, component)
+   self.super.remove(self, component)
    if self.level then
       ---@diagnostic disable-next-line
       self.level:__removeComponent(self, component)

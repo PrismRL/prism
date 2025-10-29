@@ -23,7 +23,7 @@ function Query:__new(storage, ...)
    self:with(...)
    self.requiredPosition = nil
 
-   self.relationshipInfo = {}
+   self.relationInfo = {}
 end
 
 --- Adds required component types to the query.
@@ -48,10 +48,10 @@ function Query:with(...)
    return self
 end
 
-function Query:relationship(owner, relationshipType)
-   table.insert(self.relationshipInfo, {
+function Query:relation(owner, relationType)
+   table.insert(self.relationInfo, {
       owner = owner,
-      prototype = relationshipType,
+      prototype = relationType,
    })
 
    return self
@@ -170,9 +170,9 @@ function Query:iter()
       table.insert(counts, 0)
    end
 
-   -- Relationships — also count=1 to prioritize
-   for _, rel in ipairs(self.relationshipInfo) do
-      local relSet = rel.owner:getRelationships(rel.prototype)
+   -- Relations — also count=1 to prioritize
+   for _, rel in ipairs(self.relationInfo) do
+      local relSet = rel.owner:getRelations(rel.prototype)
       if not relSet then
          return function()
             return nil

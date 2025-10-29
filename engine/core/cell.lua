@@ -10,7 +10,7 @@ local Cell = prism.Entity:extend("Cell")
 
 --- Constructor for the Cell class.
 function Cell:__new()
-   prism.Entity.__new(self)
+   self.super.__new(self)
 end
 
 --- Initializes a cell from a list of components.

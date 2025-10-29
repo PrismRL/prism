@@ -47,12 +47,12 @@ function SightSystem:updateSeenActors(level, actor)
    local sensesComponent = actor:get(prism.components.Senses)
    if not sensesComponent then return end
 
-   actor:removeAllRelationships(prism.relationships.Sees)
+   actor:removeAllRelations(prism.relations.SeesRelation)
 
    for x, y, _ in sensesComponent.cells:each() do
       for other, _ in pairs(level.actorStorage:getSparseMap():get(x, y)) do
-         actor:addRelationship(prism.relationships.Sees, other)
-         actor:addRelationship(prism.relationships.Senses, other)
+         actor:addRelation(prism.relations.SeesRelation, other)
+         actor:addRelation(prism.relations.SensesRelation, other)
       end
    end
 end

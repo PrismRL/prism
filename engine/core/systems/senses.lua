@@ -1,6 +1,5 @@
 --- @class SensesSystem : System
 local SensesSystem = prism.System:extend("SensesSystem")
-SensesSystem.name = "Senses"
 
 function SensesSystem:onTurn(level, actor)
    if actor:has(prism.components.PlayerController) then return end
@@ -31,7 +30,7 @@ function SensesSystem:triggerRebuild(level, actor)
    if not senses then return end
 
    senses.cells = prism.SparseGrid()
-   actor:removeAllRelationships(prism.relationships.Senses)
+   actor:removeAllRelations(prism.relations.SensesRelation)
 
    level:trigger("onSenses", level, actor)
 
@@ -62,7 +61,7 @@ function SensesSystem:triggerRebuild(level, actor)
    for rememberedActor in
       level
          :query(prism.components.Drawable, prism.components.Remembered)
-         :relationship(actor, prism.relationships.Senses)
+         :relation(actor, prism.relations.SensesRelation)
          :iter()
    do
       local x, y = rememberedActor:getPosition():decompose()

@@ -5,7 +5,7 @@
 --- @field level Level The level object representing the game environment.
 --- @field display Display The display object used for rendering.
 --- @field message ActionMessage The most recent action message.
---- @field geometer EditorState An editor state for debugging or managing geometry.
+--- @field editor EditorState An editor state for debugging or managing geometry.
 local LevelState = spectrum.GameState:extend("LevelState")
 
 --- Constructs a new LevelState.
@@ -14,21 +14,12 @@ local LevelState = spectrum.GameState:extend("LevelState")
 --- @param display Display The display object for rendering the level.
 function LevelState:__new(level, display)
    assert(level and display)
-
-   level = level:serialize()
-   level = prism.messagepack.pack(level)
-   level = love.data.compress("string", "lz4", level)
-   print(#level)
-   level = love.data.decompress("string", "lz4", level)
-   level = prism.messagepack.unpack(level)
-   level = prism.Object.deserialize(level)
-   
    self.level = level
    self.updateCoroutine = coroutine.create(level.run)
    self.decision = nil
    self.message = nil
    self.display = display
-   self.geometer = geometer.EditorState(self.level, self.display)
+   if geometer then self.editor = spectrum.gamestates.EditorState(self.level, self.display) end
    self.time = 0
 end
 
@@ -59,7 +50,7 @@ function LevelState:update(dt)
 
    if self.decision then self:updateDecision(dt, self.decision.actor, self.decision) end
 
-   if spectrum.Input.key["`"].pressed then self.manager:push(self.geometer) end
+   if spectrum.Input.key["`"].pressed and self.editor then self.manager:push(self.editor) end
 end
 
 --- Sets the action for the current decision, if one exists.
@@ -67,7 +58,7 @@ end
 --- @return boolean success True if the action was successfully set; false otherwise.
 --- @return string? error An error message if the action could not be set.
 function LevelState:setAction(action)
-   if self.decision then self.decision:setAction(action, self.level) end
+   if self.decision then return self.decision:setAction(action, self.level) end
    return false, "No decision to set action for."
 end
 
@@ -78,8 +69,8 @@ function LevelState:handleMessage(message)
    if prism.decisions.ActionDecision:is(message) then
       --- @cast message ActionDecision
       self.decision = message
-   elseif prism.messages.DebugMessage:is(message) then
-      self.manager:push(self.geometer)
+   elseif prism.messages.DebugMessage:is(message) and self.editor then
+      self.manager:push(self.editor)
    elseif prism.messages.AnimationMessage:is(message) then
       --- @cast message AnimationMessage
       self.display:yieldAnimation(message)

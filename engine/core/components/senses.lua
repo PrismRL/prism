@@ -21,7 +21,7 @@ end
 --- @param level Level The level.
 --- @param ... Component A list of components to pass to the query.
 function Senses:query(level, ...)
-   return level:query(...):relationship(self.owner, prism.relationships.Senses)
+   return level:query(...):relation(self.owner, prism.relations.SensesRelation)
 end
 
 return Senses

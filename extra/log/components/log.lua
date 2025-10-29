@@ -51,7 +51,7 @@ end
 function Log.addMessageSensed(level, action, message, ...)
    local query = level
       :query(prism.components.Senses, prism.components.Log)
-      :relationship(action.owner, prism.relationships.Senses)
+      :relation(action.owner, prism.relations.SensesRelation)
 
    for actor, _ in query:iter() do
       --- @cast actor Actor
