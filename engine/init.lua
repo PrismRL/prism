@@ -165,7 +165,7 @@ prism.BehaviorTree.Conditional = prism.require "core.behavior_tree.btconditional
 --- @type Registry[]
 prism.registries = {}
 
-local function writeDefinitions(...)
+function prism.writeDefinitions(...)
    if prism._currentDefinitions then
       for _, line in ipairs({ ... }) do
          table.insert(prism._currentDefinitions, line)
@@ -178,8 +178,8 @@ end
 local function registerFactory(registry)
    local className = registry.class.className
 
-   writeDefinitions(
-      string.format("Registers a %s in the %s registry.", className, registry.name),
+   prism.writeDefinitions(
+      string.format("--- Registers a %s in the %s registry.", className, registry.name),
       "--- @param name string A name for the factory",
       string.format("--- @param factory %sFactory", className),
       string.format("function %s.register%s(name, factory) end", registry.module, className)
@@ -194,7 +194,7 @@ local function registerFactory(registry)
       )
       registryList[objectName] = factory
 
-      writeDefinitions(
+      prism.writeDefinitions(
          "--- @type fun(...): " .. className,
          string.format("%s.%s.%s = nil", registry.module, registry.name, objectName)
       )
@@ -207,7 +207,7 @@ local function registerRegistration(registry)
    local registryList = _G[registry.module][registry.name]
    local className = registry.class.className
 
-   writeDefinitions(
+   prism.writeDefinitions(
       string.format("--- Registers a %s in the %s registry.", className, registry.name),
       "--- @param prototype " .. className .. " A " .. className .. " prototype.",
       string.format("function %s.register%s(prototype) end", registry.module, className)
@@ -233,7 +233,7 @@ local function registerRegistration(registry)
 
       if skipDefinitions then return end
 
-      writeDefinitions(
+      prism.writeDefinitions(
          "--- @class " .. object.className,
          "local " .. object.className .. " = nil",
          registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
@@ -247,6 +247,8 @@ end
 --- @param factory? boolean Whether objects in the registry are registered with a factory. Defaults to false.
 --- @param module? string The table to assign the registry to. Defaults to the prism global.
 function prism.registerRegistry(name, type, factory, module)
+   module = module or "prism"
+
    for _, registry in ipairs(prism.registries) do
       if registry.name == name then
          error("A registry with name " .. name .. " is already registered!")
@@ -264,7 +266,7 @@ function prism.registerRegistry(name, type, factory, module)
       name = name,
       class = type,
       manualRegistration = factory or false,
-      module = module or "prism",
+      module = module,
    }
    table.insert(prism.registries, registry)
 
@@ -273,104 +275,12 @@ function prism.registerRegistry(name, type, factory, module)
    else
       registerRegistration(registry)
    end
-end
 
-prism.registerRegistry("components", prism.Component)
-prism.registerRegistry("relations", prism.Relation)
-prism.registerRegistry("targets", prism.Target, true)
-prism.registerRegistry("cells", prism.Cell, true)
-prism.registerRegistry("actions", prism.Action)
-prism.registerRegistry("actors", prism.Actor, true)
-prism.registerRegistry("messages", prism.Message)
-prism.registerRegistry("decisions", prism.Decision)
-prism.registerRegistry("systems", prism.System)
-
---- @param component string|Component
---- @param fields table<string, string>
-function prism.registerComponent(component, fields, skipDefinitions)
-   if type(component) == "string" then
-      component = prism.Component:extend(component)
-      if fields then
-         function component:__new(options)
-            for k, _ in pairs(fields) do
-               self[k] = options[k]
-            end
-         end
-      end
-   end
-   --- @cast component Component
-
-   local name = component.className
-
-   assert(
-      prism.components[name] == nil,
-      string.format("A component with name %s is already registered!", name)
-   )
-
-   prism.components[name] = component
-
-   if skipDefinitions then return end
-
-   local class = "--- @class " .. component.className .. " : Component"
-   local constructor = "--- @overload fun("
-   if fields then
-      local options = component.className .. "Options"
-      writeDefinitions("--- @class " .. options)
-      constructor = constructor .. "options: " .. options
-      for field, type in pairs(fields) do
-         writeDefinitions("--- @field " .. field .. " " .. type)
-      end
-      writeDefinitions(class .. ", " .. options)
-   end
-
-   writeDefinitions(
-      constructor .. "): " .. component.className,
-      "local " .. component.className .. " = nil",
-      "prism." .. "components" .. "." .. name .. " = " .. component.className
+   prism.writeDefinitions(
+      "--- The " .. type.className .. " registry.",
+      module .. "." .. name .. " = {}"
    )
 end
-
---- @module "engine.core.systems.senses"
-prism.systems.SensesSystem = prism.require "core.systems.senses"
-
---- @module "engine.core.components.collider"
-prism.components.Collider = prism.require "core.components.collider"
-
---- @module "engine.core.components.controller"
-prism.components.Controller = prism.require "core.components.controller"
-
---- @module "engine.core.components.player_controller"
-prism.components.PlayerController = prism.require "core.components.player_controller"
-
---- @module "engine.core.components.senses"
-prism.components.Senses = prism.require "core.components.senses"
-
---- @module "engine.core.components.remembered"
-prism.components.Remembered = prism.require "core.components.remembered"
-
---- @module "engine.core.components.opaque"
-prism.components.Opaque = prism.require "core.components.opaque"
-
---- @module "engine.core.components.name"
-prism.components.Name = prism.require "core.components.name"
-
---- @module "engine.core.components.position"
-prism.components.Position = prism.require "core.components.position"
-
---- @module "engine.core.decisions.actiondecision"
-prism.decisions.ActionDecision = prism.require "core.decisions.actiondecision"
-
---- @module "engine.core.messages.actionmessage"
-prism.messages.ActionMessage = prism.require "core.messages.actionmessage"
-
---- @module "engine.core.messages.debugmessage"
-prism.messages.DebugMessage = prism.require "core.messages.debugmessage"
-
---- @module "engine.core.relations.senses"
-prism.relations.SensesRelation = prism.require "core.relations.senses"
-
---- @module "engine.core.relations.sensedby"
-prism.relations.SensedByRelation = prism.require "core.relations.sensedby"
 
 --- @param path string The path to load into the registry from.
 --- @param registry Registry
@@ -422,6 +332,9 @@ function prism.loadModule(directory)
    if love.filesystem.read(directory .. "/module.lua") then
       local filename = directory:gsub("/", ".") .. ".module"
       require(filename)
+   elseif love.filesystem.read(directory .. "/init.lua") then
+      local filename = directory:gsub("/", ".")
+      require(filename)
    end
 
    for _, registry in pairs(prism.registries) do
@@ -454,8 +367,6 @@ function prism.loadModule(directory)
    file:close()
 end
 
-function prism.hotload() end
-
 --- @alias TurnHandler fun(level: Level, actor: Actor, controller: Controller)
 
 --- This is the default core turn logic. Use :lua:func:`LevelBuilder.addTurnHandler` to override this.
@@ -481,3 +392,62 @@ function prism.advanceCoroutine(updateCoroutine, level, decision)
    local coroutineStatus = coroutine.status(updateCoroutine)
    if coroutineStatus == "suspended" then return ret end
 end
+
+-- Register registries and load core module
+
+prism.registerRegistry("components", prism.Component)
+prism.registerRegistry("relations", prism.Relation)
+prism.registerRegistry("targets", prism.Target, true)
+prism.registerRegistry("cells", prism.Cell, true)
+prism.registerRegistry("actions", prism.Action)
+prism.registerRegistry("actors", prism.Actor, true)
+prism.registerRegistry("messages", prism.Message)
+prism.registerRegistry("decisions", prism.Decision)
+prism.registerRegistry("systems", prism.System)
+
+--- @param component string|Component
+--- @param fields table<string, string>
+function prism.registerComponent(component, fields, skipDefinitions)
+   if type(component) == "string" then
+      component = prism.Component:extend(component)
+      if fields then
+         function component:__new(options)
+            for k, _ in pairs(fields) do
+               self[k] = options[k]
+            end
+         end
+      end
+   end
+   --- @cast component Component
+
+   local name = component.className
+
+   assert(
+      prism.components[name] == nil,
+      string.format("A component with name %s is already registered!", name)
+   )
+
+   prism.components[name] = component
+
+   if skipDefinitions then return end
+
+   local class = "--- @class " .. component.className .. " : Component"
+   local constructor = "--- @overload fun("
+   if fields then
+      local options = component.className .. "Options"
+      prism.writeDefinitions("--- @class " .. options)
+      constructor = constructor .. "options: " .. options
+      for field, type in pairs(fields) do
+         prism.writeDefinitions("--- @field " .. field .. " " .. type)
+      end
+      prism.writeDefinitions(class .. ", " .. options)
+   end
+
+   prism.writeDefinitions(
+      constructor .. "): " .. component.className,
+      "local " .. component.className .. " = nil",
+      "prism." .. "components" .. "." .. name .. " = " .. component.className
+   )
+end
+
+prism.loadModule(prism.path:gsub("%.", "/") .. "/core")

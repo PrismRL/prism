@@ -5,7 +5,7 @@
 --- @field level Level The level object representing the game environment.
 --- @field display Display The display object used for rendering.
 --- @field message ActionMessage The most recent action message.
---- @field geometer EditorState An editor state for debugging or managing geometry.
+--- @field editor EditorState An editor state for debugging or managing geometry.
 local LevelState = spectrum.GameState:extend("LevelState")
 
 --- Constructs a new LevelState.
@@ -19,7 +19,7 @@ function LevelState:__new(level, display)
    self.decision = nil
    self.message = nil
    self.display = display
-   self.geometer = geometer.EditorState(self.level, self.display)
+   if geometer then self.editor = spectrum.gamestates.EditorState(self.level, self.display) end
    self.time = 0
 end
 
@@ -50,7 +50,7 @@ function LevelState:update(dt)
 
    if self.decision then self:updateDecision(dt, self.decision.actor, self.decision) end
 
-   if spectrum.Input.key["`"].pressed then self.manager:push(self.geometer) end
+   if spectrum.Input.key["`"].pressed and self.editor then self.manager:push(self.editor) end
 end
 
 --- Sets the action for the current decision, if one exists.
@@ -69,8 +69,8 @@ function LevelState:handleMessage(message)
    if prism.decisions.ActionDecision:is(message) then
       --- @cast message ActionDecision
       self.decision = message
-   elseif prism.messages.DebugMessage:is(message) then
-      self.manager:push(self.geometer)
+   elseif prism.messages.DebugMessage:is(message) and self.editor then
+      self.manager:push(self.editor)
    elseif prism.messages.AnimationMessage:is(message) then
       --- @cast message AnimationMessage
       self.display:yieldAnimation(message)

@@ -1,11 +1,12 @@
 --- @type Controls
 local controls = geometer.require "controls"
+local EditorState = geometer.require "gamestates.editorstate"
 
 --- A wrapper around Geometer's EditorState meant for stepping through map generation.
 --- @class MapGeneratorState : EditorState
 --- @field onFinish? fun(builder: LevelBuilder)
 --- @overload fun(generator: function, builder: LevelBuilder, display: Display, onFinish?: fun(builder: LevelBuilder)): MapGeneratorState
-local MapGeneratorState = geometer.EditorState:extend "MapGeneratorState"
+local MapGeneratorState = EditorState:extend "MapGeneratorState"
 
 --- @param generator function
 --- @param builder LevelBuilder
