@@ -142,6 +142,9 @@ prism.Target = prism.require "core.target"
 prism.Level = prism.require "core.level"
 --- @module "engine.core.collision"
 prism.Collision = prism.require "core.collision"
+--- @module "engine.core.turnhandler"
+prism.TurnHandler = prism.require "core.turnhandler"
+
 -- Behavior Tree
 
 prism.BehaviorTree = {}
@@ -383,21 +386,6 @@ function prism.loadModule(directory)
 
    file:write(table.concat(definitions, "\n"))
    file:close()
-end
-
---- @alias TurnHandler fun(level: Level, actor: Actor, controller: Controller)
-
---- This is the default core turn logic. Use :lua:func:`LevelBuilder.addTurnHandler` to override this.
---- @param level Level
---- @param actor Actor
---- @param controller Controller
-function prism.defaultTurn(level, actor, controller)
-   local action = controller:act(level, actor)
-
-   -- we make sure we got an action back from the controller for sanity's sake
-   assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
-
-   level:perform(action)
 end
 
 --- Runs the level coroutine and returns the next message, or nil if the coroutine has halted.

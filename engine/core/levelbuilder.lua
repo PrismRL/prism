@@ -2,7 +2,7 @@
 --- @class LevelBuilder : SparseGrid, IQueryable, SpectrumAttachable
 --- @field actors ActorStorage A list of actors present in the map.
 --- @field scheduler? Scheduler
---- @field turn? TurnHandler
+--- @field turnHandler? TurnHandler
 --- @field maximumActorSize integer
 --- @field seed any
 --- @field systems System[]
@@ -67,9 +67,9 @@ function LevelBuilder:addSystems(...)
 end
 
 --- Adds a custom turn handler to the level.
---- @param turn TurnHandler A custom turn handler. Defaults to prism.defaultTurn.
-function LevelBuilder:addTurnHandler(turn)
-   self.turn = turn
+--- @param turnHandler TurnHandler A custom turn handler.
+function LevelBuilder:addTurnHandler(turnHandler)
+   self.turnHandler = turnHandler
 end
 
 --- Adds a custom scheduler to the level.
@@ -235,7 +235,7 @@ function LevelBuilder:normalize()
    for x, y, value in self:each() do
       shifted:set(x - minX, y - minY, value)
    end
-   
+
    self:clear()
 
    for x, y, value in shifted:each() do
@@ -256,7 +256,9 @@ end
 --- @param destY number The y-coordinate of the top-left corner in the destination LevelBuilder.
 --- @param maskFn fun(x: integer, y: integer, source: Cell, dest: Cell)|nil A callback function for masking. Should return true if the cell should be copied, false otherwise.
 function LevelBuilder:blit(source, destX, destY, maskFn)
-   maskFn = maskFn or function() return true end
+   maskFn = maskFn or function()
+      return true
+   end
 
    local src = source:clone()
    src:normalize()
@@ -264,9 +266,7 @@ function LevelBuilder:blit(source, destX, destY, maskFn)
    -- Copy cells (already cloned by source:clone)
    for x, y, value in src:each() do
       local mx, my = destX + x, destY + y
-      if maskFn(mx, my, value, self:get(mx, my)) then
-         self:set(mx, my, value)
-      end
+      if maskFn(mx, my, value, self:get(mx, my)) then self:set(mx, my, value) end
    end
 
    -- Copy actors (already cloned by source:clone)
@@ -376,6 +376,5 @@ function LevelBuilder:clone()
 
    return clone
 end
-
 
 return LevelBuilder

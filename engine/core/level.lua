@@ -8,7 +8,7 @@
 --- @field RNG RNG                                      Level-local RNG; supports deterministic behavior.
 --- @field private systemManager SystemManager          Manages systems, dispatches events, controls lifecycle.
 --- @field private scheduler Scheduler                  Controls actor turn order in the game loop.
---- @field private turn TurnHandler                     Function to perform an actor's turn in the level.
+--- @field private turnHandler TurnHandler                     Function to perform an actor's turn in the level.
 --- @field private opacityCache BooleanBuffer           Cached opacity grid for FOV and lighting.
 --- @field private passableCache CascadingBitmaskBuffer Cached passability grid for pathfinding.
 --- @field private decision ActionDecision              Temporary storage for the current actor’s choice.
@@ -28,7 +28,7 @@ function Level:__new(builder)
    self.systemManager = prism.SystemManager(self)
    self.actorStorage = prism.ActorStorage(self:sparseMapCallback(), self:sparseMapCallback())
    self.scheduler = builder.scheduler or prism.SimpleScheduler()
-   self.turn = builder.turn or prism.defaultTurn
+   self.turnHandler = builder.turnHandler or prism.TurnHandler()
    self.RNG = prism.RNG(builder.seed or love.timer.getTime())
    self.debug = false
 
@@ -80,7 +80,7 @@ function Level:run()
    if self.decision then
       local actor = self.decision.actor
 
-      self:turn(actor, actor:expect(prism.components.Controller))
+      self.turnHandler:handleTurn(self, actor, actor:expect(prism.components.Controller))
 
       self.systemManager:onTurnEnd(self, actor)
    end
@@ -102,7 +102,7 @@ function Level:step()
    local actor = schedNext
    ---@cast actor Actor
    self.systemManager:onTurn(self, actor)
-   self:turn(actor, actor:expect(prism.components.Controller))
+   self.turnHandler:handleTurn(self, actor, actor:expect(prism.components.Controller))
    self.systemManager:onTurnEnd(self, actor)
 end
 
