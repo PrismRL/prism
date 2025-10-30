@@ -32,7 +32,14 @@ local function File(self, scene)
       -- Open the file in write mode and write some content
       local file, err = io.open(result, "w")
       if file then
-         local json = prism.json.encode(prism.Object.serialize(self.props.editor.attachable))
+         local normalized = self.props.editor.attachable
+         if normalized.clone then
+            --- @cast normalized LevelBuilder
+            normalized = normalized:clone()
+            normalized:normalize()
+         end
+
+         local json = prism.json.encode(prism.Object.serialize(normalized))
          local compressed = love.data.compress("string", "lz4", json)
 
          ---@diagnostic disable-next-line

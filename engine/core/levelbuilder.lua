@@ -369,8 +369,9 @@ function LevelBuilder:clone()
    for i, system in ipairs(self.systems) do
       clone.systems[i] = system
    end
+
    clone.scheduler = self.scheduler
-   clone.turn = self.turn
+   clone.turnHandler = self.turnHandler
    clone.maximumActorSize = self.maximumActorSize
    clone.seed = self.seed
 

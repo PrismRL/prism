@@ -47,7 +47,7 @@ function Component:clone()
       end
    end
 
-   return self.super:adopt(copy)
+   return getmetatable(self):adopt(copy)
 end
 
 --- Compute a deep diff from this component to another of the same class.
