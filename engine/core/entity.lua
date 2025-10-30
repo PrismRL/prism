@@ -3,6 +3,8 @@
 --- @field components Component[] A table containing all of the entity's component instances. Generated at runtime.
 --- @field relations table<Relation, table<Entity, Relation>>
 --- @field componentCache table<Component, Component> This is a cache of prototype -> component for component queries, reducing most queries to a hashmap lookup.
+--- @field private __factory function The factory this entity was initialized from.
+--- @field private __diff table A diff from the factory this entity was initialized from, only used during serialization.
 --- @overload fun(): Entity
 local Entity = prism.Object:extend("Entity")
 

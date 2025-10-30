@@ -14,9 +14,8 @@ Map.serializationBlacklist = {
 --- Initializes the map with the specified dimensions and initial value, and sets up the opacity caches.
 --- @param w number The width of the map.
 --- @param h number The height of the map.
---- @param cellFactory CellFactory The initial value to fill the map with.
 function Map:__new(w, h, cellFactory)
-   self.super.__new(self, w, h, cellFactory())
+   self.super.__new(self, w, h)
 
    self.opacityCache = prism.BooleanBuffer(w, h)
    self.passableCache = prism.BitmaskBuffer(w, h)

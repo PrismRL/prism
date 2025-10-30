@@ -59,6 +59,8 @@ function Object:__call(...)
    return o
 end
 
+--- Adopts a table into this class.
+--- @return self o
 function Object:adopt(o)
    o._isInstance = true
 

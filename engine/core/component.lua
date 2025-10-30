@@ -35,12 +35,6 @@ function Component:getBase()
    return proto
 end
 
--- Fields that should not be cloned (transient/runtime-only)
-local TRANSIENT_FIELDS = {
-   owner = true,
-   _isInstance = true,
-}
-
 --- Creates a shallow copy of this component. If your component needs a deep
 --- copy or other considerations make sure to override this method on that component!
 --- @return Component clone A new component instance with copied fields.
@@ -48,12 +42,12 @@ function Component:clone()
    local copy = {}
 
    for k, v in pairs(self) do
-      if not TRANSIENT_FIELDS[k] then
+      if not self._serializationBlacklist[k] then
          copy[k] = v
       end
    end
 
-   return setmetatable(copy, getmetatable(self))
+   return self.super:adopt(copy)
 end
 
 --- Compute a deep diff from this component to another of the same class.
@@ -81,8 +75,8 @@ function Component:diff(other)
       return true
    end
 
-   local function is_ignored_key(k, v)
-      if TRANSIENT_FIELDS[k] then return true end
+   local function isIgnoredKey(k, v)
+      if self._serializationBlacklist[k] then return true end
       local t = type(v)
       return t == "function" or t == "userdata"
    end
@@ -91,7 +85,7 @@ function Component:diff(other)
 
    -- Fields present on self: detect removals/changes
    for k, v in pairs(self) do
-      if not is_ignored_key(k, v) then
+      if not isIgnoredKey(k, v) then
          local ov = other[k]
          if ov == nil then
             unset[k] = true
@@ -103,7 +97,7 @@ function Component:diff(other)
 
    -- Fields present only on other: detect additions
    for k, ov in pairs(other) do
-      if not is_ignored_key(k, ov) and self[k] == nil then
+      if not isIgnoredKey(k, ov) and self[k] == nil then
          set[k] = ov
       end
    end
@@ -126,8 +120,8 @@ end
 function Component:applyDiff(patch)
    assert(type(patch) == "table", "Component:applyDiff expected a table patch")
 
-   local function is_ignored_key(k)
-      return TRANSIENT_FIELDS and TRANSIENT_FIELDS[k] == true
+   local function isIgnoredKey(k)
+      return self._serializationBlacklist[k] == true
    end
 
    local function deepCopy(val, seen)
@@ -156,7 +150,7 @@ function Component:applyDiff(patch)
    -- Unset fields (skip transient)
    if patch.unset then
       for k, _ in pairs(patch.unset) do
-         if not is_ignored_key(k) then
+         if not isIgnoredKey(k) then
             rawset(self, k, nil)
          end
       end
@@ -165,7 +159,7 @@ function Component:applyDiff(patch)
    -- Set fields (skip transient)
    if patch.set then
       for k, v in pairs(patch.set) do
-         if not is_ignored_key(k) then
+         if not isIgnoredKey(k) then
             if type(v) == "table" then
                rawset(self, k, deepCopy(v))
             else
