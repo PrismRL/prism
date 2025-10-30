@@ -33,6 +33,7 @@ Our discord can be found `here <https://discord.gg/9YpsH4hYVF>`_.
    installation
    architecture-primer
    conventions
+   gallery
 
 .. toctree::
    :caption: How-tos
