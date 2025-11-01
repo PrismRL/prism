@@ -4,6 +4,7 @@
 --- !doc protected-members
 --- @class Action : Object
 --- @field owner Actor The actor taking the action.
+--- @field name? string A name for the action.
 --- @field protected targets Target[] (static) A list of targets to apply the action to.
 --- @field protected targetObjects Object[] The objects that correspond to the targets.
 --- @field protected requiredComponents Component[] (static) Components required for an actor to take this action.
@@ -11,6 +12,7 @@
 --- @field protected abstract boolean
 --- @overload fun(owner: Actor, targets: Object[]): Action
 local Action = prism.Object:extend("Action")
+
 Action.targets = {}
 
 --- Constructor for the Action class.
@@ -128,6 +130,12 @@ end
 function Action:validateTarget(n, level, owner, toValidate, previousTargets)
    --- @diagnostic disable-next-line
    return self.targets[n] and self.targets[n]:validate(level, owner, toValidate, previousTargets)
+end
+
+--- Returns the action's name, or the class name if it's nil.
+--- @return string name
+function Action:getName()
+   return self.name or self.className
 end
 
 return Action
