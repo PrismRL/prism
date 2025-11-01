@@ -4,7 +4,7 @@
 local SightSystem = prism.System:extend("SightSystem")
 
 function SightSystem:getRequirements()
-   return prism.systems.Senses
+   return prism.systems.SensesSystem
 end
 
 -- These functions update the fov and visibility of actors on the level.
