@@ -97,9 +97,9 @@ Next we'll change ``GameLevelState``'s constructor.
    function GameLevelState:__new(display, builder, seed)
       builder:addSeed(seed)
       builder:addSystems(
-         prism.systems.Senses(),
-         prism.systems.Sight(),
-         prism.systems.Fall(),
+         prism.systems.SensesSystem(),
+         prism.systems.SightSystem(),
+         prism.systems.FallSystem(),
       )
 
       -- Initialize with the created level and display, the heavy lifting is done by
@@ -130,14 +130,14 @@ Now modify our message handler so it passes the player into the next level:
       )
    end
 
-To indicate what level we're on, add another call to :lua:func:`Display.putString` below our health
+To indicate what level we're on, add another call to :lua:func:`Display.print` below our health
 display:
 
 .. code-block:: lua
 
-   if health then self.display:putString(1, 1, "HP: " .. health.hp .. "/" .. health.maxHP) end
+   if health then self.display:print(1, 1, "HP: " .. health.hp .. "/" .. health.maxHP) end
 
-   self.display:putString(1, 2, "Depth: " .. Game.depth)
+   self.display:print(1, 2, "Depth: " .. Game.depth)
 
 Finally, head over to main.lua and ``require`` the class right below where we’re loading all our
 modules.

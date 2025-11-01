@@ -332,7 +332,8 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
 Updating GameLevelState
 -----------------------
 
-Head back to ``gamestates/gamelevelstate.lua`` and add the following line to the top of the file.
+Head back to ``modules/game/gamestates/gamelevelstate.lua`` and add the following line to the top of
+the file.
 
 .. code-block:: lua
 

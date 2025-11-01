@@ -11,7 +11,7 @@ Head on over to ``gamelevelstate.lua`` and in draw replace the following line:
 
 .. code-block:: lua
 
-   self.display:putString(1, 1, "Hello prism!")
+   self.display:print(1, 1, "Hello prism!")
 
 with:
 
@@ -19,7 +19,7 @@ with:
 
    local health = player:get(prism.components.Health)
    if health then
-      self.display:putString(1, 1, "HP:" .. health.hp .. "/" .. health.maxHP)
+      self.display:print(1, 1, "HP:" .. health.hp .. "/" .. health.maxHP)
    end
 
 Now we have a primitive HP display.
@@ -83,7 +83,7 @@ Back in ``gamelevelstate.lua``, we'll draw the message log by grabbing the last 
    if log then
       local offset = 0
       for line in log:iterLast(5) do
-         self.display:putString(1, self.display.height - offset, line)
+         self.display:print(1, self.display.height - offset, line)
          offset = offset + 1
       end
    end

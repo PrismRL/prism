@@ -128,14 +128,14 @@ back over to the Die action. Let's change its ``perform`` to the following:
    end
 
 And finally we're going to handle this message in the user interface. Head back over to
-``gamestates/gamelevelstate.lua`` and let's modify ``GameLevelState:handleMessage``.
+``modules/game/gamestates/gamelevelstate.lua`` and let's modify ``GameLevelState:handleMessage``.
 
 .. code-block:: lua
 
    function GameLevelState:handleMessage(message)
       spectrum.LevelState.handleMessage(self, message)
 
-      if prism.messages.Lose:is(message) then
+      if prism.messages.LoseMessage:is(message) then
          self.manager:pop()
          love.event.quit()
       end

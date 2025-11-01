@@ -114,19 +114,31 @@ head to ``modules/game/actors`` and create a new file named ``wandofhurt.lua``.
 .. code-block:: lua
 
    prism.registerActor("WandofHurt", function()
-   return prism.Actor.fromComponents {
-       prism.components.Name("Wand of Hurt"),
-       prism.components.Drawable{
-           char = "/"
-       },
-       prism.components.HurtZappable{
-           charges = 3,
-           cost = 1,
-           damage = 3,
-       },
-       prism.components.Item(),
-   }
+      return prism.Actor.fromComponents {
+          prism.components.Name("Wand of Hurt"),
+          prism.components.Drawable{
+              index = "/",
+              color = prism.Color4.LIME
+          },
+          prism.components.HurtZappable{
+              charges = 3,
+              cost = 1,
+              damage = 3,
+          },
+          prism.components.Item(),
+          prism.components.Position()
+      }
    end)
+
+We can edit our ``loot/chest.lua`` file to fill chests with wands instead of meat.
+
+.. code-block:: lua
+
+   return {
+      {
+         entry = "WandofHurt",
+      },
+   }
 
 Great, now we've got to implement the zap. Head over to ``modules/game/actions`` and create a new
 file folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
@@ -238,12 +250,12 @@ to indicate we should keep popping until we reach the inventory again.
 Creating our concrete target handler
 ------------------------------------
 
-Let's head over to ``gamestates/targethandlers`` and create a new file called
+Let's head over to ``modules/game/gamestates/`` and create a new file called
 ``generaltargethandler.lua``.
 
 .. code-block:: lua
 
-   local keybindings = require "keybindingschema"
+   local controls = require "controls"
    local Name = prism.components.Name
    local TargetHandler = require "gamestates.targethandlers.targethandler"
 
@@ -318,71 +330,61 @@ drawing code in GameLevelState is that we'll center the camera on the selector's
        self.display:putSenses(primary, secondary)
 
        -- put a string to let the player know what's happening
-       self.display:putString(1, 1, "Select a target!")
-       self.display:putString(self.selectorPosition.x + ox, self.selectorPosition.y + oy, "X", prism.Color4.RED)
+       self.display:print(1, 1, "Select a target!")
+       self.display:print(self.selectorPosition.x + ox, self.selectorPosition.y + oy, "X", prism.Color4.RED)
 
        -- if there's a target then we should draw it's name!
        if self.curTarget then
            local x, y = cameraPos:decompose()
-           self.display:putString(x + ox + 1, y + oy, Name.get(self.curTarget))
+           self.display:print(x + ox + 1, y + oy, Name.get(self.curTarget))
        end
        self.display:draw()
    end
 
-Now finally we'll handle keypresses. Let's walk through it. First let's define a map and the
-keypressed function.
+Finally, we'll handle input. Add the following controls in ``controls.lua``.
 
 .. code-block:: lua
 
-   local keybindOffsets = {
-       ["move up"] = prism.Vector2.UP,
-       ["move left"] = prism.Vector2.LEFT,
-       ["move down"] = prism.Vector2.DOWN,
-       ["move right"] = prism.Vector2.RIGHT,
-       ["move up-left"] = prism.Vector2.UP_LEFT,
-       ["move up-right"] = prism.Vector2.UP_RIGHT,
-       ["move down-left"] = prism.Vector2.DOWN_LEFT,
-       ["move down-right"] = prism.Vector2.DOWN_RIGHT,
-   }
+   tab            = "tab",
+   select         = "return"
 
-   function GeneralTargetHandler:keypressed(key)
-       local action = keybindings:keypressed(key)
-
-First we'll check if the user hit the tab keybind, and if so we'll use Lua's next function to cycle
+Then we'll check if the user hit the tab keybind, and if so we'll use :lua:func:`next` to cycle
 through our valid targets table.
 
 .. code-block:: lua
 
-   if action == "tab" then
-       local lastTarget = self.curTarget
-       self.index, self.curTarget = next(self.validTargets, self.index)
+   function GeneralTargetHandler:update(dt)
+      controls:update()
+      if action == "tab" then
+          local lastTarget = self.curTarget
+          self.index, self.curTarget = next(self.validTargets, self.index)
 
-       while
-           (not self.index and #self.validTargets > 0) or
-           (lastTarget == self.curTarget and #self.validTargets > 1)
-       do
-           self.index, self.curTarget = next(self.validTargets, self.index)
-       end
+          while
+              (not self.index and #self.validTargets > 0) or
+              (lastTarget == self.curTarget and #self.validTargets > 1)
+          do
+              self.index, self.curTarget = next(self.validTargets, self.index)
+          end
 
-       self:setSelectorPosition()
-   end
+          self:setSelectorPosition()
+      end
 
 Then if the user hits the select keybind we add this target to the overall target list we're
 building and pop this instance of the target handler off of the gamestate stack.
 
 .. code-block:: lua
 
-   if action == "select" and self.curTarget then
+   if controls.select.pressed and self.curTarget then
        table.insert(self.targetList, self.curTarget)
        self.manager:pop()
    end
 
-If the user hits the return keybind we'll pop this state and pass "poprecursive" to indicate to the
-other states that we should pop all the way back to the inventory.
+If the user hits the return keybind we'll pop this state and pass "pop" to indicate to the other
+states that we should pop all the way back to the inventory.
 
 .. code-block:: Lua
 
-   if action == "return" then
+   if controls["return"].pressed then
        self.manager:pop("pop")
    end
 
@@ -391,8 +393,8 @@ for a valid target on that tile, and if it exists we'll set that as the current 
 
 .. code-block:: lua
 
-       if keybindOffsets[action] then
-           self.selectorPosition = self.selectorPosition + keybindOffsets[action]
+       if controls.move.pressed then
+           self.selectorPosition = self.selectorPosition + controls.move.vector
            self.curTarget = nil
 
            if self.target:validate(self.level, self.owner, self.selectorPosition, self.targetList) then
@@ -448,12 +450,12 @@ className if it doesn't exist. This is so our zaps display as "Zap" and not "Hur
    function InventoryActionState:draw()
        self.previousState:draw()
        self.display:clear()
-       self.display:putString(1, 1, Name.get(self.item), nil, nil, 2, "right")
+       self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
 
        for i, action in ipairs(self.actions) do
            local letter = string.char(96 + i)
            local name = string.gsub(action.name or action.className, "Action", "")
-           self.display:putString(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+           self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
        end
 
        self.display:draw()
@@ -465,32 +467,33 @@ push GeneralTargetHandler states to handle the rest of the targets.
 
 .. code-block:: lua
 
-   function InventoryActionState:keypressed(key)
-       for i, Action in ipairs(self.actions) do
-           if key == string.char(i + 96) then
-               self.decision:trySetAction(Action(self.decision.actor, self.item), self.level)
+   function InventoryActionState:update(dt)
+      controls:update()
+      for i, action in ipairs(self.actions) do
+         if spectrum.Input.key[string.char(i + 96)].pressed then
+            if self.decision:setAction(action(self.decision.actor, self.item), self.level) then
+               self.manager:pop()
+               return
+            end
 
-               if self.decision:validateResponse() then
-                   self.manager:pop()
-                   return
-               end
+            self.selectedAction = action
+            self.targets = { self.item }
+            print(action.className)
+            for i = action:getNumTargets(), 2, -1 do
+               self.manager:push(
+                  spectrum.gamestates.GeneralTargetHandler(
+                     self.display,
+                     self.previousState,
+                     self.targets,
+                     action:getTarget(i),
+                     self.targets
+                  )
+               )
+            end
+         end
+      end
 
-               self.selectedAction = Action
-               self.targets = { self.item }
-               for i = Action:getNumTargets(), 2, -1 do
-                   self.manager:push(GeneralTargetHandler(
-                   self.display,
-                   self.previousState,
-                   self.targets,
-                   Action:getTargetObject(i),
-                   self.targets
-                   ))
-               end
-           end
-       end
-
-       local binding = keybindings:keypressed(key)
-       if binding == "inventory" or binding == "return" then self.manager:pop() end
+      if controls.inventory.pressed or controls["return"].pressed then self.manager:pop() end
    end
 
 And to wrap things up we'll change InventoryActionState's resume. When it resumes we'll check if
@@ -520,4 +523,3 @@ Wrapping it up
 That one was a doozy, but we layed the ground work for making adding new ways to target really easy
 in the future! In the next section we'll go over equipment, and modify InventoryActionState a little
 bit more to handle non-standard targets like inventory slots.
-

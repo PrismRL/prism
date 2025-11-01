@@ -147,13 +147,13 @@ accessing it directly let's change this line in ``draw``:
 
 .. code-block:: lua
 
-   if health then self.display:putString(1, 1, "HP: " .. health.hp .. "/" .. health.maxHP) end
+   if health then self.display:print(1, 1, "HP: " .. health.hp .. "/" .. health.maxHP) end
 
 To use the new getter:
 
 .. code-block:: lua
 
-   if health then self.display:putString(1, 1, "HP: " .. health.hp .. "/" .. health:getMaxHP()) end
+   if health then self.display:print(1, 1, "HP: " .. health.hp .. "/" .. health:getMaxHP()) end
 
 Drinking
 --------

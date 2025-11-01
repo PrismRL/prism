@@ -132,7 +132,7 @@ options here. You can play an animation at an actor's position:
 
       .. code-block:: lua
 
-         level:yield(prism.messages.Animation {
+         level:yield(prism.messages.AnimationMessage {
             animation = spectrum.animations.Exclamation(),
             actor = kobold
          })
@@ -157,7 +157,7 @@ Or at a position:
 
 .. code-block:: lua
 
-   level:yield(prism.messages.Animation {
+   level:yield(prism.messages.AnimationMessage {
       animation = spectrum.animations.Exclamation(),
       x = position.x,
       y = position.y
@@ -174,7 +174,7 @@ If an ``actor`` is passed, the ``x`` and ``y`` are relative to the actor's posit
 
       .. code-block:: lua
 
-         level:yield(prism.messages.Animation {
+         level:yield(prism.messages.AnimationMessage {
             animation = spectrum.animations.Exclamation(),
             actor = target,
             y = -1
@@ -195,7 +195,7 @@ Animations can force the :lua:class:`LevelState` to wait for them to finish play
 
 .. code-block:: lua
 
-   level:yield(prism.messages.Animation {
+   level:yield(prism.messages.AnimationMessage {
       animation = spectrum.animations.Exclamation(),
       actor = target,
       y = -1,

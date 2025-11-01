@@ -184,7 +184,7 @@ Let's keep it simple for now and give chests a guaranteed drop of meat.
 
    return {
       {
-         entry = prism.actors.MeatBrick
+         entry = "MeatBrick"
       }
    }
 

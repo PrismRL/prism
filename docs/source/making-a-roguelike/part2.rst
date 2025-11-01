@@ -162,9 +162,9 @@ ahead and add ``prism.systems.Fall()`` to the bottom of the list like so.
 .. code-block:: lua
 
    builder:addSystems(
-      prism.systems.Senses(),
-      prism.systems.Sight(),
-      prism.systems.Fall()
+      prism.systems.SensesSystem(),
+      prism.systems.SightSystem(),
+      prism.systems.FallSystem()
    )
 
 Wrapping up

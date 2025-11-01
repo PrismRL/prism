@@ -322,8 +322,8 @@ Kicking kobolds, for real this time
 -----------------------------------
 
 We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick
-when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move
-action is called.
+when we bump into a kobold. Head over to ``modules/game/gamestates/gamelevelstate.lua`` and find
+where the move action is called.
 
 If the player presses a move button but the player fails to move, we can infer they moved into
 something that blocked their movement. Let's check if there's a valid actor to kick in front of us

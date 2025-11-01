@@ -210,12 +210,12 @@ to the user, drawing the letter used to take that action next to the item name.
    function InventoryActionState:draw()
       self.previousState:draw()
       self.display:clear()
-      self.display:putString(1, 1, Name.get(self.item), nil, nil, 2, "right")
+      self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
 
       for i, action in ipairs(self.actions) do
          local letter = string.char(96 + i)
          local name = string.gsub(action.className, "Action", "")
-         self.display:putString(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+         self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
       end
 
       self.display:draw()
@@ -310,12 +310,12 @@ Let's :lua:func:`GameStateManager.pop` on :lua:func:`GameState.resume` if we hav
       function InventoryActionState:draw()
          self.previousState:draw()
          self.display:clear()
-         self.display:putString(1, 1, Name.get(self.item), nil, nil, 2, "right")
+         self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
 
          for i, action in ipairs(self.actions) do
             local letter = string.char(96 + i)
             local name = string.gsub(action.className, "Action", "")
-            self.display:putString(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+            self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
          end
 
          self.display:draw()

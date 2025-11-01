@@ -92,7 +92,7 @@ and draw it to the screen.
    function InventoryState:draw()
       self.previousState:draw()
       self.display:clear()
-      self.display:putString(1, 1, "Inventory", nil, nil, 2, "right")
+      self.display:print(1, 1, "Inventory", nil, nil, 2, "right")
 
       for i, actor in ipairs(self.items) do
          local name = actor:getName()
@@ -105,7 +105,7 @@ and draw it to the screen.
          end
 
          local itemstr = ("[%s] %s%s"):format(letter, countstr, name)
-         self.display:putString(1, 1 + i, itemstr, nil, nil, 2, "right")
+         self.display:print(1, 1 + i, itemstr, nil, nil, 2, "right")
       end
       self.display:draw()
    end
@@ -179,7 +179,7 @@ Then we check if the user hit the inventory or return key, and if so we call
       function InventoryState:draw()
          self.previousState:draw()
          self.display:clear()
-         self.display:putString(1, 1, "Inventory", nil, nil, 2, "right")
+         self.display:print(1, 1, "Inventory", nil, nil, 2, "right")
 
          for i, actor in ipairs(self.items) do
             local name = actor:getName()
@@ -190,7 +190,7 @@ Then we check if the user hit the inventory or return key, and if so we call
             if item.stackCount and item.stackCount > 1 then countstr = ("%sx "):format(item.stackCount) end
 
             local itemstr = ("[%s] %s%s"):format(letter, countstr, name)
-            self.display:putString(1, 1 + i, itemstr, nil, nil, 2, "right")
+            self.display:print(1, 1 + i, itemstr, nil, nil, 2, "right")
          end
 
          self.display:draw()

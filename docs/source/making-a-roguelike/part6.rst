@@ -8,8 +8,8 @@ screen.
 Making a gamestate
 ------------------
 
-Navigate to the ``gamestates`` folder and create a new file called ``gameoverstate.lua`` with the
-following contents:
+Navigate to the ``modules/game/gamestates`` folder and create a new file called
+``gameoverstate.lua`` with the following contents:
 
 .. code-block:: lua
 
@@ -26,7 +26,7 @@ following contents:
       local midpoint = math.floor(self.display.height / 2)
 
       self.display:clear()
-      self.display:putString(
+      self.display:print(
          1, midpoint,
          "Game over!",
          nil, nil, nil,
@@ -38,26 +38,19 @@ following contents:
    return GameOverState
 
 We extend the :lua:class:`GameState` class and accept a :lua:class:`Display` in our constructor. For
-now, we just draw "Game over!" centered on the screen by using :lua:func:`Display.putString`'s
-alignment parameters.
+now, we just draw "Game over!" centered on the screen by using :lua:func:`Display.print`'s alignment
+parameters.
 
 Replacing the exit
 ------------------
 
-Let's head over to ``gamelevelstate.lua``. First we're going to require our new state at the top of
-the file.
+Let's head over to ``gamelevelstate.lua``, and in the ``handleMessage`` function replace our current
+handling of ``LoseMessage`` with the following.
 
 .. code-block:: lua
 
-   local GameOverState = require "gamestates.gameoverstate"
-
-Then we'll head back to the ``handleMessage`` function. Replace our current handling of the ``Lose``
-message with the following.
-
-.. code-block:: lua
-
-   if prism.messages.Lose:is(message) then
-      self.manager:enter(GameOverState(self.display))
+   if prism.messages.LoseMessage:is(message) then
+      self.manager:enter(spectrum.gamestates.GameOverState(self.display))
    end
 
 Let's boot up the game and spawn in a few kobolds. Let yourself get slapped around and you should
@@ -104,13 +97,13 @@ Finally, let's add some instructions.
 
 .. code-block:: lua
 
-   self.display:putString(
+   self.display:print(
       1, midpoint + 3,
       "[r] to restart",
       nil, nil, nil,
       "center", self.display.width
    )
-   self.display:putString(
+   self.display:print(
       1, midpoint + 4,
       "[q] to quit",
       nil, nil, nil,
