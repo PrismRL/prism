@@ -1,98 +1,51 @@
 Brewing potions
 ===============
 
-.. note::
+In this chapter we'll use the :lua:class:`ConditionHolder` component included in ``prism/extra`` to
+create a potion that heals the drinker and increases their health temporarily. We'll go over
+creating a buff, making our Health component respect it, and ticking down the duration on status
+effects.
 
-   This chapter hasn't had a second pass! Beware explosive brews!
+Setting up
+----------
 
-In this chapter we'll use the StatusEffect component included in ``prism/extra`` to create a potion
-of vitality that heals the drinker and increases their hitpoint maximum by 5, temporarily. We'll go
-over creating a buff, making our Health component respect it, and ticking down the duration on
-status effects.
-
-Adding status effects to the player
------------------------------------
-
-Make your way to ``modules/game/actors/player.lua`` and add the following component.
+First, load the conditions module.
 
 .. code-block:: lua
 
-   prism.components.StatusEffects(),
+   prism.loadModule("prism/extra/condition")
 
-Getting a brew going
---------------------
-
-The first thing we're going to want to do is head over to ``main.lua`` and load the
-``statuseffects`` module. Let's add this line right above where we're loading our game module.
+Then make your way to ``modules/game/actors/player.lua`` and add the following component.
 
 .. code-block:: lua
 
-   prism.loadModule("prism/extra/statuseffects")
-
-Okay with that done the next thing we're going to want to do is create a subclass of the
-StatusEffectInstance that will serve as a base prototype for all of our buffs/debuffs in the game.
-This is where we'll define stuff that's game specific to our status effects like durations.
-
-Head over to ``modules/game`` and create a new file named ``statusinstance.lua``.
-
-.. code-block:: lua
-
-   --- @class GameStatusInstance : StatusEffectsInstance
-   --- @field duration integer?
-   local GameStatusInstance = prism.components.StatusEffects.Instance:extend "GameStatusInstance"
-
-   --- @class GameStatusInstanceOptions : StatusEffectsInstanceOptions
-   --- @field duration integer
-
-   --- @param options GameStatusInstanceOptions
-   function GameStatusInstance:__new(options)
-      prism.components.StatusEffects.Instance.__new(self, options)
-      self.duration = options.duration or nil
-   end
-
-   return GameStatusInstance
-
-Our only addition for our usecase is going to be a duration since we'll want timed buffs. Now head
-over to ``module.lua`` in the same folder. We're going to load this file and inject our status
-instance into the global namespace simply for convenience sake.
-
-This Instance is a collection of Modifiers. A status effect instance might be the entire buff a
-potion gives you like +5 maxhp, +2 strength. A modifier is the individual pieces like +5 maxhp. You
-can subclass this to define a new named instance or use it anonymously.
-
-::
-
-   --- @module "modules.game.statusinstance"
-   prism.GameStatusInstance = require ("modules.game.statusinstance")
-
-The path string manipulation is just so that this file loads correctly now matter which folder our
-module is loaded from, that won't matter here, but it's a good idea to do this.
+   prism.components.ConditionHolder(),
 
 Modifying health
 ----------------
 
-Let's head back to ``modules/game/components/health.lua`` and take a look at our health component.
-At the top of the file let's add the following code.
+Let's head back to ``modules/game/components/health.lua`` and define a new
+:lua:class:`ConditionModifier` to represent a change to our max health.
 
 .. code-block:: lua
 
-   local StatusEffects = prism.components.StatusEffects
-
-Let's quickly alias the StatusEffects component, we're going to use one of it's static methods later
-in the file.
-
-.. code-block:: lua
-
-   --- @class HealthModifier : StatusEffectsModifier
+   --- @class HealthModifier : ConditionModifier
    --- @field maxHP integer
-   local HealthModifier = prism.components.StatusEffects.Modifier:extend "HealthModifier"
+   --- @overload fun(delta: integer): HealthModifier
+   local HealthModifier = prism.condition.Modifier:extend "HealthModifier"
 
    function HealthModifier:__new(delta)
       self.maxHP = delta
    end
 
-This defined a new StatusEffectsModifier. We'll leave the constructor as it is, but let's set maxHP
-to private.
+   prism.register(HealthModifier)
+
+.. tip::
+
+   Every object with a registry can be registered manually with :lua:func:`prism.register`!
+
+On the ``Health`` component we'll set maxHP to private, since we won't want to access it directly
+now.
 
 .. code-block:: lua
 
@@ -101,13 +54,15 @@ to private.
    --- @field hp integer
    --- @overload fun(maxHP: integer)
 
-Next let's create a getMaxHP function that will take our new modifier into account.
+Next let's create a ``getMaxHP`` function that will take our new modifier into account. We use
+:lua:func:`ConditionHolder.getActorModifiers` to retrieve all health modifiers and apply each of
+them to our maxHP.
 
 .. code-block:: lua
 
    --- @return integer maxHP
    function Health:getMaxHP()
-      local modifiers = StatusEffects.getActorModifiers(self.owner, HealthModifier)
+      local modifiers = ConditionHolder.getActorModifiers(self.owner, HealthModifier)
 
       local modifiedMaxHP = self.maxHP
       for _, modifier in ipairs(modifiers) do
@@ -117,8 +72,7 @@ Next let's create a getMaxHP function that will take our new modifier into accou
       return modifiedMaxHP
    end
 
-We loop through each modifier, add it to our base maxHP, and return the modified value. While we're
-here we'll need to change a few more things. First let's change heal to use our new getter function.
+We change ``heal`` to use our new function.
 
 .. code-block:: lua
 
@@ -127,7 +81,7 @@ here we'll need to change a few more things. First let's change heal to use our 
       self.hp = math.min(self.hp + amount, self:getMaxHP())
    end
 
-Next we'll add a small function that will clamp hp to maxhp for a little bit later in the tutorial.
+We'll add a small function that to clamp our health to the maximum. We'll use this later.
 
 .. code-block:: lua
 
@@ -135,15 +89,8 @@ Next we'll add a small function that will clamp hp to maxhp for a little bit lat
       self.hp = math.min(self.hp, self:getMaxHP())
    end
 
-And finally we'll set ``Health.Modifier`` to the modifier we've just created for this component so
-that we can access it from a convenient place.
-
-.. code-block:: lua
-
-   Health.Modifier = HealthModifier
-
-Now in ``gamelevelstate.lua`` we'll have to make a small change. We're drawing maxHP, but we're
-accessing it directly let's change this line in ``draw``:
+In ``gamelevelstate.lua`` we'll make sure to draw our health with the new function as well. Change
+the following line:
 
 .. code-block:: lua
 
@@ -158,30 +105,30 @@ To use the new getter:
 Drinking
 --------
 
-Let's create a new file in ``modules/game/components`` called ``drinkable.lua``.
+Let's create a new component in ``modules/game/components/drinkable.lua`` that we'll give to our
+potions. For now, let's give it an optional healing amount and an optional condition.
 
 .. code-block:: lua
 
    --- @class DrinkableOptions
    --- @field healing integer?
-   --- @field status StatusEffectsInstance?
+   --- @field condition Condition?
 
    --- @class Drinkable : Component
    --- @field healing integer?
-   --- @field status StatusEffectsInstance?
+   --- @field condition Condition?
    --- @overload fun(options: DrinkableOptions): Drinkable
    local Drinkable = prism.Component:extend "Drinkable"
 
    function Drinkable:__new(options)
       self.healing = options.healing
-      self.status = options.status
+      self.condition = options.condition
    end
 
    return Drinkable
 
-We create a simple component with an optional healing value, and an optional status effect.
-
-Now let's create a new file in ``modules/game/actions`` called ``drink.lua``.
+Now let's create a new action in ``modules/game/actions/drink.lua``. First we define our target to
+be an item in the actor's inventory with a ``Drinkable`` component.
 
 .. code-block:: lua
 
@@ -189,7 +136,7 @@ Now let's create a new file in ``modules/game/actions`` called ``drink.lua``.
       :inInventory()
       :with(prism.components.Drinkable)
 
-First we define our target an item in the actor's inventory with the Drinkable component.
+Then if we have a condition holder and our drink applies a condition we add that condition.
 
 .. code-block:: lua
 
@@ -199,17 +146,17 @@ First we define our target an item in the actor's inventory with the Drinkable c
       DrinkTarget
    }
 
-   --- @param level Level
+   --- @param drink Actor
    function Drink:perform(level, drink)
+      self.owner:expect(prism.components.Inventory):removeItem(drink)
       local drinkable = drink:expect(prism.components.Drinkable)
 
-      local statusComponent = self.owner:get(prism.components.StatusEffects)
-      if statusComponent and drinkable.status then
-         statusComponent:add(drinkable.status)
+      local conditions = self.owner:get(prism.components.ConditionHolder)
+      if conditions and drinkable.condition then
+         conditions:add(drinkable.condition)
       end
 
-Then if we've got a status effects component and our drink applies a status effect we add that to
-the status effects component.
+Finally we'll heal the actor for the amount of the drinkable's healing, if there is any.
 
 .. code-block:: lua
 
@@ -221,12 +168,12 @@ the status effects component.
 
    return Drink
 
-Finally we'll heal the actor for the amount of the drinkable's healing, if any.
-
 Brewing the potion
 ------------------
 
-Create a new file in ``modules/game/actors`` called ``vitalitypotion.lua``.
+Create a new file in ``modules/game/actors`` called ``vitalitypotion.lua``. We register a new item
+with our new ``Drinkable`` component. We'll make it heal for 5 and apply a health bonus of 5 as
+well.
 
 .. code-block:: lua
 
@@ -235,65 +182,102 @@ Create a new file in ``modules/game/actors`` called ``vitalitypotion.lua``.
          prism.components.Name("Potion of Vitality"),
          prism.components.Drawable("!", prism.Color4.RED),
          prism.components.Item(),
-         prism.components.Drinkable{
+         prism.components.Position(),
+         prism.components.Drinkable {
             healing = 5,
-            status = prism.GameStatusInstance{
-               duration = 10,
-               modifiers = {
-                  prism.components.Health.Modifier(5)
-               }
-            }
+            condition = prism.condition.Condition(prism.modifiers.Health(5))
          }
       }
    end)
 
-You've seen most of this before, except the Drinkable component. Here we're saying that this potion
-should heal for 5 and modify the actor's maxHP by +5 for 10 turns.
+To have it appear in game, let's include it in ``loot/chest.lua``.
 
-If we go into the game now and drink the potion everything should work, but you'll notice the buff
-doesn't expire after 10 turns! Let's fix that!
+.. code-block:: lua
+
+   --- @type DropTableOptions
+   return {
+      {
+         entry = "VitalityPotion"
+      }
+   }
+
+Start the game and try drinking a potion. It should heal us for 5 points and increase our maximum
+health by 5!
 
 Ticking down durations
 ----------------------
 
-Head over to ``modules/game/actions`` and create a new file called ``tick.lua``.
+To make our health bonus a temporary effect, we'll extend :lua:class:`Condition` to include a
+duration.
+
+Create a new directory ``modules/game/conditions/`` and create a new file named
+``tickedcondition.lua``. We're just adding a ``duration`` field to indicate how many turns the
+condition lasts.
+
+.. code-block:: lua
+
+   --- @class TickedCondition : Condition
+   --- @field duration integer
+   --- @overload fun(duration: integer, ...: ConditionModifier): TickedCondition
+   local TickedCondition = prism.condition.Condition:extend "TickedCondition"
+
+   function TickedCondition:__new(duration, ...)
+      self.super.__new(self, { ... })
+      self.duration = duration
+   end
+
+   return TickedCondition
+
+To use it, edit ``vitalitypotion.lua`` to the following.
+
+.. code-block:: lua
+
+   prism.components.Drinkable {
+      healing = 5,
+      condition = prism.conditions.TickedCondition(10, prism.modifiers.HealthModifier(5))
+   },
+
+Head over to ``modules/game/actions`` and create a new file called ``tick.lua``. Our tick action can
+only be taken by actors who have a condition holder.
 
 .. code-block:: lua
 
    --- @class Tick : Action
    local Tick = prism.Action:extend "Tick"
-   Tick.requiredComponents = { prism.components.StatusEffects }
+   Tick.requiredComponents = { prism.components.ConditionHolder }
 
-Our tick action can only be taken by actors who have a status effect component.
+Next, we want to iterate over all of the performer's timed conditions and tick them down by 1. We
+can use :lua:func:`ConditionHolder.each` to simplify this.
 
 .. code-block:: lua
 
    --- @param level Level
    function Tick:perform(level)
       -- Handle status effect durations
-      local statusComponent = self.owner:expect(prism.components.StatusEffects)
-
-      local expired = {}
-      for handle, status in statusComponent:pairs() do
-         --- @cast status GameStatusInstance
-         if status.duration then
-            status.duration = status.duration - 1
-            if status.duration <= 0 then
-               table.insert(expired, handle)
+      self.owner
+         :expect(prism.components.ConditionHolder)
+         :each(function(condition)
+            if prism.conditions.TimedCondition:is(condition) then
+               --- @cast condition TimedCondition
+               condition.duration = condition.duration - 1
             end
-         end
-      end
+         end)
 
-First we loop through all of the status effects currently applied to our actor, ticking down their
-durations and keeping track of which ones have expired.
+Then we want to remove any that have expired. We can similarly use
+:lua:func:`ConditionHolder.removeIf`.
 
 .. code-block:: lua
 
-   for _, handle in ipairs(expired) do
-      statusComponent:remove(handle)
-   end
+   :removeIf(function(condition)
+      --- @cast condition TimedCondition
+      return prism.conditions.TimedCondition:is(condition)
+         and condition.duration <= 0
+   end)
 
-Then we remove the expired status effects.
+Finally we clamp our hp to maxHP by calling ``enforceBounds`` from earlier. This is where you'd
+enforce minimums or maximums that might change. Without this if the player ends the duration of the
+buff with 15 health they'd end up keeping that health total and only see a reduction in their
+maximum.
 
 .. code-block:: lua
 
@@ -304,12 +288,8 @@ Then we remove the expired status effects.
 
    return Tick
 
-Finally we clamp our hp to maxHP by calling ``enforceBounds`` from earlier. This is where you'd
-enforce minimums or maximums that might change. Without this if the player ends the duration of the
-buff with 15 health they'd end up keeping that health total and only see a reduction in their
-maximum.
-
-Now head over to ``modules/game/systems`` and create a new file called ``tick.lua``.
+Now head over to ``modules/game/systems`` and create a new file called ``tick.lua``. Each turn we
+try to perform ``Tick`` on the actor.
 
 .. code-block:: lua
 
@@ -322,11 +302,21 @@ Now head over to ``modules/game/systems`` and create a new file called ``tick.lu
 
    return TickSystem
 
-Each turn we try to perform tick action on the actor. If we head back into the game and spawn a new
-Potion of Vitality with Geometer and drink it we'll see that our health and max health both go up by
-5, and then after 10 turns our max health returns to it's original value, success!
+Don't forget to add our system to the level in ``gamelevelstate.lua``:
+
+.. code-block:: lua
+
+   builder:addSystems(
+      prism.systems.SensesSystem(),
+      prism.systems.SightSystem(),
+      prism.systems.FallSystem(),
+      prism.systems.TickSystem()
+   )
+
+Head back into the game and quaff some more potions. The maximum health increase should now end
+after 10 turns!
 
 Wrapping up
 -----------
 
-In the next chapter we'll make a wand and write some targetting code.
+In the :doc:`next chapter <part14>` we'll make a wand and write some targetting code.
