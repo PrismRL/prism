@@ -180,7 +180,7 @@ end
 function Inventory:clone()
    local clone = prism.Component.clone(self)
    --- @cast clone Inventory
-   
+
    clone.inventory = prism.ActorStorage()
 
    for actor in self:query():iter() do
@@ -191,4 +191,3 @@ function Inventory:clone()
 end
 
 return Inventory
-

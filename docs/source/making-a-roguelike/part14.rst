@@ -56,7 +56,7 @@ Now let's head to ``modules/basegame/actions`` and create a new file ``zap.lua``
 
    local Log = prism.components.Log
 
-   local ZappableTarget = prism.InventoryTarget()
+   local ZappableTarget = prism.inventory.InventoryTarget()
        :inInventory()
        :with(prism.components.Zappable)
 
@@ -145,7 +145,7 @@ file folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
 
 .. code-block:: lua
 
-   local HurtZappableTarget = prism.InventoryTarget(prism.components.HurtZappable)
+   local HurtZappableTarget = prism.inventory.InventoryTarget(prism.components.HurtZappable)
        :inInventory()
 
    local HurtTarget = prism.Target(prism.components.Health)

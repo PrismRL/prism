@@ -172,5 +172,5 @@ Moving along
 ------------
 
 We've created a ``Game`` class to maintain some global game state and now pass our player to the
-next level. In the :doc:`next section <part10>`, we'll start working on an inventory system, along
-with a few items.
+next level. In the :doc:`next section <part10>`, we'll go over drop tables and containers like chests, populating the
+dungeon with delicious meat and shiny trinkets!

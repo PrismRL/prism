@@ -132,7 +132,7 @@ be an item in the actor's inventory with a ``Drinkable`` component.
 
 .. code-block:: lua
 
-   local DrinkTarget = prism.InventoryTarget()
+   local DrinkTarget = prism.inventory.InventoryTarget()
       :inInventory()
       :with(prism.components.Drinkable)
 

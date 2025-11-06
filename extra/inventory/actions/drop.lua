@@ -1,7 +1,7 @@
 local sf = string.format
 local Name = prism.components.Name
 
-local DropTarget = prism.InventoryTarget():inInventory()
+local DropTarget = prism.inventory.InventoryTarget():inInventory()
 
 local QuantityParameter = prism
    .Target()

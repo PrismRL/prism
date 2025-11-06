@@ -3,7 +3,7 @@
 --- @field owner Actor
 --- @field private weight number
 --- @field private volume number
---- @field stackable string
+--- @field stackable string Other items with this identifier will stack with it.
 --- @overload fun(options: ItemOptions?): Item
 local Item = prism.Component:extend("Item")
 Item.weight = 0
