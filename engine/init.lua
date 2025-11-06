@@ -222,46 +222,6 @@ function prism.resolveFactory(path)
    return node
 end
 
---- @param registry Registry
-local function registerRegistration(registry)
-   --- @type any[]
-   local registryList = _G[registry.module][registry.name]
-   local className = registry.class.className
-
-   prism.writeDefinitions(
-      string.format("--- Registers a %s in the %s registry.", className, registry.name),
-      "--- @param prototype " .. className .. " A " .. className .. " prototype.",
-      string.format("function %s.register%s(prototype) end", registry.module, className)
-   )
-
-   _G[registry.module]["register" .. className] = function(object, skipDefinitions)
-      assert(
-         registry.class:is(object),
-         "Tried to register a " .. className .. " but got " .. tostring(object) .. "!"
-      )
-      local objectName = object.className
-
-      assert(
-         objectName ~= "",
-         string.format("Tried to register a %s wihout a valid stripped name!", className)
-      )
-      assert(
-         registryList[objectName] == nil,
-         string.format("Tried to register duplicate %s (%s)", className, objectName)
-      )
-
-      registryList[objectName] = object
-
-      if skipDefinitions then return end
-
-      prism.writeDefinitions(
-         "--- @class " .. object.className,
-         "local " .. object.className .. " = nil",
-         registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
-      )
-   end
-end
-
 --- Registers a registry, a global list of game objects.
 --- @param name string The name of the registry, e.g. "components".
 --- @param type Object The type of the object, e.g. "Component".
@@ -291,15 +251,62 @@ function prism.registerRegistry(name, type, factory, module)
    }
    table.insert(prism.registries, registry)
 
-   if factory then
-      registerFactory(registry)
-   else
-      registerRegistration(registry)
-   end
+   if factory then registerFactory(registry) end
 
    prism.writeDefinitions(
       "--- The " .. type.className .. " registry.",
       module .. "." .. name .. " = {}"
+   )
+end
+
+--- Registers an object into its registry. Errors if the object has no registry.
+--- For factories (Actor, Cell, Animation, etc.) use the specific function, e.g. prism.registerActor.
+--- @param object Object The object to register.
+--- @param skipDefinitions boolean Whether to skip writing to definitions files.
+function prism.register(object, skipDefinitions)
+   if type(object) == "string" then
+      error(
+         "Tried to register a string ("
+            .. object
+            .. ") as an object. Did you mean to register a factory?"
+      )
+   end
+
+   assert(
+      prism.Object:is(object),
+      "Tried to register a non-Object (" .. tostring(object) .. ") object!"
+   )
+
+   --- @type Registry
+   local registry
+   for _, r in ipairs(prism.registries) do
+      if r.class:is(object) then registry = r end
+   end
+
+   local objectName = object.className
+   assert(registry, "Tried to register a " .. objectName .. " but it has no registry!")
+   assert(
+      not registry.manualRegistration,
+      "Tried to register an object (" .. objectName .. ") into a factory registry!"
+   )
+
+   --- @type table<string, Object>
+   local registryList = _G[registry.module][registry.name]
+   assert(
+      registryList[objectName] == nil,
+      string.format("Tried to register duplicate %s (%s)", registry.class.className, objectName)
+   )
+
+   registryList[objectName] = object
+
+   prism.logger.debug("Registered ", objectName, " into ", registry.module, ".", registry.name)
+
+   if skipDefinitions then return end
+
+   prism.writeDefinitions(
+      "--- @class " .. object.className,
+      "local " .. object.className .. " = nil",
+      registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
    )
 end
 
@@ -321,10 +328,12 @@ local function loadRegistry(path, registry, recurse, definitions)
          local item = require(requireName)
 
          if not registry.manualRegistration then
-            _G[registry.module]["register" .. registry.class.className](item, true, true)
-            table.insert(definitions, '--- @module "' .. requireName .. '"')
+            prism.register(item, true)
             local objectName = item.className
-            table.insert(definitions, "prism." .. registry.name .. "." .. objectName .. " = nil")
+            prism.writeDefinitions(
+               '--- @module "' .. requireName .. '"',
+               registry.module .. registry.name .. "." .. objectName .. " = nil"
+            )
          end
       elseif info.type == "directory" and recurse then
          loadRegistry(fileName, registry, recurse, definitions)
