@@ -44,7 +44,7 @@ def process_files(input_dir, output_dir):
 
             class_names = []
             for line in content:
-                match = re.search(r"@class\s+(\S+)", line)
+                match = re.search(r"^---\s+@class\s+(\S+)", line)
                 if match:
                     class_names.append(match.group(1))
             if len(class_names) > 0:
