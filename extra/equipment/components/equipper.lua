@@ -51,6 +51,7 @@ function Equipper:canEquip(equipment)
 end
 
 --- Gets the actor equipped in the slot, or nil if it's empty.
+--- @param slot string
 --- @return Actor?
 function Equipper:get(slot)
    return self.equipped[slot]
