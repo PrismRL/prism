@@ -381,6 +381,18 @@ function Display:putDrawable(x, y, drawable, color, layer)
    self:putSprite(x, y, drawable, color, layer)
 end
 
+--- Puts an Actor onto the display grid at specified coordinates, considering its depth.
+--- If a `color` or `layer` is provided, they will override the drawable's default values.
+--- Will error if the actor has no Drawable.
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @param actor Actor The actor to put.
+--- @param color Color4? An optional color to use for the drawable.
+--- @param layer number? An optional layer to use for depth sorting.
+function Display:putActor(x, y, actor, color, layer)
+   self:putSprite(x, y, actor:expect(prism.components.Drawable), color, layer)
+end
+
 --- Puts a character, foreground color, and background color at a specific grid position.
 --- This function respects drawing layers, so higher layer values will overwrite lower ones.
 --- @param x integer The X grid coordinate.
