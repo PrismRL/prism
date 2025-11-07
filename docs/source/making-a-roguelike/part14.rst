@@ -130,14 +130,24 @@ head to ``modules/game/actors`` and create a new file named ``wandofhurt.lua``.
       }
    end)
 
-We can edit our ``loot/chest.lua`` file to fill chests with wands instead of meat.
+We can edit our ``loot/chest.lua`` file to add wands to the drop pool. We have to switch from a
+single entry to a list of weighted entries, and we'll give the wands half the weight of potions,
+making them drop 33% of the time.
 
 .. code-block:: lua
 
+   --- @type DropTableOptions
    return {
-      {
-         entry = "WandofHurt",
-      },
+      entries = {
+         {
+            entry = "VitalityPotion",
+            weight = 100,
+         },
+         {
+            entry = "WandofHurt",
+            weight = 50,
+         },
+      }
    }
 
 Great, now we've got to implement the zap. Head over to ``modules/game/actions`` and create a new
