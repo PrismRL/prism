@@ -8,10 +8,11 @@ local TurnHandler = prism.Object:extend("TurnHandler")
 --- @param actor Actor
 --- @param controller Controller
 function TurnHandler:handleTurn(level, actor, controller)
-   local action = controller:act(level, actor)
+   local decision = controller:decide(level, actor, prism.decisions.ActionDecision(actor))
+   local action = decision.action
 
    -- we make sure we got an action back from the controller for sanity's sake
-   assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
+   assert(action, "Actor " .. actor:getName() .. " returned nil from decide/act.")
 
    level:perform(action)
 end

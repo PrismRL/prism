@@ -4,6 +4,12 @@
 --- @overload fun(): Controller
 local Controller = prism.Component:extend "Controller"
 
+function Controller:decide(level, actor, decision)
+   assert(prism.decisions.ActionDecision:is(decision), "For non-action decisions override the Controller:decide method!")
+   decision:setAction(self:act(level, actor), level)
+   return decision
+end
+
 --- Returns the :lua:class:`Action` that the actor will take on its turn.
 --- This should not modify the :lua:class:`Level` directly.
 --- @param level Level The level the actor is in.
