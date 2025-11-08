@@ -332,7 +332,7 @@ local function loadRegistry(path, registry, recurse, definitions)
             local objectName = item.className
             prism.writeDefinitions(
                '--- @module "' .. requireName .. '"',
-               registry.module .. registry.name .. "." .. objectName .. " = nil"
+               registry.module .. "." .. registry.name .. "." .. objectName .. " = nil"
             )
          end
       elseif info.type == "directory" and recurse then
