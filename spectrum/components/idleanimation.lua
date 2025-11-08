@@ -9,7 +9,7 @@ function IdleAnimation:__new(animationName)
    self.animation = spectrum.animations[animationName]()
 end
 
-function IdleAnimation:onDeserialize()
+function IdleAnimation:__deserialize()
    self.animation = spectrum.animations[self.animationName]()
 end
 

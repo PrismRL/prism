@@ -200,6 +200,7 @@ function Object.serialize(object)
 
          if isSerializableObject(obj) then
             className = obj.className
+            if className == "Level" then print "SERIALIZING LEVEL" end
             if obj.__serialize then
                sourceTable = obj:__serialize(ctx)
             end
@@ -306,7 +307,11 @@ function Object.deserialize(data)
 
    -- 4) Post-deserialize hook (optional)
    for _, obj in ipairs(idToObject) do
-      if obj.onDeserialize then obj:onDeserialize() end
+      if obj.__wire then obj:__wire() end
+   end
+
+   for _, obj in ipairs(idToObject) do
+      if obj.__finalize then obj:__finalize() end
    end
 
    return idToObject[data.rootId]

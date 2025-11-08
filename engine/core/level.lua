@@ -592,14 +592,13 @@ function Level:sparseMapCallback()
    end
 end
 
-function Level:onDeserialize()
+function Level:__finalize()
    self.actorStorage:setCallbacks(self:sparseMapCallback(), self:sparseMapCallback())
 
    local w, h = self.map.w, self.map.h
    self.opacityCache = prism.BooleanBuffer(w, h)
    self.passableCache = prism.CascadingBitmaskBuffer(w, h, 4)
 
-   self.map:onDeserialize()
    for x, y, _ in self.map:each() do
       self:updateCaches(x, y)
    end

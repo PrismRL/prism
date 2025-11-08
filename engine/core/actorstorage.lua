@@ -174,7 +174,7 @@ function ActorStorage:merge(other)
       self:addActor(actor)
    end
 end
-function ActorStorage:onDeserialize()
+function ActorStorage:__wire()
    self:setCallbacks(self.insertSparseMapCallback, self.removeSparseMapCallback)
 
    -- rebuild runtime-only caches
@@ -182,7 +182,6 @@ function ActorStorage:onDeserialize()
    self.componentCounts = {}
 
    for _, actor in pairs(self.actors) do
-      print(_, actor)
       self:insertSparseMapEntries(actor)
       self:updateComponentCache(actor)
    end

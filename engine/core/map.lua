@@ -79,7 +79,7 @@ function Map:isInBounds(x, y)
    return x >= 1 and x <= self.w and y >= 1 and y <= self.h
 end
 
-function Map:onDeserialize()
+function Map:__wire()
    local w, h = self.w, self.h
    self.opacityCache = prism.BooleanBuffer(w, h)
    self.passableCache = prism.BitmaskBuffer(w, h)
