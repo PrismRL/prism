@@ -4,6 +4,7 @@ local bit = require("bit") -- LuaJIT's bit library
 ---@field private data table<number, any> # Internal storage table mapping index -> item
 ---@field private freeIndices number[] # List of freed indices available for reuse
 ---@field private generations table<number, number> # Generation counters per slot
+---@field private maxIndex integer
 ---@overload fun(): SparseArray
 local SparseArray = prism.Object:extend("SparseArray")
 
@@ -29,21 +30,24 @@ local function unpack_handle(handle)
 end
 
 --- Constructs a new SparseArray instance.
+--- Constructs a new SparseArray instance.
 function SparseArray:__new()
    self.data = {}
    self.freeIndices = {}
    self.generations = {}
+   self.maxIndex = 0
 end
 
 --- Adds an item to the sparse array.
---- @param item any The item to add.
---- @return number handle A packed handle representing the item's location.
+--- @param item any
+--- @return number handle
 function SparseArray:add(item)
    local index
    if #self.freeIndices > 0 then
       index = table.remove(self.freeIndices)
    else
-      index = #self.data + 1
+      index = self.maxIndex + 1
+      self.maxIndex = index
    end
 
    self.data[index] = item
@@ -51,8 +55,8 @@ function SparseArray:add(item)
    return pack_handle(index, self.generations[index])
 end
 
---- Removes an item from the sparse array by its handle.
---- @param handle number The packed handle representing the item.
+--- Removes an item by handle.
+--- @param handle number
 function SparseArray:remove(handle)
    local index, gen = unpack_handle(handle)
    if self.data[index] ~= nil and self.generations[index] == gen then
@@ -60,6 +64,13 @@ function SparseArray:remove(handle)
       self.data[index] = nil
       self.generations[index] = self.generations[index] + 1
       table.insert(self.freeIndices, index)
+
+      if index == self.maxIndex then
+         while self.maxIndex > 0 and self.data[self.maxIndex] == nil do
+            self.maxIndex = self.maxIndex - 1
+         end
+      end
+      
       return data
    end
 end
@@ -75,28 +86,28 @@ function SparseArray:get(handle)
    end
 end
 
---- Clears the sparse array, removing all items and resetting state.
+
+--- Clears the sparse array.
 function SparseArray:clear()
    self.data = {}
    self.freeIndices = {}
    self.generations = {}
+   self.maxIndex = 0
 end
 
---- Returns an iterator over valid (handle, item) pairs in the sparse array.
---- @return fun(): (number?, any?) Iterator function returning (handle, item)
+--- Iterates over valid (handle, item) pairs up to the last live slot.
 function SparseArray:pairs()
-   local data = self.data
-   local generations = self.generations
    local i = 0
    return function()
-      repeat
-         i = i + 1
-         local item = data[i]
+      for n = i + 1, self.maxIndex do
+         local item = self.data[n]
          if item ~= nil then
-            local handle = pack_handle(i, generations[i] or 0)
+            i = n
+            local handle = pack_handle(n, self.generations[n] or 0)
             return handle, item
          end
-      until i > #data
+      end
+      return nil
    end
 end
 
