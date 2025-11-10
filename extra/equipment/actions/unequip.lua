@@ -1,8 +1,8 @@
 local Log = prism.components.Log
 local Name = prism.components.Name
 
-local UnequipTarget = prism
-   .Target()
+-- stylua: ignore
+local UnequipTarget = prism.Target()
    :outsideLevel()
    :with(prism.components.Equipment)
    :filter(function(_, owner, target)

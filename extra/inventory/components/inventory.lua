@@ -30,12 +30,6 @@ function Inventory:__new(options)
    self.limitWeight = options.limitWeight or self.limitWeight
 
    if options.multipleStacks ~= nil then self.multipleStacks = options.multipleStacks end
-
-   if options.items then
-      for _, actor in ipairs(options.items) do
-         self:addItem(actor)
-      end
-   end
 end
 
 --- Query the inner ActorStorage of the inventory.
@@ -102,6 +96,14 @@ function Inventory:canAddItem(actor)
    return true
 end
 
+--- Tries to add every item in the passed list. Will error if unable to do so.
+--- @param actors Actor[]
+function Inventory:addItems(actors)
+   for _, actor in ipairs(actors) do
+      self:addItem(actor)
+   end
+end
+
 --- Adds the actor to the inventory, stacking it if possible.
 --- @param actor Actor
 function Inventory:addItem(actor)
@@ -119,6 +121,7 @@ function Inventory:addItem(actor)
    end
 
    self.inventory:addActor(actor)
+   self.owner:addRelation(prism.relations.InventoryRelation, actor)
    self:updateLimits()
 end
 
@@ -127,6 +130,7 @@ end
 --- @return Actor
 function Inventory:removeItem(actor)
    self.inventory:removeActor(actor)
+   self.owner:removeRelation(prism.relations.InventoryRelation, actor)
    self:updateLimits()
    return actor
 end

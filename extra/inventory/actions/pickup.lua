@@ -1,10 +1,8 @@
 local sf = string.format
 local Name = prism.components.Name
 
-local PickupTarget = prism.inventory
-   .InventoryTarget()
-   :outsideInventory()
-   :with(prism.components.Item)
+local PickupTarget = prism
+   .Target(prism.components.Item)
    :range(0)
    :filter(function(level, owner, target)
       --- @cast owner Actor

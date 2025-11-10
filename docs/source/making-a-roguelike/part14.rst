@@ -6,19 +6,18 @@ Zapping wands
    This chapter is very work in progress, beware! Don't procede yet adventurer!
 
 In this chapter we'll add wands and a generalized targetting system for actions. We'll add a Wand of
-Hurt which you can zap a creature with to hurt them, and a Wand of Swapping which you can use to
-swap positions with another actor.
+Hurt to zap a creatures with.
 
 Creating a base module
 ----------------------
 
-We're going to be creating a base module where we can put components, actions, and actors we want to
-reference in the main module so they're available at load time.
+The load order for a given type within a module is random, so let's start by creating a "base"
+module that our other content can depend on. Head to ``modules`` and create a new folder there
+called ``base``. Now go ahead and add an ``actions`` and ``components`` folder.
 
-Head to ``modules`` and create a new folder there called ``basegame``. Now go ahead and add an
-``actions`` and ``components`` folder.
-
-Let's head to ``modules/basegame/components`` and create a new file ``zappable.lua``.
+Let's head to ``modules/base/components`` and create a new file ``zappable.lua``. This component is
+going to be the base Zappable component all of our wand components derive from. It implements a few
+utility functions for managing charges and checking if we have charges left to zap.
 
 .. code-block:: lua
 
@@ -47,18 +46,13 @@ Let's head to ``modules/basegame/components`` and create a new file ``zappable.l
 
    return Zappable
 
-This component is going to be the base Zappable component all of our wand components derive from. It
-implements a few utility functions for managing charges and checking if we have charges left to zap.
-
 Now let's head to ``modules/basegame/actions`` and create a new file ``zap.lua``.
 
 .. code-block:: lua
 
    local Log = prism.components.Log
 
-   local ZappableTarget = prism.inventory.InventoryTarget()
-       :inInventory()
-       :with(prism.components.Zappable)
+   local ZappableTarget = prism.targets.InventoryTarget(prism.components.Zappable)
 
    --- @class Zap : Action
    local Zap = prism.Action:extend "Zap"
@@ -76,14 +70,13 @@ Now let's head to ``modules/basegame/actions`` and create a new file ``zap.lua``
    --- @param level Level
    --- @param zappable Actor
    function Zap:perform(level, zappable)
-       local zappableComponent = zappable:expect(prism.components.Zappable):reduceCharges()
-       Log.addMessage(self.owner, "You zap the wand!")
+       zappable:expect(prism.components.Zappable):reduceCharges()
    end
 
    return Zap
 
-Now we implement a zap action. We implement a canPerform that checks if the wand has enough charges
-to zap. Then we implement a perform action that reduces the wand's charges and logs a message.
+Now we implement a zap action. We implement a ``canPerform`` that checks if the wand has enough
+charges to zap. Then we implement a ``perform`` action that reduces the wand's charges.
 
 Making a wand
 -------------
@@ -116,11 +109,11 @@ head to ``modules/game/actors`` and create a new file named ``wandofhurt.lua``.
    prism.registerActor("WandofHurt", function()
       return prism.Actor.fromComponents {
           prism.components.Name("Wand of Hurt"),
-          prism.components.Drawable{
+          prism.components.Drawable {
               index = "/",
               color = prism.Color4.LIME
           },
-          prism.components.HurtZappable{
+          prism.components.HurtZappable {
               charges = 3,
               cost = 1,
               damage = 3,
@@ -151,30 +144,47 @@ making them drop 33% of the time.
    }
 
 Great, now we've got to implement the zap. Head over to ``modules/game/actions`` and create a new
-file folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
+folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
 
 .. code-block:: lua
 
-   local HurtZappableTarget = prism.inventory.InventoryTarget(prism.components.HurtZappable)
-       :inInventory()
+   local WandTarget = prism.targets.InventoryTarget(prism.components.HurtZappable)
 
    local HurtTarget = prism.Target(prism.components.Health)
-       :range(5)
-       :sensed()
+      :range(5)
+      :sensed()
 
    --- @class HurtZap : Zap
    local HurtZap = prism.actions.Zap:extend "HurtZap"
+   HurtZap.name = "Zap"
    HurtZap.abstract = false
    HurtZap.targets = {
-       HurtZappableTarget,
-       HurtTarget
+      HurtZappableTarget,
+      HurtTarget
    }
 
    --- @param level Level
    function HurtZap:perform(level, zappable, hurtable)
-       prism.actions.Zap.perform(self, level, zappable)
-       local zappableComponent = zappable:expect(prism.components.HurtZappable)
-       level:tryPerform(prism.actions.Damage(hurtable, zappableComponent.damage))
+      prism.actions.Zap.perform(self, level, zappable)
+      local zappableComponent = zappable:expect(prism.components.HurtZappable)
+      local damage = prism.actions.Damage(hurtable, zappableComponent.damage)
+      level:tryPerform(damage)
+
+      local dealt = damage.dealt or 0
+
+      local zapName = Name.lower(hurtable)
+      local ownerName = Name.lower(self.owner)
+
+      Log.addMessage(self.owner, "You zap the %s for %i damage!", zapName, dealt)
+      Log.addMessage(hurtable, "The %s zaps you for %i damage!", ownerName, dealt)
+      Log.addMessageSensed(
+         level,
+         self,
+         "The %s kicks the %s for %i damage.",
+         ownerName,
+         zapName,
+         dealt
+      )
    end
 
    return HurtZap
@@ -213,13 +223,13 @@ handlers.
    ---@param targetList any[]
    ---@param target Target
    function TargetHandler:__new(display, levelState, targetList, target)
-       self.display = display
-       self.levelState = levelState
-       self.owner = self.levelState.decision.actor
-       self.level = self.levelState.level
-       self.targetList = targetList
-       self.target = target
-       self.index = nil
+      self.display = display
+      self.levelState = levelState
+      self.owner = self.levelState.decision.actor
+      self.level = self.levelState.level
+      self.targetList = targetList
+      self.target = target
+      self.index = nil
    end
 
 This accepts a display, the base levelstate, a target list, and the current target we're handling
@@ -228,23 +238,23 @@ and initializes a few fields for convenience.
 .. code-block:: lua
 
    function TargetHandler:getValidTargets()
-       error("Method 'getValidTargets' must be implemented in subclass")
+      error("Method 'getValidTargets' must be implemented in subclass")
    end
 
    function TargetHandler:init()
-       self.validTargets = self:getValidTargets()
-       if #self.validTargets == 0 then self.manager:pop("poprecursive") end
+      self.validTargets = self:getValidTargets()
+      if #self.validTargets == 0 then self.manager:pop("poprecursive") end
    end
 
    function TargetHandler:resume(previous, shouldPop)
-       if shouldPop == "poprecursive" then self.manager:pop("poprecursive") return end
-       if shouldPop then self.manager:pop() return end
+      if shouldPop == "poprecursive" then self.manager:pop("poprecursive") return end
+      if shouldPop then self.manager:pop() return end
 
-       self:init()
+      self:init()
    end
 
    function TargetHandler:load()
-       self:init()
+      self:init()
    end
 
    return TargetHandler
@@ -279,23 +289,22 @@ getValidTargets. Where we'll query the level for valid targets to our action and
 .. code-block:: lua
 
    function GeneralTargetHandler:getValidTargets()
-       local valid = {}
+      local valid = {}
 
+      for foundTarget in self.level:query():target(self.target, self.level, self.owner, self.targetList):iter() do
+         table.insert(valid, foundTarget)
+      end
 
-       for foundTarget in self.level:query():target(self.target, self.level, self.owner, self.targetList):iter() do
-           table.insert(valid, foundTarget)
-       end
+      if not (self.target.type and self.target.type ~= prism.Vector2) then
+         for x, y in self.level.map:each() do
+            local vec = prism.Vector2(x, y)
+            if self.target:validate(self.level, self.owner, vec, self.targetList) then
+               table.insert(valid, vec)
+            end
+         end
+      end
 
-       if not (self.target.type and self.target.type ~= prism.Vector2) then
-           for x, y in self.level.map:each() do
-               local vec = prism.Vector2(x, y)
-               if self.target:validate(self.level, self.owner, vec, self.targetList) then
-                   table.insert(valid, vec)
-               end
-           end
-       end
-
-       return valid
+      return valid
    end
 
 We check if the current target is a Vector or an Actor and we'll set the selectorPosition based on
@@ -304,11 +313,11 @@ the current target that we chose arbitrarily.
 .. code-block:: lua
 
    function GeneralTargetHandler:setSelectorPosition()
-       if prism.Vector2.is(self.curTarget) then
-           self.selectorPosition = self.curTarget
-       elseif self.curTarget then
-           self.selectorPosition = self.curTarget:getPosition()
-       end
+      if prism.Vector2.is(self.curTarget) then
+         self.selectorPosition = self.curTarget
+      elseif self.curTarget then
+         self.selectorPosition = self.curTarget:getPosition()
+      end
    end
 
 Next we'll redefine the init function to set the selector position.
@@ -316,9 +325,9 @@ Next we'll redefine the init function to set the selector position.
 .. code-block:: lua
 
    function GeneralTargetHandler:init()
-       TargetHandler.init(self)
-       self.curTarget = self.validTargets[1]
-       self:setSelectorPosition()
+      TargetHandler.init(self)
+      self.curTarget = self.validTargets[1]
+      self:setSelectorPosition()
    end
 
 Then we'll implement a draw function that draws this state. You'll recognize a lot of this code it's
@@ -328,27 +337,27 @@ drawing code in GameLevelState is that we'll center the camera on the selector's
 .. code-block:: lua
 
    function GeneralTargetHandler:draw()
-       local cameraPos = self.selectorPosition
+      local cameraPos = self.selectorPosition
 
-       self.display:clear()
-       -- set the camera position on the display
-       local ox, oy = self.display:getCenterOffset(cameraPos:decompose())
-       self.display:setCamera(ox, oy)
+      self.display:clear()
+      -- set the camera position on the display
+      local ox, oy = self.display:getCenterOffset(cameraPos:decompose())
+      self.display:setCamera(ox, oy)
 
-       -- draw the level
-       local primary, secondary = self.levelState:getSenses()
-       self.display:putSenses(primary, secondary)
+      -- draw the level
+      local primary, secondary = self.levelState:getSenses()
+      self.display:putSenses(primary, secondary)
 
-       -- put a string to let the player know what's happening
-       self.display:print(1, 1, "Select a target!")
-       self.display:print(self.selectorPosition.x + ox, self.selectorPosition.y + oy, "X", prism.Color4.RED)
+      -- put a string to let the player know what's happening
+      self.display:print(1, 1, "Select a target!")
+      self.display:print(self.selectorPosition.x + ox, self.selectorPosition.y + oy, "X", prism.Color4.RED)
 
-       -- if there's a target then we should draw it's name!
-       if self.curTarget then
-           local x, y = cameraPos:decompose()
-           self.display:print(x + ox + 1, y + oy, Name.get(self.curTarget))
-       end
-       self.display:draw()
+      -- if there's a target then we should draw it's name!
+      if self.curTarget then
+       local x, y = cameraPos:decompose()
+       self.display:print(x + ox + 1, y + oy, Name.get(self.curTarget))
+      end
+      self.display:draw()
    end
 
 Finally, we'll handle input. Add the following controls in ``controls.lua``.
@@ -366,17 +375,17 @@ through our valid targets table.
    function GeneralTargetHandler:update(dt)
       controls:update()
       if controls.tab.pressed then
-          local lastTarget = self.curTarget
-          self.index, self.curTarget = next(self.validTargets, self.index)
+         local lastTarget = self.curTarget
+         self.index, self.curTarget = next(self.validTargets, self.index)
 
-          while
-              (not self.index and #self.validTargets > 0) or
-              (lastTarget == self.curTarget and #self.validTargets > 1)
-          do
-              self.index, self.curTarget = next(self.validTargets, self.index)
-          end
+         while
+            (not self.index and #self.validTargets > 0) or
+            (lastTarget == self.curTarget and #self.validTargets > 1)
+         do
+            self.index, self.curTarget = next(self.validTargets, self.index)
+         end
 
-          self:setSelectorPosition()
+         self:setSelectorPosition()
       end
 
 Then if the user hits the select keybind we add this target to the overall target list we're
@@ -385,8 +394,8 @@ building and pop this instance of the target handler off of the gamestate stack.
 .. code-block:: lua
 
    if controls.select.pressed and self.curTarget then
-       table.insert(self.targetList, self.curTarget)
-       self.manager:pop()
+      table.insert(self.targetList, self.curTarget)
+      self.manager:pop()
    end
 
 If the user hits the return keybind we'll pop this state and pass "pop" to indicate to the other
@@ -394,8 +403,8 @@ states that we should pop all the way back to the inventory.
 
 .. code-block:: Lua
 
-   if controls["return"].pressed then
-       self.manager:pop("pop")
+   if controls.back.pressed then
+      self.manager:pop("pop")
    end
 
 Next we'll handle moving the selector. When the user hits a movement key we move the selector, check
@@ -403,23 +412,23 @@ for a valid target on that tile, and if it exists we'll set that as the current 
 
 .. code-block:: lua
 
-       if controls.move.pressed then
-           self.selectorPosition = self.selectorPosition + controls.move.vector
-           self.curTarget = nil
+      if controls.move.pressed then
+         self.selectorPosition = self.selectorPosition + controls.move.vector
+         self.curTarget = nil
 
-           if self.target:validate(self.level, self.owner, self.selectorPosition, self.targetList) then
-               self.curTarget = self.selectorPosition
-           end
+         if self.target:validate(self.level, self.owner, self.selectorPosition, self.targetList) then
+            self.curTarget = self.selectorPosition
+         end
 
-           local validTarget = self.level:query()
-               :at(self.selectorPosition:decompose())
-               :target(self.target, self.level, self.owner, self.targetList)
-               :first()
+         local validTarget = self.level:query()
+            :at(self.selectorPosition:decompose())
+            :target(self.target, self.level, self.owner, self.targetList)
+            :first()
 
-           if validTarget then
-               self.curTarget = validTarget
-           end
-       end
+         if validTarget then
+            self.curTarget = validTarget
+         end
+      end
    end
 
    return GeneralTargetHandler
@@ -438,18 +447,18 @@ instances of actions.
 .. code-block:: lua
 
    function InventoryActionState:__new(display, decision, level, item)
-       self.display = display
-       self.decision = decision
-       self.level = level
-       self.item = item
+      self.display = display
+      self.decision = decision
+      self.level = level
+      self.item = item
 
-       self.actions = {}
+      self.actions = {}
 
-       for _, Action in ipairs(self.decision.actor:getActions()) do
-           if Action:validateTarget(1, level, self.decision.actor, item) and not Action:isAbstract() then
-               table.insert(self.actions, Action)
-           end
-       end
+      for _, Action in ipairs(self.decision.actor:getActions()) do
+         if Action:validateTarget(1, level, self.decision.actor, item) and not Action:isAbstract() then
+            table.insert(self.actions, Action)
+         end
+      end
    end
 
 Next we'll make a small modification to draw. We'll use the action's name field and fallback to the
@@ -458,17 +467,17 @@ className if it doesn't exist. This is so our zaps display as "Zap" and not "Hur
 .. code-block:: lua
 
    function InventoryActionState:draw()
-       self.previousState:draw()
-       self.display:clear()
-       self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
+      self.previousState:draw()
+      self.display:clear()
+      self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
 
-       for i, Action in ipairs(self.actions) do
-           local letter = string.char(96 + i)
-           local name = string.gsub(Action:getName(), "Action", "")
-           self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
-       end
+      for i, Action in ipairs(self.actions) do
+         local letter = string.char(96 + i)
+         local name = string.gsub(Action:getName(), "Action", "")
+         self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+      end
 
-       self.display:draw()
+      self.display:draw()
    end
 
 Now we'll modify the keypressed function. Instead of simply executing the action the user selects
@@ -502,7 +511,7 @@ push GeneralTargetHandler states to handle the rest of the targets.
          end
       end
 
-      if controls.inventory.pressed or controls["return"].pressed then self.manager:pop() end
+      if controls.inventory.pressed or controls.back.pressed then self.manager:pop() end
    end
 
 And to wrap things up we'll change InventoryActionState's resume. When it resumes we'll check if
@@ -513,17 +522,17 @@ action didn't work.
 .. code-block:: lua
 
    function InventoryActionState:resume()
-       if self.targets then
-           local action = self.selectedAction(self.decision.actor, unpack(self.targets))
-           local success, err = self.level:canPerform(action)
-           if success then
-               self.decision:setAction(action)
-           else
-               prism.components.Log.addMessage(self.decision.actor, err)
-           end
+      if self.targets then
+         local action = self.selectedAction(self.decision.actor, unpack(self.targets))
+         local success, err = self.level:canPerform(action)
+         if success then
+            self.decision:setAction(action)
+         else
+            prism.components.Log.addMessage(self.decision.actor, err)
+         end
 
-           self.manager:pop()
-       end
+         self.manager:pop()
+      end
    end
 
 Wrapping it up

@@ -132,9 +132,7 @@ be an item in the actor's inventory with a ``Drinkable`` component.
 
 .. code-block:: lua
 
-   local DrinkTarget = prism.inventory.InventoryTarget()
-      :inInventory()
-      :with(prism.components.Drinkable)
+   local DrinkTarget = prism.targets.InventoryTarget(prism.components.Drinkable)
 
 Then if we have a condition holder and our drink applies a condition we add that condition.
 
@@ -257,8 +255,8 @@ can use :lua:func:`ConditionHolder.each` to simplify this.
       self.owner
          :expect(prism.components.ConditionHolder)
          :each(function(condition)
-            if prism.conditions.TimedCondition:is(condition) then
-               --- @cast condition TimedCondition
+            if prism.conditions.TickedCondition:is(condition) then
+               --- @cast condition TickedCondition
                condition.duration = condition.duration - 1
             end
          end)
@@ -269,8 +267,8 @@ Then we want to remove any that have expired. We can similarly use
 .. code-block:: lua
 
    :removeIf(function(condition)
-      --- @cast condition TimedCondition
-      return prism.conditions.TimedCondition:is(condition)
+      --- @cast condition TickedCondition
+      return prism.conditions.TickedCondition:is(condition)
          and condition.duration <= 0
    end)
 

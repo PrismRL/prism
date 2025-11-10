@@ -49,15 +49,19 @@ new file ``eat.lua``.
 
    local Log = prism.components.Log
    local Name = prism.components.Name
-   local sf = string.format
 
-   local EatTarget = prism.inventory.InventoryTarget(prism.components.Edible)
-      :inInventory()
+   local EatTarget = prism.targets.InventoryTarget(prism.components.Edible)
 
 .. note::
 
-   The inventory module injects :lua:class:`InventoryTarget`, a subclass of :lua:class:`Target` into
-   the ``prism`` namespace as a convenience. It includes extra filters for dealing with items.
+   The inventory module registers a :lua:class:`Target` for convenience. It's equivalent to the
+   following:
+
+   .. code-block:: lua
+
+      prism.Target(...)
+         :outsideLevel()
+         :related(prism.relations.InventoryRelation)
 
 Now we create our eat action. You need a health component to eat, and the target has to be something
 edible in your inventory as we defined above.
@@ -88,11 +92,10 @@ making sure to remove the item with :lua:func:`Inventory.removeQuantity`.
       local health = self.owner:expect(prism.components.Health)
       health:heal(edible.healing)
 
-      local inventory = self.owner:expect(prism.components.Inventory)
-      inventory:removeQuantity(food, 1)
+      self.owner:expect(prism.components.Inventory):removeQuantity(food, 1)
 
-      Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
-      Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
+      Log.addMessage(self.owner, "You eat the %s.", Name.get(food))
+      Log.addMessageSensed(level, self, "%s eats the %s.", Name.get(self.owner), Name.get(food))
    end
 
    return Eat
@@ -105,9 +108,8 @@ making sure to remove the item with :lua:func:`Inventory.removeQuantity`.
 
       local Log = prism.components.Log
       local Name = prism.components.Name
-      local sf = string.format
 
-      local EatTarget = prism.inventory.InventoryTarget(prism.components.Edible):inInventory()
+      local EatTarget = prism.targets.InventoryTarget(prism.components.Edible)
 
       ---@class Eat : Action
       ---@overload fun(owner: Actor, food: Actor): Eat
@@ -128,11 +130,10 @@ making sure to remove the item with :lua:func:`Inventory.removeQuantity`.
          local health = self.owner:expect(prism.components.Health)
          health:heal(edible.healing)
 
-         local inventory = self.owner:expect(prism.components.Inventory)
-         inventory:removeQuantity(food, 1)
+         self.owner:expect(prism.components.Inventory):removeQuantity(food, 1)
 
-         Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
-         Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
+         Log.addMessage(self.owner, "You eat the %s.", Name.get(food))
+         Log.addMessageSensed(level, self, "%s eats the %s.", Name.get(self.owner), Name.get(food))
       end
 
       return Eat
@@ -152,12 +153,12 @@ Modifying the interface
 -----------------------
 
 With the actual mechanics out of the way it's time to flesh out our inventory menu a little more.
-Create a new file called ``gamestates/inventoryactionstate.lua`` and let's create a new
-:lua:class:`GameState`. Load our :lua:class:`Keybinding` and alias the name component at the top.
+Create a new file called ``modules/game/gamestates/inventoryactionstate.lua`` and let's create a new
+:lua:class:`GameState`. Load our :lua:class:`Controls` and alias the name component at the top.
 
 .. code-block:: lua
 
-   local keybindings = require "keybindingschema"
+   local controls = require "controls"
    local Name = prism.components.Name
 
 Next we'll create the new ``GameState`` and in the constructor we'll loop through all the actions
@@ -226,17 +227,18 @@ we set the decision to that action.
 
 .. code-block:: lua
 
-   function InventoryActionState:keypressed(key)
+   function InventoryActionState:update(dt)
+      controls:update()
       for i, action in ipairs(self.actions) do
-         print(key, string.char(i + 96))
-         if key == string.char(i + 96) then
+         if spectrum.Input.key[string.char(i + 96)].pressed then
             self.decision:setAction(action)
             self.manager:pop()
          end
       end
 
-      local binding = keybindings:keypressed(key)
-      if binding == "inventory" or binding == "return" then self.manager:pop() end
+      if controls.inventory.pressed or controls.back.pressed then
+         self.manager:pop()
+      end
    end
 
 Now we'll need to head over to ``gamestates/inventorystate.lua`` and push this new
@@ -245,16 +247,15 @@ modify our ``InventoryState:keypressed`` to look like this:
 
 .. code-block:: lua
 
-   function InventoryState:keypressed(key)
+   function InventoryState:update(dt)
       for i, letter in ipairs(self.letters) do
-         if key == letter then
+         if spectrum.Input.key[letter].pressed then
             self.manager:push(InventoryActionState(self.display, self.decision, self.level, self.items[i]))
             return
          end
       end
 
-      local binding = keybindings:keypressed(key)
-      if binding == "inventory" or binding == "return" then self.manager:pop() end
+      if controls.inventory.pressed or controls.back.pressed then self.manager:pop() end
    end
 
 We've got one last thing to handle. When we press a letter right now we just go back to the

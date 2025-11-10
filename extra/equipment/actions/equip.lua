@@ -3,10 +3,8 @@ local Name = prism.components.Name
 
 -- Filters inventory items that have an Equipment component
 -- and can be equipped by the acting entity.
-local EquipTarget = prism.inventory
-   .InventoryTarget()
-   :inInventory()
-   :with(prism.components.Equipment)
+-- stylua: ignore
+local EquipTarget = prism.targets.InventoryTarget(prism.components.Equipment)
    :filter(function(level, owner, target)
       local equipper = owner:expect(prism.components.Equipper)
       return equipper:canEquip(target)
