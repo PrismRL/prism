@@ -123,7 +123,7 @@ back over to the Die action. Let's change its ``perform`` to the following:
       level:removeActor(self.owner)
 
       if not level:query(prism.components.PlayerController):first() then
-         level:yield(prism.messages.Lose())
+         level:yield(prism.messages.LoseMessage())
       end
    end
 

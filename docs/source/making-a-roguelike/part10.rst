@@ -46,7 +46,7 @@ drop one of our meat bricks.
 
 .. code-block:: lua
 
-   prism.components.DropTable{
+   prism.components.DropTable {
       chance = 0.3,
       entry = prism.actors.MeatBrick,
    }
@@ -149,20 +149,23 @@ before removing the container and logging messages.
 
 Now that we're all set up with our container logic we need to actually make a container to try this
 with. Let's create a new file in ``modules/game/actors`` called ``chest.lua``. We'll accept a
-``contents`` parameter to define the items in the chest.
+``contents`` parameter to define the items in the chest and use :lua:func:`Inventory.addItems`.
 
 .. code-block:: lua
 
    prism.registerActor("Chest", function(contents)
-      --- @cast contents Actor[]
-      return prism.Actor.fromComponents {
+      local inventory = prism.components.Inventory()
+      local chest = prism.Actor.fromComponents {
           prism.components.Name("Chest"),
           prism.components.Position(),
-          prism.components.Inventory{items = contents},
+          inventory,
           prism.components.Drawable("(", prism.Color4.YELLOW),
           prism.components.Container(),
           prism.components.Collider()
       }
+      --- @cast contents Actor[]
+      inventory:addItems(contents or {})
+      return chest
    end)
 
 .. note::
@@ -174,12 +177,11 @@ Cracking a cold one
 
 If you launch the game and bump into a chest you'll notice you kick it, which is fun but not exactly
 what we want. We'll have to change to logic in ``GameLevelState``. In
-``modules/gamestates/gamelevelstate.lua`` ``GameLevelState:keypressed`` and add the following right
-above where we try to kick:
+``GameLevelState:updateDecision`` add the following right above where we try to kick:
 
 .. code-block:: lua
 
-   function GameLevelState:update(dt)
+   function GameLevelState:updateDecision(dt, owner, decision)
       -- yada yada
       if controls.move.pressed then
          -- blah blah

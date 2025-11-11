@@ -15,9 +15,9 @@ The load order for a given type within a module is random, so let's start by cre
 module that our other content can depend on. Head to ``modules`` and create a new folder there
 called ``base``. Now go ahead and add an ``actions`` and ``components`` folder.
 
-Let's head to ``modules/base/components`` and create a new file ``zappable.lua``. This component is
-going to be the base Zappable component all of our wand components derive from. It implements a few
-utility functions for managing charges and checking if we have charges left to zap.
+Let's head to ``modules/base/components`` and create a new component in ``zappable.lua``. This will
+be the base component for our wand components. It implements a few utility functions for managing
+charges and checking if we have charges left to zap.
 
 .. code-block:: lua
 
@@ -46,7 +46,9 @@ utility functions for managing charges and checking if we have charges left to z
 
    return Zappable
 
-Now let's head to ``modules/basegame/actions`` and create a new file ``zap.lua``.
+Now let's head to ``modules/basegame/actions`` and create a new action in ``zap.lua``. We implement
+a :lua:func:`Action.canPerform` that checks if the wand has enough charges to zap. Then we implement
+a ``perform`` action that reduces the wand's charges.
 
 .. code-block:: lua
 
@@ -56,27 +58,21 @@ Now let's head to ``modules/basegame/actions`` and create a new file ``zap.lua``
 
    --- @class Zap : Action
    local Zap = prism.Action:extend "Zap"
-   Zap.name = "Zap"
    Zap.abstract = true
    Zap.targets = { ZappableTarget }
    Zap.ZappableTarget = ZappableTarget
 
-   --- @param level Level
    --- @param zappable Actor
    function Zap:canPerform(level, zappable)
        return zappable:expect(prism.components.Zappable):canZap()
    end
 
-   --- @param level Level
    --- @param zappable Actor
    function Zap:perform(level, zappable)
        zappable:expect(prism.components.Zappable):reduceCharges()
    end
 
    return Zap
-
-Now we implement a zap action. We implement a ``canPerform`` that checks if the wand has enough
-charges to zap. Then we implement a ``perform`` action that reduces the wand's charges.
 
 Making a wand
 -------------
@@ -144,7 +140,9 @@ making them drop 33% of the time.
    }
 
 Great, now we've got to implement the zap. Head over to ``modules/game/actions`` and create a new
-folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
+folder called ``zaps``. Inside create a new file called ``hurtzap.lua``. We're going to extend the
+base zap to add a tiny bit of behavior to it. We'll add a target, anything with health, and try to
+deal damage to it.
 
 .. code-block:: lua
 
@@ -189,9 +187,6 @@ folder called ``zaps``. Inside create a new file called ``hurtzap.lua``.
 
    return HurtZap
 
-We're going to extend the base zap to add a tiny bit of behavior to it. We'll add a target, anything
-with health, and try to deal damage to it.
-
 Okay now if you go in game there's a bit of an issue! You can't actually zap anything with this wand
 yet, just drop it! We'll have to modify the user interface to add some proper targetting to let us
 select who we'd like to zap.
@@ -199,11 +194,9 @@ select who we'd like to zap.
 Handling targets
 ----------------
 
-Let's head over ``gamestates`` and create a new folder called ``targethandlers``. Inside let's
-create a new file called ``targethandler.lua``.
-
-Let's walk through step by step. We're going to create a new base class we'll use for all our target
-handlers.
+Let's head over to ``modules/base/gamestates`` and create a new :lua:class:`GameState` in
+``targethandler.lua``. We'll accept a display, the base :lua:class:`LevelState`, a target list, and
+the current target we're handling and initializes a few fields for convenience.
 
 .. code-block:: lua
 
@@ -232,9 +225,6 @@ handlers.
       self.index = nil
    end
 
-This accepts a display, the base levelstate, a target list, and the current target we're handling
-and initializes a few fields for convenience.
-
 .. code-block:: lua
 
    function TargetHandler:getValidTargets()
@@ -247,8 +237,9 @@ and initializes a few fields for convenience.
    end
 
    function TargetHandler:resume(previous, shouldPop)
-      if shouldPop == "poprecursive" then self.manager:pop("poprecursive") return end
-      if shouldPop then self.manager:pop() return end
+      if shouldPop then
+         self.manager:pop(shouldPop == "poprecursive" and shouldPop or nil)
+      end
 
       self:init()
    end
@@ -277,14 +268,15 @@ Let's head over to ``modules/game/gamestates/`` and create a new file called
 
    local controls = require "controls"
    local Name = prism.components.Name
-   local TargetHandler = require "gamestates.targethandlers.targethandler"
 
    --- @class GeneralTargetHandler : TargetHandler
    --- @field selectorPosition Vector2
-   local GeneralTargetHandler = TargetHandler:extend("GeneralTargetHandler")
+   local GeneralTargetHandler = prism.gamestates.TargetHandler:extend("GeneralTargetHandler")
 
-We create a new target handler derived from the TargetHandler gamestate. Next we move on to
-getValidTargets. Where we'll query the level for valid targets to our action and collect them.
+We create a new target handler derived from the ``TargetHandler`` gamestate. Next we move on to
+``getValidTargets``, where we'll query the level for valid targets to our action and collect them.
+We can query directly for actors using :lua:func:`Query.target`, or if the target is ``Vector2`` we
+validate against the entire map.
 
 .. code-block:: lua
 
@@ -295,7 +287,7 @@ getValidTargets. Where we'll query the level for valid targets to our action and
          table.insert(valid, foundTarget)
       end
 
-      if not (self.target.type and self.target.type ~= prism.Vector2) then
+      if self.target.type and self.target.type == prism.Vector2 then
          for x, y in self.level.map:each() do
             local vec = prism.Vector2(x, y)
             if self.target:validate(self.level, self.owner, vec, self.targetList) then
@@ -307,7 +299,7 @@ getValidTargets. Where we'll query the level for valid targets to our action and
       return valid
    end
 
-We check if the current target is a Vector or an Actor and we'll set the selectorPosition based on
+We check if the current target is a Vector2 or an Actor and we'll set the selectorPosition based on
 the current target that we chose arbitrarily.
 
 .. code-block:: lua
@@ -325,38 +317,34 @@ Next we'll redefine the init function to set the selector position.
 .. code-block:: lua
 
    function GeneralTargetHandler:init()
-      TargetHandler.init(self)
+      self.super.init(self)
       self.curTarget = self.validTargets[1]
       self:setSelectorPosition()
    end
 
-Then we'll implement a draw function that draws this state. You'll recognize a lot of this code it's
-very similar to the code found in ``GameLevelState``. The main difference between this and the
-drawing code in GameLevelState is that we'll center the camera on the selector's position.
+Then we'll implement a draw function that draws this state. Like our other states, we draw the base
+state and then draw on top of it. We'll put a red "X" over our selected position, and next to it
+their name, if they are ``Entity``.
 
 .. code-block:: lua
 
    function GeneralTargetHandler:draw()
-      local cameraPos = self.selectorPosition
+      self.levelState:draw()
 
       self.display:clear()
       -- set the camera position on the display
-      local ox, oy = self.display:getCenterOffset(cameraPos:decompose())
-      self.display:setCamera(ox, oy)
-
-      -- draw the level
-      local primary, secondary = self.levelState:getSenses()
-      self.display:putSenses(primary, secondary)
+      local x, y = self.selectorPosition:decompose()
 
       -- put a string to let the player know what's happening
       self.display:print(1, 1, "Select a target!")
-      self.display:print(self.selectorPosition.x + ox, self.selectorPosition.y + oy, "X", prism.Color4.RED)
+      self.display:push()
+      self.display:print(x, y, "X", prism.Color4.RED, prism.Color4.BLACK)
 
-      -- if there's a target then we should draw it's name!
-      if self.curTarget then
-       local x, y = cameraPos:decompose()
-       self.display:print(x + ox + 1, y + oy, Name.get(self.curTarget))
+      -- if there's a target then we should draw its name!
+      if prism.Entity:is(self.curTarget) then
+         self.display:print(x + 1, y, Name.get(self.curTarget))
       end
+      self.display:pop()
       self.display:draw()
    end
 
@@ -416,10 +404,12 @@ for a valid target on that tile, and if it exists we'll set that as the current 
          self.selectorPosition = self.selectorPosition + controls.move.vector
          self.curTarget = nil
 
+         -- Check if the position is valid
          if self.target:validate(self.level, self.owner, self.selectorPosition, self.targetList) then
             self.curTarget = self.selectorPosition
          end
 
+         -- Check if any actors at the position are valid
          local validTarget = self.level:query()
             :at(self.selectorPosition:decompose())
             :target(self.target, self.level, self.owner, self.targetList)
@@ -437,22 +427,17 @@ Modifying InventoryActionState
 ------------------------------
 
 Okay with our target handler out of the way we're going to have to make some changes to the
-InventoryActionState. Navigate to ``/gamestates/inventoryactionstate.lua``. First we're going to
-make a small change to the constructor.
+InventoryActionState. Navigate to ``modules/game/gamestates/inventoryactionstate.lua``. First we're
+going to make a small change to the constructor.
 
-Instead of validating if the action is valid with it's only target being the item we'll instead
-validate if it's first target is the item. The actions table notably now holds prototypes instead of
+Instead of validating if the action is valid with its only target being the item we'll instead
+validate if its first target is the item. The actions table notably now holds prototypes instead of
 instances of actions.
 
 .. code-block:: lua
 
    function InventoryActionState:__new(display, decision, level, item)
-      self.display = display
-      self.decision = decision
-      self.level = level
-      self.item = item
-
-      self.actions = {}
+      -- ...
 
       for _, Action in ipairs(self.decision.actor:getActions()) do
          if Action:validateTarget(1, level, self.decision.actor, item) and not Action:isAbstract() then
@@ -461,39 +446,37 @@ instances of actions.
       end
    end
 
-Next we'll make a small modification to draw. We'll use the action's name field and fallback to the
-className if it doesn't exist. This is so our zaps display as "Zap" and not "HurtZap".
+Next we'll make a small modification to ``draw``. We'll use the action's :lua:func:`Action.getName`
+method so our zaps display as "Zap" and not "HurtZap".
 
 .. code-block:: lua
+   :emphasize-lines: 3
 
-   function InventoryActionState:draw()
-      self.previousState:draw()
-      self.display:clear()
-      self.display:print(1, 1, Name.get(self.item), nil, nil, 2, "right")
-
-      for i, Action in ipairs(self.actions) do
-         local letter = string.char(96 + i)
-         local name = string.gsub(Action:getName(), "Action", "")
-         self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
-      end
-
-      self.display:draw()
+   for i, Action in ipairs(self.actions) do
+      local letter = string.char(96 + i)
+      local name = string.gsub(Action:getName(), "Action", "")
+      self.display:print(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
    end
 
-Now we'll modify the keypressed function. Instead of simply executing the action the user selects
-we'll know check if the action is valid with just the item as the first target, and if not we'll
-push GeneralTargetHandler states to handle the rest of the targets.
+Now we'll modify the ``update`` function. Instead of simply executing the action the user selects
+we'll now check if the action is valid with just the item as the first target.
 
 .. code-block:: lua
+   :emphasize-lines: 5
 
    function InventoryActionState:update(dt)
       controls:update()
       for i, Action in ipairs(self.actions) do
          if spectrum.Input.key[string.char(i + 96)].pressed then
-            if self.decision:setAction(action(self.decision.actor, self.item), self.level) then
+            if self.decision:setAction(Action(self.decision.actor, self.item), self.level) then
                self.manager:pop()
                return
             end
+
+If it wasn't valid, we'll push instances of our ``GeneralTargetHandler`` in reverse order, so the
+second target (whatever is after the item) is on the top of the stack.
+
+.. code-block:: lua
 
             self.selectedAction = Action
             self.targets = { self.item }
@@ -514,10 +497,9 @@ push GeneralTargetHandler states to handle the rest of the targets.
       if controls.inventory.pressed or controls.back.pressed then self.manager:pop() end
    end
 
-And to wrap things up we'll change InventoryActionState's resume. When it resumes we'll check if
-we're handling targets for an action, adn if we are we check if we succeeded. If we succeeded we set
-the action and then pop the state. If not we display a message to the user explaining why their
-action didn't work.
+And to wrap things up we'll change ``InventoryActionState``'s resume. We'll check if we're handling
+targets for an action, and if we are we check if we succeeded. If we succeeded we set the action and
+then pop the state. If not we display a message to the user explaining why their action didn't work.
 
 .. code-block:: lua
 
@@ -534,6 +516,10 @@ action didn't work.
          self.manager:pop()
       end
    end
+
+.. note::
+
+   :lua:func:`unpack` expands a table into separate values.
 
 Wrapping it up
 --------------

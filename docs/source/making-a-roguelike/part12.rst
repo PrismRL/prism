@@ -243,7 +243,7 @@ we set the decision to that action.
 
 Now we'll need to head over to ``gamestates/inventorystate.lua`` and push this new
 ``InventoryActionState`` onto the stack when a user selects an item instead of dropping it. Let's
-modify our ``InventoryState:keypressed`` to look like this:
+modify our ``InventoryState:update`` to look like this:
 
 .. code-block:: lua
 

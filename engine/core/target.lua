@@ -6,6 +6,7 @@
 --- @field hint any
 --- @field _optional boolean
 --- @field inLevel boolean
+--- @field type? Object An object prototype for the targeted to adhere to.
 --- @field rangeValue integer
 --- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
 --- @field requiredComponents table<Component, boolean>

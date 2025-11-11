@@ -186,7 +186,9 @@ Then we check if the user hit the inventory or return key, and if so we call
 
             local item = actor:expect(prism.components.Item)
             local countstr = ""
-            if item.stackCount and item.stackCount > 1 then countstr = ("%sx "):format(item.stackCount) end
+            if item.stackCount and item.stackCount > 1 then
+               countstr = ("%sx "):format(item.stackCount)
+            end
 
             local itemstr = ("[%s] %s%s"):format(letter, countstr, name)
             self.display:print(1, 1 + i, itemstr, nil, nil, 2, "right")
@@ -195,7 +197,7 @@ Then we check if the user hit the inventory or return key, and if so we call
          self.display:draw()
       end
 
-      function InventoryState:keypressed(key)
+      function InventoryState:update(dt)
          for i, letter in ipairs(self.letters) do
             if spectrum.Input.key[letter].pressed then
                local pressedItem = self.items[i]
@@ -219,12 +221,12 @@ Opening the inventory
 
 With the inventory state complete it's time to glue things together. Head back to
 ``gamelevelstate.lua`` and let's add some input handling to get the ``InventoryState`` to pop up. At
-the bottom of ``GameLevelState:keypressed``, just above the wait action, we'll check for the
+the bottom of ``GameLevelState:updateDecision``, just above the wait action, we'll check for the
 inventory key and push the ``InventoryState``, if the current actor (``owner``) has an inventory.
 
 .. code-block:: lua
 
-   function GameLevelState:update(key, scancode)
+   function GameLevelState:updateDecision(dt, owner, decision)
       -- ...
 
       if controls.inventory.pressed then

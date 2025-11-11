@@ -98,8 +98,8 @@ Next, we'll define the ``Descend`` action.
 First we create a target that targets actors with the ``Stair`` component within range 1. Then we
 create our ``Descend`` action, which is similar to ``Die`` but yields a different message.
 
-Now let's add some code to ``GameLevelState:keypressed``. After we figure out which direction the
-user just pressed we'll add the following. Make sure this is checked before the `Move` action is
+Now let's add some code to ``GameLevelState:updateDecision``. After we figure out which direction
+the user just pressed we'll add the following. Make sure this is checked before the `Move` action is
 considered.
 
 .. code-block:: lua
@@ -123,8 +123,8 @@ Now that we've got everything set up we need to actually handle the descend mess
 
 .. code-block:: lua
 
-   if prism.messages.Descend:is(message) then
-      self.manager:enter(GameLevelState(self.display))
+   if prism.messages.DescendMessage:is(message) then
+      self.manager:enter(prism.gamestates.GameLevelState(self.display))
    end
 
 If we run the game and find ourselves a staircase we'll be able to go down to a new floor!

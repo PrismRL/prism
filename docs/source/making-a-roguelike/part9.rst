@@ -32,7 +32,7 @@ actor.
 
    function Descend:perform(level)
       level:removeActor(self.owner)
-      level:yield(prism.messages.Descend(self.owner))
+      level:yield(prism.messages.DescendMessage(self.owner))
    end
 
 Creating the game
@@ -104,7 +104,7 @@ Next we'll change ``GameLevelState``'s constructor.
 
       -- Initialize with the created level and display, the heavy lifting is done by
       -- the parent class.
-      spectrum.LevelState.__new(self, builder:build(), display)
+      self.super.__new(self, builder:build(), display)
    end
 
 This sets up our level with the map we build and the seed we'll pass from the ``Game``. Let's change
@@ -119,10 +119,10 @@ Now modify our message handler so it passes the player into the next level:
 
 .. code-block:: lua
 
-   if prism.messages.Descend:is(message) then
+   if prism.messages.DescendMessage:is(message) then
       --- @cast message DescendMessage
       self.manager:enter(
-         GameLevelState(
+         prism.gamestates.GameLevelState(
             self.display,
             Game:generateNextFloor(message.descender),
             Game:getLevelSeed()
@@ -155,7 +155,7 @@ In ``love.load()``, we'll generate the first level and pass a seed for the level
 .. code-block:: lua
 
    local builder = Game:generateNextFloor(prism.actors.Player())
-   manager:push(GameLevelState(display, builder, Game:getLevelSeed()))
+   manager:push(prism.gamestates.GameLevelState(display, builder, Game:getLevelSeed()))
 
 We can simplify the set up for our ``MapGeneratorState`` as well.
 
