@@ -33,6 +33,9 @@ making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:data:: prism.decisions: table<string, Decision>
 
      The decision registry.
+- .. lua:data:: prism.: table<string, Scheduler>
+
+     The scheduler registry.
 
 .. toctree::
    :caption: Core
@@ -48,7 +51,7 @@ making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:function:: prism.loadModule(directory: string)
 
      Loads a module into prism, automatically loading objects based on directory.
-     . Will also run ``module/module.lua`` for any other set up.
+     . Will also run ``module/module.lua`` or ``module/init.lua`` for any other set up.
 
      :param string directory: The root directory of the module.
 - .. lua:function:: prism.registerActor(name: string, factory: fun(...): Actor)
@@ -59,11 +62,8 @@ making them easy to access, e.g. ``prism.actors.Player()``.
      Registers a cell factory into the cells registry.
 - .. lua:function:: prism.registerTarget(name: string, factory: fun(...): Target)
 
-     Registers a target factory into the targets registry.
-- .. lua:function:: prism.turn(level: Level, actor: Actor, controller: Controller)
-
-     This is the core turn logic, and if you need to use a different scheduler or
-     want a different turn structure you should override this.
+     Registers an object into its registry. Errors if the object has no registry.
+- .. lua:function:: prism.register(object: Object)
 
      :param Level level: The current level.
      :param Actor actor: The actor taking their turn.
