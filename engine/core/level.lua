@@ -27,7 +27,7 @@ Level.serializationBlacklist = {
 function Level:__new(builder)
    self.systemManager = prism.SystemManager(self)
    self.actorStorage = prism.ActorStorage(self:sparseMapCallback(), self:sparseMapCallback())
-   self.scheduler = builder.scheduler or prism.SimpleScheduler()
+   self.scheduler = builder.scheduler or prism.schedulers.SimpleScheduler()
    self.turnHandler = builder.turnHandler or prism.TurnHandler()
    self.RNG = prism.RNG(builder.seed or love.timer.getTime())
    self.debug = false
