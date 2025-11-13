@@ -1,5 +1,5 @@
 --- @class IdleAnimation : Component
---- @field animationName string
+--- @field animationName AnimationName
 --- @field animation Animation
 --- @overload fun(animationName: string): IdleAnimation
 local IdleAnimation = prism.Component:extend "IdleAnimation"

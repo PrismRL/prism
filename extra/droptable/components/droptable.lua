@@ -11,7 +11,7 @@
 --- @field entry DropTableEntry The actual actor to drop.
 --- @field quantity? integer The amount to drop. Defaults to 1.
 
---- @alias DropTableEntry string|Actor
+--- @alias DropTableEntry ActorName|Actor
 
 --- A drop table which tracks what items the actor should drop upon death.
 --- @class DropTable : Component
