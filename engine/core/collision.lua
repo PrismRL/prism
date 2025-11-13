@@ -1,5 +1,5 @@
 --- Keeps track of different move types or "layers" in the game for use in collision detection.
----@class Collision
+--- @class Collision
 local Collision = {}
 
 --- @alias CollisionMask integer
@@ -26,17 +26,12 @@ Collision.movetypeNames = {}
 --- @param movetypeIndex integer The index key from `Collision.MOVETYPES`.
 function Collision.registerMovetype(name, movetypeIndex)
    local bitmask = Collision.MOVETYPES[movetypeIndex]
-   if bitmask == nil then
-      error("Invalid movetype index: " .. tostring(movetypeIndex))
-   end
+   if bitmask == nil then error("Invalid movetype index: " .. tostring(movetypeIndex)) end
    if Collision.registeredMovetypes[name] then
       error("movetype name already registered: " .. name)
    end
    if Collision.movetypeNames[bitmask] then
-      error(
-         "movetype already assigned to another name: "
-            .. Collision.movetypeNames[bitmask]
-      )
+      error("movetype already assigned to another name: " .. Collision.movetypeNames[bitmask])
    end
 
    Collision.registeredMovetypes[name] = bitmask

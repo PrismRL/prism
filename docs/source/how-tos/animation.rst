@@ -209,5 +209,6 @@ mouse click.
 Drawing animations
 ------------------
 
-:lua:class:`Display` won't draw animations by default. Call :lua:func:`Display.putAnimations` when
-you want them to be drawn.
+The :lua:class:`Display` will draw animations automatically, so long as you are using a
+:lua:class:`LevelState` and using :lua:func:`Display.putSenses`. Otherwise, you will have to call
+:lua:func:`Display.update` and :lua:func:`Display.putAnimations` yourself.

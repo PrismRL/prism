@@ -23,15 +23,18 @@ install:
 	. venv/bin/activate
 	pip install -r requirements.txt
 
-watch: install
-	sphinx-autobuild source build/html
-
-build: install
+generate: install
 	$(MAKE) clean
 	python3 scripts/gen.py ../spectrum/ source/reference/spectrum
 	python3 scripts/gen.py ../engine/ source/reference/prism
 	python3 scripts/gen.py ../geometer/ source/reference/geometer
 	python3 scripts/gen.py ../extra/ source/reference/extra
+
+watch: generate
+	sphinx-autobuild source build/html
+
+build: generate
+	$(MAKE) clean
 	$(MAKE) html
 
 # Catch-all target: route all unknown targets to Sphinx using the new

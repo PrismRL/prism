@@ -59,7 +59,7 @@ Require the target to be visible or otherwise sensed by the actor:
 
    myTarget:sensed()
 
-This uses the actor’s ``Senses`` component.
+This uses the actor’s :lua:class:`Senses` component.
 
 Line of sight
 -------------
@@ -71,7 +71,7 @@ Require an unobstructed path from the actor to the target:
    myTarget:los(collisionMask)
 
 This checks tiles along a Bresenham line and fails if any cell blocks movement. For more info on
-collision masks see the Collision how-to!
+collision masks see the :doc:`Collision how-to <collision>`!
 
 Checking target types
 ---------------------

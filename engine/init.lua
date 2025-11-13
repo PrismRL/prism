@@ -165,6 +165,7 @@ prism.BehaviorTree.Conditional = prism.require "core.behavior_tree.btconditional
 --- @field class Object
 --- @field manualRegistration boolean
 --- @field module string
+--- @field definitions? string[]
 
 --- @type Registry[]
 prism.registries = {}
@@ -175,6 +176,21 @@ function prism.writeDefinitions(...)
          table.insert(prism._currentDefinitions, line)
       end
    end
+end
+
+local function writeFile(name, content, mode)
+   local sourceDir = love.filesystem.getSource() -- Get the source directory
+   local outputFile = sourceDir .. "/definitions/" .. name .. ".lua"
+
+   -- Write the concatenated definitions to the file
+   local file, err = io.open(outputFile, mode)
+   if not file then
+      prism.logger.error("Failed to open file for writing: " .. (err or "Unknown error"))
+      return
+   end
+
+   file:write(content)
+   file:close()
 end
 
 --- Registers a factory for a registry.
@@ -188,6 +204,10 @@ local function registerFactory(registry)
       string.format("--- @param factory %sFactory", className),
       string.format("function %s.register%s(name, factory) end", registry.module, className)
    )
+
+   registry.definitions = {}
+
+   writeFile(registry.name, "--- @meta\n--- @alias " .. className .. "Name\n", "w")
 
    local registryList = _G[registry.module][registry.name]
    local registryStr = registry.module .. "." .. registry.name
@@ -208,6 +228,8 @@ local function registerFactory(registry)
          "--- @type fun(...): " .. className,
          string.format("%s.%s.%s = nil", registry.module, registry.name, objectName)
       )
+
+      table.insert(registry.definitions, '--- | "' .. objectName .. '"')
    end
 end
 
@@ -337,6 +359,11 @@ local function loadRegistry(path, registry, recurse, definitions)
          loadRegistry(fileName, registry, recurse, definitions)
       end
    end
+
+   if registry.manualRegistration then
+      writeFile(registry.name, table.concat(registry.definitions, "\n"), "a")
+      registry.definitions = {}
+   end
 end
 
 prism.modules = {}
@@ -353,8 +380,7 @@ function prism.loadModule(directory)
    )
    table.insert(prism.modules, directory)
 
-   local sourceDir = love.filesystem.getSource() -- Get the source directory
-   local definitions = { "---@meta " .. string.lower(directory) }
+   local definitions = { "--- @meta " .. string.lower(directory) }
    prism._currentDefinitions = definitions
 
    if love.filesystem.read(directory .. "/module.lua") then
@@ -381,18 +407,7 @@ function prism.loadModule(directory)
 
    local lastSubdir = directory:match("([^/\\]+)$")
 
-   -- Define the output file path
-   local outputFile = sourceDir .. "/definitions/" .. lastSubdir .. ".lua"
-
-   -- Write the concatenated definitions to the file
-   local file, err = io.open(outputFile, "w")
-   if not file then
-      prism.logger.error("Failed to open file for writing: " .. (err or "Unknown error"))
-      return
-   end
-
-   file:write(table.concat(definitions, "\n"))
-   file:close()
+   writeFile(lastSubdir, table.concat(definitions, "\n"), "w")
 end
 
 --- Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
