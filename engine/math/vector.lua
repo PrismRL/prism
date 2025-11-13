@@ -1,4 +1,3 @@
----@module 'Vector2''
 --- @alias DistanceType
 --- | "euclidean"
 --- | "chebyshev"
@@ -9,27 +8,27 @@
 --- 4way is an alias for manhattan distance
 --- 8way is an alias for chebyshev distance
 
----@class Vector2 : Object
+--- @class Vector2 : Object
 --- A Vector2 represents a 2D vector with x and y components.
----@overload fun(x?: number, y?: number): Vector2
----@operator add(Vector2): Vector2
----@operator sub(Vector2): Vector2
----@operator mul(Vector2): Vector2
----@operator unm(): Vector2
----@field x number The x component of the vector.
----@field y number The y component of the vector.
+--- @overload fun(x?: number, y?: number): Vector2
+--- @operator add(Vector2): Vector2
+--- @operator sub(Vector2): Vector2
+--- @operator mul(Vector2): Vector2
+--- @operator unm(): Vector2
+--- @field x number The x component of the vector.
+--- @field y number The y component of the vector.
 local Vector2 = prism.Object:extend("Vector2")
 
 --- Constructor for Vector2 accepts two numbers, x and y. Both default to zero.
----@param x number The x component of the vector.
----@param y number The y component of the vector.
+--- @param x number The x component of the vector.
+--- @param y number The y component of the vector.
 function Vector2:__new(x, y)
    self.x = x or 0
    self.y = y or 0
 end
 
 --- Returns a copy of the vector.
----@return Vector2 # A copy of the vector.
+--- @return Vector2 # A copy of the vector.
 function Vector2:copy(out)
    out = out or Vector2()
    out.x, out.y = self.x, self.y
@@ -38,7 +37,7 @@ function Vector2:copy(out)
 end
 
 --- Returns the length of the vector.
----@return number # The length of the vector.
+--- @return number # The length of the vector.
 function Vector2:length()
    return math.sqrt(self.x * self.x + self.y * self.y)
 end
@@ -62,23 +61,23 @@ function Vector2:floor()
 end
 
 --- Rotates the vector clockwise.
----@return Vector2 The rotated vector.
+--- @return Vector2 The rotated vector.
 function Vector2:rotateClockwise()
    return Vector2(self.y, -self.x)
 end
 
 --- Adds two vectors together.
----@param a Vector2 The first vector.
----@param b Vector2 The second vector.
----@return Vector2 # The sum of the two vectors.
+--- @param a Vector2 The first vector.
+--- @param b Vector2 The second vector.
+--- @return Vector2 # The sum of the two vectors.
 function Vector2.__add(a, b)
    return Vector2(a.x + b.x, a.y + b.y)
 end
 
 --- Subtracts vector b from vector a.
----@param a Vector2 The first vector.
----@param b Vector2 The second vector.
----@return Vector2 # The difference of the two vectors.
+--- @param a Vector2 The first vector.
+--- @param b Vector2 The second vector.
+--- @return Vector2 # The difference of the two vectors.
 function Vector2.__sub(a, b)
    return Vector2(a.x - b.x, a.y - b.y)
 end
@@ -91,41 +90,41 @@ function Vector2.__div(a, b)
 end
 
 --- Checks the equality of two vectors.
----@param a Vector2 The first vector.
----@param b Vector2 The second vector.
----@return boolean # True if the vectors are equal, false otherwise.
+--- @param a Vector2 The first vector.
+--- @param b Vector2 The second vector.
+--- @return boolean # True if the vectors are equal, false otherwise.
 function Vector2.__eq(a, b)
    return a.x == b.x and a.y == b.y
 end
 
 --- Multiplies a vector by a scalar.
----@param a Vector2 The vector.
----@param b number The scalar.
----@return Vector2 # The product of the vector and the scalar.
+--- @param a Vector2 The vector.
+--- @param b number The scalar.
+--- @return Vector2 # The product of the vector and the scalar.
 function Vector2.__mul(a, b)
    return Vector2(a.x * b, a.y * b)
 end
 
 --- Negates the vector.
----@param a Vector2 The vector to negate.
----@return Vector2 # The negated vector.
+--- @param a Vector2 The vector to negate.
+--- @return Vector2 # The negated vector.
 function Vector2.__unm(a)
    return Vector2(-a.x, -a.y)
 end
 
 --- Creates a string representation of the vector.
----@return string # The string representation of the vector.
+--- @return string # The string representation of the vector.
 function Vector2:__tostring()
    return "x: " .. self.x .. " y: " .. self.y
 end
 
----@return number hash
+--- @return number hash
 function Vector2:hash()
    return Vector2._hash(self.x, self.y)
 end
 
----@param x integer
----@param y integer
+--- @param x integer
+--- @param y integer
 function Vector2._hash(x, y)
    -- Shift to handle negatives (assuming 26-bit signed integers)
    x = x + 0x2000000 -- Shift range from [-2^25, 2^25-1] to [0, 2^26-1]
@@ -138,7 +137,7 @@ function Vector2.unhash(hash)
    return Vector2(x, y)
 end
 
----@param hash number
+--- @param hash number
 function Vector2._unhash(hash)
    local x = hash % 0x4000000
    local y = math.floor(hash / 0x4000000)

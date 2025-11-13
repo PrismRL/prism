@@ -15,6 +15,7 @@ Released under the **MIT License**, prism is free to use for both personal and c
 - **In-game editor**: You can edit the world like a paint program during play and build prefabricated maps with Geometer.
 - **Multitile actors**: Prism supports having players and monsters be NxN! No longer does a dragon need to inhabit just one tile!
 - **Built-in modules**: Generic modules and systems for field of view, inventory, equipment, status effects, and more are included to get games off the ground quickly.
+- **Animations**: A flexible animation system is included. Check out the [how-to](https://prismrl.github.io/prism/how-tos/animation.html) for some examples!
   
 ## Documentation
 

@@ -25,7 +25,20 @@ Load it with the following:
    actions/*
 
 .. toctree::
-   :caption: Miscellaneous
+   :caption: Relations
+   :glob:
    :maxdepth: 1
 
-   inventorytarget
+   relations/*
+
+**Targets**
+
+- .. lua:data:: prism.targets.InventoryTarget: Target
+
+     A helper target equivalent to the following:
+
+     .. code-block:: lua
+
+        prism.Target(...)
+           :outsideLevel()
+           :related(prism.relations.InventoryRelation)

@@ -1,16 +1,16 @@
----@class Color4 : Object
----@field r number The red component (0-1).
----@field g number The green component (0-1).
----@field b number The blue component (0-1).
----@field a number The alpha component (0-1).
----@overload fun(r?: number, g?: number, b?: number, a?: number): Color4
+--- @class Color4 : Object
+--- @field r number The red component (0-1).
+--- @field g number The green component (0-1).
+--- @field b number The blue component (0-1).
+--- @field a number The alpha component (0-1).
+--- @overload fun(r?: number, g?: number, b?: number, a?: number): Color4
 local Color4 = prism.Object:extend("Color4")
 
 --- Constructor for Color4 accepts red, green, blue, and alpha values. All default to 0, alpha to 1.
----@param r number The red component (0-1).
----@param g number The green component (0-1).
----@param b number The blue component (0-1).
----@param a number The alpha component (0-1).
+--- @param r number The red component (0-1).
+--- @param g number The green component (0-1).
+--- @param b number The blue component (0-1).
+--- @param a number The alpha component (0-1).
 function Color4:__new(r, g, b, a)
    self.r = r or 0
    self.g = g or 0
@@ -41,9 +41,9 @@ function Color4:copy(out)
 end
 
 --- Linearly interpolates between two colors.
----@param target Color4 The target color.
----@param t number A value between 0 and 1, where 0 is this color and 1 is the target color.
----@return Color4 The interpolated color.
+--- @param target Color4 The target color.
+--- @param t number A value between 0 and 1, where 0 is this color and 1 is the target color.
+--- @return Color4 The interpolated color.
 function Color4:lerp(target, t)
    return Color4(
       self.r + (target.r - self.r) * t,
@@ -54,50 +54,50 @@ function Color4:lerp(target, t)
 end
 
 --- Multiplies the color's components by a scalar.
----@param scalar number The scalar value.
----@return Color4 The scaled color.
+--- @param scalar number The scalar value.
+--- @return Color4 The scaled color.
 function Color4.__mul(self, scalar)
    return Color4(self.r * scalar, self.g * scalar, self.b * scalar, self.a * scalar)
 end
 
 --- Adds two colors together.
----@param a Color4 The first color.
----@param b Color4 The second color.
----@return Color4 The sum of the two colors.
+--- @param a Color4 The first color.
+--- @param b Color4 The second color.
+--- @return Color4 The sum of the two colors.
 function Color4.__add(a, b)
    return Color4(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a)
 end
 
 --- Subtracts one color from another.
----@param a Color4 The first color.
----@param b Color4 The second color.
----@return Color4 The difference of the two colors.
+--- @param a Color4 The first color.
+--- @param b Color4 The second color.
+--- @return Color4 The difference of the two colors.
 function Color4.__sub(a, b)
    return Color4(a.r - b.r, a.g - b.g, a.b - b.b, a.a - b.a)
 end
 
 --- Negates the color's components.
----@return Color4 The negated color.
+--- @return Color4 The negated color.
 function Color4.__unm(self)
    return Color4(-self.r, -self.g, -self.b, -self.a)
 end
 
 --- Checks equality between two colors.
----@param a Color4 The first color.
----@param b Color4 The second color.
----@return boolean True if the colors are equal, false otherwise.
+--- @param a Color4 The first color.
+--- @param b Color4 The second color.
+--- @return boolean True if the colors are equal, false otherwise.
 function Color4.__eq(a, b)
    return a.r == b.r and a.g == b.g and a.b == b.b and a.a == b.a
 end
 
 --- Creates a string representation of the color.
----@return string The string representation.
+--- @return string The string representation.
 function Color4:__tostring()
    return string.format("r: %.2f, g: %.2f, b: %.2f, a: %.2f", self.r, self.g, self.b, self.a)
 end
 
 --- Returns the components of the color as numbers.
----@return number r, number g, number b, number a The components of the color.
+--- @return number r, number g, number b, number a The components of the color.
 function Color4:decompose()
    return self.r, self.g, self.b, self.a
 end
@@ -107,7 +107,7 @@ function Color4:compose(r, g, b, a)
 end
 
 --- Clamps the components of the color between 0 and 1.
----@return Color4 The clamped color.
+--- @return Color4 The clamped color.
 function Color4:clamp()
    return Color4(
       math.min(1, math.max(0, self.r)),
