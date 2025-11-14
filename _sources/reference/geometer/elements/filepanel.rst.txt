@@ -1,0 +1,16 @@
+.. title:: FilePanelProps
+.. lua:autoobject:: FilePanelProps
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+
+.. title:: FilePanel
+.. lua:autoobject:: FilePanel
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+

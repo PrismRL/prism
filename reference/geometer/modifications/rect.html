@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>RectModification &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../../../_static/prism.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="lua class">
+<dt class="sig sig-object lua" id="lua-RectModification">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RectModification</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../modification.html#lua-Modification" title="Modification"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Modification</span></code></a><a class="headerlink" href="#lua-RectModification" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-RectModification.placeable">
+<span class="sig-name descname"><span class="pre">placeable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#lua-RectModification.placeable" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-RectModification.topLeft">
+<span class="sig-name descname"><span class="pre">topLeft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/math/vector.html#lua-Vector2" title="Vector2"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Vector2</span></code></a><a class="headerlink" href="#lua-RectModification.topLeft" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-RectModification.bottomRight">
+<span class="sig-name descname"><span class="pre">bottomRight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/math/vector.html#lua-Vector2" title="Vector2"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Vector2</span></code></a><a class="headerlink" href="#lua-RectModification.bottomRight" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-RectModification.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-RectModification" title="RectModification"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">RectModification</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">placeable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/entity.html#lua-Entity" title="Entity"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Entity</span></code></a><span class="p"><span class="pre">}</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">topLeft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/math/vector.html#lua-Vector2" title="Vector2"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Vector2</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">bottomRight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/math/vector.html#lua-Vector2" title="Vector2"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Vector2</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">fillMode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-RectModification.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-RectModification.fillMode">
+<span class="sig-name descname"><span class="pre">fillMode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><a class="headerlink" href="#lua-RectModification.fillMode" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-RectModification.placeBoundaryCell">
+<span class="sig-name descname"><span class="pre">placeBoundaryCell</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-RectModification" title="RectModification"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">RectModification</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">attachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../spectrum/display.html#lua-SpectrumAttachable" title="SpectrumAttachable"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-RectModification.placeBoundaryCell" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Helper function to place a cell on the boundary</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<div class="lua-inherited-members docutils container">
+<p><strong>Other members:</strong></p>
+<div class="admonition">
+<p>Inherited from <a class="reference internal" href="../modification.html#lua-Modification" title="Modification"><code class="docutils literal notranslate"><span class="pre">Modification</span></code></a>: <a class="reference internal" href="../modification.html#lua-Modification.execute" title="Modification.execute"><code class="docutils literal notranslate"><span class="pre">execute()</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.place" title="Modification.place"><code class="docutils literal notranslate"><span class="pre">place()</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.placeActor" title="Modification.placeActor"><code class="docutils literal notranslate"><span class="pre">placeActor()</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.placeCell" title="Modification.placeCell"><code class="docutils literal notranslate"><span class="pre">placeCell()</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.placed" title="Modification.placed"><code class="docutils literal notranslate"><span class="pre">placed</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.removeActor" title="Modification.removeActor"><code class="docutils literal notranslate"><span class="pre">removeActor()</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.removed" title="Modification.removed"><code class="docutils literal notranslate"><span class="pre">removed</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.replaced" title="Modification.replaced"><code class="docutils literal notranslate"><span class="pre">replaced</span></code></a>, <a class="reference internal" href="../modification.html#lua-Modification.undo" title="Modification.undo"><code class="docutils literal notranslate"><span class="pre">undo()</span></code></a></p>
+<p>Inherited from <a class="reference internal" href="../../prism/core/object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="../../prism/core/object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deepcopy" title="Object.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+</div>
+</div>
+</dd></dl>
+
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/reference/geometer/modifications/rect.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

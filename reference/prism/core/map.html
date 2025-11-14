@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
@@ -26,8 +26,8 @@
     <link rel="icon" href="../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="MapBuilder" href="map_builder.html" />
-    <link rel="prev" title="Level" href="level.html" />
+    <link rel="next" title="Message" href="message.html" />
+    <link rel="prev" title="LevelBuilder" href="levelbuilder.html" />
    
   <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
@@ -63,7 +63,7 @@
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Map.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Map" title="Map"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Map</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cellFactory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="cell.html#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Map.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Map" title="Map"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Map</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">cellFactory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">unknown</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Map.__new" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The constructor for the ‘Map’ class.
 Initializes the map with the specified dimensions and initial value, and sets up the opacity caches.</p>
 <dl class="field-list simple">
@@ -71,7 +71,6 @@ Initializes the map with the specified dimensions and initial value, and sets up
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>w</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The width of the map.</p></li>
 <li><p><strong>h</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The height of the map.</p></li>
-<li><p><strong>cellFactory</strong> (<span class="k">fun</span><span class="p">(</span><span class="p">)</span><span class="p">:</span><span class="w"> </span><a class="reference internal" href="cell.html#lua-Cell" title="Cell"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Cell</span></code></a>) – The initial value to fill the map with.</p></li>
 </ul>
 </dd>
 </dl>
@@ -140,13 +139,6 @@ Initializes the map with the specified dimensions and initial value, and sets up
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>True</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code>) – if the coordinates are within bounds, false otherwise.</p>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Map.onDeserialize">
-<span class="sig-name descname"><span class="pre">onDeserialize</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Map" title="Map"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Map</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Map.onDeserialize" title="Link to this definition">¶</a><br /></dt>
-<dd><dl class="field-list simple">
 </dl>
 </dd></dl>
 
@@ -253,7 +245,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -267,9 +261,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -288,6 +282,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.messages"><code class="docutils literal notranslate"><span class="pre">prism.messages</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.systems"><code class="docutils literal notranslate"><span class="pre">prism.systems</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.decisions"><code class="docutils literal notranslate"><span class="pre">prism.decisions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.schedulers"><code class="docutils literal notranslate"><span class="pre">prism.schedulers</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="action.html"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="actor.html"><code class="docutils literal notranslate"><span class="pre">Actor</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="actorstorage.html"><code class="docutils literal notranslate"><span class="pre">ActorStorage</span></code></a></li>
@@ -298,6 +293,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="levelbuilder.html"><code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Map.opacityCache"><code class="docutils literal notranslate"><span class="pre">opacityCache</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Map.passableCache"><code class="docutils literal notranslate"><span class="pre">passableCache</span></code></a></li>
@@ -306,26 +302,24 @@ SOFTWARE.
 <li class="toctree-l3"><a class="reference internal" href="#lua-Map.getCellPassable"><code class="docutils literal notranslate"><span class="pre">getCellPassable()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Map.getCellOpaque"><code class="docutils literal notranslate"><span class="pre">getCellOpaque()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Map.isInBounds"><code class="docutils literal notranslate"><span class="pre">isInBounds()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Map.onDeserialize"><code class="docutils literal notranslate"><span class="pre">onDeserialize()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relation.html"><code class="docutils literal notranslate"><span class="pre">Relation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="turnhandler.html"><code class="docutils literal notranslate"><span class="pre">TurnHandler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.loadModule"><code class="docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerActor"><code class="docutils literal notranslate"><span class="pre">prism.registerActor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerCell"><code class="docutils literal notranslate"><span class="pre">prism.registerCell()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerTarget"><code class="docutils literal notranslate"><span class="pre">prism.registerTarget()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.turn"><code class="docutils literal notranslate"><span class="pre">prism.turn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.register"><code class="docutils literal notranslate"><span class="pre">prism.register()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.advanceCoroutine"><code class="docutils literal notranslate"><span class="pre">prism.advanceCoroutine()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
@@ -338,6 +332,8 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="components/senses.html"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relations/sensedby.html"><code class="docutils literal notranslate"><span class="pre">SensedByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relations/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesRelation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
@@ -367,6 +363,7 @@ SOFTWARE.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
@@ -374,8 +371,8 @@ SOFTWARE.
 <ul>
   <li><a href="../../../index.html">Documentation overview</a><ul>
   <li><a href="../index.html">Prism</a><ul>
-      <li>Previous: <a href="level.html" title="previous chapter">Level</a></li>
-      <li>Next: <a href="map_builder.html" title="next chapter">MapBuilder</a></li>
+      <li>Previous: <a href="levelbuilder.html" title="previous chapter">LevelBuilder</a></li>
+      <li>Next: <a href="message.html" title="next chapter">Message</a></li>
   </ul></li>
   </ul></li>
 </ul>

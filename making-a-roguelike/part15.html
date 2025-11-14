@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>Gearing up &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../_static/prism.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="gearing-up">
+<h1>Gearing up<a class="headerlink" href="#gearing-up" title="Link to this heading">¶</a></h1>
+<p>In this chapter we’ll start gearing up our hero using the equipment module!</p>
+<section id="setting-up">
+<h2>Setting up<a class="headerlink" href="#setting-up" title="Link to this heading">¶</a></h2>
+<p>To begin, load the equipment module.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/equipment&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we’ll give our player an <a class="reference internal" href="../reference/extra/equipment/components/equipper.html#lua-Equipper" title="Equipper"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Equipper</span></code></a> component in <code class="docutils literal notranslate"><span class="pre">player.lua</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Equipper</span> <span class="p">{</span>
+   <span class="s2">&quot;head&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;armor&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;boots&quot;</span><span class="p">,</span>
+   <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ringl&quot;</span><span class="p">,</span> <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;ring&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;ring&quot;</span> <span class="p">},</span>
+   <span class="p">{</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ringr&quot;</span><span class="p">,</span> <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;ring&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;ring&quot;</span> <span class="p">},</span>
+   <span class="s2">&quot;amulet&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="forging-the-ring">
+<h2>Forging the ring<a class="headerlink" href="#forging-the-ring" title="Link to this heading">¶</a></h2>
+<p>We’ll start off with a ring of vitality that uses our <code class="docutils literal notranslate"><span class="pre">HealthModifier</span></code> from part 13. The
+<a class="reference internal" href="../reference/extra/equipment/components/equipment.html#lua-Equipment" title="Equipment"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Equipment</span></code></a> component accepts a list of required categories and a condition to apply
+while equipped.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;RingofVitality&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
+   <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Ring of Vitality&quot;</span><span class="p">),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span>
+         <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+         <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Item</span><span class="p">(),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Equipment</span><span class="p">(</span>
+         <span class="s2">&quot;ring&quot;</span><span class="p">,</span>
+         <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">modifiers</span><span class="p">.</span><span class="n">HealthModifier</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+      <span class="p">),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
+   <span class="p">}</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Equipment accepts a list of categories to support cases like two-handed weapons, e.g. <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;hand&quot;,</span>
+<span class="pre">&quot;hand&quot;</span> <span class="pre">}</span></code>.</p>
+</div>
+<p>We can get them to start dropping from chests by adding another entry in <code class="docutils literal notranslate"><span class="pre">loot/chest.lua</span></code>. We’ll
+give it the same weight as wands.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="n">entry</span> <span class="o">=</span> <span class="s2">&quot;RingofVitality&quot;</span><span class="p">,</span>
+   <span class="n">weight</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Find (or cheat one in with Geometer, we won’t judge) a ring and pop open the inventory screen. If
+you select the ring you should already see an option to equip it! You should see our health go up by
+5 when we slip it on. The built in <a class="reference internal" href="../reference/extra/equipment/actions/equip.html#lua-Equip" title="Equip"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Equip</span></code></a> action gets picked up automatically by our
+<code class="docutils literal notranslate"><span class="pre">InventoryActionState</span></code>, and modifier was handled previously.</p>
+</section>
+<section id="the-armory">
+<h2>The armory<a class="headerlink" href="#the-armory" title="Link to this heading">¶</a></h2>
+<p>To view and unequip our items we’ll implement a new game state,
+<code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/equipmentstate.lua</span></code>. Let’s start off with our controls and defining our
+familiar state fields, along with the <code class="docutils literal notranslate"><span class="pre">Equipper</span></code> component.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
+
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> EquipmentState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> previousState GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, equipper: Equipper): self</span>
+<span class="kd">local</span> <span class="n">EquipmentState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;EquipmentState&quot;</span>
+</pre></div>
+</div>
+<p>In our constructor we’ll set our fields and then build up a data structure to display the slots. For
+each slot, we’ll grab the label and the actor (which may be <code class="docutils literal notranslate"><span class="pre">nil</span></code>).</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> decision ActionDecision</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> equipper Equipper</span>
+<span class="kr">function</span> <span class="nc">EquipmentState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">equipper</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">equipper</span> <span class="o">=</span> <span class="n">equipper</span>
+
+   <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">letters</span> <span class="o">=</span> <span class="p">{}</span>
+
+   <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slot</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">equipper</span><span class="p">.</span><span class="n">slots</span> <span class="ow">or</span> <span class="p">{})</span> <span class="kr">do</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+         <span class="n">slot</span> <span class="o">=</span> <span class="n">slot</span><span class="p">.</span><span class="n">label</span><span class="p">,</span>
+         <span class="n">actor</span> <span class="o">=</span> <span class="n">equipper</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">slot</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">string.char</span><span class="p">(</span><span class="mi">96</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="c1">-- a, b, c, ...</span>
+   <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Don’t forget to set our <code class="docutils literal notranslate"><span class="pre">previousState</span></code> when we load into this one!</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">EquipmentState</span><span class="p">:</span><span class="nf">load</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">previousState</span> <span class="o">=</span> <span class="n">previous</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Next we have to draw our slots. Like usual, we start by drawing the previous state and clearing the
+display. Then for each of our entries we build up a line to display, e.g. <code class="docutils literal notranslate"><span class="pre">[a]</span> <span class="pre">head</span> <span class="pre">-</span> <span class="pre">(empty)</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">EquipmentState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Equipment&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+   <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">)</span> <span class="kr">do</span>
+      <span class="kd">local</span> <span class="n">letter</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+      <span class="kd">local</span> <span class="n">slot</span> <span class="o">=</span> <span class="n">entry</span><span class="p">.</span><span class="n">slot</span>
+      <span class="kd">local</span> <span class="n">name</span> <span class="o">=</span> <span class="n">entry</span><span class="p">.</span><span class="n">actor</span> <span class="ow">and</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="n">actor</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;(empty)&quot;</span>
+      <span class="kd">local</span> <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;[%s] %s - %s&quot;</span><span class="p">):</span><span class="n">format</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="n">slot</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="kr">if</span> <span class="n">entry</span><span class="p">.</span><span class="n">actor</span> <span class="kr">then</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putActor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">28</span> <span class="o">+</span> <span class="o">#</span><span class="n">line</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">drawable</span><span class="p">)</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
+
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Finally, we’ll call the built in <code class="docutils literal notranslate"><span class="pre">Unequip</span></code> action and pop the state when we press the
+corresponding key. We’ll allow backing out of the state like our other ones.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">EquipmentState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+
+   <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">letter</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">)</span> <span class="kr">do</span>
+      <span class="kr">if</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">.</span><span class="n">key</span><span class="p">[</span><span class="n">letter</span><span class="p">].</span><span class="n">pressed</span> <span class="kr">then</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span>
+            <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Unequip</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">actor</span><span class="p">),</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">level</span>
+         <span class="p">)</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
+
+   <span class="c1">-- No equipment interaction yet—just allow closing</span>
+   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">equipment</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">or</span> <span class="n">controls</span><span class="p">.</span><span class="n">back</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+      <span class="kr">return</span>
+   <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">return</span> <span class="n">EquipmentState</span>
+</pre></div>
+</div>
+</section>
+<section id="hook-it-together">
+<h2>Hook it together<a class="headerlink" href="#hook-it-together" title="Link to this heading">¶</a></h2>
+<p>All we have left to do is hook our state up in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">equipment</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+   <span class="kd">local</span> <span class="n">equipper</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Equipper</span><span class="p">)</span>
+   <span class="kr">if</span> <span class="n">equipper</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">equipState</span> <span class="o">=</span>
+         <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">EquipmentState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">equipper</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">equipState</span><span class="p">)</span>
+   <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>And add an entry to <code class="docutils literal notranslate"><span class="pre">controls.lua</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">equipment</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>Pop the ring on again and open the equipment state. The ring should show up in the screen, and
+pressing the corresponding key should remove it, lowering our max health by 5.</p>
+</section>
+<section id="next-time">
+<h2>Next time<a class="headerlink" href="#next-time" title="Link to this heading">¶</a></h2>
+<p>We’ll go over serialization in the next chapter, allowing us to save our game and resume it later!</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/making-a-roguelike/part15.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

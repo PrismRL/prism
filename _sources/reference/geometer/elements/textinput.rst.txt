@@ -1,0 +1,16 @@
+.. title:: TextInputProps
+.. lua:autoobject:: TextInputProps
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+
+.. title:: TextInput
+.. lua:autoobject:: TextInput
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+

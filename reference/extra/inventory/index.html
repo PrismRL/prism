@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
@@ -68,11 +68,27 @@ extended <a class="reference internal" href="../../prism/core/target.html#lua-Ta
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<p class="caption" role="heading"><span class="caption-text">Relations</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="inventorytarget.html"><code class="docutils literal notranslate"><span class="pre">InventoryTarget</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="relations/heldby.html"><code class="docutils literal notranslate"><span class="pre">HeldByRelation</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="relations/inventory.html"><code class="docutils literal notranslate"><span class="pre">InventoryRelation</span></code></a></li>
 </ul>
 </div>
+<p><strong>Targets</strong></p>
+<ul>
+<li><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-prism.targets.InventoryTarget">
+<span class="sig-name descname"><span class="pre">prism.targets.InventoryTarget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/target.html#lua-Target" title="Target"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Target</span></code></a><a class="headerlink" href="#lua-prism.targets.InventoryTarget" title="Link to this definition">¶</a><br /></dt>
+<dd><p>A helper target equivalent to the following:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">(...)</span>
+   <span class="p">:</span><span class="n">outsideLevel</span><span class="p">()</span>
+   <span class="p">:</span><span class="n">related</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">relations</span><span class="p">.</span><span class="n">InventoryRelation</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</li>
+</ul>
 </section>
 
 
@@ -169,7 +185,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -183,9 +201,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -198,20 +216,23 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extra</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../condition/index.html">Conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../droptable/index.html">Drop table module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Inventory module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="components/inventory.html"><code class="docutils literal notranslate"><span class="pre">Inventory</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="components/item.html"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="actions/drop.html"><code class="docutils literal notranslate"><span class="pre">Drop</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="actions/pickup.html"><code class="docutils literal notranslate"><span class="pre">Pickup</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="inventorytarget.html"><code class="docutils literal notranslate"><span class="pre">InventoryTarget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="relations/heldby.html"><code class="docutils literal notranslate"><span class="pre">HeldByRelation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="relations/inventory.html"><code class="docutils literal notranslate"><span class="pre">InventoryRelation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-prism.targets.InventoryTarget"><code class="docutils literal notranslate"><span class="pre">prism.targets.InventoryTarget</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../log/index.html">Log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sight/index.html">Sight module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../statuseffects/index.html">Status effects module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

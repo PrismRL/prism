@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>Inky.Element &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../../../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../../../../../_static/prism.png"/>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="lua class">
+<dt class="sig sig-object lua" id="lua-Inky.Element">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Inky.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><a class="headerlink" href="#lua-Inky.Element" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Inky.Element.props">
+<span class="sig-name descname"><span class="pre">props</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../props/init.html#lua-Inky.Props" title="Inky.Props"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Props</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">[</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#lua-Inky.Element.props" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.getView">
+<span class="sig-name descname"><span class="pre">getView</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Inky.Element.getView" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Return the x, y, w, h that the Element was last rendered at</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.on">
+<span class="sig-name descname"><span class="pre">on</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">eventName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.on" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when Scene event is raised from the parent Scene
+</p>
+<p>See: [Inky.Scene.raise](<a class="reference external" href="file:///home/runner/work/prism/prism/geometer/inky/core/scene/init">file:///home/runner/work/prism/prism/geometer/inky/core/scene/init</a>.lua#58#9)</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onPointer">
+<span class="sig-name descname"><span class="pre">onPointer</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">eventName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onPointer" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when a Pointer event is raised from an overlapping/capturing Pointer
+</p>
+<p>See:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer.raise" title="Inky.Pointer.raise"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Inky.Pointer:raise()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer.captureElement" title="Inky.Pointer.captureElement"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Inky.Pointer:captureElement()</span></code></a></p></li>
+</ul>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onPointerInHierarchy">
+<span class="sig-name descname"><span class="pre">onPointerInHierarchy</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">eventName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onPointerInHierarchy" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when a Pointer event was accepted by a child Element
+</p>
+<p>See:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer.raise" title="Inky.Pointer.raise"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Inky.Pointer:raise()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#lua-Inky.Element.onPointer" title="Inky.Element.onPointer"><code class="xref lua lua-obj docutils literal notranslate"><span class="pre">Inky.Element:onPointer()</span></code></a></p></li>
+</ul>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onPointerEnter">
+<span class="sig-name descname"><span class="pre">onPointerEnter</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onPointerEnter" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when a Pointer enters the bounding box of the Element</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onPointerExit">
+<span class="sig-name descname"><span class="pre">onPointerExit</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onPointerExit" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when a Pointer exits the bounding box of the Element</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onEnable">
+<span class="sig-name descname"><span class="pre">onEnable</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onEnable" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when an Element is rendered, when it wasn’t rendered last frame</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.onDisable">
+<span class="sig-name descname"><span class="pre">onDisable</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">callback?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.onDisable" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute callback when an Element isn’t rendered, when it was rendered last frame</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.useOverlapCheck">
+<span class="sig-name descname"><span class="pre">useOverlapCheck</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">predicate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pointerX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointerY</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.useOverlapCheck" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Use an additional check to determine if a Pointer is overlapping an Element</p>
+<p>Note: Check is performed after a bounding box check</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.useEffect">
+<span class="sig-name descname"><span class="pre">useEffect</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">effect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.useEffect" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Execute a side effect when any specified Element’s prop changes</p>
+<p>Note: The effect is ran right before a render</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Inky.Element.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">depth?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><br /><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><a class="headerlink" href="#lua-Inky.Element.render" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Render the Element, setting up all the hooks and drawing the Element</p>
+<p>Note: The parent Scene’s frame must have been begun to be able to render</p>
+<p>See: [Inky.Scene.beginFrame](<a class="reference external" href="file:///home/runner/work/prism/prism/geometer/inky/core/scene/init">file:///home/runner/work/prism/prism/geometer/inky/core/scene/init</a>.lua#29#9)</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="lua class">
+<dt class="sig sig-object lua" id="lua-Inky.Element.Internal">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Internal</span></span><a class="headerlink" href="#lua-Inky.Element.Internal" title="Link to this definition">¶</a><br /></dt>
+<dd><div class="lua-inherited-members docutils container">
+</div>
+</dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.Initializer">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Initializer</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../scene/init.html#lua-Inky.Scene" title="Inky.Scene"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Scene</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">depth</span></code><span class="p"><span class="pre">?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Inky.Element.Initializer" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.Draw">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Draw</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">depth</span></code><span class="p"><span class="pre">?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Inky.Element.Draw" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnPointerCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnPointerCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnPointerCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnPointerInHierarchyCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnPointerInHierarchyCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnPointerInHierarchyCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnPointerEnterCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnPointerEnterCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnPointerEnterCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnPointerExitCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnPointerExitCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../pointer/init.html#lua-Inky.Pointer" title="Inky.Pointer"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Pointer</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnPointerExitCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnEnableCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnEnableCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnEnableCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OnDisableCallback">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OnDisableCallback</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.OnDisableCallback" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.Effect">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Effect</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Inky.Element" title="Inky.Element"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Inky.Element</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><a class="headerlink" href="#lua-Inky.Element.Effect" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua alias">
+<dt class="sig sig-object lua" id="lua-Inky.Element.OverlapPredicate">
+<em class="property"><span class="k"><span class="pre">alias</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OverlapPredicate</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pointerX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">pointerY</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Inky.Element.OverlapPredicate" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<div class="lua-inherited-members docutils container">
+</div>
+</dd></dl>
+
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../../../index.html">
+    <img class="logo" src="../../../../../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../making-a-roguelike/part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../../../_sources/reference/geometer/inky/core/element/init.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

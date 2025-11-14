@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
@@ -26,8 +26,8 @@
     <link rel="icon" href="../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Drop table module" href="droptable/index.html" />
-    <link rel="prev" title="GameStateManager" href="../spectrum/gamestates/statemanager.html" />
+    <link rel="next" title="Conditions module" href="condition/index.html" />
+    <link rel="prev" title="AnimationMessageOptions" href="../spectrum/messages/animation.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -50,6 +50,15 @@
 <p>These are optional modules for common features.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="condition/index.html">Conditions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="condition/index.html#lua-prism.conditions"><code class="docutils literal notranslate"><span class="pre">prism.conditions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition/index.html#lua-prism.modifiers"><code class="docutils literal notranslate"><span class="pre">prism.modifiers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition/condition.html"><code class="docutils literal notranslate"><span class="pre">ConditionOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition/condition.html#lua-Condition"><code class="docutils literal notranslate"><span class="pre">Condition</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition/module.html"><code class="docutils literal notranslate"><span class="pre">ConditionModifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="condition/components/conditionholder.html"><code class="docutils literal notranslate"><span class="pre">ConditionHolder</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="droptable/index.html">Drop table module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="droptable/components/droptable.html"><code class="docutils literal notranslate"><span class="pre">DropTableCategory</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="droptable/components/droptable.html#lua-DropTableWeightedOption"><code class="docutils literal notranslate"><span class="pre">DropTableWeightedOption</span></code></a></li>
@@ -61,7 +70,9 @@
 <li class="toctree-l2"><a class="reference internal" href="inventory/components/item.html"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/actions/drop.html"><code class="docutils literal notranslate"><span class="pre">Drop</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/actions/pickup.html"><code class="docutils literal notranslate"><span class="pre">Pickup</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="inventory/inventorytarget.html"><code class="docutils literal notranslate"><span class="pre">InventoryTarget</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="inventory/relations/heldby.html"><code class="docutils literal notranslate"><span class="pre">HeldByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="inventory/relations/inventory.html"><code class="docutils literal notranslate"><span class="pre">InventoryRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="inventory/index.html#lua-prism.targets.InventoryTarget"><code class="docutils literal notranslate"><span class="pre">prism.targets.InventoryTarget</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="log/index.html">Log module</a><ul>
@@ -71,13 +82,8 @@
 <li class="toctree-l1"><a class="reference internal" href="sight/index.html">Sight module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sight/components/sight.html"><code class="docutils literal notranslate"><span class="pre">Sight</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sight/systems/sight.html"><code class="docutils literal notranslate"><span class="pre">SightSystem</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="statuseffects/index.html">Status effects module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="statuseffects/components/statuseffects.html"><code class="docutils literal notranslate"><span class="pre">StatusEffects</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="statuseffects/components/statuseffects.html#lua-StatusEffectsInstanceOptions"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstanceOptions</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="statuseffects/components/statuseffects.html#lua-StatusEffectsInstance"><code class="docutils literal notranslate"><span class="pre">StatusEffectsInstance</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="statuseffects/components/statuseffects.html#lua-StatusEffectsModifier"><code class="docutils literal notranslate"><span class="pre">StatusEffectsModifier</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sight/relations/seenby.html"><code class="docutils literal notranslate"><span class="pre">SeenByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="sight/relations/sees.html"><code class="docutils literal notranslate"><span class="pre">SeesRelation</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -178,7 +184,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -192,9 +200,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -207,21 +215,22 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Extra</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="condition/index.html">Conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="droptable/index.html">Drop table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/index.html">Inventory module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log/index.html">Log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sight/index.html">Sight module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="statuseffects/index.html">Status effects module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../spectrum/gamestates/statemanager.html" title="previous chapter">GameStateManager</a></li>
-      <li>Next: <a href="droptable/index.html" title="next chapter">Drop table module</a></li>
+      <li>Previous: <a href="../spectrum/messages/animation.html" title="previous chapter">AnimationMessageOptions</a></li>
+      <li>Next: <a href="condition/index.html" title="next chapter">Conditions module</a></li>
   </ul></li>
 </ul>
 </div>

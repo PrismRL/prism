@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>AnimationMessageOptions &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../../../_static/prism.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Extra" href="../../extra/index.html" />
+    <link rel="prev" title="LevelState" href="../gamestates/levelstate.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="lua class">
+<dt class="sig sig-object lua" id="lua-AnimationMessage">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnimationMessage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Message</span></code></a><a class="headerlink" href="#lua-AnimationMessage" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Represents an animation to be played.</p>
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.animation">
+<span class="sig-name descname"><span class="pre">animation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../animation.html#lua-Animation" title="Animation"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Animation</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">display</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../display.html#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-AnimationMessage.animation" title="Link to this definition">¶</a><br /></dt>
+<dd><p>An animation to be played in a display. Yield an <a class="reference internal" href="#lua-AnimationMessage" title="AnimationMessage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a> to play one.
+Animations can be built with a list of frames and durations, or with a custom function.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.actor">
+<span class="sig-name descname"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessage.actor" title="Link to this definition">¶</a><br /></dt>
+<dd><p>An optional actor to play the animation relative to.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessage.x" title="Link to this definition">¶</a><br /></dt>
+<dd><p>An x position to play the animation at. If an actor is given, this is relative to their position.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.y">
+<span class="sig-name descname"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessage.y" title="Link to this definition">¶</a><br /></dt>
+<dd><p>A y position to play the animation at. If an actor is given, this is relative to their position.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.blocking">
+<span class="sig-name descname"><span class="pre">blocking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-AnimationMessage.blocking" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Whether to block other processes while the animation plays.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.skippable">
+<span class="sig-name descname"><span class="pre">skippable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-AnimationMessage.skippable" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Whether the animation can be skipped with input.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.override">
+<span class="sig-name descname"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-AnimationMessage.override" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Whether to override (hide the actor) during animation drawing.</p>
+</dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-AnimationMessage.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-AnimationMessage" title="AnimationMessage"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-AnimationMessageOptions" title="AnimationMessageOptions"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">AnimationMessageOptions</span></code></a><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-AnimationMessage.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<div class="lua-inherited-members docutils container">
+<p><strong>Other members:</strong></p>
+<div class="admonition">
+<p>Inherited from <a class="reference internal" href="../../prism/core/object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="../../prism/core/object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deepcopy" title="Object.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+</div>
+</div>
+</dd></dl>
+
+<dl class="lua class">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnimationMessageOptions</span></span><a class="headerlink" href="#lua-AnimationMessageOptions" title="Link to this definition">¶</a><br /></dt>
+<dd><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.animation">
+<span class="sig-name descname"><span class="pre">animation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../animation.html#lua-Animation" title="Animation"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Animation</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">display</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../display.html#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-AnimationMessageOptions.animation" title="Link to this definition">¶</a><br /></dt>
+<dd><p>An animation to be played in a display. Yield an <a class="reference internal" href="#lua-AnimationMessage" title="AnimationMessage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a> to play one.
+Animations can be built with a list of frames and durations, or with a custom function.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.actor">
+<span class="sig-name descname"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.actor" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Entities in the game, including the player, enemies, and items.
+Actors are composed of Components that define their state and behavior.
+For example, an actor may have a Sight component that determines their field of vision, explored tiles,
+and other related aspects.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.x" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.y">
+<span class="sig-name descname"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.y" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.blocking">
+<span class="sig-name descname"><span class="pre">blocking</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.blocking" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.skippable">
+<span class="sig-name descname"><span class="pre">skippable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.skippable" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-AnimationMessageOptions.override">
+<span class="sig-name descname"><span class="pre">override</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-AnimationMessageOptions.override" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<div class="lua-inherited-members docutils container">
+</div>
+</dd></dl>
+
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../prism/index.html">Prism</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Spectrum</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#registries">Registries</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#lua-spectrum.gamestates"><code class="docutils literal notranslate"><span class="pre">spectrum.gamestates</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../animation.html"><code class="docutils literal notranslate"><span class="pre">Animation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../animation.html#lua-MultiSprite"><code class="docutils literal notranslate"><span class="pre">MultiSprite</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../camera.html"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html"><code class="docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html#lua-Sprite"><code class="docutils literal notranslate"><span class="pre">Sprite</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html#lua-Display"><code class="docutils literal notranslate"><span class="pre">Display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gamestate.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input.html"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input.html#lua-InputGetter"><code class="docutils literal notranslate"><span class="pre">InputGetter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input.html#lua-ControlState"><code class="docutils literal notranslate"><span class="pre">ControlState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input.html#lua-Controls"><code class="docutils literal notranslate"><span class="pre">Controls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../input.html#lua-ControlsOptions"><code class="docutils literal notranslate"><span class="pre">ControlsOptions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spriteatlas.html"><code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../statemanager.html"><code class="docutils literal notranslate"><span class="pre">GameStateManager</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/drawable.html"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/idleanimation.html"><code class="docutils literal notranslate"><span class="pre">IdleAnimation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gamestates/levelstate.html"><code class="docutils literal notranslate"><span class="pre">LevelState</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.animation"><code class="docutils literal notranslate"><span class="pre">animation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.actor"><code class="docutils literal notranslate"><span class="pre">actor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.x"><code class="docutils literal notranslate"><span class="pre">x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.y"><code class="docutils literal notranslate"><span class="pre">y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.blocking"><code class="docutils literal notranslate"><span class="pre">blocking</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.skippable"><code class="docutils literal notranslate"><span class="pre">skippable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.override"><code class="docutils literal notranslate"><span class="pre">override</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessage.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-AnimationMessageOptions"><code class="docutils literal notranslate"><span class="pre">AnimationMessageOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.animation"><code class="docutils literal notranslate"><span class="pre">animation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.actor"><code class="docutils literal notranslate"><span class="pre">actor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.x"><code class="docutils literal notranslate"><span class="pre">x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.y"><code class="docutils literal notranslate"><span class="pre">y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.blocking"><code class="docutils literal notranslate"><span class="pre">blocking</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.skippable"><code class="docutils literal notranslate"><span class="pre">skippable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-AnimationMessageOptions.override"><code class="docutils literal notranslate"><span class="pre">override</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometer/index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Spectrum</a><ul>
+      <li>Previous: <a href="../gamestates/levelstate.html" title="previous chapter">LevelState</a></li>
+      <li>Next: <a href="../../extra/index.html" title="next chapter">Extra</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/reference/spectrum/messages/animation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

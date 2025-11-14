@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -26,8 +26,8 @@
     <link rel="icon" href="../_static/prism.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Targets" href="targets.html" />
-    <link rel="prev" title="Queries" href="query.html" />
+    <link rel="next" title="Input handling" href="controls.html" />
+    <link rel="prev" title="Animation" href="animation.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -50,14 +50,15 @@
 <p>Most roguelikes require some kind of collision, so we’ve provided a collision system built in to
 Prism. Here’s how it works:</p>
 <p>First, register any “layers” or types of movement you want to use, usually in your module’s
-module.lua:</p>
+<code class="docutils literal notranslate"><span class="pre">module.lua</span></code>:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">assignNextAvailableMovetype</span><span class="p">(</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">assignNextAvailableMovetype</span><span class="p">(</span><span class="s2">&quot;fly&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Then, use a <a class="reference internal" href="../reference/prism/core/components/collider.html#lua-Collider" title="Collider"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Collider</span></code></a> to define collision for actors and cells. If no move types are
-supplied, nothing will be able to pass.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">{</span> <span class="n">allowedMovetypes</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">}</span> <span class="p">}</span>
+supplied, nothing will be able to pass. A <code class="docutils literal notranslate"><span class="pre">size</span></code> parameter can also be passed to define a <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">x</span>
+<span class="pre">size</span></code> actor; it has no effect on cells.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">{</span> <span class="n">allowedMovetypes</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">},</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">}</span>
 
 <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">()</span> <span class="c1">-- impassable</span>
 </pre></div>
@@ -69,9 +70,9 @@ supplied, nothing will be able to pass.</p>
 <p>For movement, you can define a component yourself by using
 <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.createBitmaskFromMovetypes" title="Collision.createBitmaskFromMovetypes"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.createBitmaskFromMovetypes()</span></code></a> to create a collision mask. Here’s an example from
 the <a class="reference external" href="https://github.com/prismrl/prism-template">template</a>:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> MoverComponent : Component</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Mover : Component</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> mask integer</span>
-<span class="kd">local</span> <span class="n">Mover</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span> <span class="s2">&quot;MoverComponent&quot;</span> <span class="p">)</span>
+<span class="kd">local</span> <span class="n">Mover</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Mover&quot;</span>
 <span class="n">Mover</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Mover&quot;</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> movetypes string[]</span>
@@ -185,7 +186,9 @@ SOFTWARE.
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -199,9 +202,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -214,14 +217,15 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="query.html" title="previous chapter">Queries</a></li>
-      <li>Next: <a href="targets.html" title="next chapter">Targets</a></li>
+      <li>Previous: <a href="animation.html" title="previous chapter">Animation</a></li>
+      <li>Next: <a href="controls.html" title="next chapter">Input handling</a></li>
   </ul></li>
 </ul>
 </div>

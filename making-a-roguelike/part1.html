@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -49,7 +49,7 @@
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
 <p>In this tutorial, we’ll start with a project template and create an enemy that we can kick around
 and get chased by.</p>
-<figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../_images/part1.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">Kicking a kobold</span></p></figcaption></figure><p>The following sections will expand this into a complete game.</p>
+<figure  class="sphinx-contrib-video-container align-center"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/part1.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">Kicking a kobold</span></p></figcaption></figure><p>The following sections will expand this into a complete game.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We assume familiarity with Lua, but the language is simple enough that you could probably skirt
@@ -71,7 +71,7 @@ template.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;Kobold&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span><span class="p">),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span> <span class="p">},</span>
    <span class="p">}</span>
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
@@ -92,7 +92,7 @@ right hand side and use the pen tool to draw a kobold in. Press the green button
 <p>See <a class="reference internal" href="../how-tos/collision.html"><span class="doc">Collision</span></a> for more information on the collision system.</p>
 </div>
 <p>If we restart the game and spawn in another kobold, we shouldn’t be able to walk through kobolds
-anymore. We’re also going to give the kobold a few more core components: a <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>,
+anymore. We’re also going to give the kobold a few more core components: a <a class="reference internal" href="../reference/prism/core/components/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>,
 <code class="docutils literal notranslate"><span class="pre">SightComponent</span></code>, and <code class="docutils literal notranslate"><span class="pre">MoverComponent</span></code>, so it can see and move:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">(),</span>
 <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Sight</span><span class="p">{</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">},</span>
@@ -120,7 +120,6 @@ actions.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> KoboldController : Controller</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): KoboldController</span>
 <span class="kd">local</span> <span class="n">KoboldController</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KoboldController&quot;</span><span class="p">)</span>
-<span class="n">KoboldController</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KoboldController&quot;</span>
 
 <span class="kr">function</span> <span class="nc">KoboldController</span><span class="p">:</span><span class="nf">act</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">actor</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">RIGHT</span>
@@ -154,7 +153,7 @@ game. Let’s make them follow the player around.</p>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Kobold&quot;</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span> <span class="p">},</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span> <span class="p">},</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">(),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Sight</span><span class="p">{</span> <span class="n">range</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">},</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">{</span> <span class="s2">&quot;walk&quot;</span> <span class="p">},</span>
@@ -173,12 +172,12 @@ game. Let’s make them follow the player around.</p>
 <li><p>Find a valid path to the player.</p></li>
 <li><p>Move the kobold along that path.</p></li>
 </ol>
-<p>We can find the player by grabbing the <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a> from the kobold and seeing if it contains
+<p>We can find the player by grabbing the <a class="reference internal" href="../reference/prism/core/components/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a> from the kobold and seeing if it contains
 the player. We should also ensure the kobold has the component in the first place.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">senses</span> <span class="o">=</span> <span class="n">actor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">)</span>
 <span class="kr">if</span> <span class="ow">not</span> <span class="n">senses</span> <span class="kr">then</span> <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="kr">end</span> <span class="c1">-- we can&#39;t see!</span>
 
-<span class="kd">local</span> <span class="n">player</span> <span class="o">=</span> <span class="n">senses</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">PlayerController</span><span class="p">):</span><span class="n">first</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">player</span> <span class="o">=</span> <span class="n">senses</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">PlayerController</span><span class="p">):</span><span class="n">first</span><span class="p">()</span>
 <span class="kr">if</span> <span class="ow">not</span> <span class="n">player</span> <span class="kr">then</span> <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="kr">end</span>
 </pre></div>
 </div>
@@ -212,13 +211,12 @@ first position.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> KoboldController : Controller</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): KoboldController</span>
 <span class="kd">local</span> <span class="n">KoboldController</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KoboldController&quot;</span><span class="p">)</span>
-<span class="n">KoboldController</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;KoboldController&quot;</span>
 
 <span class="kr">function</span> <span class="nc">KoboldController</span><span class="p">:</span><span class="nf">act</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">senses</span> <span class="o">=</span> <span class="n">actor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Senses</span><span class="p">)</span>
    <span class="kr">if</span> <span class="ow">not</span> <span class="n">senses</span> <span class="kr">then</span> <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="kr">end</span> <span class="c1">-- we can&#39;t see!</span>
 
-   <span class="kd">local</span> <span class="n">player</span> <span class="o">=</span> <span class="n">senses</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">PlayerController</span><span class="p">):</span><span class="n">first</span><span class="p">()</span>
+   <span class="kd">local</span> <span class="n">player</span> <span class="o">=</span> <span class="n">senses</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">PlayerController</span><span class="p">):</span><span class="n">first</span><span class="p">()</span>
    <span class="kr">if</span> <span class="ow">not</span> <span class="n">player</span> <span class="kr">then</span> <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="kr">end</span>
 
    <span class="kd">local</span> <span class="n">mover</span> <span class="o">=</span> <span class="n">actor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Mover</span><span class="p">)</span>
@@ -246,8 +244,7 @@ first position.</p>
 <p>In this section we’ll give you something to do to these kobolds: kick them! We’ll need to create our
 first action. Head over to <code class="docutils literal notranslate"><span class="pre">/modules/game/actions</span></code> and add kick.lua.</p>
 <p>Let’s first create a target for our kick. Put this at the top of kick.lua:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">KickTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
-   <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">KickTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
    <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
    <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
 </pre></div>
@@ -257,7 +254,6 @@ we can define the kick action, including our target. We will also require that a
 perform the kick action have a controller.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> KickAction : Action</span>
 <span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
-<span class="n">Kick</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kick&quot;</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">KickTarget</span> <span class="p">}</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span>
    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span>
@@ -282,14 +278,14 @@ checking passability with a custom collision mask.</p>
 <span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">())</span>
 
+   <span class="kd">local</span> <span class="n">final</span> <span class="o">=</span> <span class="n">kicked</span><span class="p">:</span><span class="n">expectPosition</span><span class="p">()</span>
    <span class="kr">for</span> <span class="n">_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="kr">do</span>
-     <span class="kd">local</span> <span class="n">nextpos</span> <span class="o">=</span> <span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">direction</span>
-
-     <span class="kr">if</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span><span class="n">getCellPassable</span><span class="p">(</span><span class="n">nextpos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">nextpos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">break</span> <span class="kr">end</span>
-     <span class="kr">if</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span><span class="n">hasActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">break</span> <span class="kr">end</span>
-
-     <span class="n">level</span><span class="p">:</span><span class="n">moveActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">nextpos</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">nextpos</span> <span class="o">=</span> <span class="n">final</span> <span class="o">+</span> <span class="n">direction</span>
+      <span class="kr">if</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span><span class="n">getCellPassable</span><span class="p">(</span><span class="n">nextpos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">nextpos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">break</span> <span class="kr">end</span>
+      <span class="n">final</span> <span class="o">=</span> <span class="n">nextpos</span>
    <span class="kr">end</span>
+
+   <span class="n">level</span><span class="p">:</span><span class="n">moveActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">final</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -297,38 +293,34 @@ checking passability with a custom collision mask.</p>
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete kick.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><a class="reference external" href="https://github.com/PrismRL/Kicking-Kobolds/blob/part1/modules/game/actions/kick.lua">Source</a></p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">KickTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
-   <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
-   <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-   <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">KickTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">):</span><span class="n">range</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">sensed</span><span class="p">()</span>
 
 <span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> KickAction : Action</span>
 <span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
-<span class="n">Kick</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kick&quot;</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">KickTarget</span> <span class="p">}</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="kr">return</span> <span class="kc">true</span>
 <span class="kr">end</span>
 
+<span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">createBitmaskFromMovetypes</span> <span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">}</span>
+
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> kicked Actor</span>
 <span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">())</span>
 
-   <span class="kd">local</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Collision</span><span class="p">.</span><span class="n">createBitmaskFromMovetypes</span><span class="p">{</span> <span class="s2">&quot;fly&quot;</span> <span class="p">}</span>
-
+   <span class="kd">local</span> <span class="n">final</span> <span class="o">=</span> <span class="n">kicked</span><span class="p">:</span><span class="n">expectPosition</span><span class="p">()</span>
    <span class="kr">for</span> <span class="n">_</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="kr">do</span>
-      <span class="kd">local</span> <span class="n">nextpos</span> <span class="o">=</span> <span class="n">kicked</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">direction</span>
-
+      <span class="kd">local</span> <span class="n">nextpos</span> <span class="o">=</span> <span class="n">final</span> <span class="o">+</span> <span class="n">direction</span>
       <span class="kr">if</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span><span class="n">getCellPassable</span><span class="p">(</span><span class="n">nextpos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">nextpos</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">break</span> <span class="kr">end</span>
-      <span class="kr">if</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span><span class="n">hasActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">break</span> <span class="kr">end</span>
-
-      <span class="n">level</span><span class="p">:</span><span class="n">moveActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">nextpos</span><span class="p">)</span>
+      <span class="n">final</span> <span class="o">=</span> <span class="n">nextpos</span>
    <span class="kr">end</span>
+
+   <span class="n">level</span><span class="p">:</span><span class="n">moveActor</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">final</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Kick</span>
@@ -339,10 +331,10 @@ checking passability with a custom collision mask.</p>
 <section id="kicking-kobolds-for-real-this-time">
 <h2>Kicking kobolds, for real this time<a class="headerlink" href="#kicking-kobolds-for-real-this-time" title="Link to this heading">¶</a></h2>
 <p>We’ve added the kick action, but we don’t use it anywhere. Let’s fix that by performing the kick
-when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and find where the move
-action is called.</p>
-<p>If the player presses a move button but the <code class="docutils literal notranslate"><span class="pre">canPerform</span></code> check fails, we can infer they moved into
-something that blocked their movement. Then, check if there’s a valid actor to kick in front of us
+when we bump into a kobold. Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gamelevelstate.lua</span></code> and find
+where the move action is called.</p>
+<p>If the player presses a move button but the player fails to move, we can infer they moved into
+something that blocked their movement. Let’s check if there’s a valid actor to kick in front of us
 (as opposed to another impassable entity), and perform the kick action on them:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span>
 <span class="p">...</span>
@@ -353,9 +345,7 @@ something that blocked their movement. Then, check if there’s a valid actor to
    <span class="p">:</span><span class="n">first</span><span class="p">()</span> <span class="c1">-- grab one of the kickable things, or nil</span>
 
 <span class="kd">local</span> <span class="n">kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Kick</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">kick</span><span class="p">)</span> <span class="kr">then</span>
-   <span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">kick</span><span class="p">)</span>
-<span class="kr">end</span>
+<span class="n">self</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">kick</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -471,7 +461,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -494,9 +486,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -509,6 +501,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

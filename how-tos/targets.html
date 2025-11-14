@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Getting started" href="../making-a-roguelike/part1.html" />
-    <link rel="prev" title="Collision" href="collision.html" />
+    <link rel="prev" title="Input handling" href="controls.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -90,7 +90,7 @@ health:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">myTarget</span><span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This uses the actor’s <code class="docutils literal notranslate"><span class="pre">Senses</span></code> component.</p>
+<p>This uses the actor’s <a class="reference internal" href="../reference/prism/core/components/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a> component.</p>
 </section>
 <section id="line-of-sight">
 <h2>Line of sight<a class="headerlink" href="#line-of-sight" title="Link to this heading">¶</a></h2>
@@ -99,7 +99,7 @@ health:</p>
 </pre></div>
 </div>
 <p>This checks tiles along a Bresenham line and fails if any cell blocks movement. For more info on
-collision masks see the Collision how-to!</p>
+collision masks see the <a class="reference internal" href="collision.html"><span class="doc">Collision how-to</span></a>!</p>
 </section>
 <section id="checking-target-types">
 <h2>Checking target types<a class="headerlink" href="#checking-target-types" title="Link to this heading">¶</a></h2>
@@ -246,7 +246,9 @@ SOFTWARE.
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controls.html">Input handling</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Targets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-basic-target">Creating a basic target</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-custom-filters">Adding custom filters</a></li>
@@ -271,9 +273,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -286,13 +288,14 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="collision.html" title="previous chapter">Collision</a></li>
+      <li>Previous: <a href="controls.html" title="previous chapter">Input handling</a></li>
       <li>Next: <a href="../making-a-roguelike/part1.html" title="next chapter">Getting started</a></li>
   </ul></li>
 </ul>

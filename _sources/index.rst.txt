@@ -77,3 +77,4 @@ Our discord can be found `here <https://discord.gg/9YpsH4hYVF>`_.
    reference/prism/index
    reference/spectrum/index
    reference/extra/index
+   reference/geometer/index

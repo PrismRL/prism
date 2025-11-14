@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
@@ -55,6 +55,12 @@ See Target for more.</p>
 <dt class="sig sig-object lua" id="lua-Action.owner">
 <span class="sig-name descname"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><a class="headerlink" href="#lua-Action.owner" title="Link to this definition">¶</a><br /></dt>
 <dd><p>The actor taking the action.</p>
+</dd></dl>
+
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-Action.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Action.name" title="Link to this definition">¶</a><br /></dt>
+<dd><p>A name for the action.</p>
 </dd></dl>
 
 <dl class="lua data">
@@ -159,15 +165,15 @@ See Target for more.</p>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Action.getTarget">
-<span class="sig-name descname"><span class="pre">getTarget</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.getTarget" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Returns the target actor at the specified index.</p>
+<dt class="sig sig-object lua" id="lua-Action.getTargeted">
+<span class="sig-name descname"><span class="pre">getTargeted</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.getTargeted" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Returns the targeted object at the specified index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The index of the target actor to retrieve.</p>
+<dd class="field-odd"><p><strong>n</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The index of the targeted object to retrieve.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>target</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code>) – The target actor at the specified index.</p>
+<dd class="field-even"><p><strong>target</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code>) – The targeted object at the specified index.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -184,19 +190,19 @@ See Target for more.</p>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Action.getTargetObject">
-<span class="sig-name descname"><span class="pre">getTargetObject</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">targetObject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="target.html#lua-Target" title="Target"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Target</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">nil</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.getTargetObject" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Returns the target object at the specified index.</p>
+<dt class="sig sig-object lua" id="lua-Action.getTarget">
+<span class="sig-name descname"><span class="pre">getTarget</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">targetObject?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="target.html#lua-Target" title="Target"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Target</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.getTarget" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Returns the target at the specified index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The index of the target object to retrieve.</p>
+<dd class="field-odd"><p><strong>index</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">number</span></code>) – The index of the target to retrieve.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Action.hasTarget">
-<span class="sig-name descname"><span class="pre">hasTarget</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.hasTarget" title="Link to this definition">¶</a><br /></dt>
+<dt class="sig sig-object lua" id="lua-Action.hasTargeted">
+<span class="sig-name descname"><span class="pre">hasTargeted</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Action.hasTargeted" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Determines if the specified actor is a target of this action.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -227,10 +233,18 @@ See Target for more.</p>
 </dl>
 </dd></dl>
 
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-Action.getName">
+<span class="sig-name descname"><span class="pre">getName</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Action.getName" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Returns the action’s name, or the class name if it’s nil.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 <div class="lua-inherited-members docutils container">
 <p><strong>Other members:</strong></p>
 <div class="admonition">
-<p>Inherited from <a class="reference internal" href="object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+<p>Inherited from <a class="reference internal" href="object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="object.html#lua-Object.deepcopy" title="Object.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
 </div>
 </div>
 </dd></dl>
@@ -330,7 +344,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -344,9 +360,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -365,8 +381,10 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.messages"><code class="docutils literal notranslate"><span class="pre">prism.messages</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.systems"><code class="docutils literal notranslate"><span class="pre">prism.systems</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.decisions"><code class="docutils literal notranslate"><span class="pre">prism.decisions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.schedulers"><code class="docutils literal notranslate"><span class="pre">prism.schedulers</span></code></a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.owner"><code class="docutils literal notranslate"><span class="pre">owner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.targets"><code class="docutils literal notranslate"><span class="pre">targets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.targetObjects"><code class="docutils literal notranslate"><span class="pre">targetObjects</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.requiredComponents"><code class="docutils literal notranslate"><span class="pre">requiredComponents</span></code></a></li>
@@ -378,11 +396,12 @@ SOFTWARE.
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.canPerform"><code class="docutils literal notranslate"><span class="pre">canPerform()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.hasRequisiteComponents"><code class="docutils literal notranslate"><span class="pre">hasRequisiteComponents()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.perform"><code class="docutils literal notranslate"><span class="pre">perform()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Action.getTarget"><code class="docutils literal notranslate"><span class="pre">getTarget()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.getTargeted"><code class="docutils literal notranslate"><span class="pre">getTargeted()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.getNumTargets"><code class="docutils literal notranslate"><span class="pre">getNumTargets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Action.getTargetObject"><code class="docutils literal notranslate"><span class="pre">getTargetObject()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#lua-Action.hasTarget"><code class="docutils literal notranslate"><span class="pre">hasTarget()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.getTarget"><code class="docutils literal notranslate"><span class="pre">getTarget()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.hasTargeted"><code class="docutils literal notranslate"><span class="pre">hasTargeted()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#lua-Action.validateTarget"><code class="docutils literal notranslate"><span class="pre">validateTarget()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Action.getName"><code class="docutils literal notranslate"><span class="pre">getName()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="actor.html"><code class="docutils literal notranslate"><span class="pre">Actor</span></code></a></li>
@@ -394,24 +413,24 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="levelbuilder.html"><code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="map.html"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relation.html"><code class="docutils literal notranslate"><span class="pre">Relation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="turnhandler.html"><code class="docutils literal notranslate"><span class="pre">TurnHandler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.loadModule"><code class="docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerActor"><code class="docutils literal notranslate"><span class="pre">prism.registerActor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerCell"><code class="docutils literal notranslate"><span class="pre">prism.registerCell()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.registerTarget"><code class="docutils literal notranslate"><span class="pre">prism.registerTarget()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.turn"><code class="docutils literal notranslate"><span class="pre">prism.turn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.register"><code class="docutils literal notranslate"><span class="pre">prism.register()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#lua-prism.advanceCoroutine"><code class="docutils literal notranslate"><span class="pre">prism.advanceCoroutine()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
@@ -424,6 +443,8 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="components/senses.html"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relations/sensedby.html"><code class="docutils literal notranslate"><span class="pre">SensedByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="relations/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesRelation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
@@ -453,6 +474,7 @@ SOFTWARE.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

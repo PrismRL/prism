@@ -1,0 +1,16 @@
+.. title:: ButtonProps
+.. lua:autoobject:: ButtonProps
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+
+.. title:: Button
+.. lua:autoobject:: Button
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+

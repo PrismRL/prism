@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -52,15 +52,15 @@
 <p>This chapter is very work in progress, beware! Don’t procede yet adventurer!</p>
 </div>
 <p>In this chapter we’ll add wands and a generalized targetting system for actions. We’ll add a Wand of
-Hurt which you can zap a creature with to hurt them, and a Wand of Swapping which you can use to
-swap positions with another actor.</p>
+Hurt to zap a creatures with.</p>
 <section id="creating-a-base-module">
 <h2>Creating a base module<a class="headerlink" href="#creating-a-base-module" title="Link to this heading">¶</a></h2>
-<p>We’re going to be creating a base module where we can put components, actions, and actors we want to
-reference in the main module so they’re available at load time.</p>
-<p>Head to <code class="docutils literal notranslate"><span class="pre">modules</span></code> and create a new folder there called <code class="docutils literal notranslate"><span class="pre">basegame</span></code>. Now go ahead and add an
-<code class="docutils literal notranslate"><span class="pre">actions</span></code> and <code class="docutils literal notranslate"><span class="pre">components</span></code> folder.</p>
-<p>Let’s head to <code class="docutils literal notranslate"><span class="pre">modules/basegame/components</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">zappable.lua</span></code>.</p>
+<p>The load order for a given type within a module is random, so let’s start by creating a “base”
+module that our other content can depend on. Head to <code class="docutils literal notranslate"><span class="pre">modules</span></code> and create a new folder there
+called <code class="docutils literal notranslate"><span class="pre">base</span></code>. Now go ahead and add an <code class="docutils literal notranslate"><span class="pre">actions</span></code> and <code class="docutils literal notranslate"><span class="pre">components</span></code> folder.</p>
+<p>Let’s head to <code class="docutils literal notranslate"><span class="pre">modules/base/components</span></code> and create a new component in <code class="docutils literal notranslate"><span class="pre">zappable.lua</span></code>. This will
+be the base component for our wand components. It implements a few utility functions for managing
+charges and checking if we have charges left to zap.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> ZappableOptions</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> charges integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> cost integer</span>
@@ -87,40 +87,32 @@ reference in the main module so they’re available at load time.</p>
 <span class="kr">return</span> <span class="n">Zappable</span>
 </pre></div>
 </div>
-<p>This component is going to be the base Zappable component all of our wand components derive from. It
-implements a few utility functions for managing charges and checking if we have charges left to zap.</p>
-<p>Now let’s head to <code class="docutils literal notranslate"><span class="pre">modules/basegame/actions</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">zap.lua</span></code>.</p>
+<p>Now let’s head to <code class="docutils literal notranslate"><span class="pre">modules/basegame/actions</span></code> and create a new action in <code class="docutils literal notranslate"><span class="pre">zap.lua</span></code>. We implement
+a <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Action:canPerform()</span></code></a> that checks if the wand has enough charges to zap. Then we implement
+a <code class="docutils literal notranslate"><span class="pre">perform</span></code> action that reduces the wand’s charges.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">Log</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span>
 
-<span class="kd">local</span> <span class="n">ZappableTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">()</span>
-    <span class="p">:</span><span class="n">inInventory</span><span class="p">()</span>
-    <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Zappable</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">ZappableTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">targets</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Zappable</span><span class="p">)</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Zap : Action</span>
 <span class="kd">local</span> <span class="n">Zap</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Zap&quot;</span>
-<span class="n">Zap</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Zap&quot;</span>
 <span class="n">Zap</span><span class="p">.</span><span class="n">abstract</span> <span class="o">=</span> <span class="kc">true</span>
 <span class="n">Zap</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">ZappableTarget</span> <span class="p">}</span>
 <span class="n">Zap</span><span class="p">.</span><span class="n">ZappableTarget</span> <span class="o">=</span> <span class="n">ZappableTarget</span>
 
-<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> zappable Actor</span>
 <span class="kr">function</span> <span class="nc">Zap</span><span class="p">:</span><span class="nf">canPerform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">zappable</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">zappable</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Zappable</span><span class="p">):</span><span class="n">canZap</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> zappable Actor</span>
 <span class="kr">function</span> <span class="nc">Zap</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">zappable</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">zappableComponent</span> <span class="o">=</span> <span class="n">zappable</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Zappable</span><span class="p">):</span><span class="n">reduceCharges</span><span class="p">()</span>
-    <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="s2">&quot;You zap the wand!&quot;</span><span class="p">)</span>
+    <span class="n">zappable</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Zappable</span><span class="p">):</span><span class="n">reduceCharges</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Zap</span>
 </pre></div>
 </div>
-<p>Now we implement a zap action. We implement a canPerform that checks if the wand has enough charges
-to zap. Then we implement a perform action that reduces the wand’s charges and logs a message.</p>
 </section>
 <section id="making-a-wand">
 <h2>Making a wand<a class="headerlink" href="#making-a-wand" title="Link to this heading">¶</a></h2>
@@ -145,60 +137,96 @@ create a new file named <code class="docutils literal notranslate"><span class="
 <p>This is pretty much the base Zappable component, but we’ve added a damage amount to it. Now let’s
 head to <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">wandofhurt.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;WandofHurt&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
-<span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
-    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Wand of Hurt&quot;</span><span class="p">),</span>
-    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span>
-        <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-    <span class="p">},</span>
-    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">{</span>
-        <span class="n">charges</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">cost</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">damage</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Item</span><span class="p">(),</span>
-<span class="p">}</span>
+   <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Wand of Hurt&quot;</span><span class="p">),</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span>
+           <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+           <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">LIME</span>
+       <span class="p">},</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span> <span class="p">{</span>
+           <span class="n">charges</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+           <span class="n">cost</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+           <span class="n">damage</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+       <span class="p">},</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Item</span><span class="p">(),</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">()</span>
+   <span class="p">}</span>
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>We can edit our <code class="docutils literal notranslate"><span class="pre">loot/chest.lua</span></code> file to add wands to the drop pool. We have to switch from a
+single entry to a list of weighted entries, and we’ll give the wands half the weight of potions,
+making them drop 33% of the time.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@type</span><span class="cm"> DropTableOptions</span>
+<span class="kr">return</span> <span class="p">{</span>
+   <span class="n">entries</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span>
+         <span class="n">entry</span> <span class="o">=</span> <span class="s2">&quot;VitalityPotion&quot;</span><span class="p">,</span>
+         <span class="n">weight</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="n">entry</span> <span class="o">=</span> <span class="s2">&quot;WandofHurt&quot;</span><span class="p">,</span>
+         <span class="n">weight</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+      <span class="p">},</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>Great, now we’ve got to implement the zap. Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new
-file folder called <code class="docutils literal notranslate"><span class="pre">zaps</span></code>. Inside create a new file called <code class="docutils literal notranslate"><span class="pre">hurtzap.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">HurtZappableTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">)</span>
-    <span class="p">:</span><span class="n">inInventory</span><span class="p">()</span>
+folder called <code class="docutils literal notranslate"><span class="pre">zaps</span></code>. Inside create a new file called <code class="docutils literal notranslate"><span class="pre">hurtzap.lua</span></code>. We’re going to extend the
+base zap to add a tiny bit of behavior to it. We’ll add a target, anything with health, and try to
+deal damage to it.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">WandTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">targets</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">)</span>
 
 <span class="kd">local</span> <span class="n">HurtTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
-    <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-    <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
+   <span class="p">:</span><span class="n">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+   <span class="p">:</span><span class="n">sensed</span><span class="p">()</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> HurtZap : Zap</span>
 <span class="kd">local</span> <span class="n">HurtZap</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Zap</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HurtZap&quot;</span>
+<span class="n">HurtZap</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Zap&quot;</span>
 <span class="n">HurtZap</span><span class="p">.</span><span class="n">abstract</span> <span class="o">=</span> <span class="kc">false</span>
 <span class="n">HurtZap</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">HurtZappableTarget</span><span class="p">,</span>
-    <span class="n">HurtTarget</span>
+   <span class="n">HurtZappableTarget</span><span class="p">,</span>
+   <span class="n">HurtTarget</span>
 <span class="p">}</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="kr">function</span> <span class="nc">HurtZap</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">zappable</span><span class="p">,</span> <span class="n">hurtable</span><span class="p">)</span>
-    <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Zap</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">zappable</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">zappableComponent</span> <span class="o">=</span> <span class="n">zappable</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">)</span>
-    <span class="n">level</span><span class="p">:</span><span class="n">tryPerform</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Damage</span><span class="p">(</span><span class="n">hurtable</span><span class="p">,</span> <span class="n">zappableComponent</span><span class="p">.</span><span class="n">damage</span><span class="p">))</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Zap</span><span class="p">.</span><span class="n">perform</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">zappable</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">zappableComponent</span> <span class="o">=</span> <span class="n">zappable</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">HurtZappable</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">damage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Damage</span><span class="p">(</span><span class="n">hurtable</span><span class="p">,</span> <span class="n">zappableComponent</span><span class="p">.</span><span class="n">damage</span><span class="p">)</span>
+   <span class="n">level</span><span class="p">:</span><span class="n">tryPerform</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
+
+   <span class="kd">local</span> <span class="n">dealt</span> <span class="o">=</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span> <span class="ow">or</span> <span class="mi">0</span>
+
+   <span class="kd">local</span> <span class="n">zapName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">hurtable</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">ownerName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
+
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="s2">&quot;You zap the %s for %i damage!&quot;</span><span class="p">,</span> <span class="n">zapName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">hurtable</span><span class="p">,</span> <span class="s2">&quot;The %s zaps you for %i damage!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span>
+      <span class="n">level</span><span class="p">,</span>
+      <span class="n">self</span><span class="p">,</span>
+      <span class="s2">&quot;The %s kicks the %s for %i damage.&quot;</span><span class="p">,</span>
+      <span class="n">ownerName</span><span class="p">,</span>
+      <span class="n">zapName</span><span class="p">,</span>
+      <span class="n">dealt</span>
+   <span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">HurtZap</span>
 </pre></div>
 </div>
-<p>We’re going to extend the base zap to add a tiny bit of behavior to it. We’ll add a target, anything
-with health, and try to deal damage to it.</p>
 <p>Okay now if you go in game there’s a bit of an issue! You can’t actually zap anything with this wand
 yet, just drop it! We’ll have to modify the user interface to add some proper targetting to let us
 select who we’d like to zap.</p>
 </section>
 <section id="handling-targets">
 <h2>Handling targets<a class="headerlink" href="#handling-targets" title="Link to this heading">¶</a></h2>
-<p>Let’s head over <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> and create a new folder called <code class="docutils literal notranslate"><span class="pre">targethandlers</span></code>. Inside let’s
-create a new file called <code class="docutils literal notranslate"><span class="pre">targethandler.lua</span></code>.</p>
-<p>Let’s walk through step by step. We’re going to create a new base class we’ll use for all our target
-handlers.</p>
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/base/gamestates</span></code> and create a new <a class="reference internal" href="../reference/spectrum/gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> in
+<code class="docutils literal notranslate"><span class="pre">targethandler.lua</span></code>. We’ll accept a display, the base <a class="reference internal" href="../reference/spectrum/gamestates/levelstate.html#lua-LevelState" title="LevelState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelState</span></code></a>, a target list, and
+the current target we’re handling and initializes a few fields for convenience.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> TargetHandler : GameState</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> display Display</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> levelState LevelState</span>
@@ -215,36 +243,35 @@ handlers.</p>
 <span class="cm">---</span><span class="k k-Comment">@param</span><span class="cm"> targetList any[]</span>
 <span class="cm">---</span><span class="k k-Comment">@param</span><span class="cm"> target Target</span>
 <span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">levelState</span><span class="p">,</span> <span class="n">targetList</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">levelState</span> <span class="o">=</span> <span class="n">levelState</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">.</span><span class="n">level</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">targetList</span> <span class="o">=</span> <span class="n">targetList</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">nil</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">levelState</span> <span class="o">=</span> <span class="n">levelState</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">.</span><span class="n">level</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">targetList</span> <span class="o">=</span> <span class="n">targetList</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">target</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">nil</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>This accepts a display, the base levelstate, a target list, and the current target we’re handling
-and initializes a few fields for convenience.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">getValidTargets</span><span class="p">()</span>
-    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;Method &#39;getValidTargets&#39; must be implemented in subclass&quot;</span><span class="p">)</span>
+   <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;Method &#39;getValidTargets&#39; must be implemented in subclass&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">init</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">=</span> <span class="n">self</span><span class="p">:</span><span class="n">getValidTargets</span><span class="p">()</span>
-    <span class="kr">if</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;poprecursive&quot;</span><span class="p">)</span> <span class="kr">end</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">=</span> <span class="n">self</span><span class="p">:</span><span class="n">getValidTargets</span><span class="p">()</span>
+   <span class="kr">if</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;poprecursive&quot;</span><span class="p">)</span> <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">resume</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">shouldPop</span><span class="p">)</span>
-    <span class="kr">if</span> <span class="n">shouldPop</span> <span class="o">==</span> <span class="s2">&quot;poprecursive&quot;</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;poprecursive&quot;</span><span class="p">)</span> <span class="kr">return</span> <span class="kr">end</span>
-    <span class="kr">if</span> <span class="n">shouldPop</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span> <span class="kr">return</span> <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">shouldPop</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="n">shouldPop</span> <span class="o">==</span> <span class="s2">&quot;poprecursive&quot;</span> <span class="ow">and</span> <span class="n">shouldPop</span> <span class="ow">or</span> <span class="kc">nil</span><span class="p">)</span>
+   <span class="kr">end</span>
 
-    <span class="n">self</span><span class="p">:</span><span class="n">init</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">:</span><span class="n">init</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">TargetHandler</span><span class="p">:</span><span class="nf">load</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">:</span><span class="n">init</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">:</span><span class="n">init</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">TargetHandler</span>
@@ -259,155 +286,143 @@ to indicate we should keep popping until we reach the inventory again.</p>
 </section>
 <section id="creating-our-concrete-target-handler">
 <h2>Creating our concrete target handler<a class="headerlink" href="#creating-our-concrete-target-handler" title="Link to this heading">¶</a></h2>
-<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">gamestates/targethandlers</span></code> and create a new file called
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/</span></code> and create a new file called
 <code class="docutils literal notranslate"><span class="pre">generaltargethandler.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
-<span class="kd">local</span> <span class="n">TargetHandler</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;gamestates.targethandlers.targethandler&quot;</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GeneralTargetHandler : TargetHandler</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> selectorPosition Vector2</span>
-<span class="kd">local</span> <span class="n">GeneralTargetHandler</span> <span class="o">=</span> <span class="n">TargetHandler</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;GeneralTargetHandler&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">GeneralTargetHandler</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">TargetHandler</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;GeneralTargetHandler&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We create a new target handler derived from the TargetHandler gamestate. Next we move on to
-getValidTargets. Where we’ll query the level for valid targets to our action and collect them.</p>
+<p>We create a new target handler derived from the <code class="docutils literal notranslate"><span class="pre">TargetHandler</span></code> gamestate. Next we move on to
+<code class="docutils literal notranslate"><span class="pre">getValidTargets</span></code>, where we’ll query the level for valid targets to our action and collect them.
+We can query directly for actors using <a class="reference internal" href="../reference/prism/core/query.html#lua-Query.target" title="Query.target"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Query:target()</span></code></a>, or if the target is <code class="docutils literal notranslate"><span class="pre">Vector2</span></code> we
+validate against the entire map.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">getValidTargets</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">valid</span> <span class="o">=</span> <span class="p">{}</span>
+   <span class="kd">local</span> <span class="n">valid</span> <span class="o">=</span> <span class="p">{}</span>
 
+   <span class="kr">for</span> <span class="n">foundTarget</span> <span class="kr">in</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">():</span><span class="n">target</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">):</span><span class="n">iter</span><span class="p">()</span> <span class="kr">do</span>
+      <span class="nb">table.insert</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">foundTarget</span><span class="p">)</span>
+   <span class="kr">end</span>
 
-    <span class="kr">for</span> <span class="n">foundTarget</span> <span class="kr">in</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">():</span><span class="n">target</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">):</span><span class="n">iter</span><span class="p">()</span> <span class="kr">do</span>
-        <span class="nb">table.insert</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">foundTarget</span><span class="p">)</span>
-    <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">.</span><span class="nb">type</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span> <span class="kr">then</span>
+      <span class="kr">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="kr">in</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">.</span><span class="n">map</span><span class="p">:</span><span class="n">each</span><span class="p">()</span> <span class="kr">do</span>
+         <span class="kd">local</span> <span class="n">vec</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+         <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">:</span><span class="n">validate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span> <span class="kr">then</span>
+            <span class="nb">table.insert</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+         <span class="kr">end</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
 
-    <span class="kr">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">.</span><span class="nb">type</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">.</span><span class="nb">type</span> <span class="o">~=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">)</span> <span class="kr">then</span>
-        <span class="kr">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="kr">in</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">.</span><span class="n">map</span><span class="p">:</span><span class="n">each</span><span class="p">()</span> <span class="kr">do</span>
-            <span class="kd">local</span> <span class="n">vec</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">:</span><span class="n">validate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span> <span class="kr">then</span>
-                <span class="nb">table.insert</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
-            <span class="kr">end</span>
-        <span class="kr">end</span>
-    <span class="kr">end</span>
-
-    <span class="kr">return</span> <span class="n">valid</span>
+   <span class="kr">return</span> <span class="n">valid</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We check if the current target is a Vector or an Actor and we’ll set the selectorPosition based on
+<p>We check if the current target is a Vector2 or an Actor and we’ll set the selectorPosition based on
 the current target that we chose arbitrarily.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">setSelectorPosition</span><span class="p">()</span>
-    <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">is</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span> <span class="kr">then</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
-    <span class="kr">elseif</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span>
-    <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">is</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
+   <span class="kr">elseif</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span>
+   <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
 <p>Next we’ll redefine the init function to set the selector position.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">init</span><span class="p">()</span>
-    <span class="n">TargetHandler</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">self</span><span class="p">:</span><span class="n">setSelectorPosition</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+   <span class="n">self</span><span class="p">:</span><span class="n">setSelectorPosition</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Then we’ll implement a draw function that draws this state. You’ll recognize a lot of this code it’s
-very similar to the code found in <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>. The main difference between this and the
-drawing code in GameLevelState is that we’ll center the camera on the selector’s position.</p>
+<p>Then we’ll implement a draw function that draws this state. Like our other states, we draw the base
+state and then draw on top of it. We’ll put a red “X” over our selected position, and next to it
+their name, if they are <code class="docutils literal notranslate"><span class="pre">Entity</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">cameraPos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
 
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
-    <span class="c1">-- set the camera position on the display</span>
-    <span class="kd">local</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">getCenterOffset</span><span class="p">(</span><span class="n">cameraPos</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">setCamera</span><span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+   <span class="c1">-- set the camera position on the display</span>
+   <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">:</span><span class="n">decompose</span><span class="p">()</span>
 
-    <span class="c1">-- draw the level</span>
-    <span class="kd">local</span> <span class="n">primary</span><span class="p">,</span> <span class="n">secondary</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">levelState</span><span class="p">:</span><span class="n">getSenses</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putSenses</span><span class="p">(</span><span class="n">primary</span><span class="p">,</span> <span class="n">secondary</span><span class="p">)</span>
+   <span class="c1">-- put a string to let the player know what&#39;s happening</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Select a target!&quot;</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">push</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">BLACK</span><span class="p">)</span>
 
-    <span class="c1">-- put a string to let the player know what&#39;s happening</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Select a target!&quot;</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">ox</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">oy</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span><span class="p">)</span>
-
-    <span class="c1">-- if there&#39;s a target then we should draw it&#39;s name!</span>
-    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
-        <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cameraPos</span><span class="p">:</span><span class="n">decompose</span><span class="p">()</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">ox</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">oy</span><span class="p">,</span> <span class="n">Name</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">))</span>
-    <span class="kr">end</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+   <span class="c1">-- if there&#39;s a target then we should draw its name!</span>
+   <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">Entity</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">Name</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">))</span>
+   <span class="kr">end</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now finally we’ll handle keypresses. Let’s walk through it. First let’s define a map and the
-keypressed function.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindOffsets</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">[</span><span class="s2">&quot;move up&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">UP</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move left&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">LEFT</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move down&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">DOWN</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">RIGHT</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move up-left&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">UP_LEFT</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move up-right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">UP_RIGHT</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move down-left&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">DOWN_LEFT</span><span class="p">,</span>
-    <span class="p">[</span><span class="s2">&quot;move down-right&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">DOWN_RIGHT</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">keybindings</span><span class="p">:</span><span class="n">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<p>Finally, we’ll handle input. Add the following controls in <code class="docutils literal notranslate"><span class="pre">controls.lua</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">tab</span>            <span class="o">=</span> <span class="s2">&quot;tab&quot;</span><span class="p">,</span>
+<span class="nb">select</span>         <span class="o">=</span> <span class="s2">&quot;return&quot;</span>
 </pre></div>
 </div>
-<p>First we’ll check if the user hit the tab keybind, and if so we’ll use Lua’s next function to cycle
+<p>Then we’ll check if the user hit the tab keybind, and if so we’ll use <a class="reference external" href="https://www.lua.org/manual/5.1/manual.html#pdf-next"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">next</span></code></a> to cycle
 through our valid targets table.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;tab&quot;</span> <span class="kr">then</span>
-    <span class="kd">local</span> <span class="n">lastTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GeneralTargetHandler</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">tab</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">lastTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
 
-    <span class="kr">while</span>
-        <span class="p">(</span><span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span>
-        <span class="p">(</span><span class="n">lastTarget</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="kr">do</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="kr">end</span>
+      <span class="kr">while</span>
+         <span class="p">(</span><span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span>
+         <span class="p">(</span><span class="n">lastTarget</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="ow">and</span> <span class="o">#</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="kr">do</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">validTargets</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+      <span class="kr">end</span>
 
-    <span class="n">self</span><span class="p">:</span><span class="n">setSelectorPosition</span><span class="p">()</span>
-<span class="kr">end</span>
+      <span class="n">self</span><span class="p">:</span><span class="n">setSelectorPosition</span><span class="p">()</span>
+   <span class="kr">end</span>
 </pre></div>
 </div>
 <p>Then if the user hits the select keybind we add this target to the overall target list we’re
 building and pop this instance of the target handler off of the gamestate stack.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;select&quot;</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
-    <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">select</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="kr">then</span>
+   <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>If the user hits the return keybind we’ll pop this state and pass “poprecursive” to indicate to the
-other states that we should pop all the way back to the inventory.</p>
-<div class="highlight-Lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;return&quot;</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pop&quot;</span><span class="p">)</span>
+<p>If the user hits the return keybind we’ll pop this state and pass “pop” to indicate to the other
+states that we should pop all the way back to the inventory.</p>
+<div class="highlight-Lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">back</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;pop&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
 <p>Next we’ll handle moving the selector. When the user hits a movement key we move the selector, check
 for a valid target on that tile, and if it exists we’ll set that as the current target.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>    <span class="kr">if</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="kr">then</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">+</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="kc">nil</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span> <span class="o">+</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">vector</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="kc">nil</span>
 
-        <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">:</span><span class="n">validate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span> <span class="kr">then</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span>
-        <span class="kr">end</span>
+      <span class="c1">-- Check if the position is valid</span>
+      <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">:</span><span class="n">validate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span> <span class="kr">then</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span>
+      <span class="kr">end</span>
 
-        <span class="kd">local</span> <span class="n">validTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">()</span>
-            <span class="p">:</span><span class="n">at</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span>
-            <span class="p">:</span><span class="n">target</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span>
-            <span class="p">:</span><span class="n">first</span><span class="p">()</span>
+      <span class="c1">-- Check if any actors at the position are valid</span>
+      <span class="kd">local</span> <span class="n">validTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">()</span>
+         <span class="p">:</span><span class="n">at</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">selectorPosition</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span>
+         <span class="p">:</span><span class="n">target</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">target</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">targetList</span><span class="p">)</span>
+         <span class="p">:</span><span class="n">first</span><span class="p">()</span>
 
-        <span class="kr">if</span> <span class="n">validTarget</span> <span class="kr">then</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">validTarget</span>
-        <span class="kr">end</span>
-    <span class="kr">end</span>
+      <span class="kr">if</span> <span class="n">validTarget</span> <span class="kr">then</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">curTarget</span> <span class="o">=</span> <span class="n">validTarget</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">GeneralTargetHandler</span>
@@ -417,94 +432,86 @@ for a valid target on that tile, and if it exists we’ll set that as the curren
 <section id="modifying-inventoryactionstate">
 <h2>Modifying InventoryActionState<a class="headerlink" href="#modifying-inventoryactionstate" title="Link to this heading">¶</a></h2>
 <p>Okay with our target handler out of the way we’re going to have to make some changes to the
-InventoryActionState. Navigate to <code class="docutils literal notranslate"><span class="pre">/gamestates/inventoryactionstate.lua</span></code>. First we’re going to
-make a small change to the constructor.</p>
-<p>Instead of validating if the action is valid with it’s only target being the item we’ll instead
-validate if it’s first target is the item. The actions table notably now holds prototypes instead of
+InventoryActionState. Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/inventoryactionstate.lua</span></code>. First we’re
+going to make a small change to the constructor.</p>
+<p>Instead of validating if the action is valid with its only target being the item we’ll instead
+validate if its first target is the item. The actions table notably now holds prototypes instead of
 instances of actions.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">decision</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">decision</span> <span class="o">=</span> <span class="n">decision</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">item</span>
+   <span class="c1">-- ...</span>
 
-    <span class="n">self</span><span class="p">.</span><span class="n">actions</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">:</span><span class="n">getActions</span><span class="p">())</span> <span class="kr">do</span>
-        <span class="kr">if</span> <span class="n">Action</span><span class="p">:</span><span class="n">validateTarget</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Action</span><span class="p">:</span><span class="n">isAbstract</span><span class="p">()</span> <span class="kr">then</span>
-            <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">,</span> <span class="n">Action</span><span class="p">)</span>
-        <span class="kr">end</span>
-    <span class="kr">end</span>
+   <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">:</span><span class="n">getActions</span><span class="p">())</span> <span class="kr">do</span>
+      <span class="kr">if</span> <span class="n">Action</span><span class="p">:</span><span class="n">validateTarget</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Action</span><span class="p">:</span><span class="n">isAbstract</span><span class="p">()</span> <span class="kr">then</span>
+         <span class="nb">table.insert</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">,</span> <span class="n">Action</span><span class="p">)</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Next we’ll make a small modification to draw. We’ll use the action’s name field and fallback to the
-className if it doesn’t exist. This is so our zaps display as “Zap” and not “HurtZap”.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Name</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">item</span><span class="p">),</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
-
-    <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">)</span> <span class="kr">do</span>
-        <span class="kd">local</span> <span class="n">letter</span> <span class="o">=</span> <span class="nb">string.char</span><span class="p">(</span><span class="mi">96</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
-        <span class="kd">local</span> <span class="n">name</span> <span class="o">=</span> <span class="nb">string.gsub</span><span class="p">(</span><span class="n">action</span><span class="p">.</span><span class="n">name</span> <span class="ow">or</span> <span class="n">action</span><span class="p">.</span><span class="n">className</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;[%s] %s&quot;</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="kr">end</span>
-
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<p>Next we’ll make a small modification to <code class="docutils literal notranslate"><span class="pre">draw</span></code>. We’ll use the action’s <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.getName" title="Action.getName"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Action:getName()</span></code></a>
+method so our zaps display as “Zap” and not “HurtZap”.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">)</span> <span class="kr">do</span>
+   <span class="kd">local</span> <span class="n">letter</span> <span class="o">=</span> <span class="nb">string.char</span><span class="p">(</span><span class="mi">96</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+<span class="hll">   <span class="kd">local</span> <span class="n">name</span> <span class="o">=</span> <span class="nb">string.gsub</span><span class="p">(</span><span class="n">Action</span><span class="p">:</span><span class="n">getName</span><span class="p">(),</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span>   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;[%s] %s&quot;</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we’ll modify the keypressed function. Instead of simply executing the action the user selects
-we’ll know check if the action is valid with just the item as the first target, and if not we’ll
-push GeneralTargetHandler states to handle the rest of the targets.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">)</span> <span class="kr">do</span>
-        <span class="kr">if</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">string.char</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">96</span><span class="p">)</span> <span class="kr">then</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">trySetAction</span><span class="p">(</span><span class="n">Action</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">item</span><span class="p">),</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">)</span>
+<p>Now we’ll modify the <code class="docutils literal notranslate"><span class="pre">update</span></code> function. Instead of simply executing the action the user selects
+we’ll now check if the action is valid with just the item as the first target.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+   <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Action</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">actions</span><span class="p">)</span> <span class="kr">do</span>
+      <span class="kr">if</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">.</span><span class="n">key</span><span class="p">[</span><span class="nb">string.char</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">96</span><span class="p">)].</span><span class="n">pressed</span> <span class="kr">then</span>
+<span class="hll">         <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">Action</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">item</span><span class="p">),</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">)</span> <span class="kr">then</span>
+</span>            <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+            <span class="kr">return</span>
+         <span class="kr">end</span>
+</pre></div>
+</div>
+<p>If it wasn’t valid, we’ll push instances of our <code class="docutils literal notranslate"><span class="pre">GeneralTargetHandler</span></code> in reverse order, so the
+second target (whatever is after the item) is on the top of the stack.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>         <span class="n">self</span><span class="p">.</span><span class="n">selectedAction</span> <span class="o">=</span> <span class="n">Action</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">self</span><span class="p">.</span><span class="n">item</span> <span class="p">}</span>
+         <span class="kr">for</span> <span class="n">j</span> <span class="o">=</span> <span class="n">Action</span><span class="p">:</span><span class="n">getNumTargets</span><span class="p">(),</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="kr">do</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span>
+               <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GeneralTargetHandler</span><span class="p">(</span>
+                  <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span>
+                  <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">,</span>
+                  <span class="n">self</span><span class="p">.</span><span class="n">targets</span><span class="p">,</span>
+                  <span class="n">Action</span><span class="p">:</span><span class="n">getTarget</span><span class="p">(</span><span class="n">j</span><span class="p">),</span>
+                  <span class="n">self</span><span class="p">.</span><span class="n">targets</span>
+               <span class="p">)</span>
+            <span class="p">)</span>
+         <span class="kr">end</span>
+      <span class="kr">end</span>
+   <span class="kr">end</span>
 
-            <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">validateResponse</span><span class="p">()</span> <span class="kr">then</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
-                <span class="kr">return</span>
-            <span class="kr">end</span>
-
-            <span class="n">self</span><span class="p">.</span><span class="n">selectedAction</span> <span class="o">=</span> <span class="n">Action</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">self</span><span class="p">.</span><span class="n">item</span> <span class="p">}</span>
-            <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="n">Action</span><span class="p">:</span><span class="n">getNumTargets</span><span class="p">(),</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="kr">do</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">GeneralTargetHandler</span><span class="p">(</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">previousState</span><span class="p">,</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">targets</span><span class="p">,</span>
-                <span class="n">Action</span><span class="p">:</span><span class="n">getTargetObject</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                <span class="n">self</span><span class="p">.</span><span class="n">targets</span>
-                <span class="p">))</span>
-            <span class="kr">end</span>
-        <span class="kr">end</span>
-    <span class="kr">end</span>
-
-    <span class="kd">local</span> <span class="n">binding</span> <span class="o">=</span> <span class="n">keybindings</span><span class="p">:</span><span class="n">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="kr">if</span> <span class="n">binding</span> <span class="o">==</span> <span class="s2">&quot;inventory&quot;</span> <span class="ow">or</span> <span class="n">binding</span> <span class="o">==</span> <span class="s2">&quot;return&quot;</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span> <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">inventory</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">or</span> <span class="n">controls</span><span class="p">.</span><span class="n">back</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span> <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>And to wrap things up we’ll change InventoryActionState’s resume. When it resumes we’ll check if
-we’re handling targets for an action, adn if we are we check if we succeeded. If we succeeded we set
-the action and then pop the state. If not we display a message to the user explaining why their
-action didn’t work.</p>
+<p>And to wrap things up we’ll change <code class="docutils literal notranslate"><span class="pre">InventoryActionState</span></code>’s resume. We’ll check if we’re handling
+targets for an action, and if we are we check if we succeeded. If we succeeded we set the action and
+then pop the state. If not we display a message to the user explaining why their action didn’t work.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryActionState</span><span class="p">:</span><span class="nf">resume</span><span class="p">()</span>
-    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">targets</span> <span class="kr">then</span>
-        <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectedAction</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targets</span><span class="p">))</span>
-        <span class="kd">local</span> <span class="n">success</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-        <span class="kr">if</span> <span class="n">success</span> <span class="kr">then</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
-        <span class="kr">else</span>
-            <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
-        <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">targets</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">selectedAction</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">unpack</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">targets</span><span class="p">))</span>
+      <span class="kd">local</span> <span class="n">success</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+      <span class="kr">if</span> <span class="n">success</span> <span class="kr">then</span>
+         <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+      <span class="kr">else</span>
+         <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+      <span class="kr">end</span>
 
-        <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
-    <span class="kr">end</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
+   <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://www.lua.org/manual/5.1/manual.html#pdf-unpack"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">unpack</span></code></a> expands a table into separate values.</p>
 </div>
 </section>
 <section id="wrapping-it-up">
@@ -609,7 +616,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -623,9 +632,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Zapping wands</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-base-module">Creating a base module</a></li>
@@ -646,6 +655,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -26,7 +26,7 @@
     <link rel="icon" href="../_static/prism.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Collision" href="collision.html" />
+    <link rel="next" title="Animation" href="animation.html" />
     <link rel="prev" title="Object registration" href="object-registration.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -53,7 +53,7 @@ system to make this easy and efficient.</p>
 <section id="basic-usage">
 <h2>Basic usage<a class="headerlink" href="#basic-usage" title="Link to this heading">¶</a></h2>
 <p>To start a query, call <a class="reference internal" href="../reference/prism/core/query.html#lua-IQueryable.query" title="IQueryable.query"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">IQueryable.query</span></code></a> with the component types you want to require.
-This interface is implemented by <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a>, <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>, and
+This interface is implemented by <a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a>, <a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder" title="LevelBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a>, and
 <a class="reference internal" href="../reference/prism/core/actorstorage.html#lua-ActorStorage" title="ActorStorage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">ActorStorage</span></code></a>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">query</span> <span class="o">=</span> <span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">)</span>
 </pre></div>
@@ -224,7 +224,9 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="#putting-it-together">Putting it together</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -238,9 +240,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -253,6 +255,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
@@ -260,7 +263,7 @@ SOFTWARE.
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="object-registration.html" title="previous chapter">Object registration</a></li>
-      <li>Next: <a href="collision.html" title="next chapter">Collision</a></li>
+      <li>Next: <a href="animation.html" title="next chapter">Animation</a></li>
   </ul></li>
 </ul>
 </div>

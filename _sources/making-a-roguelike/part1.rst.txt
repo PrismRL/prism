@@ -7,6 +7,10 @@ and get chased by.
 .. video:: ../_static/part1.mp4
    :caption: Kicking a kobold
    :align: center
+   :autoplay:
+   :nocontrols:
+   :loop:
+   :muted:
 
 The following sections will expand this into a complete game.
 
@@ -35,7 +39,7 @@ To make the game more engaging, let’s introduce an enemy: the **Kobold**.
    prism.registerActor("Kobold", function()
       return prism.Actor.fromComponents {
          prism.components.Position(),
-         prism.components.Drawable("k", prism.Color4.RED),
+         prism.components.Drawable{ index = "k", color = prism.Color4.RED },
       }
    end)
 
@@ -91,7 +95,6 @@ valid action.
    --- @class KoboldController : Controller
    --- @overload fun(): KoboldController
    local KoboldController = prism.components.Controller:extend("KoboldController")
-   KoboldController.name = "KoboldController"
 
    function KoboldController:act(level, actor)
       local destination = actor:getPosition() + prism.Vector2.RIGHT
@@ -129,7 +132,7 @@ game. Let's make them follow the player around.
             prism.components.Name("Kobold"),
             prism.components.Position(),
             prism.components.Collider(),
-            prism.components.Drawable{ char = "k", color = prism.Color4.RED },
+            prism.components.Drawable{ index = "k", color = prism.Color4.RED },
             prism.components.Senses(),
             prism.components.Sight{ range = 12, fov = true },
             prism.components.Mover{ "walk" },
@@ -154,7 +157,7 @@ the player. We should also ensure the kobold has the component in the first plac
    local senses = actor:get(prism.components.Senses)
    if not senses then return prism.actions.Wait(actor) end -- we can't see!
 
-   local player = senses:query(prism.components.PlayerController):first()
+   local player = senses:query(level, prism.components.PlayerController):first()
    if not player then return prism.actions.Wait(actor) end
 
 .. note::
@@ -194,13 +197,12 @@ Jump back into the game and you should find kobolds chasing after you.
       --- @class KoboldController : Controller
       --- @overload fun(): KoboldController
       local KoboldController = prism.components.Controller:extend("KoboldController")
-      KoboldController.name = "KoboldController"
 
       function KoboldController:act(level, actor)
          local senses = actor:get(prism.components.Senses)
          if not senses then return prism.actions.Wait(actor) end -- we can't see!
 
-         local player = senses:query(prism.components.PlayerController):first()
+         local player = senses:query(level, prism.components.PlayerController):first()
          if not player then return prism.actions.Wait(actor) end
 
          local mover = actor:get(prism.components.Mover)
@@ -230,8 +232,7 @@ Let’s first create a target for our kick. Put this at the top of kick.lua:
 
 .. code-block:: lua
 
-   local KickTarget = prism.Target()
-      :with(prism.components.Collider)
+   local KickTarget = prism.Target(prism.components.Collider)
       :range(1)
       :sensed()
 
@@ -243,7 +244,6 @@ perform the kick action have a controller.
 
    ---@class KickAction : Action
    local Kick = prism.Action:extend("KickAction")
-   Kick.name = "Kick"
    Kick.targets = { KickTarget }
    Kick.requiredComponents = {
       prism.components.Controller
@@ -270,14 +270,14 @@ checking passability with a custom collision mask.
    function Kick:perform(level, kicked)
       local direction = (kicked:getPosition() - self.owner:getPosition())
 
+      local final = kicked:expectPosition()
       for _ = 1, 3 do
-        local nextpos = kicked:getPosition() + direction
-
-        if not level:getCellPassable(nextpos.x, nextpos.y, mask) then break end
-        if not level:hasActor(kicked) then break end
-
-        level:moveActor(kicked, nextpos)
+         local nextpos = final + direction
+         if not level:getCellPassable(nextpos.x, nextpos.y, mask) then break end
+         final = nextpos
       end
+
+      level:moveActor(kicked, final)
    end
 
 .. dropdown:: Complete kick.lua
@@ -286,38 +286,34 @@ checking passability with a custom collision mask.
 
    .. code:: lua
 
-      local KickTarget = prism.Target()
-         :with(prism.components.Collider)
-         :range(1)
-         :sensed()
+      local KickTarget = prism.Target(prism.components.Collider):range(1):sensed()
 
       ---@class KickAction : Action
       local Kick = prism.Action:extend("KickAction")
-      Kick.name = "Kick"
       Kick.targets = { KickTarget }
       Kick.requiredComponents = {
-         prism.components.Controller
+         prism.components.Controller,
       }
 
       function Kick:canPerform(level)
          return true
       end
 
+      local mask = prism.Collision.createBitmaskFromMovetypes { "fly" }
+
       --- @param level Level
       --- @param kicked Actor
       function Kick:perform(level, kicked)
          local direction = (kicked:getPosition() - self.owner:getPosition())
 
-         local mask = prism.Collision.createBitmaskFromMovetypes{ "fly" }
-
+         local final = kicked:expectPosition()
          for _ = 1, 3 do
-            local nextpos = kicked:getPosition() + direction
-
+            local nextpos = final + direction
             if not level:getCellPassable(nextpos.x, nextpos.y, mask) then break end
-            if not level:hasActor(kicked) then break end
-
-            level:moveActor(kicked, nextpos)
+            final = nextpos
          end
+
+         level:moveActor(kicked, final)
       end
 
       return Kick
@@ -326,11 +322,11 @@ Kicking kobolds, for real this time
 -----------------------------------
 
 We've added the kick action, but we don't use it anywhere. Let's fix that by performing the kick
-when we bump into a kobold. Head over to ``gamestates/gamelevelstate.lua`` and find where the move
-action is called.
+when we bump into a kobold. Head over to ``modules/game/gamestates/gamelevelstate.lua`` and find
+where the move action is called.
 
-If the player presses a move button but the ``canPerform`` check fails, we can infer they moved into
-something that blocked their movement. Then, check if there's a valid actor to kick in front of us
+If the player presses a move button but the player fails to move, we can infer they moved into
+something that blocked their movement. Let's check if there's a valid actor to kick in front of us
 (as opposed to another impassable entity), and perform the kick action on them:
 
 .. code-block:: lua
@@ -344,9 +340,7 @@ something that blocked their movement. Then, check if there's a valid actor to k
       :first() -- grab one of the kickable things, or nil
 
    local kick = prism.actions.Kick(owner, target)
-   if self.level:canPerform(kick) then
-      decision:setAction(kick)
-   end
+   self:setAction(kick)
 
 .. note::
 

@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -49,7 +49,7 @@
 <h1>Carving out caverns<a class="headerlink" href="#carving-out-caverns" title="Link to this heading">¶</a></h1>
 <p>In this section of the tutorial we’ll create a more interesting place to kick kobolds, and put some
 in the game world to start.</p>
-<section id="getting-started-on-a-map">
+<div  class="sphinx-contrib-video-container align-left"><video autoplay="True" loop="True" muted="True" preload="auto" width="100%"><source src="../_images/part7.mp4" type="video/mp4"></video></div><section id="getting-started-on-a-map">
 <h2>Getting started on a map<a class="headerlink" href="#getting-started-on-a-map" title="Link to this heading">¶</a></h2>
 <p>Let’s create a new file in the root of the project called <code class="docutils literal notranslate"><span class="pre">levelgen.lua</span></code>. We’ll return a function
 from this module that takes a few parameters.</p>
@@ -59,8 +59,9 @@ from this module that takes a few parameters.</p>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> player Actor</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> width integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> height integer</span>
-<span class="kr">return</span> <span class="kr">function</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">MapBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> builder? LevelBuilder</span>
+<span class="kr">return</span> <span class="kr">function</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span>
+   <span class="n">builder</span> <span class="o">=</span> <span class="n">builder</span> <span class="ow">or</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Pit</span><span class="p">)</span>
 
    <span class="c1">-- world building code goes here!</span>
 
@@ -70,8 +71,31 @@ from this module that takes a few parameters.</p>
 </div>
 <p>We give the level building function an <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> which will be exclusive to it, the player we
 want to place, and the width and height of the map we want generated. Inside we create a
-<a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a> and return it. The constant <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> will define the grid size of the
-rooms.</p>
+<a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder" title="LevelBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a> and return it. The constant <code class="docutils literal notranslate"><span class="pre">PARTITIONS</span></code> will define the grid size of
+the rooms.</p>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Link to this heading">¶</a></h2>
+<p>Before we begin filling up the level, let’s set up a <a class="reference internal" href="../reference/geometer/gamestates/mapgenerator.html#lua-MapGeneratorState" title="MapGeneratorState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapGeneratorState</span></code></a> so we can see
+how the level looks as it generates. In <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>, we’ll check for an argument passed to decide
+whether we preview the level or not. Rather than loading our regular state, we’ll load a
+<a class="reference internal" href="../reference/geometer/gamestates/mapgenerator.html#lua-MapGeneratorState" title="MapGeneratorState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapGeneratorState</span></code></a>, passing it a function used to generate the level, the
+<code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code>, and the <code class="docutils literal notranslate"><span class="pre">Display</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+   <span class="kr">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;--debug&quot;</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">levelgen</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;levelgen&quot;</span>
+      <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">RNG</span><span class="p">(</span><span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">getTime</span><span class="p">())</span>
+      <span class="kd">local</span> <span class="kr">function</span> <span class="nf">generator</span><span class="p">()</span>
+         <span class="n">levelgen</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span>
+      <span class="kr">end</span>
+
+      <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">geometer</span><span class="p">.</span><span class="n">MapGeneratorState</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+   <span class="kr">else</span>
+      <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">display</span><span class="p">))</span>
+   <span class="kr">end</span>
+</pre></div>
+</div>
 </section>
 <section id="populating-the-void">
 <h2>Populating the void<a class="headerlink" href="#populating-the-void" title="Link to this heading">¶</a></h2>
@@ -94,6 +118,8 @@ we start guarantees a random pattern.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
+<p>Run the game with <code class="docutils literal notranslate"><span class="pre">--debug</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">love</span> <span class="pre">.</span> <span class="pre">--debug</span></code> and hit the play button (or press <code class="docutils literal notranslate"><span class="pre">\`</span></code>).
+You should see the noise get filled out!</p>
 </section>
 <section id="making-room">
 <h2>Making room<a class="headerlink" href="#making-room" title="Link to this heading">¶</a></h2>
@@ -123,7 +149,9 @@ rooms.</p>
 </div>
 <p>Next we loop through each of our partitions and build a room so long as it’s not the one we’re
 omitting. We create a <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangle</span></code></a>, hash its partition coordinates, and put it into our
-table of rooms. Finally we draw the room onto our map with <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder.drawRectangle" title="MapBuilder.drawRectangle"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">MapBuilder:drawRectangle()</span></code></a>.</p>
+table of rooms. Finally we draw the room onto our map with <code class="xref lua lua-func docutils literal notranslate"><span class="pre">LevelBuilder.drawRectangle</span></code>.
+We use <code class="docutils literal notranslate"><span class="pre">coroutine.yield()</span></code> to return control back to Geometer, so we can see each rectangle get
+drawn.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">px</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
    <span class="kr">for</span> <span class="n">py</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
       <span class="kr">if</span> <span class="ow">not</span> <span class="n">missing</span><span class="p">:</span><span class="n">equals</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)</span> <span class="kr">then</span>
@@ -135,6 +163,7 @@ table of rooms. Finally we draw the room onto our map with <a class="reference i
          <span class="kd">local</span> <span class="n">roomRect</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span><span class="p">)</span>
          <span class="n">rooms</span><span class="p">[</span><span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)]</span> <span class="o">=</span> <span class="n">roomRect</span>
 
+         <span class="nb">coroutine.yield</span><span class="p">()</span>
          <span class="n">builder</span><span class="p">:</span><span class="n">drawRectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rw</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rh</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
       <span class="kr">end</span>
    <span class="kr">end</span>
@@ -158,11 +187,11 @@ should start vertically or horizontally for a little bit of spice.</p>
    <span class="kd">local</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="n">b</span><span class="p">:</span><span class="n">center</span><span class="p">():</span><span class="n">floor</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
    <span class="c1">-- Randomly choose one of two L-shaped tunnel patterns for variety.</span>
    <span class="kr">if</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="kr">then</span>
-      <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
-      <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+      <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+      <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
    <span class="kr">else</span>
-      <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
-      <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+      <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+      <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
    <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
@@ -172,6 +201,7 @@ bottom. If either doesn’t exist the hallway helper won’t get past the guard 
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">hash</span><span class="p">,</span> <span class="n">currentRoom</span> <span class="kr">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">rooms</span><span class="p">)</span> <span class="kr">do</span>
    <span class="kd">local</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_unhash</span><span class="p">(</span><span class="n">hash</span><span class="p">)</span>
 
+   <span class="nb">coroutine.yield</span><span class="p">()</span>
    <span class="n">createLShapedHallway</span><span class="p">(</span><span class="n">currentRoom</span><span class="p">,</span> <span class="n">rooms</span><span class="p">[</span><span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">px</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">py</span><span class="p">)])</span>
    <span class="n">createLShapedHallway</span><span class="p">(</span><span class="n">currentRoom</span><span class="p">,</span> <span class="n">rooms</span><span class="p">[</span><span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
 <span class="kr">end</span>
@@ -188,6 +218,7 @@ bottom. If either doesn’t exist the hallway helper won’t get past the guard 
 <span class="kr">end</span>
 
 <span class="kd">local</span> <span class="n">playerPos</span> <span class="o">=</span> <span class="n">startRoom</span><span class="p">:</span><span class="n">center</span><span class="p">():</span><span class="n">floor</span><span class="p">()</span>
+<span class="nb">coroutine.yield</span><span class="p">()</span>
 <span class="n">builder</span><span class="p">:</span><span class="n">addActor</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">playerPos</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -197,6 +228,7 @@ the starting room and spawn a kobold there.</p>
    <span class="kr">if</span> <span class="n">room</span> <span class="o">~=</span> <span class="n">startRoom</span> <span class="kr">then</span>
       <span class="kd">local</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">room</span><span class="p">:</span><span class="n">center</span><span class="p">():</span><span class="n">floor</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
 
+      <span class="nb">coroutine.yield</span><span class="p">()</span>
       <span class="n">builder</span><span class="p">:</span><span class="n">addActor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Kobold</span><span class="p">(),</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">)</span>
    <span class="kr">end</span>
 <span class="kr">end</span>
@@ -205,12 +237,12 @@ the starting room and spawn a kobold there.</p>
 </section>
 <section id="sending-it-back">
 <h2>Sending it back<a class="headerlink" href="#sending-it-back" title="Link to this heading">¶</a></h2>
+<p>Finally we’ll pad the entire map in some walls and return the finished <a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder" title="LevelBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">:</span><span class="n">addPadding</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
 <span class="kr">return</span> <span class="n">builder</span>
 </pre></div>
 </div>
-<p>Finally we’ll pad the entire map in some walls and return the finished <a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>.</p>
 <details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete levelgen.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
@@ -221,7 +253,7 @@ the starting room and spawn a kobold there.</p>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> width integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> height integer</span>
 <span class="kr">return</span> <span class="kr">function</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">player</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">MapBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
    <span class="c1">-- Fill the map with random noise of pits and walls.</span>
    <span class="kd">local</span> <span class="n">nox</span><span class="p">,</span> <span class="n">noy</span> <span class="o">=</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
@@ -266,11 +298,11 @@ the starting room and spawn a kobold there.</p>
       <span class="kd">local</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="n">b</span><span class="p">:</span><span class="n">center</span><span class="p">():</span><span class="n">floor</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
       <span class="c1">-- Randomly choose one of two L-shaped tunnel patterns for variety.</span>
       <span class="kr">if</span> <span class="n">rng</span><span class="p">:</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="kr">then</span>
-         <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
-         <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+         <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+         <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">bx</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
       <span class="kr">else</span>
-         <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
-         <span class="n">builder</span><span class="p">:</span><span class="n">drawLine</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+         <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+         <span class="n">builder</span><span class="p">:</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">bx</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
       <span class="kr">end</span>
    <span class="kr">end</span>
 
@@ -309,14 +341,15 @@ the starting room and spawn a kobold there.</p>
 </details></section>
 <section id="updating-gamelevelstate">
 <h2>Updating GameLevelState<a class="headerlink" href="#updating-gamelevelstate" title="Link to this heading">¶</a></h2>
-<p>Head back to <code class="docutils literal notranslate"><span class="pre">gamestates/gamelevelstate.lua</span></code> and add the following line to the top of the file.</p>
+<p>Head back to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gamelevelstate.lua</span></code> and add the following line to the top of
+the file.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">levelgen</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;levelgen&quot;</span>
 </pre></div>
 </div>
 <p>Then we’re going to change its constructor. Head to <code class="docutils literal notranslate"><span class="pre">GameLevelState:__new</span></code> and let’s replace the
 map builder code there with this:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">seed</span> <span class="o">=</span> <span class="nb">tostring</span><span class="p">(</span><span class="nb">os.time</span><span class="p">())</span>
-<span class="kd">local</span> <span class="n">mapbuilder</span> <span class="o">=</span> <span class="n">levelgen</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">RNG</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">timer</span><span class="p">.</span><span class="n">getTime</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">levelgen</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">RNG</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now run the game! You’ll be exploring a map reminiscent of Rogue but with a lot more pits to kick
@@ -325,7 +358,7 @@ kobolds into.</p>
 <section id="descending-to-the-next-part">
 <h2>Descending to the next part<a class="headerlink" href="#descending-to-the-next-part" title="Link to this heading">¶</a></h2>
 <p>We’ve developed a simple level generation algorithm using <a class="reference internal" href="../reference/prism/core/rng.html#lua-RNG" title="RNG"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">RNG</span></code></a> and
-<a class="reference internal" href="../reference/prism/core/map_builder.html#lua-MapBuilder" title="MapBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">MapBuilder</span></code></a>. In the <a class="reference internal" href="part8.html"><span class="doc">next section</span></a> of the tutorial we’ll add a set of
+<a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder" title="LevelBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a>. In the <a class="reference internal" href="part8.html"><span class="doc">next section</span></a> of the tutorial we’ll add a set of
 stairs and let the player descend deeper into the dungeon!</p>
 </section>
 </section>
@@ -424,7 +457,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -437,6 +472,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part6.html">Losing the game</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Carving out caverns</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#getting-started-on-a-map">Getting started on a map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#populating-the-void">Populating the void</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#making-room">Making room</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#carving-hallways">Carving hallways</a></li>
@@ -448,9 +484,9 @@ SOFTWARE.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -463,6 +499,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

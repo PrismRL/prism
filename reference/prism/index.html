@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
@@ -50,8 +50,8 @@
 <p>The prism module contains the core engine and commonly used utilities. Its classes and functions can
 be accessed from the <code class="docutils literal notranslate"><span class="pre">prism</span></code> global, e.g. <code class="docutils literal notranslate"><span class="pre">prism.Level</span></code>.</p>
 <p><strong>Registries</strong></p>
-<p>Registries get automatically loaded by <code class="xref lua lua-func docutils literal notranslate"><span class="pre">loadModule</span></code>. They hold all of the game objects,
-making them easy to access, e.g. <code class="docutils literal notranslate"><span class="pre">prism.actors.Player()</span></code>.</p>
+<p>Registries get automatically loaded by <a class="reference internal" href="#lua-prism.loadModule" title="prism.loadModule"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a>. They hold all of the game
+objects, making them easy to access, e.g. <code class="docutils literal notranslate"><span class="pre">prism.actors.Player()</span></code>.</p>
 <ul>
 <li><dl class="lua data">
 <dt class="sig sig-object lua" id="lua-prism.actors">
@@ -109,6 +109,13 @@ making them easy to access, e.g. <code class="docutils literal notranslate"><spa
 </dd></dl>
 
 </li>
+<li><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-prism.schedulers">
+<span class="sig-name descname"><span class="pre">prism.schedulers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="core/scheduler.html#lua-Scheduler" title="Scheduler"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Scheduler</span></code></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-prism.schedulers" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The scheduler registry.</p>
+</dd></dl>
+
+</li>
 </ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Core</span></p>
@@ -123,19 +130,19 @@ making them easy to access, e.g. <code class="docutils literal notranslate"><spa
 <li class="toctree-l1"><a class="reference internal" href="core/decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/levelbuilder.html"><code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/map.html"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="core/map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="core/relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/relation.html"><code class="docutils literal notranslate"><span class="pre">Relation</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="core/scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="core/scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/turnhandler.html"><code class="docutils literal notranslate"><span class="pre">TurnHandler</span></code></a></li>
 </ul>
 </div>
 <p><strong>Functions</strong></p>
@@ -144,7 +151,7 @@ making them easy to access, e.g. <code class="docutils literal notranslate"><spa
 <dt class="sig sig-object lua" id="lua-prism.loadModule">
 <span class="sig-name descname"><span class="pre">prism.loadModule</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-prism.loadModule" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Loads a module into prism, automatically loading objects based on directory.
-. Will also run <code class="docutils literal notranslate"><span class="pre">module/module.lua</span></code> for any other set up.</p>
+Will also run <code class="docutils literal notranslate"><span class="pre">module/module.lua</span></code> or <code class="docutils literal notranslate"><span class="pre">module/init.lua</span></code> for any other set up.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>directory</strong> (<code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code>) – The root directory of the module.</p>
@@ -170,24 +177,14 @@ making them easy to access, e.g. <code class="docutils literal notranslate"><spa
 <li><dl class="lua function">
 <dt class="sig sig-object lua" id="lua-prism.registerTarget">
 <span class="sig-name descname"><span class="pre">prism.registerTarget</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">factory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">fun</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/target.html#lua-Target" title="Target"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Target</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-prism.registerTarget" title="Link to this definition">¶</a><br /></dt>
-<dd><p>Registers a target factory into the targets registry.</p>
+<dd><p>Registers a target factory into the targets.</p>
 </dd></dl>
 
 </li>
 <li><dl class="lua function">
-<dt class="sig sig-object lua" id="lua-prism.turn">
-<span class="sig-name descname"><span class="pre">prism.turn</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/level.html#lua-Level" title="Level"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Level</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Controller</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-prism.turn" title="Link to this definition">¶</a><br /></dt>
-<dd><p>This is the core turn logic, and if you need to use a different scheduler or
-want a different turn structure you should override this.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>level</strong> (<a class="reference internal" href="core/level.html#lua-Level" title="Level"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Level</span></code></a>) – The current level.</p></li>
-<li><p><strong>actor</strong> (<a class="reference internal" href="core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a>) – The actor taking their turn.</p></li>
-<li><p><strong>controller</strong> (<a class="reference internal" href="core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Controller</span></code></a>) – The actor’s controller, for convenience.</p></li>
-</ul>
-</dd>
-</dl>
+<dt class="sig sig-object lua" id="lua-prism.register">
+<span class="sig-name descname"><span class="pre">prism.register</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="core/object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-prism.register" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Registers an object into its registry. Errors if the object has no registry.</p>
 </dd></dl>
 
 </li>
@@ -200,7 +197,7 @@ want a different turn structure you should override this.</p>
 </li>
 </ul>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Basic components</span></p>
+<p class="caption" role="heading"><span class="caption-text">Core components</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core/components/collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/components/collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
@@ -214,10 +211,17 @@ want a different turn structure you should override this.</p>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Basic systems</span></p>
+<p class="caption" role="heading"><span class="caption-text">Core systems</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core/systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="core/collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Core relations</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core/relations/sensedby.html"><code class="docutils literal notranslate"><span class="pre">SensedByRelation</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="core/relations/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesRelation</span></code></a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -405,7 +409,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -419,9 +425,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -440,6 +446,7 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.messages"><code class="docutils literal notranslate"><span class="pre">prism.messages</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.systems"><code class="docutils literal notranslate"><span class="pre">prism.systems</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.decisions"><code class="docutils literal notranslate"><span class="pre">prism.decisions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lua-prism.schedulers"><code class="docutils literal notranslate"><span class="pre">prism.schedulers</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/action.html"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/actor.html"><code class="docutils literal notranslate"><span class="pre">Actor</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/actorstorage.html"><code class="docutils literal notranslate"><span class="pre">ActorStorage</span></code></a></li>
@@ -450,24 +457,24 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="core/decision.html"><code class="docutils literal notranslate"><span class="pre">Decision</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/entity.html"><code class="docutils literal notranslate"><span class="pre">Entity</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/level.html"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/levelbuilder.html"><code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/map.html"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/map_builder.html"><code class="docutils literal notranslate"><span class="pre">MapBuilder</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/message.html"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/object.html"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/query.html"><code class="docutils literal notranslate"><span class="pre">IQueryable</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/query.html#lua-Query"><code class="docutils literal notranslate"><span class="pre">Query</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/relationship.html"><code class="docutils literal notranslate"><span class="pre">Relationship</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/relation.html"><code class="docutils literal notranslate"><span class="pre">Relation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/rng.html"><code class="docutils literal notranslate"><span class="pre">RNG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/system.html"><code class="docutils literal notranslate"><span class="pre">System</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/system_manager.html"><code class="docutils literal notranslate"><span class="pre">SystemManager</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/target.html"><code class="docutils literal notranslate"><span class="pre">Target</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/scheduler/scheduler.html"><code class="docutils literal notranslate"><span class="pre">Scheduler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="core/scheduler/simple_scheduler.html"><code class="docutils literal notranslate"><span class="pre">SimpleScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/turnhandler.html"><code class="docutils literal notranslate"><span class="pre">TurnHandler</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.loadModule"><code class="docutils literal notranslate"><span class="pre">prism.loadModule()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.registerActor"><code class="docutils literal notranslate"><span class="pre">prism.registerActor()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.registerCell"><code class="docutils literal notranslate"><span class="pre">prism.registerCell()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.registerTarget"><code class="docutils literal notranslate"><span class="pre">prism.registerTarget()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#lua-prism.turn"><code class="docutils literal notranslate"><span class="pre">prism.turn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lua-prism.register"><code class="docutils literal notranslate"><span class="pre">prism.register()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lua-prism.advanceCoroutine"><code class="docutils literal notranslate"><span class="pre">prism.advanceCoroutine()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/components/collider.html"><code class="docutils literal notranslate"><span class="pre">Collider</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/components/collider.html#lua-ColliderOptions"><code class="docutils literal notranslate"><span class="pre">ColliderOptions</span></code></a></li>
@@ -480,6 +487,8 @@ SOFTWARE.
 <li class="toctree-l2"><a class="reference internal" href="core/components/senses.html"><code class="docutils literal notranslate"><span class="pre">Senses</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/systems/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesSystem</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/collision.html"><code class="docutils literal notranslate"><span class="pre">Collision</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/relations/sensedby.html"><code class="docutils literal notranslate"><span class="pre">SensedByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="core/relations/senses.html"><code class="docutils literal notranslate"><span class="pre">SensesRelation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/messages/actionmessage.html"><code class="docutils literal notranslate"><span class="pre">ActionMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/messages/debugmessage.html"><code class="docutils literal notranslate"><span class="pre">DebugMessage</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="core/decisions/actiondecision.html"><code class="docutils literal notranslate"><span class="pre">ActionDecision</span></code></a></li>
@@ -509,6 +518,7 @@ SOFTWARE.
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

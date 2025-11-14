@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>Saving the game &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../_static/prism.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="saving-the-game">
+<h1>Saving the game<a class="headerlink" href="#saving-the-game" title="Link to this heading">¶</a></h1>
+<p>In this tutorial we’re going to get the game saving and loading. We’ll introduce a new game startup screen
+for choosing between continuing and a new game, and we’ll hook into love.quit to save the game when we quit.</p>
+<section id="introductions">
+<h2>Introductions<a class="headerlink" href="#introductions" title="Link to this heading">¶</a></h2>
+<p>Head to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">gamestartstate.lua</span></code>.</p>
+<p>We import controls, because we’ll use that a little later. All we do here is keep track of the display, and try to
+read the savegame from disk. We’re not saving it yet, so it won’t exist and that’s okay!</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">,</span> <span class="s2">&quot;Kicking Kobolds&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+
+    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;[n] for new game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+
+    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[l] to load game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="kr">end</span>
+
+    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[q] to quit&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Now we draw a really simple newgame screen. We put the title of the game and a few options below.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">newgame</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+        <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">())</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span>
+            <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">())</span>
+        <span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">loadgame</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
+        <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">mp</span><span class="p">))</span>
+        <span class="n">Game</span> <span class="o">=</span> <span class="n">save</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">Game</span><span class="p">.</span><span class="n">level</span><span class="p">))</span>
+    <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">quit</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+        <span class="n">love</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">return</span> <span class="n">GameStartState</span>
+</pre></div>
+</div>
+<p>Lastly we’ll wire up our options to controls. New game will delete the old save and restart the game anew.
+Load will restore the save from disk and send us to our previous game. Quit quits the game.</p>
+<p>One minor problem! We haven’t actually defined these controls yet, so let’s do that!</p>
+</section>
+<section id="controls">
+<h2>Controls<a class="headerlink" href="#controls" title="Link to this heading">¶</a></h2>
+<p>Head over to <code class="docutils literal notranslate"><span class="pre">controls.lua</span></code> and add the following controls.</p>
+</section>
+<section id="cleaning-up-main">
+<h2>Cleaning up main<a class="headerlink" href="#cleaning-up-main" title="Link to this heading">¶</a></h2>
+<p>Okay we’ve got our start screen and new controls defined. Let’s get this actually showing up! Navigate
+over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
+<p>Let’s replace our love.load() function with the following:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="kr">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;--debug&quot;</span> <span class="kr">then</span>
+        <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">()</span>
+        <span class="kd">local</span> <span class="kr">function</span> <span class="nf">generator</span><span class="p">()</span>
+            <span class="n">Game</span><span class="p">:</span><span class="n">generateNegamextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="n">builder</span><span class="p">)</span>
+        <span class="kr">end</span>
+
+        <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">MapGeneratorState</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">display</span><span class="p">))</span>
+    <span class="kr">else</span>
+        <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameStartState</span><span class="p">(</span><span class="n">display</span><span class="p">))</span>
+    <span class="kr">end</span>
+
+    <span class="n">manager</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
+    <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>This will push our start screen to the stack when the game loads up. Now we need to modify Game a bit to track a bit
+more state when saving/loading.</p>
+</section>
+<section id="modifying-game">
+<h2>Modifying Game<a class="headerlink" href="#modifying-game" title="Link to this heading">¶</a></h2>
+<p>Let’s modify the class definition and constructor of Game.</p>
+<p>We’re also going to modify how we expose Game. At the bottom of the file replace the line where we return Game
+with the following:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">_G</span><span class="p">.</span><span class="n">Game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="nb">os.time</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>Next, find any instances of <code class="docutils literal notranslate"><span class="pre">require(&quot;game&quot;)</span></code> in your code and remove it. Here we’re creating a global variable that
+contains the gamestate and can be easily replaced during serialization.</p>
+</section>
+<section id="losing-and-levels">
+<h2>Losing and levels<a class="headerlink" href="#losing-and-levels" title="Link to this heading">¶</a></h2>
+<p>Now, let’s make a few changes to GameLevelState and GameOverState. We need them to track what level we’re on,
+and if we’ve lost the game.</p>
+<p>First let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gameoverstate.lua`</span></code>.</p>
+<p>Add the following line to the top of GameOverState:update:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">...</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Now let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gamelevelstate.lua</span></code>.</p>
+<p>Add the following line to the top of GameLevelState:updateDecision:</p>
+</section>
+<section id="id1">
+<h2>Saving the game<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>We’re finally read to wire everything up. It’s time to save the game. Head back over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
+<p>Add a <code class="docutils literal notranslate"><span class="pre">require</span> <span class="pre">&quot;game&quot;</span></code> to the top of the file.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="nb">require</span> <span class="s2">&quot;debugger&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;prism&quot;</span>
+<span class="nb">require</span> <span class="s2">&quot;game&quot;</span>
+</pre></div>
+</div>
+<p>Now let’s define a <code class="docutils literal notranslate"><span class="pre">love.quit</span></code> hook that will run when the game is stopped. We’ll check if we lost, and if so we’ll
+delete any existing save and return. If we haven’t lost we’ll save the current state of the game for the user’s next session.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">quit</span><span class="p">()</span>
+    <span class="kr">if</span> <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="kr">then</span> <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span> <span class="kr">return</span> <span class="kr">end</span>
+    <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">serialize</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">lz</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">compress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+    <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">,</span> <span class="n">lz</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+</section>
+<section id="in-the-next-chapter">
+<h2>In the next chapter<a class="headerlink" href="#in-the-next-chapter" title="Link to this heading">¶</a></h2>
+<p>We’ll use serialization in a different way, creating prefabs and using them to spice up level generation!</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/making-a-roguelike/part16.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

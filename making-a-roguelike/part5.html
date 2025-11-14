@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -52,14 +52,13 @@ most recent actions that happened to them to make the flow of the game more clea
 <section id="keeping-tabs-on-your-health">
 <h2>Keeping tabs on your health<a class="headerlink" href="#keeping-tabs-on-your-health" title="Link to this heading">¶</a></h2>
 <p>Head on over to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and in draw replace the following line:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Hello prism!&quot;</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Hello prism!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>with:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">currentActor</span> <span class="o">=</span> <span class="n">self</span><span class="p">:</span><span class="n">getCurrentActor</span><span class="p">()</span>
-<span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">currentActor</span> <span class="ow">and</span> <span class="n">currentActor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">player</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
 <span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP:&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP:&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -85,16 +84,16 @@ most recent actions that happened to them to make the flow of the game more clea
 <p>Head to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/kick.lua</span></code> and at the top of the file we’ll define some shorthands:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">Log</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
-<span class="kd">local</span> <span class="n">sf</span> <span class="o">=</span> <span class="nb">string.format</span>
 </pre></div>
 </div>
 <p>These are mainly for convenience and brevity. Now head to the bottom of <code class="docutils literal notranslate"><span class="pre">perform</span></code> and add the
 following.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">kickName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">kicked</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">ownerName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
-<span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;You kick the %s.&quot;</span><span class="p">,</span> <span class="n">kickName</span><span class="p">))</span>
-<span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s kicks you!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">))</span>
-<span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s kicks the %s.&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">kickName</span><span class="p">))</span>
+
+<span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="s2">&quot;You kick the %s.&quot;</span><span class="p">,</span> <span class="n">kickName</span><span class="p">)</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="s2">&quot;The %s kicks you!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">)</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="s2">&quot;The %s kicks the %s.&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">kickName</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We use the convenience methods <a class="reference internal" href="../reference/extra/log/components/log.html#lua-Log.addMessage" title="Log.addMessage"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Log.addMessage()</span></code></a> and <a class="reference internal" href="../reference/extra/log/components/log.html#lua-Log.addMessageSensed" title="Log.addMessageSensed"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Log.addMessageSensed()</span></code></a> to
@@ -104,11 +103,11 @@ add messages to the affected and nearby actors.</p>
 <h2>Drawing logs<a class="headerlink" href="#drawing-logs" title="Link to this heading">¶</a></h2>
 <p>Back in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code>, we’ll draw the message log by grabbing the last 5 messages with
 <a class="reference internal" href="../reference/extra/log/components/log.html#lua-Log.iterLast" title="Log.iterLast"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Log:iterLast()</span></code></a> and writing them to the screen.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">log</span> <span class="o">=</span> <span class="n">currentActor</span> <span class="ow">and</span> <span class="n">currentActor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">log</span> <span class="o">=</span> <span class="n">player</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span><span class="p">)</span>
 <span class="kr">if</span> <span class="n">log</span> <span class="kr">then</span>
    <span class="kd">local</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
    <span class="kr">for</span> <span class="n">line</span> <span class="kr">in</span> <span class="n">log</span><span class="p">:</span><span class="n">iterLast</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="kr">do</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">offset</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">offset</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
       <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="mi">1</span>
    <span class="kr">end</span>
 <span class="kr">end</span>
@@ -133,17 +132,13 @@ Let’s head to <code class="docutils literal notranslate"><span class="pre">mod
 generate back to <code class="docutils literal notranslate"><span class="pre">kick.lua</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Kick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">kicked</span><span class="p">)</span>
    <span class="p">...</span>
-
-   <span class="kd">local</span> <span class="n">dmgstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-   <span class="kr">if</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span> <span class="kr">then</span>
-      <span class="n">dmgstr</span> <span class="o">=</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;Dealing %i damage.&quot;</span><span class="p">,</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span><span class="p">)</span>
-   <span class="kr">end</span>
-
    <span class="kd">local</span> <span class="n">kickName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">kicked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">ownerName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;You kick the %s. %s&quot;</span><span class="p">,</span> <span class="n">kickName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s kicks you! %s&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s kicks the %s. %s&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">kickName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
+   <span class="kd">local</span> <span class="n">dealt</span> <span class="o">=</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span> <span class="ow">or</span> <span class="mi">0</span>
+
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="s2">&quot;You kick the %s for %i damage!&quot;</span><span class="p">,</span> <span class="n">kickName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="s2">&quot;The %s kicks you for %i damage!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="s2">&quot;The %s kicks the %s for %i damage!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">kickName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -153,23 +148,18 @@ generate back to <code class="docutils literal notranslate"><span class="pre">ki
 <p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions/attack.lua</span></code> and add the same shorthands as before.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">Log</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Log</span>
 <span class="kd">local</span> <span class="n">Name</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span>
-<span class="kd">local</span> <span class="n">sf</span> <span class="o">=</span> <span class="nb">string.format</span>
 </pre></div>
 </div>
 <p>Then give the same treatment to <code class="docutils literal notranslate"><span class="pre">Attack</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Attack</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">attacked</span><span class="p">)</span>
    <span class="p">...</span>
-
-   <span class="kd">local</span> <span class="n">dmgstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-   <span class="kr">if</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span> <span class="kr">then</span>
-      <span class="n">dmgstr</span> <span class="o">=</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;Dealing %i damage.&quot;</span><span class="p">,</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span><span class="p">)</span>
-   <span class="kr">end</span>
-
    <span class="kd">local</span> <span class="n">attackName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">attacked</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">ownerName</span> <span class="o">=</span> <span class="n">Name</span><span class="p">.</span><span class="n">lower</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;You attack the %s. %s&quot;</span><span class="p">,</span> <span class="n">attackName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">attacked</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s attacks you! %s&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
-   <span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">sf</span><span class="p">(</span><span class="s2">&quot;The %s attacks the %s. %s&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">attackName</span><span class="p">,</span> <span class="n">dmgstr</span><span class="p">))</span>
+   <span class="kd">local</span> <span class="n">dealt</span> <span class="o">=</span> <span class="n">damage</span><span class="p">.</span><span class="n">dealt</span> <span class="ow">or</span> <span class="mi">0</span>
+
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="s2">&quot;You attack the %s for %i damage!&quot;</span><span class="p">,</span> <span class="n">attackName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessage</span><span class="p">(</span><span class="n">attacked</span><span class="p">,</span> <span class="s2">&quot;The %s attacks you for %i damage!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
+   <span class="n">Log</span><span class="p">.</span><span class="n">addMessageSensed</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="s2">&quot;The %s attacks the %s for %i damage!&quot;</span><span class="p">,</span> <span class="n">ownerName</span><span class="p">,</span> <span class="n">attackName</span><span class="p">,</span> <span class="n">dealt</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -277,7 +267,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -300,9 +292,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -315,6 +307,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

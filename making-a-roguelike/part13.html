@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Zapping wands" href="part14.html" />
-    <link rel="prev" title="Stashing treasure" href="part12.html" />
+    <link rel="prev" title="Having a snack" href="part12.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -47,91 +47,55 @@
             
   <section id="brewing-potions">
 <h1>Brewing potions<a class="headerlink" href="#brewing-potions" title="Link to this heading">¶</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This chapter hasn’t had a second pass! Beware explosive brews!</p>
-</div>
-<p>In this chapter we’ll use the StatusEffect component included in <code class="docutils literal notranslate"><span class="pre">prism/extra</span></code> to create a potion
-of vitality that heals the drinker and increases their hitpoint maximum by 5, temporarily. We’ll go
-over creating a buff, making our Health component respect it, and ticking down the duration on
-status effects.</p>
-<section id="adding-status-effects-to-the-player">
-<h2>Adding status effects to the player<a class="headerlink" href="#adding-status-effects-to-the-player" title="Link to this heading">¶</a></h2>
-<p>Make your way to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and add the following component.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">(),</span>
+<p>In this chapter we’ll use the <a class="reference internal" href="../reference/extra/condition/components/conditionholder.html#lua-ConditionHolder" title="ConditionHolder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">ConditionHolder</span></code></a> component included in <code class="docutils literal notranslate"><span class="pre">prism/extra</span></code> to
+create a potion that heals the drinker and increases their health temporarily. We’ll go over
+creating a buff, making our Health component respect it, and ticking down the duration on status
+effects.</p>
+<section id="setting-up">
+<h2>Setting up<a class="headerlink" href="#setting-up" title="Link to this heading">¶</a></h2>
+<p>First, load the conditions module.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/condition&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="getting-a-brew-going">
-<h2>Getting a brew going<a class="headerlink" href="#getting-a-brew-going" title="Link to this heading">¶</a></h2>
-<p>The first thing we’re going to want to do is head over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code> and load the
-<code class="docutils literal notranslate"><span class="pre">statuseffects</span></code> module. Let’s add this line right above where we’re loading our game module.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;prism/extra/statuseffects&quot;</span><span class="p">)</span>
+<p>Then make your way to <code class="docutils literal notranslate"><span class="pre">modules/game/actors/player.lua</span></code> and add the following component.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">ConditionHolder</span><span class="p">(),</span>
 </pre></div>
 </div>
-<p>Okay with that done the next thing we’re going to want to do is create a subclass of the
-StatusEffectInstance that will serve as a base prototype for all of our buffs/debuffs in the game.
-This is where we’ll define stuff that’s game specific to our status effects like durations.</p>
-<p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game</span></code> and create a new file named <code class="docutils literal notranslate"><span class="pre">statusinstance.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameStatusInstance : StatusEffectsInstance</span>
-<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> duration integer?</span>
-<span class="kd">local</span> <span class="n">GameStatusInstance</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Instance</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;GameStatusInstance&quot;</span>
-
-<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameStatusInstanceOptions : StatusEffectsInstanceOptions</span>
-<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> duration integer</span>
-
-<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> options GameStatusInstanceOptions</span>
-<span class="kr">function</span> <span class="nc">GameStatusInstance</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
-   <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Instance</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">options</span><span class="p">.</span><span class="n">duration</span> <span class="ow">or</span> <span class="kc">nil</span>
-<span class="kr">end</span>
-
-<span class="kr">return</span> <span class="n">GameStatusInstance</span>
-</pre></div>
-</div>
-<p>Our only addition for our usecase is going to be a duration since we’ll want timed buffs. Now head
-over to <code class="docutils literal notranslate"><span class="pre">module.lua</span></code> in the same folder. We’re going to load this file and inject our status
-instance into the global namespace simply for convenience sake.</p>
-<p>This Instance is a collection of Modifiers. A status effect instance might be the entire buff a
-potion gives you like +5 maxhp, +2 strength. A modifier is the individual pieces like +5 maxhp. You
-can subclass this to define a new named instance or use it anonymously.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span> <span class="nd">@module</span> <span class="s2">&quot;modules.game.statusinstance&quot;</span>
-<span class="n">prism</span><span class="o">.</span><span class="n">GameStatusInstance</span> <span class="o">=</span> <span class="n">require</span> <span class="p">(</span><span class="s2">&quot;modules.game.statusinstance&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The path string manipulation is just so that this file loads correctly now matter which folder our
-module is loaded from, that won’t matter here, but it’s a good idea to do this.</p>
 </section>
 <section id="modifying-health">
 <h2>Modifying health<a class="headerlink" href="#modifying-health" title="Link to this heading">¶</a></h2>
-<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/components/health.lua</span></code> and take a look at our health component.
-At the top of the file let’s add the following code.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">StatusEffects</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span>
-</pre></div>
-</div>
-<p>Let’s quickly alias the StatusEffects component, we’re going to use one of it’s static methods later
-in the file.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> HealthModifier : StatusEffectsModifier</span>
+<p>Let’s head back to <code class="docutils literal notranslate"><span class="pre">modules/game/components/health.lua</span></code> and define a new
+<a class="reference internal" href="../reference/extra/condition/module.html#lua-ConditionModifier" title="ConditionModifier"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">ConditionModifier</span></code></a> to represent a change to our max health.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> HealthModifier : ConditionModifier</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> maxHP integer</span>
-<span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">.</span><span class="n">Modifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(delta: integer): HealthModifier</span>
+<span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">Modifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
 
 <span class="kr">function</span> <span class="nc">HealthModifier</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">maxHP</span> <span class="o">=</span> <span class="n">delta</span>
 <span class="kr">end</span>
+
+<span class="n">prism</span><span class="p">.</span><span class="n">register</span><span class="p">(</span><span class="n">HealthModifier</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This defined a new StatusEffectsModifier. We’ll leave the constructor as it is, but let’s set maxHP
-to private.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Every object with a registry can be registered manually with <a class="reference internal" href="../reference/prism/index.html#lua-prism.register" title="prism.register"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">prism.register()</span></code></a>!</p>
+</div>
+<p>On the <code class="docutils literal notranslate"><span class="pre">Health</span></code> component we’ll set maxHP to private, since we won’t want to access it directly
+now.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Health : Component</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> private maxHP integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> hp integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(maxHP: integer)</span>
 </pre></div>
 </div>
-<p>Next let’s create a getMaxHP function that will take our new modifier into account.</p>
+<p>Next let’s create a <code class="docutils literal notranslate"><span class="pre">getMaxHP</span></code> function that will take our new modifier into account. We use
+<a class="reference internal" href="../reference/extra/condition/components/conditionholder.html#lua-ConditionHolder.getActorModifiers" title="ConditionHolder.getActorModifiers"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">ConditionHolder.getActorModifiers()</span></code></a> to retrieve all health modifiers and apply each of
+them to our maxHP.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@return</span><span class="cm"> integer maxHP</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">getMaxHP</span><span class="p">()</span>
-   <span class="kd">local</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="n">StatusEffects</span><span class="p">.</span><span class="n">getActorModifiers</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">HealthModifier</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">modifiers</span> <span class="o">=</span> <span class="n">ConditionHolder</span><span class="p">.</span><span class="n">getActorModifiers</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">HealthModifier</span><span class="p">)</span>
 
    <span class="kd">local</span> <span class="n">modifiedMaxHP</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">maxHP</span>
    <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">modifier</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span> <span class="kr">do</span>
@@ -142,82 +106,75 @@ to private.</p>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>We loop through each modifier, add it to our base maxHP, and return the modified value. While we’re
-here we’ll need to change a few more things. First let’s change heal to use our new getter function.</p>
+<p>We change <code class="docutils literal notranslate"><span class="pre">heal</span></code> to use our new function.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> amount integer</span>
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">heal</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">+</span> <span class="n">amount</span><span class="p">,</span> <span class="n">self</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Next we’ll add a small function that will clamp hp to maxhp for a little bit later in the tutorial.</p>
+<p>We’ll add a small function that to clamp our health to the maximum. We’ll use this later.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">enforceBounds</span><span class="p">()</span>
    <span class="n">self</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="nb">math.min</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">hp</span><span class="p">,</span> <span class="n">self</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>And finally we’ll set <code class="docutils literal notranslate"><span class="pre">Health.Modifier</span></code> to the modifier we’ve just created for this component so
-that we can access it from a convenient place.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">Health</span><span class="p">.</span><span class="n">Modifier</span> <span class="o">=</span> <span class="n">HealthModifier</span>
-</pre></div>
-</div>
-<p>Now in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> we’ll have to make a small change. We’re drawing maxHP, but we’re
-accessing it directly let’s change this line in <code class="docutils literal notranslate"><span class="pre">draw</span></code>:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span> <span class="kr">end</span>
+<p>In <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> we’ll make sure to draw our health with the new function as well. Change
+the following line:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">maxHP</span><span class="p">)</span> <span class="kr">end</span>
 </pre></div>
 </div>
 <p>To use the new getter:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span> <span class="kr">end</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;HP: &quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">.</span><span class="n">hp</span> <span class="o">..</span> <span class="s2">&quot;/&quot;</span> <span class="o">..</span> <span class="n">health</span><span class="p">:</span><span class="n">getMaxHP</span><span class="p">())</span> <span class="kr">end</span>
 </pre></div>
 </div>
 </section>
 <section id="drinking">
 <h2>Drinking<a class="headerlink" href="#drinking" title="Link to this heading">¶</a></h2>
-<p>Let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code> called <code class="docutils literal notranslate"><span class="pre">drinkable.lua</span></code>.</p>
+<p>Let’s create a new component in <code class="docutils literal notranslate"><span class="pre">modules/game/components/drinkable.lua</span></code> that we’ll give to our
+potions. For now, let’s give it an optional healing amount and an optional condition.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> DrinkableOptions</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> healing integer?</span>
-<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> status StatusEffectsInstance?</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> condition Condition?</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Drinkable : Component</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> healing integer?</span>
-<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> status StatusEffectsInstance?</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> condition Condition?</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(options: DrinkableOptions): Drinkable</span>
 <span class="kd">local</span> <span class="n">Drinkable</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Drinkable&quot;</span>
 
 <span class="kr">function</span> <span class="nc">Drinkable</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">healing</span> <span class="o">=</span> <span class="n">options</span><span class="p">.</span><span class="n">healing</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">options</span><span class="p">.</span><span class="n">status</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">options</span><span class="p">.</span><span class="n">condition</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Drinkable</span>
 </pre></div>
 </div>
-<p>We create a simple component with an optional healing value, and an optional status effect.</p>
-<p>Now let’s create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> called <code class="docutils literal notranslate"><span class="pre">drink.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DrinkTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">()</span>
-   <span class="p">:</span><span class="n">inInventory</span><span class="p">()</span>
-   <span class="p">:</span><span class="n">with</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span><span class="p">)</span>
+<p>Now let’s create a new action in <code class="docutils literal notranslate"><span class="pre">modules/game/actions/drink.lua</span></code>. First we define our target to
+be an item in the actor’s inventory with a <code class="docutils literal notranslate"><span class="pre">Drinkable</span></code> component.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DrinkTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">targets</span><span class="p">.</span><span class="n">InventoryTarget</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>First we define our target an item in the actor’s inventory with the Drinkable component.</p>
+<p>Then if we have a condition holder and our drink applies a condition we add that condition.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Drink : Action</span>
 <span class="kd">local</span> <span class="n">Drink</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Drink&quot;</span>
 <span class="n">Drink</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span>
    <span class="n">DrinkTarget</span>
 <span class="p">}</span>
 
-<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> drink Actor</span>
 <span class="kr">function</span> <span class="nc">Drink</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">drink</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Inventory</span><span class="p">):</span><span class="n">removeItem</span><span class="p">(</span><span class="n">drink</span><span class="p">)</span>
    <span class="kd">local</span> <span class="n">drinkable</span> <span class="o">=</span> <span class="n">drink</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span><span class="p">)</span>
 
-   <span class="kd">local</span> <span class="n">statusComponent</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">)</span>
-   <span class="kr">if</span> <span class="n">statusComponent</span> <span class="ow">and</span> <span class="n">drinkable</span><span class="p">.</span><span class="n">status</span> <span class="kr">then</span>
-      <span class="n">statusComponent</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">drinkable</span><span class="p">.</span><span class="n">status</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">conditions</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">ConditionHolder</span><span class="p">)</span>
+   <span class="kr">if</span> <span class="n">conditions</span> <span class="ow">and</span> <span class="n">drinkable</span><span class="p">.</span><span class="n">condition</span> <span class="kr">then</span>
+      <span class="n">conditions</span><span class="p">:</span><span class="n">add</span><span class="p">(</span><span class="n">drinkable</span><span class="p">.</span><span class="n">condition</span><span class="p">)</span>
    <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Then if we’ve got a status effects component and our drink applies a status effect we add that to
-the status effects component.</p>
+<p>Finally we’ll heal the actor for the amount of the drinkable’s healing, if there is any.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
    <span class="kr">if</span> <span class="n">health</span> <span class="ow">and</span> <span class="n">drinkable</span><span class="p">.</span><span class="n">healing</span> <span class="kr">then</span>
       <span class="n">health</span><span class="p">:</span><span class="n">heal</span><span class="p">(</span><span class="n">drinkable</span><span class="p">.</span><span class="n">healing</span><span class="p">)</span>
@@ -227,68 +184,100 @@ the status effects component.</p>
 <span class="kr">return</span> <span class="n">Drink</span>
 </pre></div>
 </div>
-<p>Finally we’ll heal the actor for the amount of the drinkable’s healing, if any.</p>
 </section>
 <section id="brewing-the-potion">
 <h2>Brewing the potion<a class="headerlink" href="#brewing-the-potion" title="Link to this heading">¶</a></h2>
-<p>Create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">vitalitypotion.lua</span></code>.</p>
+<p>Create a new file in <code class="docutils literal notranslate"><span class="pre">modules/game/actors</span></code> called <code class="docutils literal notranslate"><span class="pre">vitalitypotion.lua</span></code>. We register a new item
+with our new <code class="docutils literal notranslate"><span class="pre">Drinkable</span></code> component. We’ll make it heal for 5 and apply a health bonus of 5 as
+well.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">registerActor</span><span class="p">(</span><span class="s2">&quot;VitalityPotion&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Potion of Vitality&quot;</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">RED</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Item</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span><span class="p">{</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span> <span class="p">{</span>
          <span class="n">healing</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-         <span class="n">status</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">GameStatusInstance</span><span class="p">{</span>
-            <span class="n">duration</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="n">modifiers</span> <span class="o">=</span> <span class="p">{</span>
-               <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">.</span><span class="n">Modifier</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-            <span class="p">}</span>
-         <span class="p">}</span>
+         <span class="n">condition</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">Condition</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">modifiers</span><span class="p">.</span><span class="n">Health</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
       <span class="p">}</span>
    <span class="p">}</span>
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You’ve seen most of this before, except the Drinkable component. Here we’re saying that this potion
-should heal for 5 and modify the actor’s maxHP by +5 for 10 turns.</p>
-<p>If we go into the game now and drink the potion everything should work, but you’ll notice the buff
-doesn’t expire after 10 turns! Let’s fix that!</p>
+<p>To have it appear in game, let’s include it in <code class="docutils literal notranslate"><span class="pre">loot/chest.lua</span></code>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@type</span><span class="cm"> DropTableOptions</span>
+<span class="kr">return</span> <span class="p">{</span>
+   <span class="p">{</span>
+      <span class="n">entry</span> <span class="o">=</span> <span class="s2">&quot;VitalityPotion&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Start the game and try drinking a potion. It should heal us for 5 points and increase our maximum
+health by 5!</p>
 </section>
 <section id="ticking-down-durations">
 <h2>Ticking down durations<a class="headerlink" href="#ticking-down-durations" title="Link to this heading">¶</a></h2>
-<p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Tick : Action</span>
-<span class="kd">local</span> <span class="n">Tick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Tick&quot;</span>
-<span class="n">Tick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span> <span class="p">}</span>
+<p>To make our health bonus a temporary effect, we’ll extend <a class="reference internal" href="../reference/extra/condition/condition.html#lua-Condition" title="Condition"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Condition</span></code></a> to include a
+duration.</p>
+<p>Create a new directory <code class="docutils literal notranslate"><span class="pre">modules/game/conditions/</span></code> and create a new file named
+<code class="docutils literal notranslate"><span class="pre">tickedcondition.lua</span></code>. We’re just adding a <code class="docutils literal notranslate"><span class="pre">duration</span></code> field to indicate how many turns the
+condition lasts.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> TickedCondition : Condition</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> duration integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(duration: integer, ...: ConditionModifier): TickedCondition</span>
+<span class="kd">local</span> <span class="n">TickedCondition</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">Condition</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;TickedCondition&quot;</span>
+
+<span class="kr">function</span> <span class="nc">TickedCondition</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="p">...)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">{</span> <span class="p">...</span> <span class="p">})</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
+<span class="kr">end</span>
+
+<span class="kr">return</span> <span class="n">TickedCondition</span>
 </pre></div>
 </div>
-<p>Our tick action can only be taken by actors who have a status effect component.</p>
+<p>To use it, edit <code class="docutils literal notranslate"><span class="pre">vitalitypotion.lua</span></code> to the following.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drinkable</span> <span class="p">{</span>
+   <span class="n">healing</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+   <span class="n">condition</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">conditions</span><span class="p">.</span><span class="n">TickedCondition</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">modifiers</span><span class="p">.</span><span class="n">HealthModifier</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>Head over to <code class="docutils literal notranslate"><span class="pre">modules/game/actions</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>. Our tick action can
+only be taken by actors who have a condition holder.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Tick : Action</span>
+<span class="kd">local</span> <span class="n">Tick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;Tick&quot;</span>
+<span class="n">Tick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">ConditionHolder</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Next, we want to iterate over all of the performer’s timed conditions and tick them down by 1. We
+can use <a class="reference internal" href="../reference/extra/condition/components/conditionholder.html#lua-ConditionHolder.each" title="ConditionHolder.each"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">ConditionHolder:each()</span></code></a> to simplify this.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level</span>
 <span class="kr">function</span> <span class="nc">Tick</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="c1">-- Handle status effect durations</span>
-   <span class="kd">local</span> <span class="n">statusComponent</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">StatusEffects</span><span class="p">)</span>
-
-   <span class="kd">local</span> <span class="n">expired</span> <span class="o">=</span> <span class="p">{}</span>
-   <span class="kr">for</span> <span class="n">handle</span><span class="p">,</span> <span class="n">status</span> <span class="kr">in</span> <span class="n">statusComponent</span><span class="p">:</span><span class="nb">pairs</span><span class="p">()</span> <span class="kr">do</span>
-      <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> status GameStatusInstance</span>
-      <span class="kr">if</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="kr">then</span>
-         <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span>
-         <span class="kr">if</span> <span class="n">status</span><span class="p">.</span><span class="n">duration</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="kr">then</span>
-            <span class="nb">table.insert</span><span class="p">(</span><span class="n">expired</span><span class="p">,</span> <span class="n">handle</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">owner</span>
+      <span class="p">:</span><span class="n">expect</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">ConditionHolder</span><span class="p">)</span>
+      <span class="p">:</span><span class="n">each</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+         <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">conditions</span><span class="p">.</span><span class="n">TickedCondition</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="kr">then</span>
+            <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> condition TickedCondition</span>
+            <span class="n">condition</span><span class="p">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">condition</span><span class="p">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span>
          <span class="kr">end</span>
-      <span class="kr">end</span>
-   <span class="kr">end</span>
+      <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>First we loop through all of the status effects currently applied to our actor, ticking down their
-durations and keeping track of which ones have expired.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">handle</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">expired</span><span class="p">)</span> <span class="kr">do</span>
-   <span class="n">statusComponent</span><span class="p">:</span><span class="n">remove</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
-<span class="kr">end</span>
+<p>Then we want to remove any that have expired. We can similarly use
+<a class="reference internal" href="../reference/extra/condition/components/conditionholder.html#lua-ConditionHolder.removeIf" title="ConditionHolder.removeIf"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">ConditionHolder:removeIf()</span></code></a>.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">removeIf</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> condition TickedCondition</span>
+   <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">conditions</span><span class="p">.</span><span class="n">TickedCondition</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+      <span class="ow">and</span> <span class="n">condition</span><span class="p">.</span><span class="n">duration</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+<span class="kr">end</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then we remove the expired status effects.</p>
+<p>Finally we clamp our hp to maxHP by calling <code class="docutils literal notranslate"><span class="pre">enforceBounds</span></code> from earlier. This is where you’d
+enforce minimums or maximums that might change. Without this if the player ends the duration of the
+buff with 15 health they’d end up keeping that health total and only see a reduction in their
+maximum.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span>   <span class="c1">-- Validate components</span>
    <span class="kd">local</span> <span class="n">health</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">)</span>
    <span class="kr">if</span> <span class="n">health</span> <span class="kr">then</span> <span class="n">health</span><span class="p">:</span><span class="n">enforceBounds</span><span class="p">()</span> <span class="kr">end</span>
@@ -297,11 +286,8 @@ durations and keeping track of which ones have expired.</p>
 <span class="kr">return</span> <span class="n">Tick</span>
 </pre></div>
 </div>
-<p>Finally we clamp our hp to maxHP by calling <code class="docutils literal notranslate"><span class="pre">enforceBounds</span></code> from earlier. This is where you’d
-enforce minimums or maximums that might change. Without this if the player ends the duration of the
-buff with 15 health they’d end up keeping that health total and only see a reduction in their
-maximum.</p>
-<p>Now head over to <code class="docutils literal notranslate"><span class="pre">modules/game/systems</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>.</p>
+<p>Now head over to <code class="docutils literal notranslate"><span class="pre">modules/game/systems</span></code> and create a new file called <code class="docutils literal notranslate"><span class="pre">tick.lua</span></code>. Each turn we
+try to perform <code class="docutils literal notranslate"><span class="pre">Tick</span></code> on the actor.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> TickSystem : System</span>
 <span class="kd">local</span> <span class="n">TickSystem</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">System</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;TickSystem&quot;</span>
 
@@ -312,13 +298,21 @@ maximum.</p>
 <span class="kr">return</span> <span class="n">TickSystem</span>
 </pre></div>
 </div>
-<p>Each turn we try to perform tick action on the actor. If we head back into the game and spawn a new
-Potion of Vitality with Geometer and drink it we’ll see that our health and max health both go up by
-5, and then after 10 turns our max health returns to it’s original value, success!</p>
+<p>Don’t forget to add our system to the level in <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code>:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">:</span><span class="n">addSystems</span><span class="p">(</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SensesSystem</span><span class="p">(),</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SightSystem</span><span class="p">(),</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">FallSystem</span><span class="p">(),</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">TickSystem</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Head back into the game and quaff some more potions. The maximum health increase should now end
+after 10 turns!</p>
 </section>
 <section id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Link to this heading">¶</a></h2>
-<p>In the next chapter we’ll make a wand and write some targetting code.</p>
+<p>In the <a class="reference internal" href="part14.html"><span class="doc">next chapter</span></a> we’ll make a wand and write some targetting code.</p>
 </section>
 </section>
 
@@ -416,7 +410,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -430,12 +426,11 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Brewing potions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#adding-status-effects-to-the-player">Adding status effects to the player</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-a-brew-going">Getting a brew going</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up">Setting up</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modifying-health">Modifying health</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#drinking">Drinking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#brewing-the-potion">Brewing the potion</a></li>
@@ -454,13 +449,14 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="part12.html" title="previous chapter">Stashing treasure</a></li>
+      <li>Previous: <a href="part12.html" title="previous chapter">Having a snack</a></li>
       <li>Next: <a href="part14.html" title="next chapter">Zapping wands</a></li>
   </ul></li>
 </ul>

@@ -1,0 +1,8 @@
+.. title:: Inky.Props.Internal
+.. lua:autoobject:: Inky.Props.Internal
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+

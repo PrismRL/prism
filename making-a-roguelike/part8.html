@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -64,7 +64,7 @@ simple tag component to indicate the actor can be descended.</p>
    <span class="kr">return</span> <span class="n">prism</span><span class="p">.</span><span class="n">Actor</span><span class="p">.</span><span class="n">fromComponents</span> <span class="p">{</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Stairs&quot;</span><span class="p">),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">char</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span> <span class="p">},</span>
+      <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span> <span class="p">},</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Stair</span><span class="p">(),</span>
       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Remembered</span><span class="p">(),</span>
    <span class="p">}</span>
@@ -73,7 +73,7 @@ simple tag component to indicate the actor can be descended.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Actors with a <a class="reference internal" href="../reference/prism/core/components/remembered.html#lua-Remembered" title="Remembered"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Remembered</span></code></a> component will remain in an actor’s <a class="reference internal" href="../reference/prism/core/relationships/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>
+<p>Actors with a <a class="reference internal" href="../reference/prism/core/components/remembered.html#lua-Remembered" title="Remembered"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Remembered</span></code></a> component will remain in an actor’s <a class="reference internal" href="../reference/prism/core/components/senses.html#lua-Senses" title="Senses"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Senses</span></code></a>
 after being seen. Handy for actors you want other actors to, well, remember.</p>
 </div>
 </section>
@@ -105,7 +105,7 @@ place the stairs in a random corner of that room for now.</p>
 need anything inside.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> DescendMessage : Message</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(): DescendMessage</span>
-<span class="kd">local</span> <span class="n">DescendMessage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;DescendMessage&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">DescendMessage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Message</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;DescendMessage&quot;</span><span class="p">)</span>
 
 <span class="kr">return</span> <span class="n">DescendMessage</span>
 </pre></div>
@@ -122,7 +122,7 @@ need anything inside.</p>
 
 <span class="kr">function</span> <span class="nc">Descend</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
    <span class="n">level</span><span class="p">:</span><span class="n">removeActor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
-   <span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">Descend</span><span class="p">())</span>
+   <span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">DescendMessage</span><span class="p">())</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Descend</span>
@@ -130,11 +130,11 @@ need anything inside.</p>
 </div>
 <p>First we create a target that targets actors with the <code class="docutils literal notranslate"><span class="pre">Stair</span></code> component within range 1. Then we
 create our <code class="docutils literal notranslate"><span class="pre">Descend</span></code> action, which is similar to <code class="docutils literal notranslate"><span class="pre">Die</span></code> but yields a different message.</p>
-<p>Now let’s add some code to <code class="docutils literal notranslate"><span class="pre">GameLevelState:keypressed</span></code>. After we figure out which direction the
-user just pressed we’ll add the following. Make sure this is checked before the <cite>Move</cite> action is
+<p>Now let’s add some code to <code class="docutils literal notranslate"><span class="pre">GameLevelState:updateDecision</span></code>. After we figure out which direction
+the user just pressed we’ll add the following. Make sure this is checked before the <cite>Move</cite> action is
 considered.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="kr">then</span>
-   <span class="kd">local</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">keybindOffsets</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+   <span class="kd">local</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">vector</span>
 
    <span class="c1">-- add this</span>
    <span class="kd">local</span> <span class="n">descendTarget</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Stairs</span><span class="p">)</span>
@@ -142,10 +142,7 @@ considered.</p>
       <span class="p">:</span><span class="n">first</span><span class="p">()</span>
 
    <span class="kd">local</span> <span class="n">descend</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Descend</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">descendTarget</span><span class="p">)</span>
-   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">descend</span><span class="p">)</span> <span class="kr">then</span>
-      <span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">descend</span><span class="p">)</span>
-      <span class="kr">return</span>
-   <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">self</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">descend</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
 </pre></div>
 </div>
 </section>
@@ -153,8 +150,8 @@ considered.</p>
 <h2>Creating the next floor<a class="headerlink" href="#creating-the-next-floor" title="Link to this heading">¶</a></h2>
 <p>Now that we’ve got everything set up we need to actually handle the descend message. In
 <code class="docutils literal notranslate"><span class="pre">GameLevelState:handleMessage</span></code> we’ll add the following message handling.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">Descend</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">))</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">DescendMessage</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">))</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -265,7 +262,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -286,9 +285,9 @@ SOFTWARE.
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -301,6 +300,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>EditorState &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../../../_static/prism.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MapGeneratorState" href="mapgenerator.html" />
+    <link rel="prev" title="Geometer" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <dl class="lua class">
+<dt class="sig sig-object lua" id="lua-EditorState">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EditorState</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><a class="headerlink" href="#lua-EditorState" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The game state for Geometer. This should be the only thing you have to interface with
+to use Geometer in a game.</p>
+<dl class="lua data">
+<dt class="sig sig-object lua" id="lua-EditorState.editor">
+<span class="sig-name descname"><span class="pre">editor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../editor.html#lua-Editor" title="Editor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Editor</span></code></a><a class="headerlink" href="#lua-EditorState.editor" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="lua method">
+<dt class="sig sig-object lua" id="lua-EditorState.__new">
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-EditorState" title="EditorState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">EditorState</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">attachable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../spectrum/display.html#lua-SpectrumAttachable" title="SpectrumAttachable"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">display</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">fileEnabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-EditorState.__new" title="Link to this definition">¶</a><br /></dt>
+<dd><p>Create a new Editor managing gamestate, attached to a
+SpectrumAttachable, this is a Level|LevelBuilder interface.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<div class="lua-inherited-members docutils container">
+<p><strong>Other members:</strong></p>
+<div class="admonition">
+<p>Inherited from <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState" title="GameState"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a>: <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.audiodisconnected" title="GameState.audiodisconnected"><code class="docutils literal notranslate"><span class="pre">audiodisconnected()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.directorydropped" title="GameState.directorydropped"><code class="docutils literal notranslate"><span class="pre">directorydropped()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.displayrotated" title="GameState.displayrotated"><code class="docutils literal notranslate"><span class="pre">displayrotated()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.draw" title="GameState.draw"><code class="docutils literal notranslate"><span class="pre">draw()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.dropbegan" title="GameState.dropbegan"><code class="docutils literal notranslate"><span class="pre">dropbegan()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.dropcompleted" title="GameState.dropcompleted"><code class="docutils literal notranslate"><span class="pre">dropcompleted()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.dropmoved" title="GameState.dropmoved"><code class="docutils literal notranslate"><span class="pre">dropmoved()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.errorhandler" title="GameState.errorhandler"><code class="docutils literal notranslate"><span class="pre">errorhandler()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.exposesd" title="GameState.exposesd"><code class="docutils literal notranslate"><span class="pre">exposesd()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.filedropped" title="GameState.filedropped"><code class="docutils literal notranslate"><span class="pre">filedropped()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.focus" title="GameState.focus"><code class="docutils literal notranslate"><span class="pre">focus()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.gamepadaxis" title="GameState.gamepadaxis"><code class="docutils literal notranslate"><span class="pre">gamepadaxis()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.gamepadpressed" title="GameState.gamepadpressed"><code class="docutils literal notranslate"><span class="pre">gamepadpressed()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.gamepadreleased" title="GameState.gamepadreleased"><code class="docutils literal notranslate"><span class="pre">gamepadreleased()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.getManager" title="GameState.getManager"><code class="docutils literal notranslate"><span class="pre">getManager()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickadded" title="GameState.joystickadded"><code class="docutils literal notranslate"><span class="pre">joystickadded()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickaxis" title="GameState.joystickaxis"><code class="docutils literal notranslate"><span class="pre">joystickaxis()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickhat" title="GameState.joystickhat"><code class="docutils literal notranslate"><span class="pre">joystickhat()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickpressed" title="GameState.joystickpressed"><code class="docutils literal notranslate"><span class="pre">joystickpressed()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickreleased" title="GameState.joystickreleased"><code class="docutils literal notranslate"><span class="pre">joystickreleased()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joystickremoved" title="GameState.joystickremoved"><code class="docutils literal notranslate"><span class="pre">joystickremoved()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.joysticksensorupdated" title="GameState.joysticksensorupdated"><code class="docutils literal notranslate"><span class="pre">joysticksensorupdated()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.keypressed" title="GameState.keypressed"><code class="docutils literal notranslate"><span class="pre">keypressed()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.keyreleased" title="GameState.keyreleased"><code class="docutils literal notranslate"><span class="pre">keyreleased()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.load" title="GameState.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.localechanged" title="GameState.localechanged"><code class="docutils literal notranslate"><span class="pre">localechanged()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.lowmemory" title="GameState.lowmemory"><code class="docutils literal notranslate"><span class="pre">lowmemory()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.manager" title="GameState.manager"><code class="docutils literal notranslate"><span class="pre">manager</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.mousefocus" title="GameState.mousefocus"><code class="docutils literal notranslate"><span class="pre">mousefocus()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.mousemoved" title="GameState.mousemoved"><code class="docutils literal notranslate"><span class="pre">mousemoved()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.mousepressed" title="GameState.mousepressed"><code class="docutils literal notranslate"><span class="pre">mousepressed()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.mousereleased" title="GameState.mousereleased"><code class="docutils literal notranslate"><span class="pre">mousereleased()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.occluded" title="GameState.occluded"><code class="docutils literal notranslate"><span class="pre">occluded()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.pause" title="GameState.pause"><code class="docutils literal notranslate"><span class="pre">pause()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.quit" title="GameState.quit"><code class="docutils literal notranslate"><span class="pre">quit()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.resize" title="GameState.resize"><code class="docutils literal notranslate"><span class="pre">resize()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.resume" title="GameState.resume"><code class="docutils literal notranslate"><span class="pre">resume()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.run" title="GameState.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.sensorupdated" title="GameState.sensorupdated"><code class="docutils literal notranslate"><span class="pre">sensorupdated()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.textedited" title="GameState.textedited"><code class="docutils literal notranslate"><span class="pre">textedited()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.textinput" title="GameState.textinput"><code class="docutils literal notranslate"><span class="pre">textinput()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.threaderror" title="GameState.threaderror"><code class="docutils literal notranslate"><span class="pre">threaderror()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.touchmoved" title="GameState.touchmoved"><code class="docutils literal notranslate"><span class="pre">touchmoved()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.touchpressed" title="GameState.touchpressed"><code class="docutils literal notranslate"><span class="pre">touchpressed()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.touchreleased" title="GameState.touchreleased"><code class="docutils literal notranslate"><span class="pre">touchreleased()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.unload" title="GameState.unload"><code class="docutils literal notranslate"><span class="pre">unload()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.update" title="GameState.update"><code class="docutils literal notranslate"><span class="pre">update()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.visible" title="GameState.visible"><code class="docutils literal notranslate"><span class="pre">visible()</span></code></a>, <a class="reference internal" href="../../spectrum/gamestate.html#lua-GameState.wheelmoved" title="GameState.wheelmoved"><code class="docutils literal notranslate"><span class="pre">wheelmoved()</span></code></a></p>
+<p>Inherited from <a class="reference internal" href="../../prism/core/object.html#lua-Object" title="Object"><code class="docutils literal notranslate"><span class="pre">Object</span></code></a>: <a class="reference internal" href="../../prism/core/object.html#lua-Object._serializationBlacklist" title="Object._serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">_serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.adopt" title="Object.adopt"><code class="docutils literal notranslate"><span class="pre">adopt()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.assertType" title="Object.assertType"><code class="docutils literal notranslate"><span class="pre">assertType()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.className" title="Object.className"><code class="docutils literal notranslate"><span class="pre">className</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deepcopy" title="Object.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.deserialize" title="Object.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.extend" title="Object.extend"><code class="docutils literal notranslate"><span class="pre">extend()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.instanceOf" title="Object.instanceOf"><code class="docutils literal notranslate"><span class="pre">instanceOf()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.is" title="Object.is"><code class="docutils literal notranslate"><span class="pre">is()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.isInstance" title="Object.isInstance"><code class="docutils literal notranslate"><span class="pre">isInstance()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.mixin" title="Object.mixin"><code class="docutils literal notranslate"><span class="pre">mixin()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.prettyprint" title="Object.prettyprint"><code class="docutils literal notranslate"><span class="pre">prettyprint()</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serializationBlacklist" title="Object.serializationBlacklist"><code class="docutils literal notranslate"><span class="pre">serializationBlacklist</span></code></a>, <a class="reference internal" href="../../prism/core/object.html#lua-Object.serialize" title="Object.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></p>
+</div>
+</div>
+</dd></dl>
+
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../../../index.html">
+    <img class="logo" src="../../../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-tos/targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../making-a-roguelike/part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extra/index.html">Extra</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Geometer</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">EditorState</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lua-EditorState.editor"><code class="docutils literal notranslate"><span class="pre">editor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-EditorState.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mapgenerator.html"><code class="docutils literal notranslate"><span class="pre">MapGeneratorState</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Geometer</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Geometer</a></li>
+      <li>Next: <a href="mapgenerator.html" title="next chapter">MapGeneratorState</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/reference/geometer/gamestates/editorstate.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

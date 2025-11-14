@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -51,7 +51,7 @@
 <a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> that plunges actors into the abyss if they’re unable to fly.</p>
 <figure  class="sphinx-contrib-video-container align-center"><video controls="True" preload="auto"><source src="../_images/part2.mp4" type="video/mp4"></video><figcaption class="align-center"><p style="text-align: left; display:inline-block"><span class="caption-text">Kicking kobolds into the abyss</span></p></figcaption></figure><section id="creating-the-void-component">
 <h2>Creating the void component<a class="headerlink" href="#creating-the-void-component" title="Link to this heading">¶</a></h2>
-<p>First we’ll need to create a component we’ll put on cells to indicate they’re a place you can fall.</p>
+<p>First we’ll create a component to indicate cells where you can fall.</p>
 <ol class="arabic simple">
 <li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">modules/game/components</span></code></p></li>
 <li><p>Create a new file called <code class="docutils literal notranslate"><span class="pre">void.lua</span></code></p></li>
@@ -63,8 +63,6 @@
 <span class="kr">return</span> <span class="n">Void</span>
 </pre></div>
 </div>
-<p>This is a simple tag component that we’ll use to mark tiles where actors can fall if they don’t have
-an allowed movement type.</p>
 </section>
 <section id="adding-void-to-our-pit">
 <h2>Adding void to our pit<a class="headerlink" href="#adding-void-to-our-pit" title="Link to this heading">¶</a></h2>
@@ -151,7 +149,7 @@ doesn’t have a <code class="docutils literal notranslate"><span class="pre">Mo
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">Fall</span><span class="p">:</span><span class="nf">perform</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-   <span class="n">level</span><span class="p">:</span><span class="n">perform</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Die</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">))</span>
+   <span class="n">level</span><span class="p">:</span><span class="n">removeActor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">)</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">Fall</span>
@@ -186,11 +184,11 @@ create a <a class="reference internal" href="../reference/prism/core/system.html
 <h2>Registering the Fall system<a class="headerlink" href="#registering-the-fall-system" title="Link to this heading">¶</a></h2>
 <p>Navigate back to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code> and on line 32 you’ll see where we register systems. Go
 ahead and add <code class="docutils literal notranslate"><span class="pre">prism.systems.Fall()</span></code> to the bottom of the list like so.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">level</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Level</span><span class="p">(</span><span class="n">map</span><span class="p">,</span> <span class="n">actors</span><span class="p">,</span> <span class="p">{</span>
-   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">Senses</span><span class="p">(),</span>
-   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">Sight</span><span class="p">(),</span>
-   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">Fall</span><span class="p">(),</span>
-<span class="p">})</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">:</span><span class="n">addSystems</span><span class="p">(</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SensesSystem</span><span class="p">(),</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SightSystem</span><span class="p">(),</span>
+   <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">FallSystem</span><span class="p">()</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -299,7 +297,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -321,9 +321,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -336,6 +336,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

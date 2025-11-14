@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<template id="tmpl_gotoTop"><div id="gotoTop">
+  <button>Back to top</button>
+</div></template>
+    <title>Animation &#8212; Prism  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=266695fe" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=fbfae649" />
+    <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
+    <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../_static/goto-top/main.js?v=69fc67a6"></script>
+    <link rel="icon" href="../_static/prism.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Collision" href="collision.html" />
+    <link rel="prev" title="Queries" href="query.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="animation">
+<h1>Animation<a class="headerlink" href="#animation" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a> supports playing <a class="reference internal" href="../reference/spectrum/animation.html#lua-Animation" title="Animation"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Animations</span></code></a>.</p>
+<section id="define-an-animation">
+<h2>Define an animation<a class="headerlink" href="#define-an-animation" title="Link to this heading">¶</a></h2>
+<p>Animations can either be frame-based, or use a custom function. Here’s a frame-based animation:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-0 sd-g-xs-0 sd-g-sm-0 sd-g-md-0 sd-g-lg-0 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-10 sd-col-lg-10 sd-align-major-center docutils">
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">on</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">off</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">BLACK</span> <span class="p">}</span>
+<span class="n">spectrum</span><span class="p">.</span><span class="n">Animation</span><span class="p">({</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">on</span> <span class="p">},</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;pauseAtEnd&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-2 sd-col-lg-2 sd-align-major-center docutils">
+<div  class="sphinx-contrib-video-container align-right"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/animation1.mp4" type="video/mp4"></video></div></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">0.2</span></code> is the amount of seconds to play each frame for. It could also be a table of times, <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">0.2,</span>
+<span class="pre">0.2,</span> <span class="pre">0.2,</span> <span class="pre">0.2</span> <span class="pre">}</span></code>, or by ranges, <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">[&quot;1-2&quot;]</span> <span class="pre">=</span> <span class="pre">0.5,</span> <span class="pre">[&quot;3-4&quot;]</span> <span class="pre">=</span> <span class="pre">0.25</span> <span class="pre">}</span></code>. The final parameter tells
+the animation what to do when it loops. This can either be a function (which accepts the animation
+instance and the number of loops), or the string name of a function on <a class="reference internal" href="../reference/spectrum/animation.html#lua-Animation" title="Animation"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Animation</span></code></a>.</p>
+<p>Animations can be registered to the <code class="docutils literal notranslate"><span class="pre">spectrum.animations</span></code> registry:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">on</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">off</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">BLACK</span> <span class="p">}</span>
+<span class="n">spectrum</span><span class="p">.</span><span class="n">registerAnimation</span><span class="p">(</span><span class="s2">&quot;Exclamation&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
+   <span class="kr">return</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Animation</span><span class="p">({</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">on</span> <span class="p">},</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;pauseAtEnd&quot;</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Individual frames can also be functions that accept a <a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a>, <code class="docutils literal notranslate"><span class="pre">x</span></code>, and <code class="docutils literal notranslate"><span class="pre">y</span></code>:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-0 sd-g-xs-0 sd-g-sm-0 sd-g-md-0 sd-g-lg-0 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-9 sd-col-lg-9 sd-align-major-center docutils">
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">on</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">off</span> <span class="o">=</span> <span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">BLACK</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">putAround</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+   <span class="n">display</span><span class="p">:</span><span class="n">putSprite</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">on</span><span class="p">)</span>
+   <span class="n">display</span><span class="p">:</span><span class="n">putSprite</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">on</span><span class="p">)</span>
+   <span class="n">display</span><span class="p">:</span><span class="n">putSprite</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">on</span><span class="p">)</span>
+   <span class="n">display</span><span class="p">:</span><span class="n">putSprite</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="n">on</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">spectrum</span><span class="p">.</span><span class="n">registerAnimation</span><span class="p">(</span><span class="s2">&quot;Exclamation&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
+   <span class="kr">return</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Animation</span><span class="p">(</span>
+      <span class="p">{</span> <span class="n">putAround</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">putAround</span> <span class="p">},</span>
+      <span class="mf">0.2</span><span class="p">,</span>
+      <span class="s2">&quot;pauseAtEnd&quot;</span>
+   <span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-3 sd-col-lg-3 sd-align-major-center docutils">
+<div  class="sphinx-contrib-video-container align-right"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/animation2.mp4" type="video/mp4"></video></div></div>
+</div>
+</div>
+<p>For more complex animations, a function that accepts the elapsed time and the display can be used.
+Other parameters passed to the constructor are ignored.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">spectrum</span><span class="p">.</span><span class="n">registerAnimation</span><span class="p">(</span><span class="s2">&quot;Projectile&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">targetPosition</span><span class="p">)</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> owner Actor</span>
+   <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> targetPosition Vector2</span>
+   <span class="kd">local</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">expectPosition</span><span class="p">():</span><span class="n">decompose</span><span class="p">()</span>
+   <span class="kd">local</span> <span class="n">line</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Bresenham</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">targetPosition</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">targetPosition</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+
+   <span class="kr">return</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Animation</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">index</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="n">display</span><span class="p">:</span><span class="n">put</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">ORANGE</span><span class="p">)</span>
+
+      <span class="kr">if</span> <span class="n">index</span> <span class="o">==</span> <span class="o">#</span><span class="n">line</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kc">true</span> <span class="kr">end</span>
+
+      <span class="kr">return</span> <span class="kc">false</span>
+   <span class="kr">end</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+</div>
+<div  class="sphinx-contrib-video-container align-right"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/animation3.mp4" type="video/mp4"></video></div><div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Make sure to return <code class="docutils literal notranslate"><span class="pre">true</span></code> when the animation is over.</p>
+</div>
+</section>
+<section id="play-an-animation">
+<h2>Play an animation<a class="headerlink" href="#play-an-animation" title="Link to this heading">¶</a></h2>
+<p>To play an animation, <a class="reference internal" href="../reference/prism/core/level.html#lua-Level.yield" title="Level.yield"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Level:yield()</span></code></a> an <a class="reference internal" href="../reference/spectrum/messages/animation.html#lua-AnimationMessage" title="AnimationMessage"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a>. There are a few
+options here. You can play an animation at an actor’s position:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-0 sd-g-xs-0 sd-g-sm-0 sd-g-md-0 sd-g-lg-0 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-10 sd-col-lg-10 sd-align-major-center docutils">
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">AnimationMessage</span> <span class="p">{</span>
+   <span class="n">animation</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">animations</span><span class="p">.</span><span class="n">Exclamation</span><span class="p">(),</span>
+   <span class="n">actor</span> <span class="o">=</span> <span class="n">kobold</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-2 sd-col-lg-2 sd-align-major-center docutils">
+<div  class="sphinx-contrib-video-container align-right"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/animation4.mp4" type="video/mp4"></video></div></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If an actor is passed to a custom animation, <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.overrideActor" title="Display.overrideActor"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:overrideActor()</span></code></a> will be called
+when the animation starts, and <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.unoverrideActor" title="Display.unoverrideActor"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:unoverrideActor()</span></code></a> will be called when it ends.</p>
+</div>
+<p>Or at a position:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">AnimationMessage</span> <span class="p">{</span>
+   <span class="n">animation</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">animations</span><span class="p">.</span><span class="n">Exclamation</span><span class="p">(),</span>
+   <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+   <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="p">.</span><span class="n">y</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>If an <code class="docutils literal notranslate"><span class="pre">actor</span></code> is passed, the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are relative to the actor’s position:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-0 sd-g-xs-0 sd-g-sm-0 sd-g-md-0 sd-g-lg-0 docutils">
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-10 sd-col-lg-10 sd-align-major-center docutils">
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">AnimationMessage</span> <span class="p">{</span>
+   <span class="n">animation</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">animations</span><span class="p">.</span><span class="n">Exclamation</span><span class="p">(),</span>
+   <span class="n">actor</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span>
+   <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-column sd-col-12 sd-col-xs-12 sd-col-sm-12 sd-col-md-2 sd-col-lg-2 sd-align-major-center docutils">
+<div  class="sphinx-contrib-video-container align-right"><video autoplay="True" loop="True" muted="True" preload="auto"><source src="../_images/animation6.mp4" type="video/mp4"></video></div></div>
+</div>
+</div>
+<p>Animations can force the <a class="reference internal" href="../reference/spectrum/gamestates/levelstate.html#lua-LevelState" title="LevelState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelState</span></code></a> to wait for them to finish playing:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">level</span><span class="p">:</span><span class="n">yield</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">AnimationMessage</span> <span class="p">{</span>
+   <span class="n">animation</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">animations</span><span class="p">.</span><span class="n">Exclamation</span><span class="p">(),</span>
+   <span class="n">actor</span> <span class="o">=</span> <span class="n">target</span><span class="p">,</span>
+   <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+   <span class="n">blocking</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>Or they can be skippable by passing <code class="docutils literal notranslate"><span class="pre">skippable</span> <span class="pre">=</span> <span class="pre">true</span></code>, though you will have to decide when you
+want animations to be skipped by calling <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.skipAnimations" title="Display.skipAnimations"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:skipAnimations()</span></code></a>, e.g. on a key press or
+mouse click.</p>
+</section>
+<section id="drawing-animations">
+<h2>Drawing animations<a class="headerlink" href="#drawing-animations" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a> will draw animations automatically, so long as you are using a
+<a class="reference internal" href="../reference/spectrum/gamestates/levelstate.html#lua-LevelState" title="LevelState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelState</span></code></a> and using <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.putSenses" title="Display.putSenses"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:putSenses()</span></code></a>. Otherwise, you will have to call
+<a class="reference internal" href="../reference/spectrum/display.html#lua-Display.update" title="Display.update"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:update()</span></code></a> and <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.putAnimations" title="Display.putAnimations"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:putAnimations()</span></code></a> yourself.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<p class="logo">
+  <a href="../index.html">
+    <img class="logo" src="../_static/prism.png" alt="Logo" />
+    
+  </a>
+</p>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<!--
+Taken from the sphinx library theme: https://vsalvino.github.io/sphinx-library/.
+
+MIT License
+
+Copyright (c) 2020 Vince Salvino and contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<script>
+  function toggleMode(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("sphinx-terminal-mode", theme);
+  }
+  var theme = localStorage.getItem("sphinx-terminal-mode");
+  if(theme !== null)
+    toggleMode(theme);
+</script>
+<h3>Reading Mode</h3>
+
+<div class="btn-group">
+<button class="btn btn-default" type="button" onclick="toggleMode('light');">Light</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('sepia');">Sepia</button>
+<button class="btn btn-default" type="button" onclick="toggleMode('dark');">Dark</button>
+</div>
+
+<noscript>
+  <div>
+    JavaScript is required to toggle reading modes.
+  </div>
+</noscript>
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture-primer.html">Architecture primer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conventions.html">Conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="object-registration.html">Object registration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Queries</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Animation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#define-an-animation">Define an animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#play-an-animation">Play an animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#drawing-animations">Drawing animations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="controls.html">Input handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="targets.html">Targets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part1.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part2.html">Taking flight</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part3.html">Starting fights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part4.html">Taking licks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part5.html">Writing things down</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part6.html">Losing the game</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part7.html">Carving out caverns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part8.html">Descending into the depths</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part9.html">Creating continuity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Having a snack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part13.html">Brewing potions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part14.html">Zapping wands</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Explainers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../explainers/game-loop.html">The game loop</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="query.html" title="previous chapter">Queries</a></li>
+      <li>Next: <a href="collision.html" title="next chapter">Collision</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Matthew Blanchard, LJNIC.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/how-tos/animation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

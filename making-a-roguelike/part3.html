@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -57,6 +57,7 @@
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Health : Component</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> maxHP integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> hp integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(hp: integer): Health</span>
 <span class="kd">local</span> <span class="n">Health</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Component</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Health&quot;</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Health</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">maxHP</span><span class="p">)</span>
@@ -107,13 +108,11 @@ we just added.</p>
 <a class="reference internal" href="../reference/prism/core/target.html#lua-Target" title="Target"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Target</span></code></a> to apply validation to ensure types within <code class="docutils literal notranslate"><span class="pre">perform</span></code> match our expectations.
 Typically, you will be passing in instances of actors, but in this case it’s just a number
 representing the amount of damage we will apply.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DamageTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">()</span>
-   <span class="p">:</span><span class="n">isType</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">DamageTarget</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Target</span><span class="p">():</span><span class="n">isType</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Damage : Action</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(owner: Actor, damage: number): Damage</span>
 <span class="kd">local</span> <span class="n">Damage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Damage&quot;</span><span class="p">)</span>
-<span class="n">Damage</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Damage&quot;</span>
 <span class="n">Damage</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">DamageTarget</span> <span class="p">}</span>
 <span class="n">Damage</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span> <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span> <span class="p">}</span>
 
@@ -135,9 +134,7 @@ to add the following:</p>
    <span class="p">...</span>
 
    <span class="kd">local</span> <span class="n">damage</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Damage</span><span class="p">(</span><span class="n">kicked</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-   <span class="kr">if</span> <span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span> <span class="kr">then</span>
-      <span class="n">level</span><span class="p">:</span><span class="n">perform</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
-   <span class="kr">end</span>
+   <span class="n">level</span><span class="p">:</span><span class="n">tryPerform</span><span class="p">(</span><span class="n">damage</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -145,8 +142,8 @@ to add the following:</p>
 <section id="that-s-all-for-now">
 <h2>That’s all for now<a class="headerlink" href="#that-s-all-for-now" title="Link to this heading">¶</a></h2>
 <p>We’ve started on a basic health system and made our <code class="docutils literal notranslate"><span class="pre">Kick</span></code> action deal damage. In the <a class="reference internal" href="part4.html"><span class="doc">next
-chapter</span></a> we’ll implement the player health, make kobolds dangerous by giving them the attack
-action, and implement the required logic for the player dying.</p>
+chapter</span></a> we’ll implement player health, make kobolds dangerous by giving them the attack
+action, and implement the required logic for player death.</p>
 </section>
 </section>
 
@@ -244,7 +241,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -264,9 +263,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -279,6 +278,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

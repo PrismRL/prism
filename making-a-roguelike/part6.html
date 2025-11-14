@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -48,12 +48,12 @@
   <section id="losing-the-game">
 <h1>Losing the game<a class="headerlink" href="#losing-the-game" title="Link to this heading">¶</a></h1>
 <p>Right now the game simply quits when we hit zero hit points, but that’s a bit unusual to say the
-least. In this chapter we’re going to create a new <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> to represent our game over
+least. In this chapter we’re going to create a new <a class="reference internal" href="../reference/spectrum/gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> to represent our game over
 screen.</p>
 <section id="making-a-gamestate">
 <h2>Making a gamestate<a class="headerlink" href="#making-a-gamestate" title="Link to this heading">¶</a></h2>
-<p>Navigate to the <code class="docutils literal notranslate"><span class="pre">gamestates</span></code> folder and create a new file called <code class="docutils literal notranslate"><span class="pre">gameoverstate.lua</span></code> with the
-following contents:</p>
+<p>Navigate to the <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates</span></code> folder and create a new file called
+<code class="docutils literal notranslate"><span class="pre">gameoverstate.lua</span></code> with the following contents:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameOverState : GameState</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> display Display</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display): GameOverState</span>
@@ -67,7 +67,7 @@ following contents:</p>
    <span class="kd">local</span> <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span>
       <span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">,</span>
       <span class="s2">&quot;Game over!&quot;</span><span class="p">,</span>
       <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span>
@@ -79,21 +79,16 @@ following contents:</p>
 <span class="kr">return</span> <span class="n">GameOverState</span>
 </pre></div>
 </div>
-<p>We extend the <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> class and accept a <a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a> in our constructor. For
-now, we just draw “Game over!” centered on the screen by using <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.putString" title="Display.putString"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:putString()</span></code></a>’s
-alignment parameters.</p>
+<p>We extend the <a class="reference internal" href="../reference/spectrum/gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a> class and accept a <a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a> in our constructor. For
+now, we just draw “Game over!” centered on the screen by using <a class="reference internal" href="../reference/spectrum/display.html#lua-Display.print" title="Display.print"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Display:print()</span></code></a>’s alignment
+parameters.</p>
 </section>
 <section id="replacing-the-exit">
 <h2>Replacing the exit<a class="headerlink" href="#replacing-the-exit" title="Link to this heading">¶</a></h2>
-<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code>. First we’re going to require our new state at the top of
-the file.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">GameOverState</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;gamestates.gameoverstate&quot;</span>
-</pre></div>
-</div>
-<p>Then we’ll head back to the <code class="docutils literal notranslate"><span class="pre">handleMessage</span></code> function. Replace our current handling of the <code class="docutils literal notranslate"><span class="pre">Lose</span></code>
-message with the following.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">Lose</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">GameOverState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">))</span>
+<p>Let’s head over to <code class="docutils literal notranslate"><span class="pre">gamelevelstate.lua</span></code>, and in the <code class="docutils literal notranslate"><span class="pre">handleMessage</span></code> function replace our current
+handling of <code class="docutils literal notranslate"><span class="pre">LoseMessage</span></code> with the following.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">LoseMessage</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameOverState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">))</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -103,38 +98,43 @@ see our new game over screen when you die!</p>
 <section id="a-couple-keybinds">
 <h2>A couple keybinds<a class="headerlink" href="#a-couple-keybinds" title="Link to this heading">¶</a></h2>
 <p>Our game state still forces you to close the game manually, so let’s add a couple keybinds to
-restart or close the game. In <code class="docutils literal notranslate"><span class="pre">keybindingschema.lua</span></code>, add a couple entries:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;game-over&quot;</span><span class="p">,</span> <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;restart&quot;</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Restarts the game.&quot;</span> <span class="p">},</span>
-<span class="p">{</span> <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;game-over&quot;</span><span class="p">,</span> <span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;quit&quot;</span><span class="p">,</span> <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Quits the game.&quot;</span> <span class="p">},</span>
+restart or close the game. In <code class="docutils literal notranslate"><span class="pre">controls.lua</span></code>, add a couple entries:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">restart</span>        <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+<span class="n">quit</span>           <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">,</span>
 </pre></div>
 </div>
-<p>Back in <code class="docutils literal notranslate"><span class="pre">gameoverstate.lua</span></code>, we’ll add a <code class="docutils literal notranslate"><span class="pre">keypressed</span></code> callback to handle these:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
+<p>Back in <code class="docutils literal notranslate"><span class="pre">gameoverstate.lua</span></code>, we’ll add a <code class="docutils literal notranslate"><span class="pre">update</span></code> callback to handle these. Don’t forget to
+<code class="docutils literal notranslate"><span class="pre">require</span></code> our controls.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
+<span class="p">...</span>
 
 <span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
    <span class="p">...</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">scancode</span><span class="p">,</span> <span class="n">isrepeat</span><span class="p">)</span>
-   <span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">keybindings</span><span class="p">:</span><span class="n">keypressed</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;game-over&quot;</span><span class="p">)</span>
+<span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
 
-   <span class="kr">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;restart&quot;</span> <span class="kr">then</span>
-      <span class="n">love</span><span class="p">.</span><span class="n">event</span><span class="p">.</span><span class="n">restart</span><span class="p">()</span>
-   <span class="kr">elseif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;quit&quot;</span> <span class="kr">then</span>
+   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">quit</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
       <span class="n">love</span><span class="p">.</span><span class="n">event</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
+   <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">restart</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="n">love</span><span class="p">.</span><span class="n">event</span><span class="p">.</span><span class="n">restart</span><span class="p">()</span>
    <span class="kr">end</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Don’t forget to <code class="docutils literal notranslate"><span class="pre">require</span></code> our keybindings! We use a <code class="docutils literal notranslate"><span class="pre">game-over</span></code> mode to differentiate from the
-main game’s controls. Finally, add some instructions:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="../how-tos/controls.html"><span class="doc">Input handling</span></a> for a guide on input and controls.</p>
+</div>
+<p>Finally, let’s add some instructions.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span>
    <span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span>
    <span class="s2">&quot;[r] to restart&quot;</span><span class="p">,</span>
    <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span>
    <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span>
 <span class="p">)</span>
-<span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">putString</span><span class="p">(</span>
+<span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span>
    <span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span>
    <span class="s2">&quot;[q] to quit&quot;</span><span class="p">,</span>
    <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span>
@@ -146,7 +146,7 @@ main game’s controls. Finally, add some instructions:</p>
 </section>
 <section id="next-up">
 <h2>Next up<a class="headerlink" href="#next-up" title="Link to this heading">¶</a></h2>
-<p>We’ve improved our death handling by using a new <a class="reference internal" href="../reference/spectrum/gamestates/meta.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a>. In the <a class="reference internal" href="part7.html"><span class="doc">next chapter</span></a> we’ll be getting into map generation, and finally turn this into a real roguelike. The
+<p>We’ve improved our death handling by using a new <a class="reference internal" href="../reference/spectrum/gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">GameState</span></code></a>. In the <a class="reference internal" href="part7.html"><span class="doc">next chapter</span></a> we’ll be getting into map generation, and finally turn this into a real roguelike. The
 following chapters will take you through generating a map and descending through the dungeon.</p>
 </section>
 </section>
@@ -245,7 +245,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -265,9 +267,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 </ul>
@@ -280,6 +282,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

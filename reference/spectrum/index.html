@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../../_static/goto-top/style.css?v=c152bd81" />
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
@@ -26,7 +26,7 @@
     <link rel="icon" href="../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Camera" href="camera.html" />
+    <link rel="next" title="MultiSprite" href="animation.html" />
     <link rel="prev" title="Path" href="../prism/algorithms/astar/path.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -50,32 +50,57 @@
 <p>The spectrum module extends the core engine with features like a display, camera, game states, and
 more. You don’t <cite>have</cite> to use anything here, but we try to make it applicable to as many games as
 possible. Its classes can be accessed with the <code class="docutils literal notranslate"><span class="pre">spectrum</span></code> global, e.g. <code class="docutils literal notranslate"><span class="pre">spectrum.Display</span></code>.</p>
+<section id="registries">
+<h2>Registries<a class="headerlink" href="#registries" title="Link to this heading">¶</a></h2>
+<ul>
+<li><dl class="lua data">
+<dt class="sig sig-object lua" id="lua-spectrum.gamestates">
+<span class="sig-name descname"><span class="pre">spectrum.gamestates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="gamestate.html#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-spectrum.gamestates" title="Link to this definition">¶</a><br /></dt>
+<dd><p>The game state registry.</p>
+</dd></dl>
+
+</li>
+</ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Core</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="animation.html"><code class="docutils literal notranslate"><span class="pre">Animation</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="animation.html#lua-MultiSprite"><code class="docutils literal notranslate"><span class="pre">MultiSprite</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="camera.html"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="display.html"><code class="docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="display.html#lua-Sprite"><code class="docutils literal notranslate"><span class="pre">Sprite</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="display.html#lua-Display"><code class="docutils literal notranslate"><span class="pre">Display</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="keybindings.html"><code class="docutils literal notranslate"><span class="pre">Keybinding</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="gamestate.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html#lua-InputGetter"><code class="docutils literal notranslate"><span class="pre">InputGetter</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html#lua-ControlState"><code class="docutils literal notranslate"><span class="pre">ControlState</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html#lua-Controls"><code class="docutils literal notranslate"><span class="pre">Controls</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="input.html#lua-ControlsOptions"><code class="docutils literal notranslate"><span class="pre">ControlsOptions</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="spriteatlas.html"><code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="statemanager.html"><code class="docutils literal notranslate"><span class="pre">GameStateManager</span></code></a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="components/drawable.html"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="components/drawable.html#lua-DrawableOptions"><code class="docutils literal notranslate"><span class="pre">DrawableOptions</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/idleanimation.html"><code class="docutils literal notranslate"><span class="pre">IdleAnimation</span></code></a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Game states</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gamestates/gamestate.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="gamestates/levelstate.html"><code class="docutils literal notranslate"><span class="pre">LevelState</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="gamestates/meta.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="gamestates/statemanager.html"><code class="docutils literal notranslate"><span class="pre">GameStateManager</span></code></a></li>
 </ul>
 </div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Messages</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="messages/animation.html"><code class="docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="messages/animation.html#lua-AnimationMessageOptions"><code class="docutils literal notranslate"><span class="pre">AnimationMessageOptions</span></code></a></li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -172,7 +197,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -186,9 +213,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -200,20 +227,33 @@ SOFTWARE.
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../prism/index.html">Prism</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Spectrum</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="camera.html"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="display.html"><code class="docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="display.html#lua-Display"><code class="docutils literal notranslate"><span class="pre">Display</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="keybindings.html"><code class="docutils literal notranslate"><span class="pre">Keybinding</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="spriteatlas.html"><code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/drawable.html"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/drawable.html#lua-DrawableOptions"><code class="docutils literal notranslate"><span class="pre">DrawableOptions</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="gamestates/gamestate.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="gamestates/levelstate.html"><code class="docutils literal notranslate"><span class="pre">LevelState</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="gamestates/meta.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="gamestates/statemanager.html"><code class="docutils literal notranslate"><span class="pre">GameStateManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#registries">Registries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lua-spectrum.gamestates"><code class="docutils literal notranslate"><span class="pre">spectrum.gamestates</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="animation.html"><code class="docutils literal notranslate"><span class="pre">Animation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="animation.html#lua-MultiSprite"><code class="docutils literal notranslate"><span class="pre">MultiSprite</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="camera.html"><code class="docutils literal notranslate"><span class="pre">Camera</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="display.html"><code class="docutils literal notranslate"><span class="pre">SpectrumAttachable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="display.html#lua-Sprite"><code class="docutils literal notranslate"><span class="pre">Sprite</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="display.html#lua-Display"><code class="docutils literal notranslate"><span class="pre">Display</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gamestate.html"><code class="docutils literal notranslate"><span class="pre">GameState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="input.html"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="input.html#lua-InputGetter"><code class="docutils literal notranslate"><span class="pre">InputGetter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="input.html#lua-ControlState"><code class="docutils literal notranslate"><span class="pre">ControlState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="input.html#lua-Controls"><code class="docutils literal notranslate"><span class="pre">Controls</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="input.html#lua-ControlsOptions"><code class="docutils literal notranslate"><span class="pre">ControlsOptions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="spriteatlas.html"><code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="statemanager.html"><code class="docutils literal notranslate"><span class="pre">GameStateManager</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/drawable.html"><code class="docutils literal notranslate"><span class="pre">Drawable</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/idleanimation.html"><code class="docutils literal notranslate"><span class="pre">IdleAnimation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gamestates/levelstate.html"><code class="docutils literal notranslate"><span class="pre">LevelState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="messages/animation.html"><code class="docutils literal notranslate"><span class="pre">AnimationMessage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="messages/animation.html#lua-AnimationMessageOptions"><code class="docutils literal notranslate"><span class="pre">AnimationMessageOptions</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">
@@ -221,7 +261,7 @@ SOFTWARE.
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../prism/algorithms/astar/path.html" title="previous chapter">Path</a></li>
-      <li>Next: <a href="camera.html" title="next chapter">Camera</a></li>
+      <li>Next: <a href="animation.html" title="next chapter">MultiSprite</a></li>
   </ul></li>
 </ul>
 </div>

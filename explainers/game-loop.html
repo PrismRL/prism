@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=e3c5d01f" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c3d52252" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -56,7 +56,7 @@ The following diagram describes the main loop.</p>
 <p style="text-align:center;color:var(--secondary-color);">The core game loop</p><p><a class="reference internal" href="../reference/prism/core/level.html#lua-Level" title="Level"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Level</span></code></a> defines the loop, and <a class="reference internal" href="../reference/spectrum/gamestates/levelstate.html#lua-LevelState" title="LevelState"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelState</span></code></a> holds the coroutine and determines
 when to continue it. If no <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a> yields a <a class="reference internal" href="../reference/prism/core/decision.html#lua-Decision" title="Decision"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Decision</span></code></a> the loop will run
 indefinitely, forcing you to catch when there are no player controlled actors left in the level.</p>
-<p>What actually happens on an actor’s turn is defined in <a class="reference internal" href="../reference/prism/index.html#lua-prism.turn" title="prism.turn"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.turn()</span></code></a>. By default, it calls
+<p>What actually happens on an actor’s turn is defined in <code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.turn</span></code>. By default, it calls
 the <a class="reference internal" href="../reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a> and performs the action returned:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">action</span> <span class="o">=</span> <span class="n">controller</span><span class="p">:</span><span class="n">act</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
 
@@ -163,7 +163,9 @@ SOFTWARE.
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/query.html">Queries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/animation.html">Animation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/collision.html">Collision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-tos/targets.html">Targets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Making a roguelike</span></p>
@@ -177,9 +179,9 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part7.html">Carving out caverns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part8.html">Descending into the depths</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part9.html">Creating continuity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Packing your bags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Having a snack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part10.html">Stashing treasure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part11.html">Packing your bags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part12.html">Having a snack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part13.html">Brewing potions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../making-a-roguelike/part14.html">Zapping wands</a></li>
 </ul>
@@ -192,6 +194,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../reference/prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/spectrum/index.html">Spectrum</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/extra/index.html">Extra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/geometer/index.html">Geometer</a></li>
 </ul>
 
 <div class="relations">

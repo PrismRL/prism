@@ -1,343 +1,296 @@
-Having a snack
-==============
+Packing your bags
+=================
 
-In this section we'll make our food edible by presenting a simple menu for picking between dropping
-and eating.
+In this chapter we'll implement a simple inventory with the :doc:`optional module
+<../reference/extra/inventory/index>`.
 
-Modifying health
-----------------
+.. TODO: Write a how-to on the inventory module
 
-Let's head over to ``module/game/components/health.lua`` and create a method to add health, so we
-don't have to worry about going over the maximum.
+Head over to main.lua and add the inventory module from extra.
 
 .. code-block:: lua
 
-   --- @param amount integer
-   function Health:heal(amount)
-      self.hp = math.min(self.hp + amount, self.maxHP)
-   end
+   prism.loadModule("prism/extra/inventory")
 
-.. caution::
+Giving the player an inventory
+------------------------------
 
-   This should only be called from actions because it modifies the component!
-
-Making it edible
-----------------
-
-Let's create a new component to define what's edible. We'll take a single integer in and set that to
-the component's ``healing`` field. Head over to ``module/game/components`` and create a new file
-``edible.lua``.
+Let's head over to ``modules/game/actors/player.lua`` and add our inventory component. We'll limit
+the size to the alphabet.
 
 .. code-block:: lua
 
-   --- @class Edible : Component
-   --- @field healing integer
-   --- @overload fun(healing: integer): Edible
-   local Edible = prism.Component:extend("Edible")
+   prism.components.Inventory{
+      limitCount = 26,
+   },
 
-   --- @param healing integer
-   function Edible:__new(healing)
-      self.healing = healing
-   end
+Adding a keybinding
+-------------------
 
-   return Edible
-
-Now we'll create an action to use on the edible actor. Head to ``module/game/actions`` and create a
-new file ``eat.lua``.
+Let's head to ``keybindingschema.lua`` and add a few entries.
 
 .. code-block:: lua
 
-   local Log = prism.components.Log
-   local Name = prism.components.Name
-   local sf = string.format
+   -- inventory
+   inventory = "tab",
+   back      = "backspace",
+   pickup    = "p"
 
-   local EatTarget = prism.InventoryTarget(prism.components.Edible)
-      :inInventory()
+We'll use these later in the tutorial to open the inventory and return to the main game state.
 
-.. note::
+Creating an inventory screen
+----------------------------
 
-   The inventory module injects :lua:class:`InventoryTarget`, a subclass of :lua:class:`Target` into
-   the ``prism`` namespace as a convenience. It includes extra filters for dealing with items.
+Navigate to ``gamestates`` and create a new file ``inventorystate.lua``.
 
-Now we create our eat action. You need a health component to eat, and the target has to be something
-edible in your inventory as we defined above.
-
-.. code-block:: lua
-
-   ---@class Eat : Action
-   ---@overload fun(owner: Actor, food: Actor): Eat
-   local Eat = prism.Action:extend("Eat")
-
-   Eat.requiredComponents = {
-      prism.components.Health
-   }
-
-   Eat.targets = {
-      EatTarget
-   }
-
-To perform the action we just add to the owner's health with the ``heal()`` method we defined,
-making sure to remove the item with :lua:func:`Inventory.removeQuantity`.
+We create a new :lua:class:`GameState` and we pass in the display, decision, level, and the
+inventory. We get all the items at the time of instantiation and store them in the items field for
+convenience. Finally we create a mapping of letters from 1-26 corresponding to a-z which we'll use
+during input handling.
 
 .. code-block:: lua
 
-   --- @param level Level
-   --- @param food Actor
-   function Eat:perform(level, food)
-      local edible = food:expect(prism.components.Edible)
-      local health = self.owner:expect(prism.components.Health)
-      health:heal(edible.healing)
-
-      local inventory = self.owner:expect(prism.components.Inventory)
-      inventory:removeQuantity(food, 1)
-
-      Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
-      Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
-   end
-
-   return Eat
-
-.. dropdown:: Complete ``eat.lua``
-
-   `Source <https://github.com/PrismRL/Kicking-Kobolds/blob/part11/modules/game/actions/eat.lua>`_
-
-   .. code:: lua
-
-      local Log = prism.components.Log
-      local Name = prism.components.Name
-      local sf = string.format
-
-      local EatTarget = prism.InventoryTarget(prism.components.Edible):inInventory()
-
-      ---@class Eat : Action
-      ---@overload fun(owner: Actor, food: Actor): Eat
-      local Eat = prism.Action:extend("Eat")
-
-      Eat.requiredComponents = {
-         prism.components.Health,
-      }
-
-      Eat.targets = {
-         EatTarget,
-      }
-
-      --- @param level Level
-      ---@param food Actor
-      function Eat:perform(level, food)
-         local edible = food:expect(prism.components.Edible)
-         local health = self.owner:expect(prism.components.Health)
-         health:heal(edible.healing)
-
-         local inventory = self.owner:expect(prism.components.Inventory)
-         inventory:removeQuantity(food, 1)
-
-         Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
-         Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
-      end
-
-      return Eat
-
-Now let's head back over to ``modules/game/actors/meat.lua`` and add the edible component to the
-meat actor.
-
-.. code-block:: lua
-
-   prism.components.Edible(1)
-
-.. note::
-
-   There's not much meat on kobold bones.
-
-Modifying the interface
------------------------
-
-With the actual mechanics out of the way it's time to flesh out our inventory menu a little more.
-Create a new file called ``gamestates/inventoryactionstate.lua`` and let's create a new
-:lua:class:`GameState`. Load our :lua:class:`Keybinding` and alias the name component at the top.
-
-.. code-block:: lua
-
+   local utf8 = require "utf8"
    local keybindings = require "keybindingschema"
-   local Name = prism.components.Name
 
-Next we'll create the new ``GameState`` and in the constructor we'll loop through all the actions
-the active actor can do, and assign those to a letter if the actor can take that action with the
-inventory item as the first target.
-
-.. code-block:: lua
-
-   --- @class InventoryActionState : GameState
-   --- @field decision ActionDecision
-   --- @field previousState GameState
-   --- @overload fun(display: Display, decision: ActionDecision, level: Level, item: Actor)
-   local InventoryActionState = spectrum.GameState:extend "InventoryActionState"
+   --- @class InventoryState : GameState
+   --- @overload fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)
+   local InventoryState = spectrum.GameState:extend "InventoryState"
 
    --- @param display Display
    --- @param decision ActionDecision
    --- @param level Level
-   --- @param item Actor
-   function InventoryActionState:__new(display, decision, level, item)
+   --- @param inventory Inventory
+   function InventoryState:__new(display, decision, level, inventory)
       self.display = display
       self.decision = decision
       self.level = level
-      self.item = item
-
-      self.actions = {}
-
-      for _, Action in ipairs(self.decision.actor:getActions()) do
-         local action = Action(self.decision.actor, self.item)
-         if self.level:canPerform(action) then
-            table.insert(self.actions, action)
-         end
+      self.inventory = inventory
+      self.items = inventory.inventory:getAllActors()
+      self.letters = {}
+      for i = 1, #self.items do
+         self.letters[i] = utf8.char(96 + i) -- a, b, c, ...
       end
    end
 
-Then we're going to store the :lua:class:`LevelState` in our ``previousState`` field so that we can
-draw the level under this menu.
+We also want to keep a reference to the previous ``GameState``, so we'll use
+:lua:func:`GameState.load` to capture it.
 
 .. code-block:: lua
 
-   function InventoryActionState:load(previous)
-      --- @cast previous InventoryState
-      self.previousState = previous.previousState
+   function InventoryState:load(previous)
+      self.previousState = previous
    end
 
-Then we can set up our draw function to loop through all of the possible actions and enumerate them
-to the user, drawing the letter used to take that action next to the item name.
+Now we'll draw the inventory. To show the inventory on top of the level, we'll first draw the
+previous state. Then we clear the display and draw a simple header, aligned to the right side of the
+screen. Finally, we loop through each item in our inventory, assign it a letter based on its index,
+and draw it to the screen.
 
 .. code-block:: lua
 
-   function InventoryActionState:draw()
+   function InventoryState:draw()
       self.previousState:draw()
       self.display:clear()
-      self.display:putString(1, 1, Name.get(self.item), nil, nil, 2, "right")
+      self.display:print(1, 1, "Inventory", nil, nil, 2, "right")
 
-      for i, action in ipairs(self.actions) do
-         local letter = string.char(96 + i)
-         local name = string.gsub(action.className, "Action", "")
-         self.display:putString(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+      for i, actor in ipairs(self.items) do
+         local name = actor:getName()
+         local letter = self.letters[i]
+
+         local item = actor:expect(prism.components.Item)
+         local countstr = ""
+         if item.stackCount and item.stackCount > 1 then
+            countstr = ("%sx "):format(item.stackCount)
+         end
+
+         local itemstr = ("[%s] %s%s"):format(letter, countstr, name)
+         self.display:print(1, 1 + i, itemstr, nil, nil, 2, "right")
       end
-
       self.display:draw()
    end
 
-Then we'll handle the user selecting the action. If the user hits the letter that matches an action
-we set the decision to that action.
+Now we handle keypresses. For the items we loop through our letters to find which one matches our
+keypress and for now we just try to drop the item when we hit that button. ``Drop``'s
+:lua:class:`canPerform() <Action.canPerform>` will return false if given a ``nil`` target.
 
 .. code-block:: lua
 
-   function InventoryActionState:keypressed(key)
-      for i, action in ipairs(self.actions) do
-         print(key, string.char(i + 96))
-         if key == string.char(i + 96) then
-            self.decision:setAction(action)
-            self.manager:pop()
-         end
-      end
-
-      local binding = keybindings:keypressed(key)
-      if binding == "inventory" or binding == "return" then self.manager:pop() end
-   end
-
-Now we'll need to head over to ``gamestates/inventorystate.lua`` and push this new
-``InventoryActionState`` onto the stack when a user selects an item instead of dropping it. Let's
-modify our ``InventoryState:keypressed`` to look like this:
-
-.. code-block:: lua
-
-   function InventoryState:keypressed(key)
+   function InventoryState:update(dt)
       for i, letter in ipairs(self.letters) do
-         if key == letter then
-            self.manager:push(InventoryActionState(self.display, self.decision, self.level, self.items[i]))
+         if spectrum.Input.key[letter].pressed then
+            local pressedItem = self.items[i]
+            local drop = prism.actions.Drop(self.decision.actor, pressedItem)
+            if drop:canPerform(self.level) then
+               self.decision:setAction(drop)
+            end
+
+            self.manager:pop()
             return
          end
       end
 
-      local binding = keybindings:keypressed(key)
-      if binding == "inventory" or binding == "return" then self.manager:pop() end
-   end
-
-We've got one last thing to handle. When we press a letter right now we just go back to the
-inventory screen and nothing happens until we leave that screen. A little strange to say the least!
-Let's :lua:func:`GameStateManager.pop` on :lua:func:`GameState.resume` if we have a valid decision.
+Then we check if the user hit the inventory or return key, and if so we call
+:lua:func:`GameStateManager.pop`, returning us to the previous state.
 
 .. code-block:: lua
 
-   function InventoryState:resume()
-      if self.decision:validateResponse() then
+      if controls.inventory.pressed or controls.back.pressed then
          self.manager:pop()
       end
    end
 
-.. dropdown:: Complete ``inventoryactionstate.lua``
+   return InventoryState
 
-   `Source <https://github.com/PrismRL/Kicking-Kobolds/blob/part11/gamestates/inventoryactionstate.lua>`_
+.. dropdown:: Complete inventorystate.lua
+
+   `Source <https://github.com/PrismRL/Kicking-Kobolds/blob/part10/gamestates/inventorystate.lua>`_
 
    .. code:: lua
 
       local keybindings = require "keybindingschema"
-      local Name = prism.components.Name
 
-      --- @class InventoryActionState : GameState
-      --- @field decision ActionDecision
+      --- @class InventoryState : GameState
       --- @field previousState GameState
-      --- @overload fun(display: Display, decision: ActionDecision, level: Level, item: Actor)
-      local InventoryActionState = spectrum.GameState:extend "InventoryActionState"
+      --- @overload fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)
+      local InventoryState = spectrum.GameState:extend "InventoryState"
 
       --- @param display Display
       --- @param decision ActionDecision
       --- @param level Level
-      --- @param item Actor
-      function InventoryActionState:__new(display, decision, level, item)
+      --- @param inventory Inventory
+      function InventoryState:__new(display, decision, level, inventory)
          self.display = display
          self.decision = decision
          self.level = level
-         self.item = item
-
-         self.actions = {}
-
-         for _, Action in ipairs(self.decision.actor:getActions()) do
-            local action = Action(self.decision.actor, self.item)
-            if self.level:canPerform(action) then table.insert(self.actions, action) end
+         self.inventory = inventory
+         self.items = inventory.inventory:getAllActors()
+         self.letters = {}
+         for i = 1, #self.items do
+            self.letters[i] = string.char(96 + i) -- a, b, c, ...
          end
       end
 
-      function InventoryActionState:load(previous)
-         --- @cast previous InventoryState
-         self.previousState = previous.previousState
+      function InventoryState:load(previous)
+         self.previousState = previous
       end
 
-      function InventoryActionState:draw()
+      function InventoryState:draw()
          self.previousState:draw()
          self.display:clear()
-         self.display:putString(1, 1, Name.get(self.item), nil, nil, 2, "right")
+         self.display:print(1, 1, "Inventory", nil, nil, 2, "right")
 
-         for i, action in ipairs(self.actions) do
-            local letter = string.char(96 + i)
-            local name = string.gsub(action.className, "Action", "")
-            self.display:putString(1, 1 + i, string.format("[%s] %s", letter, name), nil, nil, nil, "right")
+         for i, actor in ipairs(self.items) do
+            local name = actor:getName()
+            local letter = self.letters[i]
+
+            local item = actor:expect(prism.components.Item)
+            local countstr = ""
+            if item.stackCount and item.stackCount > 1 then
+               countstr = ("%sx "):format(item.stackCount)
+            end
+
+            local itemstr = ("[%s] %s%s"):format(letter, countstr, name)
+            self.display:print(1, 1 + i, itemstr, nil, nil, 2, "right")
          end
 
          self.display:draw()
       end
 
-      function InventoryActionState:keypressed(key)
-         for i, action in ipairs(self.actions) do
-            if key == string.char(i + 96) then
-               self.decision:setAction(action)
+      function InventoryState:update(dt)
+         for i, letter in ipairs(self.letters) do
+            if spectrum.Input.key[letter].pressed then
+               local pressedItem = self.items[i]
+               local drop = prism.actions.Drop(self.decision.actor, pressedItem)
+               if drop:canPerform(self.level) then self.decision:setAction(drop) end
+
                self.manager:pop()
+               return
             end
          end
 
-         local binding = keybindings:keypressed(key)
-         if binding == "inventory" or binding == "return" then self.manager:pop() end
+         if controls.inventory.pressed or controls.back.pressed then
+            self.manager:pop()
+         end
       end
 
-      return InventoryActionState
+      return InventoryState
+
+Opening the inventory
+---------------------
+
+With the inventory state complete it's time to glue things together. Head back to
+``gamelevelstate.lua`` and let's add some input handling to get the ``InventoryState`` to pop up. At
+the bottom of ``GameLevelState:updateDecision``, just above the wait action, we'll check for the
+inventory key and push the ``InventoryState``, if the current actor (``owner``) has an inventory.
+
+.. code-block:: lua
+
+   function GameLevelState:updateDecision(dt, owner, decision)
+      -- ...
+
+      if controls.inventory.pressed then
+         local inventory = owner:get(prism.components.Inventory)
+         if inventory then
+            local inventoryState = spectrum.gamestates.InventoryState(
+               self.display,
+               decision,
+               self.level,
+               inventory
+            )
+            self.manager:push(inventoryState)
+         end
+      end
+
+      -- Handle waiting
+      if controls.wait.pressed then self:setAction(prism.actions.Wait(owner)) end
+   end
+
+Now we can run the game and hit tab. The inventory menu will show up (but won't do anything)!
+
+Picking things up
+-----------------
+
+Now to be able to pick these things up we'll need to hook up the :lua:class:`Pickup` action.
+
+.. code-block:: lua
+
+   if controls.pickup.pressed then
+      local target = self.level:query(prism.components.Item)
+         :at(owner:getPosition():decompose())
+         :first()
+
+      local pickup = prism.actions.Pickup(owner, target)
+      if self:setAction(pickup) then return end
+   end
+
+We grab the first item on the tile and use it as the target for ``Pickup``. Boot up the game and
+draw in a few meat bricks with Geometer. You should be able to pick up and drop them now!
+
+Fixing the draw order
+---------------------
+
+You might notice that now when the player moves on top of the food sometimes the player is drawn
+underneath the food. We can fix this by changing the depth or 'layer' the player's drawable is drawn
+at. Go ahead and navigate back to ``modules/game/actors/player.lua`` and change the following line
+from
+
+.. code-block:: lua
+
+   prism.components.Drawable { index = "@", color = prism.Color4.GREEN },
+
+to
+
+.. code-block:: lua
+
+   prism.components.Drawable { index = "@", color = prism.Color4.GREEN, layer = math.huge },
+
+We're setting our draw priority to :lua:data:`math.huge` so the player will always draw on top of
+everything else.
 
 In the next chapter
 -------------------
 
-We've made our food edible and expanded the ``InventoryState`` with dynamic action selection. In the
-:doc:`next chapter <part12>` we'll go over drop tables and containers like chests, populating the
-dungeon with delicious meat and shiny trinkets!
+We've implemented a simple inventory with the provided inventory module. In the :doc:`next chapter
+<part12>` we'll make the bricks consumable and allow the user a choice between dropping and eating
+the meat.
