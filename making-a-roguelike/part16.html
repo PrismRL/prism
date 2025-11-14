@@ -47,138 +47,181 @@
             
   <section id="saving-the-game">
 <h1>Saving the game<a class="headerlink" href="#saving-the-game" title="Link to this heading">¶</a></h1>
-<p>In this tutorial we’re going to get the game saving and loading. We’ll introduce a new game startup screen
-for choosing between continuing and a new game, and we’ll hook into love.quit to save the game when we quit.</p>
+<p>In this tutorial we’re going to get the game saving and loading. We’ll introduce a start menu for
+choosing between continuing and starting a new game, and we’ll hook into <code class="docutils literal notranslate"><span class="pre">love.quit</span></code> to save the
+game when we quit.</p>
 <section id="introductions">
 <h2>Introductions<a class="headerlink" href="#introductions" title="Link to this heading">¶</a></h2>
 <p>Head to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">gamestartstate.lua</span></code>.</p>
-<p>We import controls, because we’ll use that a little later. All we do here is keep track of the display, and try to
-read the savegame from disk. We’re not saving it yet, so it won’t exist and that’s okay!</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
 
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">,</span> <span class="s2">&quot;Kicking Kobolds&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+<span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> GameStartState : GameState</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display): GameStartState</span>
+<span class="kd">local</span> <span class="n">GameStartState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">GameState</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;GameStartState&quot;</span><span class="p">)</span>
 
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;[n] for new game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
-
-    <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[l] to load game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
-    <span class="kr">end</span>
-
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[q] to quit&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">display</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>Now we draw a really simple newgame screen. We put the title of the game and a few options below.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
-    <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+<p>We import controls, because we’ll use that a little later. All we do here is keep track of the
+display, and try to read the savegame from disk. We’re not saving it yet, so it won’t exist and
+that’s okay!</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">draw</span><span class="p">()</span>
+   <span class="kd">local</span> <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">math.floor</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">newgame</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
-        <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span>
-        <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">())</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span>
-            <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">())</span>
-        <span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">loadgame</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
-        <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span><span class="p">)</span>
-        <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">mp</span><span class="p">))</span>
-        <span class="n">Game</span> <span class="o">=</span> <span class="n">save</span>
-        <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">Game</span><span class="p">.</span><span class="n">level</span><span class="p">))</span>
-    <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">quit</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
-        <span class="n">love</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
-    <span class="kr">end</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span><span class="p">,</span> <span class="s2">&quot;Kicking Kobolds&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;[n] for new game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+
+   <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[l] to load game&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+   <span class="kr">end</span>
+
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="nb">print</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">midpoint</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;[q] to quit&quot;</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">.</span><span class="n">width</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">:</span><span class="n">draw</span><span class="p">()</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>Now we draw a really simple main menu. We put the title of the game and a few options below.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameStartState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+
+   <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">newgame</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">())</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span>
+         <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">())</span>
+      <span class="p">)</span>
+   <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">loadgame</span><span class="p">.</span><span class="n">pressed</span> <span class="ow">and</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">save</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">mp</span><span class="p">))</span>
+      <span class="n">Game</span> <span class="o">=</span> <span class="n">save</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span> <span class="n">Game</span><span class="p">.</span><span class="n">level</span><span class="p">))</span>
+   <span class="kr">elseif</span> <span class="n">controls</span><span class="p">.</span><span class="n">quit</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+      <span class="n">love</span><span class="p">.</span><span class="n">quit</span><span class="p">()</span>
+   <span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="kr">return</span> <span class="n">GameStartState</span>
 </pre></div>
 </div>
-<p>Lastly we’ll wire up our options to controls. New game will delete the old save and restart the game anew.
-Load will restore the save from disk and send us to our previous game. Quit quits the game.</p>
+<p>Lastly we’ll wire up our options to controls. New game will delete the old save and restart the game
+anew. Load will restore the save from disk and send us to our previous game. Quit quits the game.</p>
 <p>One minor problem! We haven’t actually defined these controls yet, so let’s do that!</p>
 </section>
 <section id="controls">
 <h2>Controls<a class="headerlink" href="#controls" title="Link to this heading">¶</a></h2>
 <p>Head over to <code class="docutils literal notranslate"><span class="pre">controls.lua</span></code> and add the following controls.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">newgame</span>        <span class="o">=</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span>
+<span class="n">loadgame</span>       <span class="o">=</span> <span class="s2">&quot;l&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
 </section>
 <section id="cleaning-up-main">
 <h2>Cleaning up main<a class="headerlink" href="#cleaning-up-main" title="Link to this heading">¶</a></h2>
-<p>Okay we’ve got our start screen and new controls defined. Let’s get this actually showing up! Navigate
-over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
-<p>Let’s replace our love.load() function with the following:</p>
+<p>Okay we’ve got our start screen and new controls defined. Let’s get this actually showing up!
+Navigate over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
+<p>Let’s replace our <code class="docutils literal notranslate"><span class="pre">love.load()</span></code> function with the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="kr">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;--debug&quot;</span> <span class="kr">then</span>
-        <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">()</span>
-        <span class="kd">local</span> <span class="kr">function</span> <span class="nf">generator</span><span class="p">()</span>
-            <span class="n">Game</span><span class="p">:</span><span class="n">generateNegamextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="n">builder</span><span class="p">)</span>
-        <span class="kr">end</span>
+   <span class="kr">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;--debug&quot;</span> <span class="kr">then</span>
+      <span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">()</span>
+      <span class="kd">local</span> <span class="kr">function</span> <span class="nf">generator</span><span class="p">()</span>
+         <span class="n">Game</span><span class="p">:</span><span class="n">generateNegamextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">(),</span> <span class="n">builder</span><span class="p">)</span>
+      <span class="kr">end</span>
 
-        <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">MapGeneratorState</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">display</span><span class="p">))</span>
-    <span class="kr">else</span>
-        <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameStartState</span><span class="p">(</span><span class="n">display</span><span class="p">))</span>
-    <span class="kr">end</span>
+      <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">MapGeneratorState</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">display</span><span class="p">))</span>
+   <span class="kr">else</span>
+      <span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameStartState</span><span class="p">(</span><span class="n">display</span><span class="p">))</span>
+   <span class="kr">end</span>
 
-    <span class="n">manager</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
-    <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
+   <span class="n">manager</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
+   <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">:</span><span class="n">hook</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
-<p>This will push our start screen to the stack when the game loads up. Now we need to modify Game a bit to track a bit
-more state when saving/loading.</p>
+<p>This will push our start screen to the stack when the game loads up. Now we need to modify Game a
+bit to track a bit more state when saving/loading.</p>
 </section>
 <section id="modifying-game">
 <h2>Modifying Game<a class="headerlink" href="#modifying-game" title="Link to this heading">¶</a></h2>
 <p>Let’s modify the class definition and constructor of Game.</p>
-<p>We’re also going to modify how we expose Game. At the bottom of the file replace the line where we return Game
-with the following:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> Game : Object</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> depth integer</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> lost boolean</span>
+<span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> level Level?</span>
+<span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(seed: string): Game</span>
+<span class="kd">local</span> <span class="n">Game</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Object</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Game&quot;</span><span class="p">)</span>
+
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> seed string</span>
+<span class="kr">function</span> <span class="nc">Game</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">RNG</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">lost</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+<p>We’re also going to modify how we expose Game. At the bottom of the file replace the line where we
+return Game with the following:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">_G</span><span class="p">.</span><span class="n">Game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="nb">tostring</span><span class="p">(</span><span class="nb">os.time</span><span class="p">()))</span>
 </pre></div>
 </div>
-<p>Next, find any instances of <code class="docutils literal notranslate"><span class="pre">require(&quot;game&quot;)</span></code> in your code and remove it. Here we’re creating a global variable that
-contains the gamestate and can be easily replaced during serialization.</p>
+<p>Next, find any instances of <code class="docutils literal notranslate"><span class="pre">require(&quot;game&quot;)</span></code> in your code and remove it. Here we’re creating a
+global variable that contains the gamestate and can be easily replaced during serialization.</p>
 </section>
 <section id="losing-and-levels">
 <h2>Losing and levels<a class="headerlink" href="#losing-and-levels" title="Link to this heading">¶</a></h2>
-<p>Now, let’s make a few changes to GameLevelState and GameOverState. We need them to track what level we’re on,
-and if we’ve lost the game.</p>
+<p>Now, let’s make a few changes to <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code> and <code class="docutils literal notranslate"><span class="pre">GameOverState</span></code>. We need them to track
+what level we’re on, and if we’ve lost the game.</p>
 <p>First let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gameoverstate.lua`</span></code>.</p>
-<p>Add the following line to the top of GameOverState:update:</p>
+<p>Add the following line to the top of <code class="docutils literal notranslate"><span class="pre">GameOverState:update</span></code>:</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameOverState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
-    <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="o">=</span> <span class="kc">true</span>
-    <span class="p">...</span>
+   <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="o">=</span> <span class="kc">true</span>
+   <span class="p">...</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
 <p>Now let’s head over to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates/gamelevelstate.lua</span></code>.</p>
-<p>Add the following line to the top of GameLevelState:updateDecision:</p>
+<p>Add the following line to the top of <code class="docutils literal notranslate"><span class="pre">GameLevelState:updateDecision</span></code>:</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">updateDecision</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">decision</span><span class="p">)</span>
+   <span class="n">Game</span><span class="p">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span>
+   <span class="p">...</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
 </section>
 <section id="id1">
 <h2>Saving the game<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
-<p>We’re finally read to wire everything up. It’s time to save the game. Head back over to <code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
+<p>We’re finally read to wire everything up. It’s time to save the game. Head back over to
+<code class="docutils literal notranslate"><span class="pre">main.lua</span></code>.</p>
 <p>Add a <code class="docutils literal notranslate"><span class="pre">require</span> <span class="pre">&quot;game&quot;</span></code> to the top of the file.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="nb">require</span> <span class="s2">&quot;debugger&quot;</span>
 <span class="nb">require</span> <span class="s2">&quot;prism&quot;</span>
 <span class="nb">require</span> <span class="s2">&quot;game&quot;</span>
 </pre></div>
 </div>
-<p>Now let’s define a <code class="docutils literal notranslate"><span class="pre">love.quit</span></code> hook that will run when the game is stopped. We’ll check if we lost, and if so we’ll
-delete any existing save and return. If we haven’t lost we’ll save the current state of the game for the user’s next session.</p>
+<p>Now let’s define a <code class="docutils literal notranslate"><span class="pre">love.quit</span></code> hook that will run when the game is stopped. We’ll check if we
+lost, and if so we’ll delete any existing save and return. If we haven’t lost we’ll save the current
+state of the game for the user’s next session.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">love</span><span class="p">.</span><span class="nf">quit</span><span class="p">()</span>
-    <span class="kr">if</span> <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="kr">then</span> <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span> <span class="kr">return</span> <span class="kr">end</span>
-    <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">serialize</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
-    <span class="kd">local</span> <span class="n">lz</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">compress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
-    <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">,</span> <span class="n">lz</span><span class="p">)</span>
+   <span class="kr">if</span> <span class="n">Game</span><span class="p">.</span><span class="n">lost</span> <span class="kr">then</span> <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">)</span> <span class="kr">return</span> <span class="kr">end</span>
+   <span class="kd">local</span> <span class="n">save</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">serialize</span><span class="p">()</span>
+   <span class="kd">local</span> <span class="n">mp</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">messagepack</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">save</span><span class="p">)</span>
+   <span class="kd">local</span> <span class="n">lz</span> <span class="o">=</span> <span class="n">love</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">compress</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="s2">&quot;lz4&quot;</span><span class="p">,</span> <span class="n">mp</span><span class="p">)</span>
+   <span class="n">love</span><span class="p">.</span><span class="n">filesystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;save.lz4&quot;</span><span class="p">,</span> <span class="n">lz</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
 </section>
 <section id="in-the-next-chapter">
 <h2>In the next chapter<a class="headerlink" href="#in-the-next-chapter" title="Link to this heading">¶</a></h2>
-<p>We’ll use serialization in a different way, creating prefabs and using them to spice up level generation!</p>
+<p>We’ll use serialization in a different way, creating prefabs and using them to spice up level
+generation!</p>
 </section>
 </section>
 
