@@ -8,8 +8,8 @@ screen.
 Making a gamestate
 ------------------
 
-Navigate to the ``gamestates`` folder and create a new file called ``gameoverstate.lua`` with the
-following contents:
+Navigate to the ``modules/game/gamestates`` folder and create a new file called
+``gameoverstate.lua`` with the following contents:
 
 .. code-block:: lua
 
@@ -26,7 +26,7 @@ following contents:
       local midpoint = math.floor(self.display.height / 2)
 
       self.display:clear()
-      self.display:putString(
+      self.display:print(
          1, midpoint,
          "Game over!",
          nil, nil, nil,
@@ -38,26 +38,19 @@ following contents:
    return GameOverState
 
 We extend the :lua:class:`GameState` class and accept a :lua:class:`Display` in our constructor. For
-now, we just draw "Game over!" centered on the screen by using :lua:func:`Display.putString`'s
-alignment parameters.
+now, we just draw "Game over!" centered on the screen by using :lua:func:`Display.print`'s alignment
+parameters.
 
 Replacing the exit
 ------------------
 
-Let's head over to ``gamelevelstate.lua``. First we're going to require our new state at the top of
-the file.
+Let's head over to ``gamelevelstate.lua``, and in the ``handleMessage`` function replace our current
+handling of ``LoseMessage`` with the following.
 
 .. code-block:: lua
 
-   local GameOverState = require "gamestates.gameoverstate"
-
-Then we'll head back to the ``handleMessage`` function. Replace our current handling of the ``Lose``
-message with the following.
-
-.. code-block:: lua
-
-   if prism.messages.Lose:is(message) then
-      self.manager:enter(GameOverState(self.display))
+   if prism.messages.LoseMessage:is(message) then
+      self.manager:enter(spectrum.gamestates.GameOverState(self.display))
    end
 
 Let's boot up the game and spawn in a few kobolds. Let yourself get slapped around and you should
@@ -67,45 +60,50 @@ A couple keybinds
 -----------------
 
 Our game state still forces you to close the game manually, so let's add a couple keybinds to
-restart or close the game. In ``keybindingschema.lua``, add a couple entries:
+restart or close the game. In ``controls.lua``, add a couple entries:
 
 .. code-block:: lua
 
-   { key = "r", mode = "game-over", action = "restart", description = "Restarts the game." },
-   { key = "q", mode = "game-over", action = "quit", description = "Quits the game." },
+   restart        = "r",
+   quit           = "q",
 
-Back in ``gameoverstate.lua``, we'll add a ``keypressed`` callback to handle these:
+Back in ``gameoverstate.lua``, we'll add a ``update`` callback to handle these. Don't forget to
+``require`` our controls.
 
 .. code-block:: lua
 
-   local keybindings = require "keybindingschema"
+   local controls = require "controls"
+   ...
 
    function GameOverState:draw()
       ...
    end
 
-   function GameOverState:keypressed(key, scancode, isrepeat)
-      local action = keybindings:keypressed(key, "game-over")
+   function GameOverState:update(dt)
+      controls:update()
 
-      if action == "restart" then
-         love.event.restart()
-      elseif action == "quit" then
+      if controls.quit.pressed then
          love.event.quit()
+      elseif controls.restart.pressed then
+         love.event.restart()
       end
    end
 
-Don't forget to ``require`` our keybindings! We use a ``game-over`` mode to differentiate from the
-main game's controls. Finally, add some instructions:
+.. note::
+
+   See :doc:`../how-tos/controls` for a guide on input and controls.
+
+Finally, let's add some instructions.
 
 .. code-block:: lua
 
-   self.display:putString(
+   self.display:print(
       1, midpoint + 3,
       "[r] to restart",
       nil, nil, nil,
       "center", self.display.width
    )
-   self.display:putString(
+   self.display:print(
       1, midpoint + 4,
       "[q] to quit",
       nil, nil, nil,

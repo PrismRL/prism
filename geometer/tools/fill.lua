@@ -7,16 +7,15 @@ local Fill = geometer.Tool:extend("FillTool")
 
 --- Begins a paint drag.
 ---@param editor Editor
----@param level Level
+---@param attachable SpectrumAttachable
 ---@param cellx number The x-coordinate of the cell clicked.
 ---@param celly number The y-coordinate of the cell clicked.
-function Fill:mouseclicked(editor, level, cellx, celly)
+function Fill:mouseclicked(editor, attachable, cellx, celly)
    if prism.Actor:is(editor.placeable) then return end
-   if cellx < 1 or cellx > level.map.w then return end
-   if celly < 1 or celly > level.map.h then return end
+   if not attachable:inBounds(cellx, celly) then return end
 
    self.locations = prism.SparseGrid()
-   self:bucket(level, cellx, celly)
+   self:bucket(attachable, cellx, celly)
    editor:execute(PenModification(editor.placeable, self.locations))
 end
 
@@ -25,13 +24,16 @@ end
 ---@param y any
 function Fill:bucket(attachable, x, y)
    local cell = attachable:getCell(x, y)
-   local cellPrototype = nil
-   if cell then cellPrototype = getmetatable(cell) end
-   --- @cast cellPrototype Cell
 
    prism.BreadthFirstSearch(prism.Vector2(x, y), function(x, y)
+      if prism.LevelBuilder:is(attachable) then
+         --- @cast attachable LevelBuilder
+         local cellAt = prism.SparseGrid.get(attachable, x, y)
+         if not cellAt then return false end
+      end
+
       local cellAt = attachable:getCell(x, y)
-      return cellPrototype and cellPrototype:is(cellAt)
+      return cellAt:getName() == cell:getName()
    end, function(x, y)
       self.locations:set(x, y, true)
    end)

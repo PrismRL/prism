@@ -9,6 +9,9 @@ end
 --- @module "engine.lib.json"
 prism.json = prism.require "lib.json"
 
+--- @module "engine.lib.messagepack"
+prism.messagepack = prism.require "lib.messagepack"
+
 --- @module "engine.lib.log"
 prism.logger = prism.require "lib.log"
 
@@ -101,16 +104,14 @@ prism.astar = prism.require "algorithms.astar.astar"
 -- Core
 --- @module "engine.core.query"
 prism.Query = prism.require "core.query"
---- @module "engine.core.scheduler.scheduler"
-prism.Scheduler = prism.require "core.scheduler.scheduler"
---- @module "engine.core.scheduler.simple_scheduler"
-prism.SimpleScheduler = prism.require "core.scheduler.simple_scheduler"
+--- @module "engine.core.scheduler"
+prism.Scheduler = prism.require "core.scheduler"
 --- @module "engine.core.action"
 prism.Action = prism.require "core.action"
 --- @module "engine.core.component"
 prism.Component = prism.require "core.component"
---- @module "engine.core.relationship"
-prism.Relationship = prism.require "core.relationship"
+--- @module "engine.core.relation"
+prism.Relation = prism.require "core.relation"
 --- @module "engine.core.entity"
 prism.Entity = prism.require "core.entity"
 --- @module "engine.core.actor"
@@ -125,8 +126,8 @@ prism.RNG = prism.require "core.rng"
 prism.System = prism.require "core.system"
 --- @module "engine.core.system_manager"
 prism.SystemManager = prism.require "core.system_manager"
---- @module "engine.core.map_builder"
-prism.MapBuilder = prism.require "core.map_builder"
+--- @module "engine.core.levelbuilder"
+prism.LevelBuilder = prism.require "core.levelbuilder"
 --- @module "engine.core.map"
 prism.Map = prism.require "core.map"
 --- @module "engine.core.message"
@@ -139,6 +140,9 @@ prism.Target = prism.require "core.target"
 prism.Level = prism.require "core.level"
 --- @module "engine.core.collision"
 prism.Collision = prism.require "core.collision"
+--- @module "engine.core.turnhandler"
+prism.TurnHandler = prism.require "core.turnhandler"
+
 -- Behavior Tree
 
 prism.BehaviorTree = {}
@@ -156,51 +160,100 @@ prism.BehaviorTree.Succeeder = prism.require "core.behavior_tree.btsucceeder"
 --- @module "engine.core.behavior_tree.btconditional"
 prism.BehaviorTree.Conditional = prism.require "core.behavior_tree.btconditional"
 
+--- @class Registry
+--- @field name string
+--- @field class Object
+--- @field manualRegistration boolean
+--- @field module string
+--- @field definitions? string[]
+
+--- @type Registry[]
 prism.registries = {}
 
---- Registers a factory for a registry.
---- @param name string
---- @param type string
---- @param moduleTable table
---- @param moduleName string
-local function registerFactory(name, type, moduleTable, moduleName)
-   local registry = moduleTable[name]
-
+function prism.writeDefinitions(...)
    if prism._currentDefinitions then
-      table.insert(
-         prism._currentDefinitions,
-         string.format("Registers a %s in the %s registry.", type, name)
-      )
-      table.insert(prism._currentDefinitions, "--- @param name string A name for the factory")
-      table.insert(prism._currentDefinitions, string.format("--- @param factory %sFactory", type))
-      table.insert(
-         prism._currentDefinitions,
-         string.format("function %s.register%s(name, factory) end", moduleName, type)
-      )
-   end
-
-   moduleTable["register" .. type] = function(objectName, factory)
-      assert(registry[objectName] == nil, type .. " " .. name .. " is already registered!")
-      registry[objectName] = factory
-
-      if prism._currentDefinitions then
-         table.insert(prism._currentDefinitions, "--- @type fun(...): " .. type)
-         table.insert(
-            prism._currentDefinitions,
-            string.format("%s.%s.%s = nil", moduleName, name, objectName)
-         )
+      for _, line in ipairs({ ... }) do
+         table.insert(prism._currentDefinitions, line)
       end
    end
 end
 
+local function writeFile(name, content, mode)
+   local sourceDir = love.filesystem.getSource() -- Get the source directory
+   local outputFile = sourceDir .. "/definitions/" .. name .. ".lua"
+
+   -- Write the concatenated definitions to the file
+   local file, err = io.open(outputFile, mode)
+   if not file then
+      prism.logger.error("Failed to open file for writing: " .. (err or "Unknown error"))
+      return
+   end
+
+   file:write(content)
+   file:close()
+end
+
+--- Registers a factory for a registry.
+--- @param registry Registry
+local function registerFactory(registry)
+   local className = registry.class.className
+
+   prism.writeDefinitions(
+      string.format("--- Registers a %s in the %s registry.", className, registry.name),
+      "--- @param name string A name for the factory",
+      string.format("--- @param factory %sFactory", className),
+      string.format("function %s.register%s(name, factory) end", registry.module, className)
+   )
+
+   registry.definitions = {}
+
+   writeFile(registry.name, "--- @meta\n--- @alias " .. className .. "Name\n", "w")
+
+   local registryList = _G[registry.module][registry.name]
+   local registryStr = registry.module .. "." .. registry.name
+   _G[registry.module]["register" .. className] = function(objectName, factory)
+      assert(
+         registryList[objectName] == nil,
+         className .. " " .. objectName .. " is already registered!"
+      )
+
+      local classStr = registryStr .. "." .. objectName
+      registryList[objectName] = function(...)
+         local o = factory(...)
+         if type(o) == "table" then o.__factory = classStr end
+         return o
+      end
+
+      prism.writeDefinitions(
+         "--- @type fun(...): " .. className,
+         string.format("%s.%s.%s = nil", registry.module, registry.name, objectName)
+      )
+
+      table.insert(registry.definitions, '--- | "' .. objectName .. '"')
+   end
+end
+
+function prism.resolveFactory(path)
+   local node = _G
+   for seg in string.gmatch(path, "[^%.]+") do
+      node = node[seg]
+   end
+
+   return node
+end
+
 --- Registers a registry, a global list of game objects.
 --- @param name string The name of the registry, e.g. "components".
---- @param type string The type of the object, e.g. "Component".
---- @param manual? boolean Whether objects in the registry are registered manually with a factory. Defaults to false.
+--- @param type Object The type of the object, e.g. "Component".
+--- @param factory? boolean Whether objects in the registry are registered with a factory. Defaults to false.
 --- @param module? string The table to assign the registry to. Defaults to the prism global.
-function prism.registerRegistry(name, type, manual, module)
-   if prism.registries[name] then
-      error("A registry with name " .. name .. " is already registered!")
+function prism.registerRegistry(name, type, factory, module)
+   module = module or "prism"
+
+   for _, registry in ipairs(prism.registries) do
+      if registry.name == name then
+         error("A registry with name " .. name .. " is already registered!")
+      end
    end
 
    local moduleTable = _G[module] or prism
@@ -209,112 +262,80 @@ function prism.registerRegistry(name, type, manual, module)
    end
    moduleTable[name] = {}
 
-   local pattern = ""
-   for i = 1, #type do
-      local c = name:sub(i, i)
-      pattern = string.format("%s[%s%s]", pattern, c:lower(), c:upper())
-   end
+   --- @type Registry
+   local registry = {
+      name = name,
+      class = type,
+      manualRegistration = factory or false,
+      module = module,
+   }
+   table.insert(prism.registries, registry)
 
-   table.insert(
-      prism.registries,
-      { name = name, type = type, manual = manual or false, module = module, pattern = pattern }
+   if factory then registerFactory(registry) end
+
+   prism.writeDefinitions(
+      "--- The " .. type.className .. " registry.",
+      module .. "." .. name .. " = {}"
    )
-
-   if manual then registerFactory(name, type, moduleTable, module or "prism") end
 end
 
-prism.registerRegistry("components", prism.Component.className)
-prism.registerRegistry("relationships", prism.Relationship.className)
-prism.registerRegistry("targets", prism.Target.className, true)
-prism.registerRegistry("cells", prism.Cell.className, true)
-prism.registerRegistry("actions", prism.Action.className)
-prism.registerRegistry("actors", prism.Actor.className, true)
-prism.registerRegistry("messages", prism.Message.className)
-prism.registerRegistry("decisions", prism.Decision.className)
-prism.registerRegistry("systems", prism.System.className)
+--- Registers an object into its registry. Errors if the object has no registry.
+--- For factories (Actor, Cell, Animation, etc.) use the specific function, e.g. prism.registerActor.
+--- @param object Object The object to register.
+--- @param skipDefinitions boolean Whether to skip writing to definitions files.
+function prism.register(object, skipDefinitions)
+   if type(object) == "string" then
+      error(
+         "Tried to register a string ("
+            .. object
+            .. ") as an object. Did you mean to register a factory?"
+      )
+   end
 
---- @module "engine.core.systems.senses"
-prism.systems.Senses = prism.require "core.systems.senses"
+   assert(
+      prism.Object:is(object),
+      "Tried to register a non-Object (" .. tostring(object) .. ") object!"
+   )
 
---- @module "engine.core.components.collider"
-prism.components.Collider = prism.require "core.components.collider"
+   --- @type Registry
+   local registry
+   for _, r in ipairs(prism.registries) do
+      if r.class:is(object) then registry = r end
+   end
 
---- @module "engine.core.components.controller"
-prism.components.Controller = prism.require "core.components.controller"
+   local objectName = object.className
+   assert(registry, "Tried to register a " .. objectName .. " but it has no registry!")
+   assert(
+      not registry.manualRegistration,
+      "Tried to register an object (" .. objectName .. ") into a factory registry!"
+   )
 
---- @module "engine.core.components.player_controller"
-prism.components.PlayerController = prism.require "core.components.player_controller"
+   --- @type table<string, Object>
+   local registryList = _G[registry.module][registry.name]
+   assert(
+      registryList[objectName] == nil,
+      string.format("Tried to register duplicate %s (%s)", registry.class.className, objectName)
+   )
 
---- @module "engine.core.components.senses"
-prism.components.Senses = prism.require "core.components.senses"
+   registryList[objectName] = object
 
---- @module "engine.core.components.remembered"
-prism.components.Remembered = prism.require "core.components.remembered"
+   prism.logger.debug("Registered ", objectName, " into ", registry.module, ".", registry.name)
 
---- @module "engine.core.components.opaque"
-prism.components.Opaque = prism.require "core.components.opaque"
+   if skipDefinitions then return end
 
---- @module "engine.core.components.name"
-prism.components.Name = prism.require "core.components.name"
-
---- @module "engine.core.components.position"
-prism.components.Position = prism.require "core.components.position"
-
---- @module "engine.core.decisions.actiondecision"
-prism.decisions.ActionDecision = prism.require "core.decisions.actiondecision"
-
---- @module "engine.core.messages.actionmessage"
-prism.messages.ActionMessage = prism.require "core.messages.actionmessage"
-
---- @module "engine.core.messages.debugmessage"
-prism.messages.DebugMessage = prism.require "core.messages.debugmessage"
-
---- @module "engine.core.relationships.senses"
-prism.relationships.Senses = prism.require "core.relationships.senses"
-
---- @module "engine.core.relationships.sensedby"
-prism.relationships.SensedBy = prism.require "core.relationships.sensedby"
-
--- --- @param name string
--- --- @param factory CellFactory
--- function prism.registerCell(name, factory)
---    assert(prism.cells[name] == nil, "Cell " .. name .. " is already registered!")
---    prism.cells[name] = factory
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Cell")
---       table.insert(prism._currentDefinitions, "prism.cells." .. name .. " = nil")
---    end
--- end
---
--- --- @param name string
--- --- @param factory ActorFactory
--- function prism.registerActor(name, factory)
---    assert(prism.actors[name] == nil, "Actor " .. name .. " is already registered!")
---    prism.actors[name] = factory
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Actor")
---       table.insert(prism._currentDefinitions, "prism.actors." .. name .. " = nil")
---    end
--- end
---
--- --- @param name string
--- --- @param target TargetFactory
--- function prism.registerTarget(name, target)
---    assert(prism.targets[name] == nil, "Target " .. name .. " is already registered!")
---    prism.targets[name] = target
---
---    if prism._currentDefinitions then
---       table.insert(prism._currentDefinitions, "--- @type fun(...): Target")
---       table.insert(prism._currentDefinitions, "prism.targets." .. name .. " = nil")
---    end
--- end
+   prism.writeDefinitions(
+      "--- @class " .. object.className,
+      "local " .. object.className .. " = nil",
+      registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
+   )
+end
 
 --- @param path string The path to load into the registry from.
+--- @param registry Registry
+--- @param recurse boolean
+--- @param definitions string[]
 local function loadRegistry(path, registry, recurse, definitions)
    local info = {}
-   local items = prism[registry.name]
 
    for _, itemPath in pairs(love.filesystem.getDirectoryItems(path)) do
       local fileName = path .. "/" .. itemPath
@@ -326,38 +347,22 @@ local function loadRegistry(path, registry, recurse, definitions)
 
          local item = require(requireName)
 
-         if not registry.manual then
-            assert(
-               type(item) == "table",
-               "Expected a table from " .. fileName .. " but received a " .. type(item) .. "!"
+         if not registry.manualRegistration then
+            prism.register(item, true)
+            local objectName = item.className
+            prism.writeDefinitions(
+               '--- @module "' .. requireName .. '"',
+               registry.module .. "." .. registry.name .. "." .. objectName .. " = nil"
             )
-            local name = item.className
-            if item.stripName then name = string.gsub(item.className, registry.pattern, "") end
-
-            assert(
-               name ~= "",
-               string.format(
-                  "File %s contains type %s wihout a valid stripped name!",
-                  fileName,
-                  registry.type
-               )
-            )
-            assert(
-               items[name] == nil,
-               string.format(
-                  "File %s contains type %s with duplicate name",
-                  fileName,
-                  registry.type
-               )
-            )
-            items[name] = item
-
-            table.insert(definitions, '--- @module "' .. requireName .. '"')
-            table.insert(definitions, "prism." .. registry.name .. "." .. name .. " = nil")
          end
       elseif info.type == "directory" and recurse then
          loadRegistry(fileName, registry, recurse, definitions)
       end
+   end
+
+   if registry.manualRegistration then
+      writeFile(registry.name, table.concat(registry.definitions, "\n"), "a")
+      registry.definitions = {}
    end
 end
 
@@ -375,16 +380,18 @@ function prism.loadModule(directory)
    )
    table.insert(prism.modules, directory)
 
+   local definitions = { "--- @meta " .. string.lower(directory) }
+   prism._currentDefinitions = definitions
+
    if love.filesystem.read(directory .. "/module.lua") then
       local filename = directory:gsub("/", ".") .. ".module"
       require(filename)
+   elseif love.filesystem.read(directory .. "/init.lua") then
+      local filename = directory:gsub("/", ".")
+      require(filename)
    end
 
-   local sourceDir = love.filesystem.getSource() -- Get the source directory
-   local definitions = { "---@meta " .. string.lower(directory) }
-   prism._currentDefinitions = definitions
-
-   for _, registry in ipairs(prism.registries) do
+   for _, registry in pairs(prism.registries) do
       loadRegistry(directory .. "/" .. registry.name, registry, true, definitions)
    end
 
@@ -400,35 +407,7 @@ function prism.loadModule(directory)
 
    local lastSubdir = directory:match("([^/\\]+)$")
 
-   -- Define the output file path
-   local outputFile = sourceDir .. "/definitions/" .. lastSubdir .. ".lua"
-
-   -- Write the concatenated definitions to the file
-   local file, err = io.open(outputFile, "w")
-   if not file then
-      print("Failed to open file for writing: " .. (err or "Unknown error"))
-      return
-   end
-
-   file:write(table.concat(definitions, "\n"))
-   file:close()
-end
-
-function prism.hotload() end
-
---- This is the core turn logic, and if you need to use a different scheduler or want a different turn structure you should override this.
---- There is a version of this provided for time-based
----@param level Level
----@param actor Actor
----@param controller Controller
----@diagnostic disable-next-line
-function prism.turn(level, actor, controller)
-   local action = controller:act(level, actor)
-
-   -- we make sure we got an action back from the controller for sanity's sake
-   assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
-
-   level:perform(action)
+   writeFile(lastSubdir, table.concat(definitions, "\n"), "w")
 end
 
 --- Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
@@ -441,3 +420,6 @@ function prism.advanceCoroutine(updateCoroutine, level, decision)
    local coroutineStatus = coroutine.status(updateCoroutine)
    if coroutineStatus == "suspended" then return ret end
 end
+
+-- Load core module
+prism.loadModule(prism.path:gsub("%.", "/") .. "/core")

@@ -51,19 +51,21 @@ function Erase:getCurrentRect()
    return lx, ly, rx, ry
 end
 
+local background = prism.Color4.fromHex(0xe43b44)
+
 --- @param display Display
 function Erase:draw(editor, display)
    if not self.origin then return end
 
-   local csx, csy = display.cellSize.x, display.cellSize.y
    local lx, ly, rx, ry = self:getCurrentRect()
 
-   -- Calculate width and height
-   local w = (rx - lx + 1) * csx
-   local h = (ry - ly + 1) * csy
-
-   -- Draw the rectangle
-   love.graphics.rectangle("fill", lx * csx, ly * csy, w, h)
+   display:push()
+   for x = lx, rx do
+      for y = ly, ry do
+         display:putBG(x, y, background, math.huge)
+      end
+   end
+   display:pop()
 end
 
 function Erase:update(dt, editor)

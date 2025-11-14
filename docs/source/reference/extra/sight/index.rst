@@ -23,3 +23,10 @@ Load it with the following:
    :maxdepth: 1
 
    systems/*
+
+.. toctree::
+   :caption: Relations
+   :glob:
+   :maxdepth: 1
+
+   relations/*

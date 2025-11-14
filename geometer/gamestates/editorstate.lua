@@ -1,4 +1,5 @@
-local keybindings = require "keybindingschema"
+--- @type Controls
+local controls = geometer.require "controls"
 
 --- The game state for Geometer. This should be the only thing you have to interface with
 --- to use Geometer in a game.
@@ -10,7 +11,7 @@ local keybindings = require "keybindingschema"
 local EditorState = spectrum.GameState:extend "EditorState"
 
 --- Create a new Editor managing gamestate, attached to a
---- SpectrumAttachable, this is a Level|MapBuilder interface.
+--- SpectrumAttachable, this is a Level|LevelBuilder interface.
 --- @param attachable SpectrumAttachable
 function EditorState:__new(attachable, display, fileEnabled)
    self.editor = geometer.Editor(attachable, display, fileEnabled)
@@ -27,7 +28,8 @@ function EditorState:load()
 end
 
 function EditorState:update(dt)
-   if not self.editor.active then self.manager:pop() end
+   controls:update()
+   if not self.editor.active or controls.close.pressed then self.manager:pop() end
 
    self.editor:update(dt)
 end
@@ -50,11 +52,6 @@ end
 
 function EditorState:mousereleased(x, y, button)
    self.editor:mousereleased(x, y, button)
-end
-
-function EditorState:keypressed(key, scancode)
-   if keybindings:keypressed(key) == "close editor" then self.manager:pop() return end
-   self.editor:keypressed(key, scancode)
 end
 
 function EditorState:textinput(text)

@@ -1,21 +1,31 @@
----@class SpectrumAttachable : Object, IQueryable
----@field getCell fun(self, x:integer, y:integer): Cell
----@field setCell fun(self, x:integer, y:integer, cell: Cell|nil)
----@field addActor fun(self, actor: Actor)
----@field removeActor fun(self, actor: Actor)
----@field inBounds fun(self, x: integer, y:integer)
----@field getSize fun(): Vector2
----@field eachCell fun(self): fun(): integer, integer, Cell
----@field debug boolean
+--- @class SpectrumAttachable : Object, IQueryable
+--- @field getCell fun(self, x:integer, y:integer): Cell
+--- @field setCell fun(self, x:integer, y:integer, cell: Cell|nil)
+--- @field addActor fun(self, actor: Actor)
+--- @field removeActor fun(self, actor: Actor)
+--- @field inBounds fun(self, x: integer, y:integer)
+--- @field getSize fun(): Vector2
+--- @field eachCell fun(self): fun(): integer, integer, Cell
+--- @field debug boolean
+
+--- @class Sprite
+--- @field index? string|integer
+--- @field indices? (Sprite|string|integer)[]
+--- @field color? Color4
+--- @field background? Color4
+--- @field layer? integer
+--- @field size? integer
 
 --- @alias DisplayCell {char: (string|integer)?, fg: Color4, bg: Color4, depth: number}
----@class Display : Object
----@field width integer The width of the display in cells.
----@field height integer The height of the display in cells.
----@field cells table<number, table<number, DisplayCell>>
----@field camera Vector2 The offset to draw the display at.
----@field pushed boolean Whether to draw with the camera offset applied or not.
----@overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
+--- @class Display : Object
+--- @field width integer The width of the display in cells.
+--- @field height integer The height of the display in cells.
+--- @field cells table<number, table<number, DisplayCell>>
+--- @field camera Vector2 The offset to draw the display at.
+--- @field pushed boolean Whether to draw with the camera offset applied or not.
+--- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
+--- @field animations AnimationMessage[]
+--- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
 --- Initializes the terminal display.
@@ -30,6 +40,8 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.height = height
    self.camera = prism.Vector2()
    self.pushed = false
+   self.overridenActors = {}
+   self.animations = {}
 
    self.cells = { {} }
 
@@ -45,6 +57,32 @@ function Display:__new(width, height, spriteAtlas, cellSize)
          }
       end
    end
+end
+
+--- Updates animations in the display.
+--- @param level Level
+--- @param dt number
+function Display:update(level, dt)
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      animation.animation:update(dt)
+
+      if animation.animation.status == "paused" then self:removeAnimation(i) end
+   end
+
+   for _, _, animation in
+      level:query(prism.components.Position, prism.components.IdleAnimation):iter()
+   do
+      --- @cast animation IdleAnimation
+      animation.animation:update(dt)
+   end
+end
+
+function Display:removeAnimation(index)
+   local animation = self.animations[index]
+   if animation.actor and animation.override then self:unoverrideActor(animation.actor) end
+   table.remove(self.animations, index)
+   if animation.blocking then self.blocking = false end
 end
 
 --- Draws the entire display to the screen. This function iterates through all cells
@@ -78,6 +116,8 @@ function Display:draw()
          end
       end
    end
+
+   love.graphics.setColor(1, 1, 1, 1)
 end
 
 --- Puts the drawable components of a level (cells and actors) onto the display.
@@ -96,14 +136,88 @@ function Display:putLevel(attachable)
       end
    end
 
-   for _, position, drawable in
+   for actor, position, drawable in
       attachable:query(prism.components.Position, prism.components.Drawable):iter()
    do
-      --- @cast drawable Drawable
-      --- @cast position Position
-      local ax, ay = position:getVector():decompose()
-      self:putDrawable(ax + camX, ay + camY, drawable)
+      if not self.overridenActors[actor] then
+         --- @cast drawable Drawable
+         --- @cast position Position
+         local ax, ay = position:getVector():decompose()
+         self:putDrawable(ax + camX, ay + camY, drawable)
+      end
    end
+end
+
+local reusedPosition = prism.Vector2()
+--- Puts animations to the display.
+--- @param level Level
+--- @param ... Senses
+function Display:putAnimations(level, ...)
+   local drawnActors = {}
+   local senses = { ... }
+
+   for _, sense in ipairs(senses) do
+      for actor, position, idleAnimation in
+         sense:query(level, prism.components.Position, prism.components.IdleAnimation):iter()
+      do
+         if not drawnActors[actor] and not self.overridenActors[actor] then
+            --- @cast idleAnimation IdleAnimation
+            --- @cast position Position
+            local x, y = position:getVector():decompose()
+            local animation = idleAnimation.animation
+
+            animation:draw(self, x, y)
+            drawnActors[actor] = true
+         end
+      end
+   end
+
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      if animation.animation:isCustom() then
+         animation.animation:draw(self)
+      else
+         local x, y = animation.x, animation.y
+         if animation.actor then
+            animation.actor:getPosition(reusedPosition)
+            x = x + (reusedPosition and reusedPosition.x or 0)
+            y = y + (reusedPosition and reusedPosition.y or 0)
+         end
+
+         animation.animation:draw(self, x, y)
+      end
+   end
+end
+
+--- Removes any animations that are skippable.
+function Display:skipAnimations()
+   for i = #self.animations, 1, -1 do
+      local animation = self.animations[i]
+      if animation.skippable then self:removeAnimation(i) end
+   end
+end
+
+--- Adds an animation to the display.
+--- @param message AnimationMessage
+function Display:yieldAnimation(message)
+   table.insert(self.animations, message)
+   -- We override the actor immediately to prevent flickering
+
+   if message.actor and message.override then self:overrideActor(message.actor) end
+   if message.blocking then self.blocking = true end
+end
+
+--- Marks an actor as being manually drawn, preventing it from being drawn
+--- automatically by putLevel or putSenses methods.
+--- @param actor Actor The actor to override.
+function Display:overrideActor(actor)
+   self.overridenActors[actor] = true
+end
+
+--- Clears the override on an actor, allowing it to be drawn automatically again.
+--- @param actor Actor The actor to clear.
+function Display:unoverrideActor(actor)
+   self.overridenActors[actor] = nil
 end
 
 local tempColor = prism.Color4()
@@ -114,8 +228,6 @@ local tempColor = prism.Color4()
 --- @param cellMap table A map of cells to draw.
 --- @param alpha number The transparency level for the drawn cells (0.0 to 1.0).
 function Display:_drawCells(drawnCells, cellMap, alpha)
-   local x, y = self.camera:decompose()
-
    for cx, cy, cell in cellMap:each() do
       if not drawnCells:get(cx, cy) then
          drawnCells:set(cx, cy, true)
@@ -124,31 +236,30 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
          local drawable = cell:expect(prism.components.Drawable)
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
-         self:putDrawable(x + cx, y + cy, drawable, tempColor)
+         self:putDrawable(cx, cy, drawable, tempColor)
       end
    end
 end
 
---- Draws actors from a queryable object onto the display, handling depth and transparency.
+--- Draws actors from a Senses component onto the display, handling depth and transparency.
 --- @private
 --- @param drawnActors table A table to keep track of already drawn actors to prevent overdrawing.
---- @param queryable IQueryable An object capable of being queried for actors with drawable components.
+--- @param senses Senses An object capable of being queried for actors with drawable components.
+--- @param level Level
 --- @param alpha number The transparency level for the drawn actors (0.0 to 1.0).
-function Display:_drawActors(drawnActors, queryable, alpha)
-   local x, y = self.camera:decompose()
-
+function Display:_drawActors(drawnActors, senses, level, alpha)
    for actor, position, drawable in
-      queryable:query(prism.components.Position, prism.components.Drawable):iter()
+      senses:query(level, prism.components.Position, prism.components.Drawable):iter()
    do
       --- @cast drawable Drawable
-      if not drawnActors[actor] then
+      if not drawnActors[actor] and not self.overridenActors[actor] then
          drawnActors[actor] = true
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
 
          --- @cast position Position
          local ax, ay = position:getVector():decompose()
-         self:putDrawable(x + ax, y + ay, drawable, tempColor)
+         self:putDrawable(ax, ay, drawable, tempColor)
       end
    end
 end
@@ -157,8 +268,6 @@ end
 ---@param grid SparseGrid
 ---@param alpha number
 function Display:_drawRemembered(drawnActors, grid, alpha)
-   local cx, cy = self.camera:decompose()
-
    for x, y, actor in grid:each() do
       if not drawnActors[actor] then
          drawnActors[actor] = true
@@ -167,7 +276,7 @@ function Display:_drawRemembered(drawnActors, grid, alpha)
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
 
-         self:putDrawable(x + cx, y + cy, drawable, tempColor)
+         self:putDrawable(x, y, drawable, tempColor)
       end
    end
 end
@@ -177,7 +286,9 @@ end
 --- senses are drawn with reduced opacity. Explored areas are drawn with even lower opacity.
 --- @param primary Senses[] A list of primary Senses objects.
 --- @param secondary Senses[] A list of secondary Senses objects.
-function Display:putSenses(primary, secondary)
+--- @param level Level The level.
+function Display:putSenses(primary, secondary, level)
+   self:push()
    local drawnCells = prism.SparseGrid()
 
    for _, senses in ipairs(primary) do
@@ -193,19 +304,17 @@ function Display:putSenses(primary, secondary)
    end
 
    for _, senses in ipairs(secondary) do
-      if senses.explored then
-         self:_drawCells(drawnCells, senses.explored, 0.3)
-      end
+      if senses.explored then self:_drawCells(drawnCells, senses.explored, 0.3) end
    end
 
    local drawnActors = {}
 
    for _, senses in ipairs(primary) do
-      self:_drawActors(drawnActors, senses, 1)
+      self:_drawActors(drawnActors, senses, level, 1)
    end
 
    for _, senses in ipairs(secondary) do
-      self:_drawActors(drawnActors, senses, 0.7)
+      self:_drawActors(drawnActors, senses, level, 0.7)
    end
 
    for _, senses in ipairs(primary) do
@@ -213,13 +322,55 @@ function Display:putSenses(primary, secondary)
    end
 
    for _, senses in ipairs(secondary) do
-      if senses.remembered then
-         self:_drawRemembered(drawnActors, senses.remembered, 0.3)
+      if senses.remembered then self:_drawRemembered(drawnActors, senses.remembered, 0.3) end
+   end
+
+   self:putAnimations(level, unpack(primary), unpack(secondary))
+   self:pop()
+end
+
+--- Puts a Sprite onto the display grid at specified coordinates, considering its depth.
+--- If a `color` or `layer` is provided, they will override the drawable's default values.
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @param sprite Sprite The drawable object to put.
+--- @param color Color4? An optional color to use for the drawable.
+--- @param layer number? An optional layer to use for depth sorting.
+function Display:putSprite(x, y, sprite, color, layer)
+   local size = sprite.size or 1
+   if size > 1 and sprite.indices then
+      local i = 1
+      for y = y, y + size - 1 do
+         for x = x, x + size - 1 do
+            local isSprite = type(sprite.indices[i]) == "table"
+            self:put(
+               x,
+               y,
+               isSprite and sprite.indices[i].index or sprite.indices[i],
+               color or (isSprite and sprite.indices[i].color or sprite.color),
+               isSprite and sprite.indices[i].background or sprite.background,
+               layer or (isSprite and sprite.indices[i].layer or sprite.layer)
+            )
+            i = i + 1
+         end
+      end
+   else
+      for ox = 1, size do
+         for oy = 1, size do
+            self:put(
+               x + ox - 1,
+               y + oy - 1,
+               sprite.index,
+               color or sprite.color,
+               sprite.background,
+               layer or sprite.layer
+            )
+         end
       end
    end
 end
 
---- Puts a Drawable object onto the display grid at specified coordinates, considering its depth.
+--- Puts a Drawable onto the display grid at specified coordinates, considering its depth.
 --- If a `color` or `layer` is provided, they will override the drawable's default values.
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
@@ -227,18 +378,19 @@ end
 --- @param color Color4? An optional color to use for the drawable.
 --- @param layer number? An optional layer to use for depth sorting.
 function Display:putDrawable(x, y, drawable, color, layer)
-   for ox = 1, drawable.size do
-      for oy = 1, drawable.size do
-         self:put(
-            x + ox - 1,
-            y + oy - 1,
-            drawable.index,
-            color or drawable.color,
-            drawable.background,
-            layer or drawable.layer
-         )
-      end
-   end
+   self:putSprite(x, y, drawable, color, layer)
+end
+
+--- Puts an Actor onto the display grid at specified coordinates, considering its depth.
+--- If a `color` or `layer` is provided, they will override the drawable's default values.
+--- Will error if the actor has no Drawable.
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @param actor Actor The actor to put.
+--- @param color Color4? An optional color to use for the drawable.
+--- @param layer number? An optional layer to use for depth sorting.
+function Display:putActor(x, y, actor, color, layer)
+   self:putSprite(x, y, actor:expect(prism.components.Drawable), color, layer)
 end
 
 --- Puts a character, foreground color, and background color at a specific grid position.
@@ -246,8 +398,8 @@ end
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
 --- @param char string|integer The character or index to draw.
---- @param fg? Color4 The foreground color.
---- @param bg? Color4 The background color.
+--- @param fg? Color4 The foreground color. Defaults to white.
+--- @param bg? Color4 The background color. Defaults to transparent.
 --- @param layer number? The draw layer (higher numbers draw on top). Defaults to -math.huge.
 function Display:put(x, y, char, fg, bg, layer)
    if self.pushed then
@@ -275,12 +427,12 @@ end
 --- @param bg Color4 The background color to set.
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putBG(x, y, bg, layer)
-   if x < 1 or x > self.width or y < 1 or y > self.height then return end
-
    if self.pushed then
       x = x + self.camera.x
       y = y + self.camera.y
    end
+
+   if x < 1 or x > self.width or y < 1 or y > self.height then return end
 
    bg = bg or prism.Color4.TRANSPARENT
 
@@ -301,7 +453,7 @@ end
 --- @param layer number? The draw layer (optional).
 --- @param align "left"|"center"|"right"? The alignment of the string within the specified width.
 --- @param width integer? The width within which to align the string.
-function Display:putString(x, y, str, fg, bg, layer, align, width)
+function Display:print(x, y, str, fg, bg, layer, align, width)
    local strLen = #str
    width = width or self.width
 
@@ -425,6 +577,7 @@ function Display:pop()
 end
 
 --- Draws a hollow rectangle on the display grid using specified characters and colors.
+--- @param mode "fill"|"line" The mode to draw the rectangle in.
 --- @param x integer The starting X grid coordinate of the rectangle.
 --- @param y integer The starting Y grid coordinate of the rectangle.
 --- @param w integer The width of the rectangle.
@@ -433,30 +586,21 @@ end
 --- @param fg Color4? The foreground color.
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
-function Display:putRect(x, y, w, h, char, fg, bg, layer)
-   for dx = 0, w - 1 do
-      self:put(x + dx, y, char, fg, bg, layer)
-      self:put(x + dx, y + h - 1, char, fg, bg, layer)
-   end
-   for dy = 1, h - 2 do
-      self:put(x, y + dy, char, fg, bg, layer)
-      self:put(x + w - 1, y + dy, char, fg, bg, layer)
-   end
-end
-
---- Draws a filled rectangle on the display grid using specified characters and colors.
---- @param x integer The starting X grid coordinate of the rectangle.
---- @param y integer The starting Y grid coordinate of the rectangle.
---- @param w integer The width of the rectangle.
---- @param h integer The height of the rectangle.
---- @param char string|integer The character or index to fill the rectangle with.
---- @param fg Color4? The foreground color.
---- @param bg Color4? The background color.
---- @param layer number? The draw layer.
-function Display:putFilledRect(x, y, w, h, char, fg, bg, layer)
-   for dx = 0, w - 1 do
-      for dy = 0, h - 1 do
-         self:put(x + dx, y + dy, char, fg, bg, layer)
+function Display:rectangle(mode, x, y, w, h, char, fg, bg, layer)
+   if mode == "fill" then
+      for dx = 0, w - 1 do
+         self:put(x + dx, y, char, fg, bg, layer)
+         self:put(x + dx, y + h - 1, char, fg, bg, layer)
+      end
+      for dy = 1, h - 2 do
+         self:put(x, y + dy, char, fg, bg, layer)
+         self:put(x + w - 1, y + dy, char, fg, bg, layer)
+      end
+   else
+      for dx = 0, w - 1 do
+         for dy = 0, h - 1 do
+            self:put(x + dx, y + dy, char, fg, bg, layer)
+         end
       end
    end
 end
@@ -470,25 +614,10 @@ end
 --- @param fg Color4? The foreground color.
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
-function Display:putLine(x0, y0, x1, y1, char, fg, bg, layer)
-   local dx = math.abs(x1 - x0)
-   local dy = math.abs(y1 - y0)
-   local sx = x0 < x1 and 1 or -1
-   local sy = y0 < y1 and 1 or -1
-   local err = dx - dy
-
-   while true do
-      self:put(x0, y0, char, fg, bg, layer)
-      if x0 == x1 and y0 == y1 then break end
-      local e2 = 2 * err
-      if e2 > -dy then
-         err = err - dy
-         x0 = x0 + sx
-      end
-      if e2 < dx then
-         err = err + dx
-         y0 = y0 + sy
-      end
+function Display:line(x0, y0, x1, y1, char, fg, bg, layer)
+   local line = prism.Bresenham(x0, y0, x1, y1)
+   for _, position in ipairs(line) do
+      self:put(position[1], position[2], char, fg, bg, layer)
    end
 end
 

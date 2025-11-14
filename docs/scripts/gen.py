@@ -30,6 +30,8 @@ def process_files(input_dir, output_dir):
         for file in files:
             if not file.endswith(".lua"):
                 continue
+            if file == "meta.lua":
+                continue
             input_file_path = os.path.join(root, file)
             output_file_path = os.path.join(
                 output_dir, os.path.relpath(input_file_path, input_dir)
@@ -44,7 +46,7 @@ def process_files(input_dir, output_dir):
 
             class_names = []
             for line in content:
-                match = re.search(r"@class\s+(\S+)", line)
+                match = re.search(r"^---\s*@class\s+(\S+)", line)
                 if match:
                     class_names.append(match.group(1))
             if len(class_names) > 0:

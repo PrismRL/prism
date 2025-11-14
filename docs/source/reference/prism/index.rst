@@ -6,8 +6,8 @@ be accessed from the ``prism`` global, e.g. ``prism.Level``.
 
 **Registries**
 
-Registries get automatically loaded by :lua:func:`loadModule`. They hold all of the game objects,
-making them easy to access, e.g. ``prism.actors.Player()``.
+Registries get automatically loaded by :lua:func:`prism.loadModule`. They hold all of the game
+objects, making them easy to access, e.g. ``prism.actors.Player()``.
 
 - .. lua:data:: prism.actors: table<string, Actor>
 
@@ -33,6 +33,9 @@ making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:data:: prism.decisions: table<string, Decision>
 
      The decision registry.
+- .. lua:data:: prism.schedulers: table<string, Scheduler>
+
+     The scheduler registry.
 
 .. toctree::
    :caption: Core
@@ -48,7 +51,7 @@ making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:function:: prism.loadModule(directory: string)
 
      Loads a module into prism, automatically loading objects based on directory.
-     . Will also run ``module/module.lua`` for any other set up.
+     Will also run ``module/module.lua`` or ``module/init.lua`` for any other set up.
 
      :param string directory: The root directory of the module.
 - .. lua:function:: prism.registerActor(name: string, factory: fun(...): Actor)
@@ -59,33 +62,35 @@ making them easy to access, e.g. ``prism.actors.Player()``.
      Registers a cell factory into the cells registry.
 - .. lua:function:: prism.registerTarget(name: string, factory: fun(...): Target)
 
-     Registers a target factory into the targets registry.
-- .. lua:function:: prism.turn(level: Level, actor: Actor, controller: Controller)
+     Registers a target factory into the targets.
+- .. lua:function:: prism.register(object: Object)
 
-     This is the core turn logic, and if you need to use a different scheduler or
-     want a different turn structure you should override this.
-
-     :param Level level: The current level.
-     :param Actor actor: The actor taking their turn.
-     :param Controller controller: The actor's controller, for convenience.
+     Registers an object into its registry. Errors if the object has no registry.
 - .. lua:function:: prism.advanceCoroutine()
 
      Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
 
 .. toctree::
-   :caption: Basic components
+   :caption: Core components
    :glob:
    :maxdepth: 1
 
    core/components/*
 
 .. toctree::
-   :caption: Basic systems
+   :caption: Core systems
    :glob:
    :maxdepth: 1
 
    core/systems/*
    core/collision
+
+.. toctree::
+   :caption: Core relations
+   :glob:
+   :maxdepth: 1
+
+   core/relations/*
 
 .. toctree::
    :caption: Messages & decisions

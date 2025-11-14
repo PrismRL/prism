@@ -4,13 +4,15 @@
 --- !doc protected-members
 --- @class Action : Object
 --- @field owner Actor The actor taking the action.
+--- @field name? string A name for the action.
 --- @field protected targets Target[] (static) A list of targets to apply the action to.
 --- @field protected targetObjects Object[] The objects that correspond to the targets.
 --- @field protected requiredComponents Component[] (static) Components required for an actor to take this action.
---- @field protected reaction boolean 
+--- @field protected reaction boolean
 --- @field protected abstract boolean
 --- @overload fun(owner: Actor, targets: Object[]): Action
 local Action = prism.Object:extend("Action")
+
 Action.targets = {}
 
 --- Constructor for the Action class.
@@ -18,7 +20,7 @@ Action.targets = {}
 ---@param ... Object An optional list of target actors. Not all actions require targets.
 function Action:__new(owner, ...)
    assert(owner, "Actions must have an owner!")
-   
+
    self.owner = owner
    self.targets = self.targets or {}
    self.targetObjects = { ... }
@@ -35,7 +37,13 @@ end
 --- @private
 function Action:__validateTargets(level)
    if #self.targets < #self.targetObjects then
-      return false, string.format("Expected %s targets got %s targets for action %s", #self.targets, #self.targetObjects, self.className)
+      return false,
+         string.format(
+            "Expected %s targets got %s targets for action %s",
+            #self.targets,
+            #self.targetObjects,
+            self.className
+         )
    end
 
    local previousTargets = {}
@@ -81,10 +89,10 @@ function Action:perform(level, ...)
    error("This is a virtual method and must be overriden by subclasses!")
 end
 
---- Returns the target actor at the specified index.
----@param n number The index of the target actor to retrieve.
----@return any target The target actor at the specified index.
-function Action:getTarget(n)
+--- Returns the targeted object at the specified index.
+---@param n number The index of the targeted object to retrieve.
+---@return any target The targeted object at the specified index.
+function Action:getTargeted(n)
    if self.targetObjects[n] then return self.targetObjects[n] end
 end
 
@@ -95,17 +103,17 @@ function Action:getNumTargets()
    return #self.targets
 end
 
---- Returns the target object at the specified index.
---- @param index number The index of the target object to retrieve.
---- @return Target|nil targetObject
-function Action:getTargetObject(index)
+--- Returns the target at the specified index.
+--- @param index number The index of the target to retrieve.
+--- @return Target? targetObject
+function Action:getTarget(index)
    return self.targets[index]
 end
 
 --- Determines if the specified actor is a target of this action.
 --- @param actor Actor The actor to check if they are a target of this action.
 --- @return boolean -- True if the specified actor is a target of this action, false otherwise.
-function Action:hasTarget(actor)
+function Action:hasTargeted(actor)
    for _, a in pairs(self.targetObjects) do
       if a == actor then return true end
    end
@@ -122,6 +130,12 @@ end
 function Action:validateTarget(n, level, owner, toValidate, previousTargets)
    --- @diagnostic disable-next-line
    return self.targets[n] and self.targets[n]:validate(level, owner, toValidate, previousTargets)
+end
+
+--- Returns the action's name, or the class name if it's nil.
+--- @return string name
+function Action:getName()
+   return self.name or self.className
 end
 
 return Action

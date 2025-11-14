@@ -3,16 +3,16 @@
 --- @field owner Actor
 --- @field private weight number
 --- @field private volume number
---- @field stackable false|fun(...): Actor
+--- @field stackable string Other items with this identifier will stack with it.
 --- @overload fun(options: ItemOptions?): Item
 local Item = prism.Component:extend("Item")
 Item.weight = 0
 Item.volume = 0
-Item.stackable = false
+Item.stackable = nil
 Item.stackCount = 1
 Item.stacklimit = math.huge
 
---- @alias ItemOptions { weight?: number, volume?: number, stackable?: ActorFactory|boolean, stackLimit: number|nil }
+--- @alias ItemOptions { weight?: number, volume?: number, stackable?: string, stackLimit: number|nil, stackCount?: number }
 
 --- Constructor for the Item component, see ItemOptions for available options.
 --- @param options ItemOptions
@@ -21,8 +21,9 @@ function Item:__new(options)
 
    self.weight = options.weight or 0
    self.volume = options.volume or 0
-   self.stackable = options.stackable or false
+   self.stackable = options.stackable
    self.stackLimit = options.stackable and options.stackLimit or math.huge
+   self.stackCount = options.stackCount or 1
 end
 
 --- Stacks an actor into this item. Updates the stackCount of both this item and
@@ -53,7 +54,7 @@ function Item:split(count)
 
    self.stackCount = self.stackCount - count
 
-   local newActor = self.stackable()
+   local newActor = self.owner:clone()
    local newItem = newActor:expect(prism.components.Item)
    newItem.stackCount = count
 

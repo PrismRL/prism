@@ -5,7 +5,7 @@
 --- @field level Level The level object representing the game environment.
 --- @field display Display The display object used for rendering.
 --- @field message ActionMessage The most recent action message.
---- @field geometer EditorState An editor state for debugging or managing geometry.
+--- @field editor EditorState An editor state for debugging or managing geometry.
 local LevelState = spectrum.GameState:extend("LevelState")
 
 --- Constructs a new LevelState.
@@ -19,7 +19,7 @@ function LevelState:__new(level, display)
    self.decision = nil
    self.message = nil
    self.display = display
-   self.geometer = geometer.EditorState(self.level, self.display)
+   if geometer then self.editor = spectrum.gamestates.EditorState(self.level, self.display) end
    self.time = 0
 end
 
@@ -32,7 +32,7 @@ function LevelState:shouldAdvance()
    --- @diagnostic disable-next-line
    if not self.manager or self.manager.states[#self.manager.states] ~= self then return false end
 
-   return not hasDecision or decisionDone
+   return (not hasDecision or decisionDone) and not self.display.blocking
 end
 
 --- Updates the state of the level.
@@ -40,11 +40,26 @@ end
 --- @param dt number The time delta since the last update.
 function LevelState:update(dt)
    self.time = self.time + dt
+   self.display:update(self.level, dt)
+
    while self:shouldAdvance() do
       local message = prism.advanceCoroutine(self.updateCoroutine, self.level, self.decision)
       self.decision, self.message = nil, nil
       if message then self:handleMessage(message) end
    end
+
+   if self.decision then self:updateDecision(dt, self.decision.actor, self.decision) end
+
+   if spectrum.Input.key["`"].pressed and self.editor then self.manager:push(self.editor) end
+end
+
+--- Sets the action for the current decision, if one exists.
+--- @param action Action The action to set for the current decision.
+--- @return boolean success True if the action was successfully set; false otherwise.
+--- @return string? error An error message if the action could not be set.
+function LevelState:setAction(action)
+   if self.decision then return self.decision:setAction(action, self.level) end
+   return false, "No decision to set action for."
 end
 
 --- Handles incoming messages from the coroutine.
@@ -52,10 +67,13 @@ end
 --- @param message Message The message to handle.
 function LevelState:handleMessage(message)
    if prism.decisions.ActionDecision:is(message) then
-      ---@cast message ActionDecision
+      --- @cast message ActionDecision
       self.decision = message
-   elseif prism.messages.DebugMessage:is(message) then
-      self.manager:push(self.geometer)
+   elseif prism.messages.DebugMessage:is(message) and self.editor then
+      self.manager:push(self.editor)
+   elseif prism.messages.AnimationMessage:is(message) then
+      --- @cast message AnimationMessage
+      self.display:yieldAnimation(message)
    end
 end
 
@@ -97,16 +115,12 @@ function LevelState:draw()
 
    local primary, secondary = self:getSenses()
    -- Render the level using the actor’s senses
-   self.display:putSenses(primary, secondary)
+   self.display:putSenses(primary, secondary, self.level)
    self.display:draw()
 end
 
-function LevelState:keypressed(key, scancode)
-   if key == "`" then self.manager:push(self.geometer) end
-end
-
 --- This method is invoked each update when a decision exists
---- and its response is not yet valid.. Override this method in subclasses to implement
+--- and its response is not yet valid. Override this method in subclasses to implement
 --- custom decision-handling logic.
 --- @param dt number The time delta since the last update.
 --- @param actor Actor The actor responsible for making the decision.

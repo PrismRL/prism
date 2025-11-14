@@ -11,7 +11,7 @@
 --- @field entry DropTableEntry The actual actor to drop.
 --- @field quantity? integer The amount to drop. Defaults to 1.
 
---- @alias DropTableEntry ActorFactory|Actor
+--- @alias DropTableEntry ActorName|Actor
 
 --- A drop table which tracks what items the actor should drop upon death.
 --- @class DropTable : Component
@@ -57,15 +57,15 @@ end
 --- @param item DropTableEntry
 --- @return Actor[] drops
 function DropTable:quantifyItem(quantity, item)
-   if type(item) ~= "function" then
+   if type(item) ~= "string" then
       if quantity > 1 then
          prism.logger.warn("DropTable entry had specific actor and quantity >1 dropping 1 instead!")
       end
 
-      return { item }
+      return { item:clone() }
    end
 
-   local dummy = item()
+   local dummy = prism.actors[item]()
    if prism.components.Item and dummy:has(prism.components.Item) then
       dummy:expect(prism.components.Item).stackCount = quantity
       return { dummy }
@@ -73,7 +73,7 @@ function DropTable:quantifyItem(quantity, item)
 
    local drops = {}
    for _ = 1, quantity do
-      table.insert(drops, item())
+      table.insert(drops, prism.actors[item]())
    end
 
    return drops

@@ -4,7 +4,7 @@
 local SightSystem = prism.System:extend("SightSystem")
 
 function SightSystem:getRequirements()
-   return prism.systems.Senses
+   return prism.systems.SensesSystem
 end
 
 -- These functions update the fov and visibility of actors on the level.
@@ -47,14 +47,12 @@ function SightSystem:updateSeenActors(level, actor)
    local sensesComponent = actor:get(prism.components.Senses)
    if not sensesComponent then return end
 
-   actor:removeAllRelationships(prism.relationships.Sees)
+   actor:removeAllRelations(prism.relations.SeesRelation)
 
-   local query = level:query()
    for x, y, _ in sensesComponent.cells:each() do
-      for other in query:at(x, y):iter() do
-         actor:addRelationship(prism.relationships.Sees, other)
-         actor:addRelationship(prism.relationships.Senses, other)
-         sensesComponent.actors:addActor(other)
+      for other, _ in pairs(level.actorStorage:getSparseMap():get(x, y)) do
+         actor:addRelation(prism.relations.SeesRelation, other)
+         actor:addRelation(prism.relations.SensesRelation, other)
       end
    end
 end

@@ -1,6 +1,7 @@
 if not prism then error("Spectrum depends on prism!") end
 
 spectrum = {}
+--- @type string
 spectrum.path = ...
 
 function spectrum.require(p)
@@ -16,14 +17,17 @@ spectrum.SpriteAtlas = spectrum.require "spriteatlas"
 --- @module "spectrum.display"
 spectrum.Display = spectrum.require "display"
 
---- @module "spectrum.keybindings"
-spectrum.Keybinding = spectrum.require "keybindings"
+--- @module "spectrum.input"
+spectrum.Input = spectrum.require "input"
 
---- @module "spectrum.gamestates.statemanager"
-spectrum.StateManager = spectrum.require "gamestates.statemanager"
+--- @module "spectrum.animation"
+spectrum.Animation = spectrum.require "animation"
 
---- @module "spectrum.gamestates.gamestate"
-spectrum.GameState = spectrum.require "gamestates.gamestate"
+--- @module "spectrum.gamestate"
+spectrum.GameState = spectrum.require "gamestate"
 
---- @module "spectrum.gamestates.levelstate"
-spectrum.LevelState = spectrum.require "gamestates.levelstate"
+--- @module "spectrum.statemanager"
+spectrum.StateManager = spectrum.require "statemanager"
+
+prism.registerRegistry("animations", spectrum.Animation, true, "spectrum")
+prism.registerRegistry("gamestates", spectrum.GameState, false, "spectrum")

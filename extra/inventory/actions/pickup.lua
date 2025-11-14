@@ -2,9 +2,7 @@ local sf = string.format
 local Name = prism.components.Name
 
 local PickupTarget = prism
-   .InventoryTarget()
-   :outsideInventory()
-   :with(prism.components.Item)
+   .Target(prism.components.Item)
    :range(0)
    :filter(function(level, owner, target)
       --- @cast owner Actor
@@ -30,7 +28,11 @@ function Pickup:perform(level, item)
    if prism.components.Log then
       Log = prism.components.Log
       Log.addMessage(self.owner, sf("You pick up the %s", Name.get(item)))
-      Log.addMessageSensed(level, self, sf("%s picks up the %s", Name.get(self.owner), Name.get(item)))
+      Log.addMessageSensed(
+         level,
+         self,
+         sf("%s picks up the %s", Name.get(self.owner), Name.get(item))
+      )
    end
 end
 

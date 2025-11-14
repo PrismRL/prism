@@ -25,7 +25,7 @@ Next we'll register a ``Stairs`` actor in ``modules/game/actors/stairs.lua`` wit
       return prism.Actor.fromComponents {
          prism.components.Name("Stairs"),
          prism.components.Position(),
-         prism.components.Drawable { char = ">" },
+         prism.components.Drawable { index = ">" },
          prism.components.Stair(),
          prism.components.Remembered(),
       }
@@ -71,7 +71,7 @@ need anything inside.
 
    --- @class DescendMessage : Message
    --- @overload fun(): DescendMessage
-   local DescendMessage = prism.Object:extend("DescendMessage")
+   local DescendMessage = prism.Message:extend("DescendMessage")
 
    return DescendMessage
 
@@ -90,7 +90,7 @@ Next, we'll define the ``Descend`` action.
 
    function Descend:perform(level)
       level:removeActor(self.owner)
-      level:yield(prism.messages.Descend())
+      level:yield(prism.messages.DescendMessage())
    end
 
    return Descend
@@ -98,14 +98,14 @@ Next, we'll define the ``Descend`` action.
 First we create a target that targets actors with the ``Stair`` component within range 1. Then we
 create our ``Descend`` action, which is similar to ``Die`` but yields a different message.
 
-Now let's add some code to ``GameLevelState:keypressed``. After we figure out which direction the
-user just pressed we'll add the following. Make sure this is checked before the `Move` action is
+Now let's add some code to ``GameLevelState:updateDecision``. After we figure out which direction
+the user just pressed we'll add the following. Make sure this is checked before the `Move` action is
 considered.
 
 .. code-block:: lua
 
-   if keybindOffsets[action] then
-      local destination = owner:getPosition() + keybindOffsets[action]
+   if controls.move.pressed then
+      local destination = owner:getPosition() + controls.move.vector
 
       -- add this
       local descendTarget = self.level:query(prism.components.Stairs)
@@ -113,10 +113,7 @@ considered.
          :first()
 
       local descend = prism.actions.Descend(owner, descendTarget)
-      if self.level:canPerform(descend) then
-         decision:setAction(descend)
-         return
-      end
+      if self:setAction(descend) then return end
 
 Creating the next floor
 -----------------------
@@ -126,8 +123,8 @@ Now that we've got everything set up we need to actually handle the descend mess
 
 .. code-block:: lua
 
-   if prism.messages.Descend:is(message) then
-      self.manager:enter(GameLevelState(self.display))
+   if prism.messages.DescendMessage:is(message) then
+      self.manager:enter(prism.gamestates.GameLevelState(self.display))
    end
 
 If we run the game and find ourselves a staircase we'll be able to go down to a new floor!

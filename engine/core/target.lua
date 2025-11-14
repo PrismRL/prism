@@ -6,15 +6,19 @@
 --- @field hint any
 --- @field _optional boolean
 --- @field inLevel boolean
---- @field validators (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)[]
---- @field reqcomponents table<Component, boolean>
+--- @field type? Object An object prototype for the targeted to adhere to.
+--- @field rangeValue integer
+--- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
+--- @field requiredComponents table<Component, boolean>
+--- @field excludedComponents table<Component, boolean>
 --- @overload fun(...: Component): Target
 local Target = prism.Object:extend("Target")
 
 --- Creates a new Target and accepts components and sends them to with().
 function Target:__new(...)
    self.validators = {}
-   self.reqcomponents = {}
+   self.requiredComponents = {}
+   self.excludedComponents = {}
    self.inLevel = true
    self.hint = nil -- A hint that can be set to let the UI know how to handle the target.
    self._optional = false
@@ -60,17 +64,40 @@ end
 --- @param ... Component
 function Target:with(...)
    for _, comp in pairs({ ... }) do
-      self.reqcomponents[comp] = true
+      self.requiredComponents[comp] = true
    end
 
    --- @param target Entity
    self.validators["with"] = function(level, owner, target)
-      if not next(self.reqcomponents) then return true end
+      if not next(self.requiredComponents) then return true end
 
       if not prism.Entity:is(target) then return false end
 
-      for comp, _ in pairs(self.reqcomponents) do
+      for comp, _ in pairs(self.requiredComponents) do
          if not target:has(comp) then return false end
+      end
+
+      return true
+   end
+
+   return self
+end
+
+--- Adds a list of components that the target object must not have.
+--- @param ... Component
+function Target:without(...)
+   for _, comp in pairs({ ... }) do
+      self.excludedComponents[comp] = true
+   end
+
+   --- @param target Entity
+   self.validators["with"] = function(level, owner, target)
+      if not next(self.excludedComponents) then return true end
+
+      if not prism.Entity:is(target) then return false end
+
+      for comp, _ in pairs(self.excludedComponents) do
+         if target:has(comp) then return false end
       end
 
       return true
@@ -87,9 +114,10 @@ function Target:outsideLevel()
 end
 
 --- Checks if the target is within the specified range, and if it's an Actor or Vector2.
---- @param range integer
-function Target:range(range)
-   self.range = range
+--- @param range integer The maximum range to the target.
+--- @param distanceType? DistanceType Optional distance type.
+function Target:range(range, distanceType)
+   self.rangeValue = range
 
    --- @param owner Actor
    --- @param target any
@@ -99,12 +127,12 @@ function Target:range(range)
       if prism.Actor:is(target) then
          if not target:getPosition() then return false end
          --- @cast target Actor
-         return owner:getRange(target) <= self.range
+         return owner:getRange(target, distanceType) <= self.rangeValue
       end
 
       if prism.Vector2:is(target) then
          --- @cast target Vector2
-         return owner:getRangeVec(target) <= self.range
+         return owner:getRangeVec(target, distanceType) <= self.rangeValue
       end
 
       return false
@@ -127,6 +155,22 @@ function Target:isPrototype(type)
    return self
 end
 
+--- Shorthand for isPrototype(prism.Actor).
+function Target:isActor()
+   return self:isPrototype(prism.Actor)
+end
+
+--- Shorthand for isPrototype(prism.Cell).
+function Target:isCell()
+   return self:isPrototype(prism.Cell)
+end
+
+--- Shorthand for isPrototype(prism.Vector2).
+function Target:isVector2()
+   return self:isPrototype(prism.Vector2)
+end
+
+--- Checks if the target is specific Lua type.
 --- @param luaType type
 function Target:isType(luaType)
    self.validators["luatype"] = function(_, _, target)
@@ -145,7 +189,7 @@ function Target:sensed()
 
       if prism.Actor:is(target) then
          --- @cast target Actor
-         return senses.actors:hasActor(target)
+         return owner:hasRelation(prism.relations.SensesRelation, target)
       end
 
       if prism.Vector2:is(target) then
@@ -166,30 +210,30 @@ end
 --- is passable by the given mask. Fails if it can't reach the target.
 --- @param mask Bitmask
 function Target:los(mask)
-   --- @param level Level
-   --- @param owner Actor
    self.validators["los"] = function(level, owner, target)
       if not prism.Actor:is(target) and not prism.Vector2:is(target) then return false end
       if not owner:getPosition() then return false end
 
       if prism.Actor:is(target) and not target:getPosition() then return false end
 
-      local ownerX, ownerY = owner:expectPosition():decompose()
-      local targetX, targetY
+      --- @type Vector2
+      local targetPosition = target
       if prism.Actor:is(target) then
          --- @cast target Actor
-         targetX, targetY = target:expectPosition():decompose()
-      else
-         --- @cast target Vector2
-         targetX, targetY = target:decompose()
+         targetPosition = target:expectPosition()
       end
-      local points = prism.Bresenham(ownerX, ownerY, targetX, targetY)
+
+      local ownerX, ownerY = owner:expectPosition():decompose()
+      local points = prism.Bresenham(ownerX, ownerY, targetPosition:decompose())
 
       for _, point in ipairs(points) do
          local x, y = point[1], point[2]
-         if x == ownerX and y == ownerY then return true end
-         if not level:getCellPassable(x, y, mask) then return false end
+         if x ~= ownerX and y ~= ownerY then
+            if not level:getCellPassable(x, y, mask) then return false end
+         end
       end
+
+      return true
    end
 
    return self
@@ -200,9 +244,7 @@ function Target:unique()
    self.validators["unique"] = function(_, _, target, previousTargets)
       if not previousTargets then return true end
       for _, prev in ipairs(previousTargets) do
-         if prev == target then
-            return false   
-         end
+         if prev == target then return false end
       end
       return true
    end
@@ -210,15 +252,24 @@ function Target:unique()
    return self
 end
 
---- Requires that the target is related to the action owner via a specific relationship type.
---- @param relationshipType Relationship
-function Target:related(relationshipType)
-   assert(relationshipType, "Missing relationship type")
+--- Requires that the target is related to the action owner via a specific relation type.
+--- @param relationType Relation
+function Target:related(relationType)
+   assert(relationType, "Missing relation type")
 
    --- @param owner Actor
    self.validators["related"] = function(_, owner, target)
       if not prism.Entity:is(target) then return false end
-      return owner:hasRelationship(relationshipType, target)
+      return owner:hasRelation(relationType, target)
+   end
+
+   return self
+end
+
+--- Excludes the owner from being a valid target.
+function Target:excludeOwner()
+   self.validators["excludeOwner"] = function(_, owner, target)
+      return owner ~= target
    end
 
    return self

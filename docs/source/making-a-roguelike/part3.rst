@@ -14,6 +14,7 @@ Getting healthy
    --- @class Health : Component
    --- @field maxHP integer
    --- @field hp integer
+   --- @overload fun(hp: integer): Health
    local Health = prism.Component:extend("Health")
 
    function Health:__new(maxHP)
@@ -75,13 +76,11 @@ representing the amount of damage we will apply.
 
 .. code-block:: lua
 
-   local DamageTarget = prism.Target()
-      :isType("number")
+   local DamageTarget = prism.Target():isType("number")
 
    --- @class Damage : Action
    --- @overload fun(owner: Actor, damage: number): Damage
    local Damage = prism.Action:extend("Damage")
-   Damage.name = "Damage"
    Damage.targets = { DamageTarget }
    Damage.requiredComponents = { prism.components.Health }
 
@@ -105,14 +104,12 @@ to add the following:
       ...
 
       local damage = prism.actions.Damage(kicked, 1)
-      if level:canPerform(damage) then
-         level:perform(damage)
-      end
+      level:tryPerform(damage)
    end
 
 That's all for now
 ------------------
 
 We've started on a basic health system and made our ``Kick`` action deal damage. In the :doc:`next
-chapter <part4>` we'll implement the player health, make kobolds dangerous by giving them the attack
-action, and implement the required logic for the player dying.
+chapter <part4>` we'll implement player health, make kobolds dangerous by giving them the attack
+action, and implement the required logic for player death.

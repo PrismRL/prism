@@ -13,7 +13,7 @@ end
 --- Gets a reference to the inner vector. Don't pass this around
 --- or modify this! Treat it as immutable!
 function Position:getVector()
-    return self._position
+   return self._position
 end
 
 return Position

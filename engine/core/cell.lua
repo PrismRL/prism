@@ -6,11 +6,11 @@
 --- @overload fun(): Cell
 local Cell = prism.Entity:extend("Cell")
 
---- @alias CellFactory fun(): Cell
+--- @alias CellFactory fun(...): Cell
 
 --- Constructor for the Cell class.
 function Cell:__new()
-   prism.Entity.__new(self)
+   self.super.__new(self)
 end
 
 --- Initializes a cell from a list of components.

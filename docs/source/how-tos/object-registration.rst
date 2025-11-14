@@ -27,7 +27,7 @@ Below is a walk through of how and when each type of object is loaded.
 
    .. timeline-card:: module.lua
 
-     ``module.lua`` is ran. You can use it to create move types with :lua:func:`Collision.assignNextAvailableMovetype`,
+     ``module.lua`` or ``init.lua`` is ran. You can use it to create move types with :lua:func:`Collision.assignNextAvailableMovetype`,
      or to perform other miscellaneous set up.
 
    .. timeline-card:: Components

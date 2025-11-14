@@ -32,7 +32,14 @@ local function File(self, scene)
       -- Open the file in write mode and write some content
       local file, err = io.open(result, "w")
       if file then
-         local json = prism.json.encode(prism.Object.serialize(self.props.editor.attachable))
+         local normalized = self.props.editor.attachable
+         if normalized.clone then
+            --- @cast normalized LevelBuilder
+            normalized = normalized:clone()
+            normalized:normalize()
+         end
+
+         local json = prism.json.encode(prism.Object.serialize(normalized))
          local compressed = love.data.compress("string", "lz4", json)
 
          ---@diagnostic disable-next-line
@@ -53,6 +60,7 @@ local function File(self, scene)
    newButton.props.tileset = image
    newButton.props.hoveredQuad = quad
    newButton.props.onPress = function(pointer)
+      self.props.editor:setAttachable(prism.LevelBuilder(prism.defaultCell))
       close(pointer)
    end
 
@@ -64,11 +72,11 @@ local function File(self, scene)
       love.window.showFileDialog("openfile", function(result)
          if not result[1] then return end
 
-         result = result[1] -- Assuming success contains a list of selected files
+         result = result[1]                      -- Assuming success contains a list of selected files
          -- Open the file in read mode and read its content
          local file, err = io.open(result, "rb") -- Open in binary mode to handle compressed data
          if file then
-            local compressed = file:read("*a") -- Read the entire file content
+            local compressed = file:read("*a")   -- Read the entire file content
             file:close()
 
             -- Decompress the content
@@ -79,8 +87,15 @@ local function File(self, scene)
             if ok and json then
                -- Deserialize the JSON content and apply it to the editor
                local data = prism.json.decode(json)
-               self.props.editor:setAttachable(prism.Object.deserialize(data))
+
+               local builder = prism.Object.deserialize(data)
+               if builder:instanceOf(prism.LevelBuilder) then
+                  builder.initialValue = prism.defaultCell
+               end
+
+               self.props.editor:setAttachable(builder)
                self.props.editor.filepath = result
+
                print("File loaded successfully from: " .. result)
             else
                print("Failed to decompress or parse file.")

@@ -2,6 +2,7 @@
 
 --- A configurable inventory.
 --- @class Inventory : Component, IQueryable
+--- @field inventory ActorStorage
 --- @field totalCount integer The current item/stack count in the inventory.
 --- @field totalWeight number The current weight in the inventory.
 --- @field totalVolume number The current volume in the inventory.
@@ -29,12 +30,6 @@ function Inventory:__new(options)
    self.limitWeight = options.limitWeight or self.limitWeight
 
    if options.multipleStacks ~= nil then self.multipleStacks = options.multipleStacks end
-
-   if options.items then
-      for _, actor in ipairs(options.items) do
-         self:addItem(actor)
-      end
-   end
 end
 
 --- Query the inner ActorStorage of the inventory.
@@ -52,7 +47,7 @@ end
 --- Gets any current actor that can stack with the stackable
 --- type specified. If multipleStacks is false it will return
 --- full stacks.
---- @param stackable ActorFactory
+--- @param stackable string
 --- @return Actor? stack
 function Inventory:getStack(stackable)
    if not stackable then return end
@@ -79,7 +74,7 @@ function Inventory:canAddItem(actor)
    local item = actor:expect(prism.components.Item)
    local stack = self:getStack(item.stackable)
 
-   if item.stackable and stack then
+   if stack then
       local stackItem = stack:expect(prism.components.Item)
       if stackItem.stackCount + item.stackCount > stackItem.stackLimit then
          if not self.multipleStacks then return false, "Stack limit exceeded" end
@@ -101,6 +96,14 @@ function Inventory:canAddItem(actor)
    return true
 end
 
+--- Tries to add every item in the passed list. Will error if unable to do so.
+--- @param actors Actor[]
+function Inventory:addItems(actors)
+   for _, actor in ipairs(actors) do
+      self:addItem(actor)
+   end
+end
+
 --- Adds the actor to the inventory, stacking it if possible.
 --- @param actor Actor
 function Inventory:addItem(actor)
@@ -118,6 +121,7 @@ function Inventory:addItem(actor)
    end
 
    self.inventory:addActor(actor)
+   self.owner:addRelation(prism.relations.InventoryRelation, actor)
    self:updateLimits()
 end
 
@@ -126,6 +130,7 @@ end
 --- @return Actor
 function Inventory:removeItem(actor)
    self.inventory:removeActor(actor)
+   self.owner:removeRelation(prism.relations.InventoryRelation, actor)
    self:updateLimits()
    return actor
 end
@@ -176,5 +181,17 @@ function Inventory:updateLimits()
    end
 end
 
-return Inventory
+function Inventory:clone()
+   local clone = prism.Component.clone(self)
+   --- @cast clone Inventory
 
+   clone.inventory = prism.ActorStorage()
+
+   for actor in self:query():iter() do
+      clone:addItem(actor:clone())
+   end
+
+   return clone
+end
+
+return Inventory

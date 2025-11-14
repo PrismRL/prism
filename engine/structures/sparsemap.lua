@@ -3,6 +3,8 @@ local dummy = {}
 --- A sparse grid of buckets that objects can be placed into. Used for
 --- tracking actors by x,y position in Level.
 --- @class SparseMap : Object
+--- @field map table<integer, table<any, boolean>>
+--- @field list table<any, table<integer, boolean>>
 --- @overload fun(): SparseMap
 local SparseMap = prism.Object:extend("SparseMap")
 
@@ -54,28 +56,6 @@ function SparseMap:each()
       end
    end
 end
-
---- Returns an iterator over all (x, y) positions where the given value is stored.
---- @param val any The value to look up.
---- @return function iter An iterator yielding x, y, hash for each coordinate the value is in.
-function SparseMap:eachFor(val)
-   local hashTable = self.list[val]
-   local hash
-
-   if not hashTable then
-      return function() return nil end
-   end
-
-   return function()
-      hash = next(hashTable, hash)
-      if hash then
-         local x, y = prism.Vector2._unhash(hash)
-         return x, y, hash
-      end
-      return nil
-   end
-end
-
 
 --- Returns the total number of entries in the sparse map.
 --- @return number -- The total number of entries.

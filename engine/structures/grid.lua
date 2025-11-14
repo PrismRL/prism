@@ -3,7 +3,7 @@
 --- @field w integer The width of the grid.
 --- @field h integer The height of the grid.
 --- @field data any[] The data stored in the grid.
---- @overload fun(w: integer, h: integer, initialValue): Grid
+--- @overload fun(w: integer, h: integer, initialValue: any?): Grid
 local Grid = prism.Object:extend("Grid")
 
 --- The constructor for the 'Grid' class.
@@ -11,15 +11,19 @@ local Grid = prism.Object:extend("Grid")
 --- @generic T
 --- @param w integer The width of the grid.
 --- @param h integer The height of the grid.
---- @param initialValue T The initial value to fill the grid with.
+--- @param initialValue T? The initial value to fill the grid with.
 --- @return Grid<T> -- The initialized grid.
 function Grid:__new(w, h, initialValue)
    self.w = w
    self.h = h
    self.data = {}
-   for i = 1, w * h do
-      self.data[i] = initialValue
+
+   if initialValue then
+      for i = 1, w * h do
+         self.data[i] = initialValue
+      end
    end
+
    return self
 end
 
