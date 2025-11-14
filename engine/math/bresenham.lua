@@ -50,14 +50,14 @@ function Bresenham.los(x0, y0, x1, y1, callback)
    return true
 end
 
---- Returns a table of {x, y} pairs representing the bresenham line from {x0, y0} to {x1, y1}
+--- Returns a Path representing the bresenham line from {x0, y0} to {x1, y1}
 --- and whether a line was found or not.
 ---@param x0 number The x coordinate of the first point.
 ---@param y0 number The y coordinate of the first point.
 ---@param x1 number The x coordinate of the second point.
 ---@param y1 number The y coordinate of the second point.
 ---@param callback? PassableCallback An optional callback used to determine passability.
----@return {x: number, y: number}[]
+---@return Path
 ---@return boolean
 function Bresenham.line(x0, y0, x1, y1, callback)
    local points = {}
@@ -65,10 +65,10 @@ function Bresenham.line(x0, y0, x1, y1, callback)
    local result = Bresenham.los(x0, y0, x1, y1, function(x, y)
       if callback and not callback(x, y) then return false end
       count = count + 1
-      points[count] = { x, y }
+      points[count] = prism.Vector2(x, y)
       return true
    end)
-   return points, result
+   return prism.Path(points), result
 end
 
 return Bresenham.line

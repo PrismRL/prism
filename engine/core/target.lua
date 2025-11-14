@@ -224,12 +224,11 @@ function Target:los(mask)
       end
 
       local ownerX, ownerY = owner:expectPosition():decompose()
-      local points = prism.Bresenham(ownerX, ownerY, targetPosition:decompose())
+      local path = prism.Bresenham(ownerX, ownerY, targetPosition:decompose())
 
-      for _, point in ipairs(points) do
-         local x, y = point[1], point[2]
-         if x ~= ownerX and y ~= ownerY then
-            if not level:getCellPassable(x, y, mask) then return false end
+      for _, point in ipairs(path) do
+         if point.x ~= ownerX and point.y ~= ownerY then
+            if not level:getCellPassable(point.x, point.y, mask) then return false end
          end
       end
 

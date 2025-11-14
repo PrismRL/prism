@@ -20,11 +20,10 @@ function LineModification:execute(attachable)
    local i, j = self.topleft.x, self.topleft.y
    local k, l = self.bottomright.x, self.bottomright.y
 
-   local points = prism.Bresenham(i, j, k, l)
+   local path = prism.Bresenham(i, j, k, l)
 
-   for _, point in ipairs(points) do
-      local x, y = point[1], point[2]
-      self:place(attachable, x, y, self.placeable)
+   for _, point in ipairs(path:getPath()) do
+      self:place(attachable, point.x, point.y, self.placeable)
    end
 end
 
