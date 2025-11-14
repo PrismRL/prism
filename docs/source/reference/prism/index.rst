@@ -9,7 +9,7 @@ be accessed from the ``prism`` global, e.g. ``prism.Level``.
 Registries get automatically loaded by :lua:func:`prism.loadModule`. They hold all of the game
 objects, making them easy to access, e.g. ``prism.actors.Player()``.
 
-- .. lua:data:: prism.actors: table<string, Actor>
+- .. lua:data:: prism.actors: table<string, fun(...): Actor>
 
      The actor registry.
 - .. lua:data:: prism.actions: table<string, Action>
@@ -18,10 +18,10 @@ objects, making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:data:: prism.components: table<string, Component>
 
      The component registry.
-- .. lua:data:: prism.cells: table<string, Cell>
+- .. lua:data:: prism.cells: table<string, fun(...): Cell>
 
      The cell registry.
-- .. lua:data:: prism.targets: table<string, Target>
+- .. lua:data:: prism.targets: table<string, fun(...): Target>
 
      The target registry.
 - .. lua:data:: prism.messages: table<string, Message>
@@ -66,6 +66,9 @@ objects, making them easy to access, e.g. ``prism.actors.Player()``.
 - .. lua:function:: prism.register(object: Object)
 
      Registers an object into its registry. Errors if the object has no registry.
+- .. lua:function:: prism.registerRegistry(name: string, type: Object, factory?: boolean, module?: string)
+
+     Registers a registry, a global list of game objects.
 - .. lua:function:: prism.advanceCoroutine()
 
      Runs the level coroutine and returns the next message, or nil if the coroutine has halted.
