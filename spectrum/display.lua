@@ -288,7 +288,6 @@ end
 --- @param secondary Senses[] A list of secondary Senses objects.
 --- @param level Level The level.
 function Display:putSenses(primary, secondary, level)
-   self:push()
    local drawnCells = prism.SparseGrid()
 
    for _, senses in ipairs(primary) do
@@ -326,7 +325,6 @@ function Display:putSenses(primary, secondary, level)
    end
 
    self:putAnimations(level, unpack(primary), unpack(secondary))
-   self:pop()
 end
 
 --- Puts a Sprite onto the display grid at specified coordinates, considering its depth.
@@ -567,12 +565,12 @@ function Display:moveCamera(dx, dy)
 end
 
 --- Push the camera offset, so everything drawn will get the camera applied.
-function Display:push()
+function Display:beginCamera()
    self.pushed = true
 end
 
 --- Pop the camera offset, so everything drawn will not get the camera applied.
-function Display:pop()
+function Display:endCamera()
    self.pushed = false
 end
 
