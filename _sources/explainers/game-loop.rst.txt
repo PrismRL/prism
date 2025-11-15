@@ -17,7 +17,8 @@ The following diagram describes the main loop.
 when to continue it. If no :lua:class:`Controller` yields a :lua:class:`Decision` the loop will run
 indefinitely, forcing you to catch when there are no player controlled actors left in the level.
 
-What actually happens on an actor's turn is defined in :lua:data:`prism.turn`. By default, it calls
+What actually happens on an actor's turn is defined in the :lua:class:`TurnHandler` 
+passed to :lua:func:`LevelBuilder.addTurnHandler`. By default, it calls
 the :lua:class:`Controller` and performs the action returned:
 
 .. code-block:: lua
