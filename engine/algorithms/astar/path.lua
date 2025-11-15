@@ -3,17 +3,17 @@
 ---@field path Vector2[] -- The path as an ordered list of Vector2 nodes
 ---@field cost number -- The total cost to traverse the path
 ---@field private costIndex integer[]
----@overload fun(path: Vector2[], costIndex: integer[]): Path
+---@overload fun(path: Vector2[], costIndex?: integer[]): Path
 local Path = prism.Object:extend("Path")
 Path.__index = Path
 
 --- Constructor for the Path class
 ---@param path Vector2[]
----@param costIndex integer[]
+---@param costIndex? integer[]
 ---@return Path
 function Path:__new(path, costIndex)
    self.path = path
-   self.costIndex = costIndex
+   self.costIndex = costIndex or {}
    self.cost = 0
    for i, node in ipairs(path) do
       self.cost = self.cost + (self.costIndex[i] or 0)

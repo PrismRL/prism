@@ -143,9 +143,9 @@ end
 --- @param y2 number The y-coordinate of the ending point.
 --- @param cellFactory CellFactory The cell factory to draw the line with.
 function LevelBuilder:line(x1, y1, x2, y2, cellFactory)
-   local line = prism.Bresenham(x1, y1, x2, y2)
-   for _, position in ipairs(line) do
-      self:set(position[1], position[2], cellFactory())
+   local path = prism.Bresenham(x1, y1, x2, y2)
+   for _, position in ipairs(path:getPath()) do
+      self:set(position.x, position.y, cellFactory())
    end
 end
 

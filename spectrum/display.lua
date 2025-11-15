@@ -615,9 +615,9 @@ end
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
 function Display:line(x0, y0, x1, y1, char, fg, bg, layer)
-   local line = prism.Bresenham(x0, y0, x1, y1)
-   for _, position in ipairs(line) do
-      self:put(position[1], position[2], char, fg, bg, layer)
+   local path = prism.Bresenham(x0, y0, x1, y1)
+   for _, position in ipairs(path:getPath()) do
+      self:put(position.x, position.y, char, fg, bg, layer)
    end
 end
 
