@@ -555,16 +555,16 @@ elements from the level or other world-space coordinates onto the display.</p>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Display.push">
-<span class="sig-name descname"><span class="pre">push</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Display.push" title="Link to this definition">¶</a><br /></dt>
+<dt class="sig sig-object lua" id="lua-Display.beginCamera">
+<span class="sig-name descname"><span class="pre">beginCamera</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Display.beginCamera" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Push the camera offset, so everything drawn will get the camera applied.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
 
 <dl class="lua method">
-<dt class="sig sig-object lua" id="lua-Display.pop">
-<span class="sig-name descname"><span class="pre">pop</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Display.pop" title="Link to this definition">¶</a><br /></dt>
+<dt class="sig sig-object lua" id="lua-Display.endCamera">
+<span class="sig-name descname"><span class="pre">endCamera</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Display" title="Display"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Display</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Display.endCamera" title="Link to this definition">¶</a><br /></dt>
 <dd><p>Pop the camera offset, so everything drawn will not get the camera applied.</p>
 <dl class="field-list simple">
 </dl>
@@ -809,8 +809,8 @@ SOFTWARE.
 <li class="toctree-l4"><a class="reference internal" href="#lua-Display.getCellUnderMouse"><code class="docutils literal notranslate"><span class="pre">getCellUnderMouse()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Display.setCamera"><code class="docutils literal notranslate"><span class="pre">setCamera()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Display.moveCamera"><code class="docutils literal notranslate"><span class="pre">moveCamera()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lua-Display.push"><code class="docutils literal notranslate"><span class="pre">push()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#lua-Display.pop"><code class="docutils literal notranslate"><span class="pre">pop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Display.beginCamera"><code class="docutils literal notranslate"><span class="pre">beginCamera()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Display.endCamera"><code class="docutils literal notranslate"><span class="pre">endCamera()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Display.rectangle"><code class="docutils literal notranslate"><span class="pre">rectangle()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#lua-Display.line"><code class="docutils literal notranslate"><span class="pre">line()</span></code></a></li>
 </ul>

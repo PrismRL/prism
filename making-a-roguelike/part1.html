@@ -336,16 +336,23 @@ where the move action is called.</p>
 <p>If the player presses a move button but the player fails to move, we can infer they moved into
 something that blocked their movement. Let’s check if there’s a valid actor to kick in front of us
 (as opposed to another impassable entity), and perform the kick action on them:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span>
-<span class="p">...</span>
-<span class="kr">end</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">updateDecision</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">decision</span><span class="p">)</span>
+    <span class="c1">-- Controls need to be updated each frame.</span>
+    <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
 
-<span class="kd">local</span> <span class="n">target</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">()</span> <span class="c1">-- grab a query object</span>
-   <span class="p">:</span><span class="n">at</span><span class="p">(</span><span class="n">destination</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span> <span class="c1">-- restrict the query to the destination</span>
-   <span class="p">:</span><span class="n">first</span><span class="p">()</span> <span class="c1">-- grab one of the kickable things, or nil</span>
+    <span class="c1">-- Controls are accessed directly via table index.</span>
+    <span class="kr">if</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">pressed</span> <span class="kr">then</span>
+        <span class="kd">local</span> <span class="n">destination</span> <span class="o">=</span> <span class="n">owner</span><span class="p">:</span><span class="n">getPosition</span><span class="p">()</span> <span class="o">+</span> <span class="n">controls</span><span class="p">.</span><span class="n">move</span><span class="p">.</span><span class="n">vector</span>
+        <span class="kd">local</span> <span class="n">move</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Move</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">destination</span><span class="p">)</span>
+        <span class="kr">if</span> <span class="n">self</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">move</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
 
-<span class="kd">local</span> <span class="n">kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Kick</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-<span class="n">self</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">kick</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">target</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">:</span><span class="n">query</span><span class="p">()</span> <span class="c1">-- grab a query object</span>
+            <span class="p">:</span><span class="n">at</span><span class="p">(</span><span class="n">destination</span><span class="p">:</span><span class="n">decompose</span><span class="p">())</span> <span class="c1">-- restrict the query to the destination</span>
+            <span class="p">:</span><span class="n">first</span><span class="p">()</span> <span class="c1">-- grab one of the kickable things, or nil</span>
+
+        <span class="kd">local</span> <span class="n">kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Kick</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="n">self</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">kick</span><span class="p">)</span>
+    <span class="kr">end</span>
 </pre></div>
 </div>
 <div class="admonition note">
