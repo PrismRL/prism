@@ -331,17 +331,24 @@ something that blocked their movement. Let's check if there's a valid actor to k
 
 .. code-block:: lua
 
-   if self.level:canPerform(move) then
-   ...
-   end
+    function GameLevelState:updateDecision(dt, owner, decision)
+        -- Controls need to be updated each frame.
+        controls:update()
 
-   local target = self.level:query() -- grab a query object
-      :at(destination:decompose()) -- restrict the query to the destination
-      :first() -- grab one of the kickable things, or nil
+        -- Controls are accessed directly via table index.
+        if controls.move.pressed then
+            local destination = owner:getPosition() + controls.move.vector
+            local move = prism.actions.Move(owner, destination)
+            if self:setAction(move) then return end
 
-   local kick = prism.actions.Kick(owner, target)
-   self:setAction(kick)
+            local target = self.level:query() -- grab a query object
+                :at(destination:decompose()) -- restrict the query to the destination
+                :first() -- grab one of the kickable things, or nil
 
+            local kick = prism.actions.Kick(owner, target)
+            self:setAction(kick)
+        end
+        
 .. note::
 
    :lua:func:`Level.canPerform` will validate all targets in the action.
