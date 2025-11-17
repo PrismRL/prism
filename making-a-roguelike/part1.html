@@ -253,7 +253,7 @@ first action. Head over to <code class="docutils literal notranslate"><span clas
 we can define the kick action, including our target. We will also require that any actor trying to
 perform the kick action have a controller.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">---</span><span class="k k-Comment">@class</span><span class="cm"> KickAction : Action</span>
-<span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;KickAction&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">Kick</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Action</span><span class="p">:</span><span class="n">extend</span><span class="p">(</span><span class="s2">&quot;Kick&quot;</span><span class="p">)</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">targets</span> <span class="o">=</span> <span class="p">{</span> <span class="n">KickTarget</span> <span class="p">}</span>
 <span class="n">Kick</span><span class="p">.</span><span class="n">requiredComponents</span> <span class="o">=</span> <span class="p">{</span>
    <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Controller</span>
