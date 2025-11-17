@@ -243,7 +243,7 @@ perform the kick action have a controller.
 .. code-block:: lua
 
    ---@class KickAction : Action
-   local Kick = prism.Action:extend("KickAction")
+   local Kick = prism.Action:extend("Kick")
    Kick.targets = { KickTarget }
    Kick.requiredComponents = {
       prism.components.Controller
@@ -348,7 +348,7 @@ something that blocked their movement. Let's check if there's a valid actor to k
             local kick = prism.actions.Kick(owner, target)
             self:setAction(kick)
         end
-        
+
 .. note::
 
    :lua:func:`Level.canPerform` will validate all targets in the action.
