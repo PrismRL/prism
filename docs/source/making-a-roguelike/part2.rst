@@ -156,7 +156,7 @@ We want the actor to fall immediately when they land on a valid tile, so we'll u
 Registering the Fall system
 ---------------------------
 
-Navigate back to ``gamelevelstate.lua`` and on line 32 you'll see where we register systems. Go
+Navigate back to ``gamelevelstate.lua`` and on line 29 you'll see where we register systems. Go
 ahead and add ``prism.systems.Fall()`` to the bottom of the list like so.
 
 .. code-block:: lua
