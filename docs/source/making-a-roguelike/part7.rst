@@ -53,13 +53,13 @@ whether we preview the level or not. Rather than loading our regular state, we'l
    function love.load(args)
       if args[1] == "--debug" then
          local levelgen = require "levelgen"
-         local builder = prism.LevelBuilder(prism.cells.Wall)
+         local builder = prism.LevelBuilder()
          local seed = prism.RNG(love.timer.getTime())
          local function generator()
             levelgen(seed, prism.actors.Player(), 60, 30, builder)
          end
 
-         manager:push(geometer.MapGeneratorState(generator, builder, display)
+         manager:push(spectrum.gamestates.MapGeneratorState(generator, builder, display)
       else
          manager:push(GameLevelState(display))
       end

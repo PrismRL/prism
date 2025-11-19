@@ -11,8 +11,7 @@ local LevelBuilder = prism.SparseGrid:extend("LevelBuilder")
 LevelBuilder._serializationBlacklist.initialValue = true
 
 --- Initialize a new LevelBuilder.
---- @param initialCell CellFactory A cell factory to define the default value of the map.
-function LevelBuilder:__new(initialCell)
+function LevelBuilder:__new()
    self.super.__new(self)
    self.actors = prism.ActorStorage()
    self.systems = {}
