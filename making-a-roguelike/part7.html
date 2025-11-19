@@ -149,8 +149,8 @@ rooms.</p>
 </div>
 <p>Next we loop through each of our partitions and build a room so long as it’s not the one we’re
 omitting. We create a <a class="reference internal" href="../reference/prism/math/rectangle.html#lua-Rectangle" title="Rectangle"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Rectangle</span></code></a>, hash its partition coordinates, and put it into our
-table of rooms. Finally we draw the room onto our map with <code class="xref lua lua-func docutils literal notranslate"><span class="pre">LevelBuilder.drawRectangle</span></code>.
-We use <code class="docutils literal notranslate"><span class="pre">coroutine.yield()</span></code> to return control back to Geometer, so we can see each rectangle get
+table of rooms. Finally we draw the room onto our map with <a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder.rectangle" title="LevelBuilder.rectangle"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">LevelBuilder:rectangle()</span></code></a>. We
+use <code class="docutils literal notranslate"><span class="pre">coroutine.yield()</span></code> to return control back to Geometer, so we can see each rectangle get
 drawn.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="n">px</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
    <span class="kr">for</span> <span class="n">py</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">PARTITIONS</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
@@ -164,7 +164,7 @@ drawn.</p>
          <span class="n">rooms</span><span class="p">[</span><span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)]</span> <span class="o">=</span> <span class="n">roomRect</span>
 
          <span class="nb">coroutine.yield</span><span class="p">()</span>
-         <span class="n">builder</span><span class="p">:</span><span class="n">drawRectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rw</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rh</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+         <span class="n">builder</span><span class="p">:</span><span class="n">rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rw</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rh</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
       <span class="kr">end</span>
    <span class="kr">end</span>
 <span class="kr">end</span>
@@ -283,7 +283,7 @@ the starting room and spawn a kobold there.</p>
             <span class="kd">local</span> <span class="n">roomRect</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rw</span><span class="p">,</span> <span class="n">rh</span><span class="p">)</span>
             <span class="n">rooms</span><span class="p">[</span><span class="n">prism</span><span class="p">.</span><span class="n">Vector2</span><span class="p">.</span><span class="n">_hash</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">)]</span> <span class="o">=</span> <span class="n">roomRect</span>
 
-            <span class="n">builder</span><span class="p">:</span><span class="n">drawRectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rw</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rh</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
+            <span class="n">builder</span><span class="p">:</span><span class="n">rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rw</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rh</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Floor</span><span class="p">)</span>
          <span class="kr">end</span>
       <span class="kr">end</span>
    <span class="kr">end</span>
@@ -452,6 +452,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../architecture-primer.html">Architecture primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../conventions.html">Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
 <ul>

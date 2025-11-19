@@ -34,6 +34,7 @@ Our discord can be found `here <https://discord.gg/9YpsH4hYVF>`_.
    architecture-primer
    conventions
    gallery
+   roadmap
 
 .. toctree::
    :caption: How-tos
