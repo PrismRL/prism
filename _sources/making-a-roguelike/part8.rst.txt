@@ -79,8 +79,7 @@ Next, we'll define the ``Descend`` action.
 
 .. code-block:: lua
 
-   local DescendTarget = prism.Target()
-      :with(prism.components.Stair)
+   local DescendTarget = prism.Target(prism.components.Stair)
       :range(1)
 
    ---@class Descend : Action
@@ -124,7 +123,7 @@ Now that we've got everything set up we need to actually handle the descend mess
 .. code-block:: lua
 
    if prism.messages.DescendMessage:is(message) then
-      self.manager:enter(prism.gamestates.GameLevelState(self.display))
+      self.manager:enter(spectrum.gamestates.GameLevelState(self.display))
    end
 
 If we run the game and find ourselves a staircase we'll be able to go down to a new floor!

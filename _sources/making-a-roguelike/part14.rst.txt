@@ -271,7 +271,7 @@ Let's head over to ``modules/game/gamestates/`` and create a new file called
 
    --- @class GeneralTargetHandler : TargetHandler
    --- @field selectorPosition Vector2
-   local GeneralTargetHandler = prism.gamestates.TargetHandler:extend("GeneralTargetHandler")
+   local GeneralTargetHandler = spectrum.gamestates.TargetHandler:extend("GeneralTargetHandler")
 
 We create a new target handler derived from the ``TargetHandler`` gamestate. Next we move on to
 ``getValidTargets``, where we'll query the level for valid targets to our action and collect them.

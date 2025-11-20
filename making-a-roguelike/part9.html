@@ -136,7 +136,7 @@ instance of a <code class="docutils literal notranslate"><span class="pre">Game<
 
    <span class="c1">-- Initialize with the created level and display, the heavy lifting is done by</span>
    <span class="c1">-- the parent class.</span>
-   <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span><span class="n">build</span><span class="p">(),</span> <span class="n">display</span><span class="p">)</span>
+   <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">builder</span><span class="p">:</span><span class="n">build</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">),</span> <span class="n">display</span><span class="p">)</span>
 <span class="kr">end</span>
 </pre></div>
 </div>
@@ -150,7 +150,7 @@ our overload here as well to reflect the new arguments.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">messages</span><span class="p">.</span><span class="n">DescendMessage</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="kr">then</span>
    <span class="cm">--- </span><span class="k k-Comment">@cast</span><span class="cm"> message DescendMessage</span>
    <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">enter</span><span class="p">(</span>
-      <span class="n">prism</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span>
+      <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span>
          <span class="n">self</span><span class="p">.</span><span class="n">display</span><span class="p">,</span>
          <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">descender</span><span class="p">),</span>
          <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()</span>
@@ -177,7 +177,7 @@ modules.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">love.load()</span></code>, we’ll generate the first level and pass a seed for the level to our
 <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">builder</span> <span class="o">=</span> <span class="n">Game</span><span class="p">:</span><span class="n">generateNextFloor</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">Player</span><span class="p">())</span>
-<span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()))</span>
+<span class="n">manager</span><span class="p">:</span><span class="n">push</span><span class="p">(</span><span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">GameLevelState</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">builder</span><span class="p">,</span> <span class="n">Game</span><span class="p">:</span><span class="n">getLevelSeed</span><span class="p">()))</span>
 </pre></div>
 </div>
 <p>We can simplify the set up for our <code class="docutils literal notranslate"><span class="pre">MapGeneratorState</span></code> as well.</p>
