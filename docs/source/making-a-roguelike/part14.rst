@@ -271,7 +271,7 @@ Let's head over to ``modules/game/gamestates/`` and create a new file called
 
    --- @class GeneralTargetHandler : TargetHandler
    --- @field selectorPosition Vector2
-   local GeneralTargetHandler = prism.gamestates.TargetHandler:extend("GeneralTargetHandler")
+   local GeneralTargetHandler = spectrum.gamestates.TargetHandler:extend("GeneralTargetHandler")
 
 We create a new target handler derived from the ``TargetHandler`` gamestate. Next we move on to
 ``getValidTargets``, where we'll query the level for valid targets to our action and collect them.
@@ -337,14 +337,14 @@ their name, if they are ``Entity``.
 
       -- put a string to let the player know what's happening
       self.display:print(1, 1, "Select a target!")
-      self.display:push()
+      self.display:beginCamera()
       self.display:print(x, y, "X", prism.Color4.RED, prism.Color4.BLACK)
 
       -- if there's a target then we should draw its name!
       if prism.Entity:is(self.curTarget) then
          self.display:print(x + 1, y, Name.get(self.curTarget))
       end
-      self.display:pop()
+      self.display:endCamera()
       self.display:draw()
    end
 

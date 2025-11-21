@@ -25,30 +25,22 @@ end
 function Fill:bucket(attachable, x, y)
    local cell = attachable:getCell(x, y)
 
-   prism.BreadthFirstSearch(prism.Vector2(x, y), function(x, y)
+   prism.BreadthFirstSearch(prism.Vector2(x, y), function(searchX, searchY)
+      local cellAt
       if prism.LevelBuilder:is(attachable) then
          --- @cast attachable LevelBuilder
-         local cellAt = prism.SparseGrid.get(attachable, x, y)
-         if not cellAt then return false end
+         -- get the raw value, since LevelBuilder returns the default cell
+         cellAt = prism.SparseGrid.get(attachable, searchX, searchY)
+      else
+         cellAt = attachable:getCell(searchX, searchY)
       end
+      if not cellAt then return false end
 
-      local cellAt = attachable:getCell(x, y)
+      cellAt = attachable:getCell(searchX, searchY)
       return cellAt:getName() == cell:getName()
-   end, function(x, y)
-      self.locations:set(x, y, true)
+   end, function(setX, setY)
+      self.locations:set(setX, setY, true)
    end)
-end
-
----Updates the tool state.
----@param dt number The time delta since the last update.
----@param editor Editor
-function Fill:update(dt, editor)
-   if not self.locations then return end
-
-   local x, y = editor.display:getCellUnderMouse()
-   if not editor.attachable:inBounds(x, y) then return end
-
-   self:bucket(editor.attachable, x, y)
 end
 
 return Fill

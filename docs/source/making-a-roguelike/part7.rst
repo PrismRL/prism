@@ -53,13 +53,13 @@ whether we preview the level or not. Rather than loading our regular state, we'l
    function love.load(args)
       if args[1] == "--debug" then
          local levelgen = require "levelgen"
-         local builder = prism.LevelBuilder(prism.cells.Wall)
+         local builder = prism.LevelBuilder()
          local seed = prism.RNG(love.timer.getTime())
          local function generator()
             levelgen(seed, prism.actors.Player(), 60, 30, builder)
          end
 
-         manager:push(geometer.MapGeneratorState(generator, builder, display)
+         manager:push(spectrum.gamestates.MapGeneratorState(generator, builder, display)
       else
          manager:push(GameLevelState(display))
       end
@@ -129,8 +129,8 @@ After that let's set some reasonable limits on the minimum and maximum room widt
 
 Next we loop through each of our partitions and build a room so long as it's not the one we're
 omitting. We create a :lua:class:`Rectangle`, hash its partition coordinates, and put it into our
-table of rooms. Finally we draw the room onto our map with :lua:func:`LevelBuilder.drawRectangle`.
-We use ``coroutine.yield()`` to return control back to Geometer, so we can see each rectangle get
+table of rooms. Finally we draw the room onto our map with :lua:func:`LevelBuilder.rectangle`. We
+use ``coroutine.yield()`` to return control back to Geometer, so we can see each rectangle get
 drawn.
 
 .. code-block:: lua
@@ -147,7 +147,7 @@ drawn.
             rooms[prism.Vector2._hash(px, py)] = roomRect
 
             coroutine.yield()
-            builder:drawRectangle(x, y, x + rw, y + rh, prism.cells.Floor)
+            builder:rectangle(x, y, x + rw, y + rh, prism.cells.Floor)
          end
       end
    end
@@ -276,7 +276,7 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
                   local roomRect = prism.Rectangle(x, y, rw, rh)
                   rooms[prism.Vector2._hash(px, py)] = roomRect
 
-                  builder:drawRectangle(x, y, x + rw, y + rh, prism.cells.Floor)
+                  builder:rectangle(x, y, x + rw, y + rh, prism.cells.Floor)
                end
             end
          end

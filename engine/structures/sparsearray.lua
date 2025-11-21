@@ -63,14 +63,15 @@ function SparseArray:remove(handle)
       local data = self.data[index]
       self.data[index] = nil
       self.generations[index] = self.generations[index] + 1
-      table.insert(self.freeIndices, index)
 
       if index == self.maxIndex then
          while self.maxIndex > 0 and self.data[self.maxIndex] == nil do
             self.maxIndex = self.maxIndex - 1
          end
+      else
+         table.insert(self.freeIndices, index)
       end
-      
+
       return data
    end
 end

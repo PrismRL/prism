@@ -59,13 +59,13 @@ function Erase:draw(editor, display)
 
    local lx, ly, rx, ry = self:getCurrentRect()
 
-   display:push()
+   display:beginCamera()
    for x = lx, rx do
       for y = ly, ry do
          display:putBG(x, y, background, math.huge)
       end
    end
-   display:pop()
+   display:endCamera()
 end
 
 function Erase:update(dt, editor)
