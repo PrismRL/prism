@@ -88,15 +88,15 @@ file. These are used with <a class="reference internal" href="../reference/spect
 </section>
 <section id="using-spriteatlas-with-drawable">
 <h2>Using SpriteAtlas with Drawable<a class="headerlink" href="#using-spriteatlas-with-drawable" title="Link to this heading">¶</a></h2>
-<p>To draw something from a spritesheet, a <code class="docutils literal notranslate"><span class="pre">Drawable</span></code> must reference a sprite
-defined in the <code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code>. This is done by setting sprite.index on the
-<code class="docutils literal notranslate"><span class="pre">Drawable</span></code> (or on the <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> passed into it). The <code class="docutils literal notranslate"><span class="pre">index</span></code> can be:</p>
+<p>To draw something from a spritesheet, a <a class="reference internal" href="../reference/spectrum/components/drawable.html#lua-Drawable" title="Drawable"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Drawable</span></code></a> must reference a sprite
+defined in the <a class="reference internal" href="../reference/spectrum/spriteatlas.html#lua-SpriteAtlas" title="SpriteAtlas"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></a>. This is done by setting sprite.index on the
+<a class="reference internal" href="../reference/spectrum/components/drawable.html#lua-Drawable" title="Drawable"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Drawable</span></code></a> (or on the <a class="reference internal" href="../reference/spectrum/display.html#lua-Sprite" title="Sprite"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Sprite</span></code></a> passed into it). The <code class="docutils literal notranslate"><span class="pre">index</span></code> can be:</p>
 <ul class="simple">
 <li><p>a <strong>number</strong>, selecting a quad by its grid position, or</p></li>
 <li><p>a <strong>string</strong>, selecting a quad by the name assigned when creating the atlas
-(e.g. via <code class="docutils literal notranslate"><span class="pre">fromGrid</span></code> with custom names or <code class="docutils literal notranslate"><span class="pre">fromAtlased</span></code>).</p></li>
+(e.g. via <a class="reference internal" href="../reference/spectrum/spriteatlas.html#lua-SpriteAtlas.fromGrid" title="SpriteAtlas.fromGrid"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">SpriteAtlas.fromGrid()</span></code></a> with custom names or <a class="reference internal" href="../reference/spectrum/spriteatlas.html#lua-SpriteAtlas.fromAtlased" title="SpriteAtlas.fromAtlased"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">SpriteAtlas.fromAtlased()</span></code></a>).</p></li>
 </ul>
-<p>When <code class="docutils literal notranslate"><span class="pre">Display</span></code> draws a <code class="docutils literal notranslate"><span class="pre">Drawable</span></code>, it resolves this value automatically:</p>
+<p>When <a class="reference internal" href="../reference/spectrum/display.html#lua-Display" title="Display"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Display</span></code></a> draws a <a class="reference internal" href="../reference/spectrum/components/drawable.html#lua-Drawable" title="Drawable"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Drawable</span></code></a>, it resolves this value automatically:</p>
 <ul class="simple">
 <li><p>numeric <code class="docutils literal notranslate"><span class="pre">index</span></code> → <code class="docutils literal notranslate"><span class="pre">spriteAtlas:getQuadByIndex(index)</span></code></p></li>
 <li><p>string <code class="docutils literal notranslate"><span class="pre">index</span></code> → <code class="docutils literal notranslate"><span class="pre">spriteAtlas:getQuadByName(name)</span></code></p></li>
