@@ -56,15 +56,15 @@ You can then look up quads by those names:
 Using SpriteAtlas with Drawable
 -------------------------------
 
-To draw something from a spritesheet, a ``Drawable`` must reference a sprite
-defined in the ``SpriteAtlas``. This is done by setting sprite.index on the
-``Drawable`` (or on the ``Sprite`` passed into it). The ``index`` can be:
+To draw something from a spritesheet, a :lua:class:`Drawable` must reference a sprite
+defined in the :lua:class:`SpriteAtlas`. This is done by setting sprite.index on the
+:lua:class:`Drawable` (or on the :lua:class:`Sprite` passed into it). The ``index`` can be:
 
 * a **number**, selecting a quad by its grid position, or
 * a **string**, selecting a quad by the name assigned when creating the atlas
-  (e.g. via ``fromGrid`` with custom names or ``fromAtlased``).
+  (e.g. via :lua:func:`SpriteAtlas.fromGrid` with custom names or :lua:func:`SpriteAtlas.fromAtlased`).
 
-When ``Display`` draws a ``Drawable``, it resolves this value automatically:
+When :lua:class:`Display` draws a :lua:class:`Drawable`, it resolves this value automatically:
 
 * numeric ``index`` → ``spriteAtlas:getQuadByIndex(index)``
 * string ``index`` → ``spriteAtlas:getQuadByName(name)``
