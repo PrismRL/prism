@@ -1,3 +1,4 @@
+local bit = require "bit"
 --- Represents a single game level, managing the map, actors, systems,
 --- scheduling, and cached data for FOV and pathfinding. Also handles the
 --- turn-based game loop via `run` and `step`.

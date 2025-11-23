@@ -1,4 +1,7 @@
-local ffi = require "ffi"
+local ok, ffi = pcall(require, "ffi")
+--- @diagnostic disable-next-line
+if not ok then ffi = nil end
+--- @cast ffi ffilib
 
 --- A class representing a 2D boolean buffer implemented as a densely packed C type.
 --- @class BooleanBuffer : Object
@@ -15,7 +18,11 @@ function BooleanBuffer:__new(w, h)
    self.h = h
 
    -- Initialize the buffer with false values
-   self.buffer = ffi.new("bool[?]", w * h)
+   if ffi then
+      self.buffer = ffi.new("bool[?]", w * h)
+   else
+      self.buffer = {}
+   end
 end
 
 --- Calculate the index in the buffer array for the given coordinates.
@@ -48,5 +55,9 @@ end
 function BooleanBuffer:get(x, y)
    return self.buffer[self:getIndex(x, y)]
 end
+
+if not ffi then BooleanBuffer.clear = function(self)
+   self.buffer = {}
+end end
 
 return BooleanBuffer

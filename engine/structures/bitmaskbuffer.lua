@@ -1,4 +1,7 @@
-local ffi = require "ffi"
+local ok, ffi = pcall(require, "ffi")
+--- @diagnostic disable-next-line
+if not ok then ffi = nil end
+--- @cast ffi ffilib
 local bit = require "bit"
 
 --- @alias Bitmask integer
@@ -16,7 +19,11 @@ function BitmaskBuffer:__new(w, h)
    self.h = h
 
    -- Initialize the buffer with zeroed 16-bit values
-   self.buffer = ffi.new("uint16_t[?]", w * h)
+   if ffi then
+      self.buffer = ffi.new("uint16_t[?]", w * h)
+   else
+      self.buffer = {}
+   end
 end
 
 --- Calculate the index in the buffer array for the given coordinates.
@@ -33,6 +40,10 @@ end
 function BitmaskBuffer:clear()
    ffi.fill(self.buffer, ffi.sizeof("uint16_t") * self.w * self.h)
 end
+
+if not ffi then BitmaskBuffer.clear = function(self)
+   self.buffer = {}
+end end
 
 --- Set a specific bit at the given coordinates.
 --- @param x integer The x-coordinate (1-based).
