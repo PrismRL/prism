@@ -4,7 +4,12 @@ local lester = require "test.lester"
 local describe, it, expect = lester.describe, lester.it, lester.expect
 
 describe("prism", function()
-   describe("components", function()
+   require "test.tests.vector2"
+   require "test.tests.sparsearray"
+   require "test.tests.grid"
+   require "test.tests.priorityqueue"
+   require "test.tests.queue"
+   describe("Component", function()
       it("add component", function()
          local actor = prism.Actor()
          actor:give(prism.components.Collider())

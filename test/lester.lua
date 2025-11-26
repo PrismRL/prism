@@ -492,6 +492,7 @@ function expect.fail(func, expected)
    elseif expected ~= nil then
       local found = expected == err
       if not found and type(expected) == "string" then
+         --- @diagnostic disable-next-line
          found = string.find(tostring(err), expected, 1, true)
       end
       if not found then
