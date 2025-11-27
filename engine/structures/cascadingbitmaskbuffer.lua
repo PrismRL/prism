@@ -1,4 +1,4 @@
-local bit = require("bit")
+local bit = require "bit"
 
 --- A class representing a cascade of BitmaskBuffers for kernel checks, all at the same resolution.
 --- @class CascadingBitmaskBuffer : Object
@@ -25,8 +25,7 @@ end
 -- Helper function to safely get a mask value from a BitmaskBuffer.
 -- Returns 0 if the coordinates are out of bounds, preventing errors.
 local function safeGetMaskValue(self, buffer, xCoord, yCoord)
-   if xCoord >= 1 and xCoord <= self.width and
-       yCoord >= 1 and yCoord <= self.height then
+   if xCoord >= 1 and xCoord <= self.width and yCoord >= 1 and yCoord <= self.height then
       return buffer:getMask(xCoord, yCoord)
    end
    return 0
@@ -44,8 +43,8 @@ function CascadingBitmaskBuffer:_cascade(xInitial, yInitial)
       local prevLevelBuffer = self.cascade[changedLevel - 1]
       local currentLevelBuffer = self.cascade[changedLevel]
 
-      local nextMinX = self.width + 1  -- Initialize beyond max
-      local nextMaxX = 0               -- Initialize before min
+      local nextMinX = self.width + 1 -- Initialize beyond max
+      local nextMaxX = 0 -- Initialize before min
       local nextMinY = self.height + 1
       local nextMaxY = 0
 
@@ -78,18 +77,14 @@ function CascadingBitmaskBuffer:_cascade(xInitial, yInitial)
          end
       end
 
-      if not levelChanged then
-         break
-      end
+      if not levelChanged then break end
 
       currentMinX = math.max(1, nextMinX)
       currentMaxX = math.min(self.width, nextMaxX)
       currentMinY = math.max(1, nextMinY)
       currentMaxY = math.min(self.height, nextMaxY)
 
-      if currentMinX > currentMaxX or currentMinY > currentMaxY then
-         break
-      end
+      if currentMinX > currentMaxX or currentMinY > currentMaxY then break end
    end
 end
 
@@ -112,7 +107,10 @@ end
 --- @param level integer The cascade level (1-based).
 --- @return BitmaskBuffer buffer The BitmaskBuffer for the given level.
 function CascadingBitmaskBuffer:getCascadeLevel(level)
-   assert(level >= 1 and level <= self.maxCascadeLevel, "Cascade level out of range (" .. level .. ")")
+   assert(
+      level >= 1 and level <= self.maxCascadeLevel,
+      "Cascade level out of range (" .. level .. ")"
+   )
    return self.cascade[level]
 end
 

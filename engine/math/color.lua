@@ -1,3 +1,4 @@
+local bit = require("bit")
 --- @class Color4 : Object
 --- @field r number The red component (0-1).
 --- @field g number The green component (0-1).

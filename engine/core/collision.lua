@@ -1,3 +1,4 @@
+local bit = require("bit")
 --- Keeps track of different move types or "layers" in the game for use in collision detection.
 --- @class Collision
 local Collision = {}

@@ -6,6 +6,8 @@ function prism.require(p)
    return require(table.concat({ prism.path, p }, "."))
 end
 
+if not package.loaded["bit"] then package.loaded["bit"] = prism.require("lib.bit").bit end
+
 --- @module "engine.lib.json"
 prism.json = prism.require "lib.json"
 
@@ -383,10 +385,10 @@ function prism.loadModule(directory)
    local definitions = { "--- @meta " .. string.lower(directory) }
    prism._currentDefinitions = definitions
 
-   if love.filesystem.read(directory .. "/module.lua") then
+   if love.filesystem.getInfo(directory .. "/module.lua") then
       local filename = directory:gsub("/", ".") .. ".module"
       require(filename)
-   elseif love.filesystem.read(directory .. "/init.lua") then
+   elseif love.filesystem.getInfo(directory .. "/init.lua") then
       local filename = directory:gsub("/", ".")
       require(filename)
    end
