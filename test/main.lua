@@ -9,6 +9,8 @@ describe("prism", function()
    require "test.tests.grid"
    require "test.tests.priorityqueue"
    require "test.tests.queue"
+   require "test.tests.sparsemap"
+
    describe("Component", function()
       it("add component", function()
          local actor = prism.Actor()

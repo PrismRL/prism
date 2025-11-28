@@ -121,6 +121,7 @@ function SparseMap:remove(x, y, val)
 
    self.__count = self.__count - 1
    self.list[val][xyhash] = nil
+   if not next(self.list[val]) then self.list[val] = nil end
    self.map[xyhash][val] = nil
    return true
 end
@@ -130,29 +131,10 @@ function SparseMap:removeAll(val)
 
    for hash, _ in pairs(self.list[val]) do
       self.map[hash][val] = nil
+      self.__count = self.__count - 1
    end
 
    self.list[val] = nil
 end
-
--- Some quick n dirty testing
-local test = SparseMap()
-test:insert(1, 1, "test")
-test:insert(1, 2, "test2")
-test:insert(3, 1, "test3")
-
-assert(test:count() == 3)
-assert(test:countCell(1, 1) == 1)
-assert(test:countCell(1, 2) == 1)
-assert(test:countCell(3, 1) == 1)
-assert(test:has(1, 1, "test"))
-assert(test:has(1, 2, "test2"))
-assert(test:has(3, 1, "test3"))
-assert(test:get(1, 1).test)
-assert(test:get(1, 2).test2)
-assert(test:get(3, 1).test3)
-assert(not test:has(1, 1, "test4"))
-assert(test:remove(1, 1, "test"))
-assert(test:count() == 2)
 
 return SparseMap

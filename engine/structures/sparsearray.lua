@@ -16,7 +16,7 @@ local INDEX_MASK = 0xFFFFFFFF -- (1 << 32) - 1
 --- @param generation number The generation count
 --- @return number handle Packed handle as a Lua number
 local function pack_handle(index, generation)
-   return index + generation * 2^32
+   return index + generation * 2 ^ 32
 end
 
 --- Unpacks a handle into index and generation components.
@@ -25,7 +25,7 @@ end
 --- @return number generation The generation count
 local function unpack_handle(handle)
    local index = bit.band(handle, INDEX_MASK)
-   local generation = math.floor(handle / 2^32)
+   local generation = math.floor(handle / 2 ^ 32)
    return index, generation
 end
 
@@ -81,12 +81,8 @@ end
 --- @return any|nil The item at the given handle, or nil if not found or stale.
 function SparseArray:get(handle)
    local index, gen = unpack_handle(handle)
-   print(index, gen)
-   if self.generations[index] == gen then
-      return self.data[index]
-   end
+   if self.generations[index] == gen then return self.data[index] end
 end
-
 
 --- Clears the sparse array.
 function SparseArray:clear()
