@@ -54,9 +54,9 @@ function BitmaskBuffer:setBit(x, y, bitIndex, v)
    assert(bitIndex >= 0 and bitIndex < 16, "Bit index out of range (" .. bitIndex .. ")")
    local index = self:getIndex(x, y)
    if v then
-      self.buffer[index] = bit.bor(self.buffer[index], bit.lshift(1, bitIndex))
+      self.buffer[index] = bit.bor(self.buffer[index] or 0, bit.lshift(1, bitIndex))
    else
-      self.buffer[index] = bit.band(self.buffer[index], bit.bnot(bit.lshift(1, bitIndex)))
+      self.buffer[index] = bit.band(self.buffer[index] or 0, bit.bnot(bit.lshift(1, bitIndex)))
    end
 end
 
@@ -76,7 +76,7 @@ end
 --- @param y integer The y-coordinate (1-based).
 --- @return Bitmask value The 16-bit mask value.
 function BitmaskBuffer:getMask(x, y)
-   return self.buffer[self:getIndex(x, y)]
+   return self.buffer[self:getIndex(x, y)] or 0
 end
 
 --- Set the full 16-bit mask value at the given coordinates.
