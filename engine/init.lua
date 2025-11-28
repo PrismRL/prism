@@ -342,7 +342,7 @@ local function loadRegistry(path, registry, recurse, definitions)
       love.filesystem.getInfo(fileName, info)
 
       if info.type == "file" then
-         local requireName = string.gsub(fileName, ".lua", "")
+         local requireName = string.gsub(fileName, "%.lua", "")
          requireName = string.gsub(requireName, "/", ".")
 
          local item = require(requireName)
