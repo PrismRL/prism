@@ -231,7 +231,7 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
 
 .. code-block:: lua
 
-   builder:addPadding(1, prism.cells.Wall)
+   builder:pad(1, prism.cells.Wall)
 
    return builder
 
@@ -324,7 +324,7 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
             end
          end
 
-         builder:addPadding(1, prism.cells.Wall)
+         builder:pad(1, prism.cells.Wall)
 
          return builder
       end
