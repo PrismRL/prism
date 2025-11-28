@@ -288,8 +288,8 @@ checking passability with a custom collision mask.
 
       local KickTarget = prism.Target(prism.components.Collider):range(1):sensed()
 
-      ---@class KickAction : Action
-      local Kick = prism.Action:extend("KickAction")
+      ---@class Kick : Action
+      local Kick = prism.Action:extend("Kick")
       Kick.targets = { KickTarget }
       Kick.requiredComponents = {
          prism.components.Controller,
@@ -331,23 +331,23 @@ something that blocked their movement. Let's check if there's a valid actor to k
 
 .. code-block:: lua
 
-    function GameLevelState:updateDecision(dt, owner, decision)
-        -- Controls need to be updated each frame.
-        controls:update()
+   function GameLevelState:updateDecision(dt, owner, decision)
+       -- Controls need to be updated each frame.
+       controls:update()
 
-        -- Controls are accessed directly via table index.
-        if controls.move.pressed then
-            local destination = owner:getPosition() + controls.move.vector
-            local move = prism.actions.Move(owner, destination)
-            if self:setAction(move) then return end
+       -- Controls are accessed directly via table index.
+       if controls.move.pressed then
+           local destination = owner:getPosition() + controls.move.vector
+           local move = prism.actions.Move(owner, destination)
+           if self:setAction(move) then return end
 
-            local target = self.level:query() -- grab a query object
-                :at(destination:decompose()) -- restrict the query to the destination
-                :first() -- grab one of the kickable things, or nil
+           local target = self.level:query() -- grab a query object
+               :at(destination:decompose()) -- restrict the query to the destination
+               :first() -- grab one of the kickable things, or nil
 
-            local kick = prism.actions.Kick(owner, target)
-            self:setAction(kick)
-        end
+           local kick = prism.actions.Kick(owner, target)
+           self:setAction(kick)
+       end
 
 .. note::
 

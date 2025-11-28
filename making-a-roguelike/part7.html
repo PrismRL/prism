@@ -238,7 +238,7 @@ the starting room and spawn a kobold there.</p>
 <section id="sending-it-back">
 <h2>Sending it back<a class="headerlink" href="#sending-it-back" title="Link to this heading">¶</a></h2>
 <p>Finally we’ll pad the entire map in some walls and return the finished <a class="reference internal" href="../reference/prism/core/levelbuilder.html#lua-LevelBuilder" title="LevelBuilder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">LevelBuilder</span></code></a>.</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">:</span><span class="n">addPadding</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">builder</span><span class="p">:</span><span class="n">pad</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
 <span class="kr">return</span> <span class="n">builder</span>
 </pre></div>
@@ -331,7 +331,7 @@ the starting room and spawn a kobold there.</p>
       <span class="kr">end</span>
    <span class="kr">end</span>
 
-   <span class="n">builder</span><span class="p">:</span><span class="n">addPadding</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
+   <span class="n">builder</span><span class="p">:</span><span class="n">pad</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">)</span>
 
    <span class="kr">return</span> <span class="n">builder</span>
 <span class="kr">end</span>
