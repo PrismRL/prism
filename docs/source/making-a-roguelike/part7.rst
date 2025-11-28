@@ -63,6 +63,9 @@ whether we preview the level or not. Rather than loading our regular state, we'l
       else
          manager:push(GameLevelState(display))
       end
+      manager:hook()
+      spectrum.Input:hook()
+   end
 
 Populating the void
 -------------------
@@ -147,7 +150,7 @@ drawn.
             rooms[prism.Vector2._hash(px, py)] = roomRect
 
             coroutine.yield()
-            builder:rectangle(x, y, x + rw, y + rh, prism.cells.Floor)
+            builder:rectangle("fill", x, y, x + rw, y + rh, prism.cells.Floor)
          end
       end
    end
@@ -276,7 +279,7 @@ Finally we'll pad the entire map in some walls and return the finished :lua:clas
                   local roomRect = prism.Rectangle(x, y, rw, rh)
                   rooms[prism.Vector2._hash(px, py)] = roomRect
 
-                  builder:rectangle(x, y, x + rw, y + rh, prism.cells.Floor)
+                  builder:rectangle("fill", x, y, x + rw, y + rh, prism.cells.Floor)
                end
             end
          end
