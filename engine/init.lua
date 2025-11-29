@@ -285,7 +285,7 @@ end
 --- Registers an object into its registry. Errors if the object has no registry.
 --- For factories (Actor, Cell, Animation, etc.) use the specific function, e.g. prism.registerActor.
 --- @param object Object The object to register.
---- @param skipDefinitions boolean Whether to skip writing to definitions files.
+--- @param skipDefinitions? boolean Whether to skip writing to definitions files.
 function prism.register(object, skipDefinitions)
    if type(object) == "string" then
       error(

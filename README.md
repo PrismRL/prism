@@ -39,6 +39,7 @@ Our website hosts a [gallery](https://prismrl.github.io/prism/gallery.html) of g
 - [anim8](https://github.com/kikito/anim8)
 - [rotLove](https://github.com/paulofmandown/rotLove)
 - [mash](https://github.com/Sheepolution/mash)
+- [lua-bit-numberlua](https://github.com/davidm/lua-bit-numberlua)
 
 #### Geometer
 
