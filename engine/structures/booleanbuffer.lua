@@ -53,7 +53,7 @@ end
 --- @param y integer The y-coordinate (1-based).
 --- @return boolean value The value at the given coordinates.
 function BooleanBuffer:get(x, y)
-   return self.buffer[self:getIndex(x, y)]
+   return self.buffer[self:getIndex(x, y)] or false
 end
 
 if not ffi then BooleanBuffer.clear = function(self)

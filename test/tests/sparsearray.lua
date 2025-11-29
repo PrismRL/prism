@@ -3,11 +3,9 @@ require "engine"
 local lester = require "test.lester"
 local describe, it, expect = lester.describe, lester.it, lester.expect
 
--- Adjust this require path to wherever your SparseArray module lives.
 local SparseArray = prism.SparseArray
 
 describe("SparseArray", function()
-
    it("starts empty", function()
       local sa = SparseArray()
 
@@ -107,7 +105,7 @@ describe("SparseArray", function()
 
    it("get returns nil for invalid handle", function()
       local sa = SparseArray()
-      local bogus = 2^32 + 123
+      local bogus = 2 ^ 32 + 123
       expect.falsy(sa:get(bogus))
    end)
 
@@ -155,3 +153,4 @@ describe("SparseArray", function()
       expect.equal(values[2], "c")
    end)
 end)
+
