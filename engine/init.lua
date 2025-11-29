@@ -201,6 +201,7 @@ local function registerFactory(registry)
    local className = registry.class.className
 
    prism.writeDefinitions(
+      string.format("--- @alias %sFactory fun(...): %s", className, className),
       string.format("--- Registers a %s in the %s registry.", className, registry.name),
       "--- @param name string A name for the factory",
       string.format("--- @param factory %sFactory", className),

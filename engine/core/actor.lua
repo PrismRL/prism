@@ -7,8 +7,6 @@
 --- @overload fun(): Actor
 local Actor = prism.Entity:extend("Actor")
 
---- @alias ActorFactory fun(...): Actor
-
 --- Constructor for an actor.
 --- Initializes and copies the actor's fields from its prototype.
 --- @param self Actor

@@ -1,5 +1,3 @@
---- @alias TargetFactory fun(...): Target
-
 --- Targets represent what actions are able to act on. The builder pattern is used to
 --- narrow down various requirements for actions.
 --- @class Target : Object
