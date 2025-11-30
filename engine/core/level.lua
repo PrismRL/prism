@@ -225,6 +225,7 @@ function Level:__removeComponent(actor, component)
    self.actorStorage:updateComponentCache(actor)
    self:_updateSparseMap(actor)
    if prism.components.Controller:is(component) then self.scheduler:remove(actor) end
+   self:trigger("onComponentRemoved", self, actor, component)
 end
 
 --- Adds a component to an actor. It handles updating
@@ -237,6 +238,7 @@ function Level:__addComponent(actor, component)
    self.actorStorage:updateComponentCache(actor)
    self:_updateSparseMap(actor)
    if prism.components.Controller:is(component) then self.scheduler:add(actor) end
+   self:trigger("onComponentAdded", self, actor, component)
 end
 
 function Level:_updateSparseMap(actor)
