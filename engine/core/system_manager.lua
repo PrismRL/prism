@@ -12,12 +12,15 @@ end
 --- Adds a system to the manager.
 --- @param system System The system to add.
 function SystemManager:addSystem(system)
-   assert(not self:getSystem(system), "Level already has system " .. system.className .. "!")
+   assert(
+      not self:getSystem(getmetatable(system)),
+      "Level already has system " .. system.className .. "!"
+   )
 
    -- Check our requirements and make sure we have all the systems we need
    for _, requirement in ipairs(system.requirements) do
-      local err = "System %s requires system %s but it is not present"
-      assert(self:getSystem(system), err:format(system.className, requirement.className))
+      local err = "System %s requires system %s but it is not present!"
+      assert(self:getSystem(requirement), err:format(system.className, requirement.className))
    end
 
    -- Check the soft requirements of all previous systems and make sure we don't have any out
@@ -25,7 +28,7 @@ function SystemManager:addSystem(system)
    for _, existingSystem in pairs(self.systems) do
       for _, softRequirement in ipairs(existingSystem.softRequirements) do
          if softRequirement:is(system) then
-            local err = "System %s is out of order. It must be added before %s"
+            local err = "System %s is out of order. It must be added before %s."
             error(err:format(system.className, existingSystem.className))
          end
       end
