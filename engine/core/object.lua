@@ -7,7 +7,7 @@ prism._ISCLASS = {}
 --- @field private __index any
 --- @field private __call any
 --- @field className string (static) A unique name for this class. By convention this should match the annotation name you use.
---- @field private _isInstance boolean
+--- @field package _isInstance boolean
 --- @field serializationBlacklist table<string, boolean>
 local Object = {}
 Object.className = "Object"
@@ -32,7 +32,6 @@ function Object:extend(className, ignoreclassName)
    o.className = className
    o.super = self
 
-   --print(className, not ignoreclassName, not prism._OBJECTREGISTRY[className])
    assert(
       ignoreclassName or not prism._OBJECTREGISTRY[className],
       className .. " is already in use by another prototype!"
@@ -89,6 +88,10 @@ function Object:is(o)
    if not o then return false end
 
    if self == o then return true end
+
+   if self:isInstance() then
+      error("Object:is was called with an instance but should be called with a prototype!")
+   end
 
    local parent = getmetatable(o)
    while parent do
@@ -200,10 +203,7 @@ function Object.serialize(object)
 
          if isSerializableObject(obj) then
             className = obj.className
-            if className == "Level" then print "SERIALIZING LEVEL" end
-            if obj.__serialize then
-               sourceTable = obj:__serialize(ctx)
-            end
+            if obj.__serialize then sourceTable = obj:__serialize(ctx) end
          end
 
          local objData = {
@@ -247,7 +247,7 @@ function Object.deserialize(data)
    local refs = data.references
    local idToObject = {}
 
-   -- 1) Allocate plain shells for all ids 
+   -- 1) Allocate plain shells for all ids
    for id, _ in ipairs(refs) do
       idToObject[id] = {}
    end
@@ -280,7 +280,9 @@ function Object.deserialize(data)
    -- Hook context
    local ctx = {
       revive = resolveValue,
-      getById = function(i) return idToObject[i] end,
+      getById = function(i)
+         return idToObject[i]
+      end,
    }
 
    -- 3) Fill fields (use __deserialize if provided; otherwise assign directly)
@@ -299,7 +301,6 @@ function Object.deserialize(data)
          obj[k] = v
       end
    end
-   
 
    for _, obj in ipairs(idToObject) do
       if obj.__deserialize then obj:__deserialize(ctx) end
@@ -378,9 +379,7 @@ function Object:deepcopy(ignore)
 
    local out = {}
    for k, v in pairs(self) do
-      if not ignore or not ignore[k] then
-         out[_copy(k)] = _copy(v)
-      end
+      if not ignore or not ignore[k] then out[_copy(k)] = _copy(v) end
    end
 
    return setmetatable(out, getmetatable(self))
@@ -388,4 +387,5 @@ end
 
 --- @type Object
 local ret = Object:__call()
+ret._isInstance = false
 return ret
