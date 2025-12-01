@@ -403,9 +403,10 @@ function prism.loadModule(directory)
       component.requirements = { component:getRequirements() }
    end
 
-   for _, system in ipairs(prism.systems) do
+   for _, system in pairs(prism.systems) do
       --- @cast system System
       system.requirements = { system:getRequirements() }
+      system.softRequirements = { system:getSoftRequirements() }
    end
 
    local lastSubdir = directory:match("([^/\\]+)$")
