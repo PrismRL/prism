@@ -30,7 +30,11 @@ end
 --- @param previousTargets any[]? A list of the previous target objects.
 function Target:validate(level, owner, targetObject, previousTargets)
    if targetObject == nil then
-      if self._optional then return false else return true end
+      if self._optional then
+         return true
+      else
+         return false
+      end
    end
 
    if self.inLevel and prism.Actor:is(targetObject) and not level:hasActor(targetObject) then
