@@ -68,6 +68,21 @@ function System:onActorAdded(level, actor) end
 --- @param actor Actor The Actor object that has been removed.
 function System:onActorRemoved(level, actor) end
 
+--- This method is called after a Component has been added to an Actor on the Level.
+--- Use this to react to actors gaining new capabilities (e.g. updating caches, FOV, AI lists, etc.).
+--- @param level Level The Level object this System is attached to.
+--- @param actor Actor The Actor that had the Component added.
+--- @param component Component The Component instance that was added.
+function System:onComponentAdded(level, actor, component) end
+
+--- This method is called after a Component has been removed from an Actor on the Level.
+--- Use this to react to actors losing capabilities (e.g. removing from registries, recalculating state, etc.).
+--- @param level Level The Level object this System is attached to.
+--- @param actor Actor The Actor that had the Component removed.
+--- @param component Component The Component instance that was removed.
+function System:onComponentRemoved(level, actor, component) end
+
+
 --- Called when an actor or tile has its opacity changed.
 --- @param level Level The Level object this System is attached to.
 --- @param x number The x coordinate of the tile.
