@@ -341,13 +341,14 @@ function Display:putSprite(x, y, sprite, color, layer)
       for y = y, y + size - 1 do
          for x = x, x + size - 1 do
             local isSprite = type(sprite.indices[i]) == "table"
+            local indexed = sprite.indices[i]
             self:put(
                x,
                y,
-               isSprite and sprite.indices[i].index or sprite.indices[i],
-               color or (isSprite and sprite.indices[i].color or sprite.color),
-               isSprite and sprite.indices[i].background or sprite.background,
-               layer or (isSprite and sprite.indices[i].layer or sprite.layer)
+               isSprite and indexed.index or indexed,
+               color or (isSprite and indexed.color or sprite.color),
+               isSprite and indexed.background or sprite.background,
+               layer or (isSprite and indexed.layer or sprite.layer)
             )
             i = i + 1
          end
@@ -585,7 +586,7 @@ end
 --- @param bg Color4? The background color.
 --- @param layer number? The draw layer.
 function Display:rectangle(mode, x, y, w, h, char, fg, bg, layer)
-   if mode == "fill" then
+   if mode == "line" then
       for dx = 0, w - 1 do
          self:put(x + dx, y, char, fg, bg, layer)
          self:put(x + dx, y + h - 1, char, fg, bg, layer)
