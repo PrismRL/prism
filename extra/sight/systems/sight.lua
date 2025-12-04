@@ -7,6 +7,7 @@ function SightSystem:getRequirements()
    return prism.systems.SensesSystem
 end
 
+local temp = prism.Vector2()
 -- These functions update the fov and visibility of actors on the level.
 ---@param level Level
 ---@param actor Actor
@@ -25,8 +26,17 @@ function SightSystem:onSenses(level, actor)
 
    -- we check if the sight component has a fov and if so we clear it
    if sightComponent.fov then
-      local sightLimit = sightComponent.range
-      self.computeFOV(level, sensesComponent, actorPos, sightLimit)
+      local collider = actor:get(prism.components.Collider)
+      if collider and collider:getSize() > 1 then
+         for x = actorPos.x, actorPos.x + collider:getSize() - 1 do
+            for y = actorPos.y, actorPos.y + collider:getSize() - 1 do
+               temp:compose(x, y)
+               self.computeFOV(level, sensesComponent, temp, sightLimit)
+            end
+         end
+      else
+         self.computeFOV(level, sensesComponent, actorPos, sightLimit)
+      end
    else
       -- we have a sight component but no fov which essentially means the actor has blind sight and can see
       -- all cells within a certain radius  generally only simple actors have this vision type
