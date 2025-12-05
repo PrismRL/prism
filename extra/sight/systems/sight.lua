@@ -19,13 +19,13 @@ function SightSystem:onSenses(level, actor)
 
    local sightComponent = actor:get(prism.components.Sight)
    if not sightComponent then return end
-   local sightLimit = sightComponent.range
+   local sightLimit = sightComponent:getRange()
 
    local actorPos = actor:getPosition()
    if not actorPos then return end
 
    -- we check if the sight component has a fov and if so we clear it
-   if sightComponent.fov then
+   if sightComponent:hasFov() then
       local collider = actor:get(prism.components.Collider)
       if collider and collider:getSize() > 1 then
          for x = actorPos.x, actorPos.x + collider:getSize() - 1 do
