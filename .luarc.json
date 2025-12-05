@@ -13,7 +13,8 @@
         "geometer"
     ],
     "Lua.workspace.library": [
-        "lib"
+        "lib",
+        "definitions"
     ],
     "completion.autoRequire": false,
     "type.weakUnionCheck": true
