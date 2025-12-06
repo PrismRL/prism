@@ -173,19 +173,39 @@ function Display:putAnimations(level, ...)
    end
 
    for i = #self.animations, 1, -1 do
-      local animation = self.animations[i]
-      if animation.animation:isCustom() then
-         animation.animation:draw(self)
-      else
-         local x, y = animation.x, animation.y
-         if animation.actor then
-            animation.actor:getPosition(reusedPosition)
-            x = x + (reusedPosition and reusedPosition.x or 0)
-            y = y + (reusedPosition and reusedPosition.y or 0)
-         end
+      self:putAnimation(self.animations[i], senses)
+   end
+end
 
-         animation.animation:draw(self, x, y)
+--- Puts a single animation to the display. Handles senses.
+--- @param message AnimationMessage The animation to put.
+--- @param senses Senses[] If the animation has an actor, it must be sensed by one of these to be drawn.
+function Display:putAnimation(message, senses)
+   local shouldPlay = false
+   if message.actor then
+      for _, sense in ipairs(senses) do
+         if sense.owner:hasRelation(prism.relations.SensesRelation, message.actor) then
+            shouldPlay = true
+         end
       end
+
+      if not shouldPlay then
+         message.animation:pause()
+         return
+      end
+   end
+
+   if message.animation:isCustom() then
+      message.animation:draw(self)
+   else
+      local x, y = message.x, message.y
+      if message.actor then
+         message.actor:getPosition(reusedPosition)
+         x = x + (reusedPosition and reusedPosition.x or 0)
+         y = y + (reusedPosition and reusedPosition.y or 0)
+      end
+
+      message.animation:draw(self, x, y)
    end
 end
 
