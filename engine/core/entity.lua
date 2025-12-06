@@ -220,8 +220,8 @@ end
 function Entity:hasRelation(relationType, target)
    self.relations = self.relations or {}
    if not self.relations[relationType] then return false end
-   return (target and self.relations[relationType][target] ~= nil)
-      or next(self.relations[relationType]) ~= nil
+   if target then return self.relations[relationType][target] ~= nil end
+   return next(self.relations[relationType]) ~= nil
 end
 
 --- Gets all relations of a given type.
