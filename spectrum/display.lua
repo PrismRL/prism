@@ -182,7 +182,7 @@ end
 --- @param senses Senses[] If the animation has an actor, it must be sensed by one of these to be drawn.
 function Display:putAnimation(message, senses)
    local shouldPlay = false
-   if message.actor then
+   if message.actor and message.actor.level then
       for _, sense in ipairs(senses) do
          if sense.owner:hasRelation(prism.relations.SensesRelation, message.actor) then
             shouldPlay = true
