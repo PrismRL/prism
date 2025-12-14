@@ -19,7 +19,9 @@ function LevelState:__new(level, display)
    self.decision = nil
    self.message = nil
    self.display = display
-   if geometer then self.editor = spectrum.gamestates.EditorState(self.level, self.display) end
+   if geometer then
+      self.editor = spectrum.gamestates.EditorState(self.level, self:getGeometerDisplay())
+   end
    self.time = 0
 end
 
@@ -154,6 +156,12 @@ end
 --- @return Actor?
 function LevelState:getCurrentActor()
    return self.decision and self.decision.actor or nil
+end
+
+--- Returns the display to use for Geometer. This should be a base :lua:class:`Display`.
+--- Override this if you have a custom Display and want to maintain compatibility with Geometer.
+function LevelState:getGeometerDisplay()
+   return self.display
 end
 
 return LevelState
