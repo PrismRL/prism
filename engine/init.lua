@@ -327,7 +327,7 @@ function prism.register(object, skipDefinitions)
    if skipDefinitions then return end
 
    prism.writeDefinitions(
-      "--- @class " .. object.className,
+      "--- @class " .. object.className .. " : " .. getmetatable(object).className,
       "local " .. object.className .. " = nil",
       registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
    )
