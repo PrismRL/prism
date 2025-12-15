@@ -4,7 +4,7 @@
 local BTConditional = prism.BehaviorTree.Node:extend("BehaviorTree.Conditional")
 
 --- Creates a new BehaviorTree.Conditional.
---- @param conditionFunc fun(self: BehaviorTree.Conditional, level: Level, actor: Actor): boolean
+--- @param conditionFunc fun(self: BehaviorTree.Conditional, level: Level, actor: Actor, controller: Controller): boolean
 function BTConditional:__new(conditionFunc)
    self.conditionFunc = conditionFunc
 end
@@ -15,7 +15,7 @@ end
 --- @param controller Controller
 --- @return boolean|Action
 function BTConditional:run(level, actor, controller)
-   return self:conditionFunc(level, actor)
+   return self:conditionFunc(level, actor, controller)
 end
 
 return BTConditional
