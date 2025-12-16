@@ -51,7 +51,7 @@ during input handling.
 .. code-block:: lua
 
    local utf8 = require "utf8"
-   local keybindings = require "keybindingschema"
+   local controls = require "controls"
 
    --- @class InventoryState : GameState
    --- @overload fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)
@@ -117,12 +117,14 @@ keypress and for now we just try to drop the item when we hit that button. ``Dro
 .. code-block:: lua
 
    function InventoryState:update(dt)
+      controls:update()
+
       for i, letter in ipairs(self.letters) do
          if spectrum.Input.key[letter].pressed then
             local pressedItem = self.items[i]
             local drop = prism.actions.Drop(self.decision.actor, pressedItem)
             if drop:canPerform(self.level) then
-               self.decision:setAction(drop)
+               self.decision:setAction(drop, self.level)
             end
 
             self.manager:pop()
@@ -148,7 +150,7 @@ Then we check if the user hit the inventory or return key, and if so we call
 
    .. code:: lua
 
-      local keybindings = require "keybindingschema"
+      local controls = require "controls"
 
       --- @class InventoryState : GameState
       --- @field previousState GameState
@@ -198,6 +200,8 @@ Then we check if the user hit the inventory or return key, and if so we call
       end
 
       function InventoryState:update(dt)
+         controls:update()
+
          for i, letter in ipairs(self.letters) do
             if spectrum.Input.key[letter].pressed then
                local pressedItem = self.items[i]

@@ -222,7 +222,7 @@ At the end of ``levelgen.lua``, we'll spawn a chest in the middle of a random ro
 
    local chestRoom = availableRooms[rng:random(1, #availableRooms)]
    local center = chestRoom:center():floor()
-   local drops = prism.components.DropTable(chestloot):getDrops(rng)
+   local drops = prism.components.DropTable(require "loot/chest"):getDrops(rng)
 
    builder:addActor(prism.actors.Chest(drops), center:decompose())
 
