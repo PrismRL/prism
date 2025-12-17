@@ -60,6 +60,12 @@ function Vector2:floor()
    return Vector2(math.floor(self.x), math.floor(self.y))
 end
 
+---Returns a Vector2 rounding coordinates > 0.5 up, otherwise down.
+---@return Vector2
+function Vector2:round()
+   return Vector2(math.floor(self.x + 0.5), math.floor(self.y + 0.5))
+end
+
 --- Rotates the vector clockwise.
 --- @return Vector2 The rotated vector.
 function Vector2:rotateClockwise()
@@ -127,7 +133,7 @@ end
 --- @param y integer
 function Vector2._hash(x, y)
    -- Shift to handle negatives (assuming 26-bit signed integers)
-   x = x + 0x2000000 -- Shift range from [-2^25, 2^25-1] to [0, 2^26-1]
+   x = x + 0x2000000        -- Shift range from [-2^25, 2^25-1] to [0, 2^26-1]
    y = y + 0x2000000
    return y * 0x4000000 + x -- Combine into a single number
 end
