@@ -153,4 +153,3 @@ describe("SparseArray", function()
       expect.equal(values[2], "c")
    end)
 end)
-
