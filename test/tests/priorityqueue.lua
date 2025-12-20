@@ -6,7 +6,6 @@ local describe, it, expect = lester.describe, lester.it, lester.expect
 local PriorityQueue = prism.PriorityQueue
 
 describe("PriorityQueue", function()
-
    it("starts empty", function()
       local pq = PriorityQueue()
       expect.truthy(pq:isEmpty())
@@ -97,5 +96,4 @@ describe("PriorityQueue", function()
       expect.equal(pq:pop(), nil)
       expect.equal(pq:size(), 0)
    end)
-
 end)

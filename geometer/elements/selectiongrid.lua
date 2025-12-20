@@ -33,6 +33,8 @@ local function Tile(self, scene)
 
    return function(_, x, y, w, h)
       local drawable = self.props.placeable.entity:get(prism.components.Drawable)
+      if not drawable then return end
+      
       local quad = self.props.display:getQuad(drawable.index)
 
       love.graphics.push("all")
