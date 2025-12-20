@@ -607,4 +607,9 @@ function Level:__finalize()
    end
 end
 
+--- @return Vector2
+function Level:getSize()
+   return prism.Vector2(self.map.w, self.map.h)
+end
+
 return Level
