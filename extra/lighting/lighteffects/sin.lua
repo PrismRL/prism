@@ -9,14 +9,14 @@ local SineLightEffect = prism.lighting.LightEffect:extend "Sin"
 function SineLightEffect:__new(opts)
    opts = opts or {}
 
-   self.amplitude    = opts.amplitude    or 0.2
-   self.speed        = opts.speed        or 2.0
+   self.amplitude = opts.amplitude or 0.2
+   self.speed = opts.speed or 2.0
 
    -- Frequency of spatial sampling
    self.spatialScale = opts.spatialScale or 0.15
 
    -- Strength of phase distortion
-   self.noiseScale   = opts.noiseScale   or math.pi
+   self.noiseScale = opts.noiseScale or math.pi
 end
 
 --- @param time number
@@ -26,10 +26,7 @@ end
 --- @return Color4
 function SineLightEffect:effect(time, color, x, y)
    -- Sample smooth spatial noise
-   local n = love.math.perlinNoise(
-      x * self.spatialScale,
-      y * self.spatialScale
-   )
+   local n = love.math.noise(x * self.spatialScale, y * self.spatialScale)
 
    -- Map noise to phase offset
    local phase = n * self.noiseScale
