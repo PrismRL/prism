@@ -9,23 +9,21 @@ local TorchFlicker = prism.lighting.LightEffect:extend "Flicker"
 
 --- @param opts table?
 function TorchFlicker:__new(opts)
-   opts                  = opts or {}
+   opts = opts or {}
 
    self.flickerAmplitude = opts.flickerAmplitude or 0.3
-   self.baseIntensity    = 1 - self.flickerAmplitude
-   self.colorShift       = opts.colorShift or 0.2
-   self.speed            = opts.speed or 3
+   self.baseIntensity = 1 - self.flickerAmplitude
+   self.colorShift = opts.colorShift or 0.2
+   self.speed = opts.speed or 3
 end
 
 --- @param time number
 --- @param color Color4
 --- @return Color4
 function TorchFlicker:effect(time, color)
-   local flicker = love.math.perlinNoise(time * self.speed)
+   local flicker = love.math.noise(time * self.speed)
 
-   local intensity =
-       self.baseIntensity +
-       flicker * self.flickerAmplitude
+   local intensity = self.baseIntensity + flicker * self.flickerAmplitude
 
    local warm = flicker * self.colorShift
 
