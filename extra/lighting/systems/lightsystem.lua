@@ -45,10 +45,14 @@ function LightSystem:rebuild()
             x, y = actor:expectPosition():decompose()
          else
             local related = actor:getRelation(prism.relations.LightsRelation)
-            x, y = related:expectPosition():decompose()
+            if related then
+               x, y = related:expectPosition():decompose()
+            end
          end
 
-         self.lightBuffers[actor] = self:cast(x, y, light)
+         if x and y then
+            self.lightBuffers[actor] = self:cast(x, y, light)
+         end
       end
    end
 
@@ -104,12 +108,14 @@ function LightSystem:cast(x, y, lightComponent)
 
       for _, neighborDir in ipairs(prism.neighborhood) do
          local nx, ny = current.x + neighborDir.x, current.y + neighborDir.y
-         if not out:get(nx, ny) and not self.owner:getCellOpaque(nx, ny) then
-            local luminance = lightComponent:attenuate(current.depth + 1)
-            out:set(nx, ny, luminance)
-            if luminance >= self.MINIMUM_LUMINANCE then
-               frontier:push(samplePool:acquire(nx, ny, current.depth + 1))
-            end
+         if nx >= 1 and nx <= self.owner.map.w and ny >= 1 and ny <= self.owner.map.h then
+            if not out:get(nx, ny) and not self.owner:getCellOpaque(nx, ny) then
+               local luminance = lightComponent:attenuate(current.depth + 1)
+               out:set(nx, ny, luminance)
+               if luminance >= self.MINIMUM_LUMINANCE then
+                  frontier:push(samplePool:acquire(nx, ny, current.depth + 1))
+               end
+            end           
          end
       end
 
@@ -135,7 +141,7 @@ local function getValuePerspectiveImpl(self, getValue, x, y, actor)
    end
 
    -- If the cell itself is transparent, return true lighting
-   if not self.owner:getCellOpaque(x, y) then
+   if getValue(self, x, y) then
       return getValue(self, x, y)
    end
 
@@ -145,7 +151,7 @@ local function getValuePerspectiveImpl(self, getValue, x, y, actor)
    for _, dir in ipairs(prism.neighborhood) do
       local nx, ny = x + dir.x, y + dir.y
 
-      if senses.cells:get(nx, ny) and not self.owner:getCellOpaque(nx, ny) then
+      if senses.cells:get(nx, ny) and getValue(self, nx, ny) then
          local c = getValue(self, nx, ny)
          if c then
             accum = accum + c
