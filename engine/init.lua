@@ -103,6 +103,12 @@ prism.Path = prism.require "algorithms.astar.path"
 --- @module "engine.algorithms.astar.astar"
 prism.astar = prism.require "algorithms.astar.astar"
 
+--- @module "engine.algorithms.djisktra"
+prism.djisktra = prism.require "algorithms.djisktra"
+
+--- @module "engine.algorithms.bfs"
+prism.bfs = prism.require "algorithms.bfs"
+
 -- Core
 --- @module "engine.core.query"
 prism.Query = prism.require "core.query"
