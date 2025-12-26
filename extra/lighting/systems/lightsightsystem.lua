@@ -1,6 +1,6 @@
 local LightSightSystem = prism.systems.SightSystem:extend "LightSightSystem"
 
-LightSightSystem.DEFAULT_DARKVISION = 2/16
+LightSightSystem.DEFAULT_DARKVISION = 2 / 16
 
 -- These functions update the fov and visibility of actors on the level.
 ---@param level Level
@@ -36,11 +36,14 @@ function LightSightSystem:onSenses(level, actor)
 
    local darkvision = sightComponent.darkvision or self.DEFAULT_DARKVISION
    local removed = {}
+   local actorPosition = actor:expectPosition()
+   local vec = prism.Vector2()
    for x, y, cell in sensesComponent.cells:each() do
       local value = lightSystem:getValuePerspective(x, y, actor)
       local luminance = value and value:average() or 0
 
-      if luminance < darkvision then
+      vec:compose(x, y)
+      if luminance < darkvision and actorPosition:distanceChebyshev(vec) > 1 then
          table.insert(removed, prism.Vector2(x, y))
       end
    end
