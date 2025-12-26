@@ -6,7 +6,6 @@ local describe, it, expect = lester.describe, lester.it, lester.expect
 local Queue = prism.Queue
 
 describe("Queue", function()
-
    it("starts empty", function()
       local q = Queue()
       expect.truthy(q:empty())
@@ -122,5 +121,4 @@ describe("Queue", function()
       expect.falsy(q:remove(3))
       expect.equal(q:size(), 2)
    end)
-
 end)

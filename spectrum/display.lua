@@ -308,13 +308,10 @@ function Display:_drawActors(drawnActors, senses, level, alpha)
 
          --- @cast position Position
          local ax, ay = position:getVector():decompose()
-         if self.pass then
-            self.pass(actor, ax, ay, drawable)
-         end
+         if self.pass then self.pass(actor, ax, ay, drawable) end
 
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha
-
 
          self:putDrawable(ax, ay, drawable, tempColor)
       end
