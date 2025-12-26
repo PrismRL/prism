@@ -23,7 +23,7 @@ describe("Grid", function()
 
    it("fromData initializes correctly", function()
       local g = Grid(1, 1)
-      local data = {1, 2, 3, 4}
+      local data = { 1, 2, 3, 4 }
       g:fromData(2, 2, data)
       expect.equal(g.w, 2)
       expect.equal(g.h, 2)
@@ -34,7 +34,7 @@ describe("Grid", function()
    it("fromData asserts on wrong length", function()
       local g = Grid(1, 1)
       local ok, err = pcall(function()
-         g:fromData(2, 2, {1, 2, 3})
+         g:fromData(2, 2, { 1, 2, 3 })
       end)
       expect.falsy(ok)
    end)
@@ -54,7 +54,7 @@ describe("Grid", function()
 
    it("set and get within bounds", function()
       local g = Grid(2, 2)
-      g.data = {nil, nil, nil, nil}
+      g.data = { nil, nil, nil, nil }
 
       g:set(1, 1, "a")
       g:set(2, 1, "b")
@@ -69,10 +69,18 @@ describe("Grid", function()
 
    it("set throws on out of bounds", function()
       local g = Grid(2, 2)
-      local ok1 = pcall(function() g:set(0, 1, "x") end)
-      local ok2 = pcall(function() g:set(3, 1, "x") end)
-      local ok3 = pcall(function() g:set(1, 0, "x") end)
-      local ok4 = pcall(function() g:set(1, 3, "x") end)
+      local ok1 = pcall(function()
+         g:set(0, 1, "x")
+      end)
+      local ok2 = pcall(function()
+         g:set(3, 1, "x")
+      end)
+      local ok3 = pcall(function()
+         g:set(1, 0, "x")
+      end)
+      local ok4 = pcall(function()
+         g:set(1, 3, "x")
+      end)
 
       expect.falsy(ok1)
       expect.falsy(ok2)
@@ -90,7 +98,7 @@ describe("Grid", function()
 
    it("fill sets all cells to a value", function()
       local g = Grid(3, 2)
-      g.data = {1, 2, 3, 4, 5, 6}
+      g.data = { 1, 2, 3, 4, 5, 6 }
       g:fill(9)
       expect.equal(#g.data, 6)
       for i = 1, #g.data do

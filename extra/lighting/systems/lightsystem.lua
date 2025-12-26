@@ -7,7 +7,7 @@ local samplePool = prism.lighting.LightSamplePool()
 --- @field rtBuffer Grid<Color4>
 --- @field tileInfluence Grid<table<Actor, number>>
 local LightSystem = prism.System:extend "LightSystem"
-LightSystem.MINIMUM_LUMINANCE = 1/16
+LightSystem.MINIMUM_LUMINANCE = 1 / 16
 
 --- @param level Level
 function LightSystem:initialize(level)
@@ -28,17 +28,27 @@ function LightSystem:setDirty(actor)
    end
 end
 
-function LightSystem:onComponentAdded(_, actor, _) self:setDirty(actor) end
-function LightSystem:onComponentRemoved(_, actor, _) self:setDirty(actor) end
-function LightSystem:onActorAdded(_, actor) self:setDirty(actor) end
-function LightSystem:onActorRemoved(_, actor) self:setDirty(actor) end
-function LightSystem:beforeMove(_, actor, _, _) self:setDirty(actor) end
+function LightSystem:onComponentAdded(_, actor, _)
+   self:setDirty(actor)
+end
+function LightSystem:onComponentRemoved(_, actor, _)
+   self:setDirty(actor)
+end
+function LightSystem:onActorAdded(_, actor)
+   self:setDirty(actor)
+end
+function LightSystem:onActorRemoved(_, actor)
+   self:setDirty(actor)
+end
+function LightSystem:beforeMove(_, actor, _, _)
+   self:setDirty(actor)
+end
 
 local dummy = prism.Color4()
 function LightSystem:rebuild()
    for actor, light in self.owner:query(prism.components.Light):iter() do
       --- @cast light Light
-      
+
       if not self.lightBuffers[actor] then
          local x, y
          if actor:getPosition() then
@@ -50,9 +60,7 @@ function LightSystem:rebuild()
             end
          end
 
-         if x and y then
-            self.lightBuffers[actor] = self:cast(x, y, light)
-         end
+         if x and y then self.lightBuffers[actor] = self:cast(x, y, light) end
       end
    end
 
@@ -72,24 +80,19 @@ function LightSystem:update()
    self.time = love.timer.getTime()
 
    -- Ensure static lighting is valid
-   if self.needsRebuild then
-      self:rebuild()
-   end
+   if self.needsRebuild then self:rebuild() end
 
    self.rtBuffer:clear()
 
    for _, buffer in pairs(self.lightBuffers) do
       for x, y, luminance in buffer.grid:each() do
          local c = buffer.color
-         if buffer.effect then
-            c = buffer.effect:effect(self.time, c, x, y)
-         end
+         if buffer.effect then c = buffer.effect:effect(self.time, c, x, y) end
          local cur = self.rtBuffer:get(x, y) or dummy
          self.rtBuffer:set(x, y, cur + c * luminance)
       end
    end
 end
-
 
 --- @return Grid<Color4>
 --- @param x integer
@@ -97,7 +100,7 @@ end
 --- @param lightComponent Light
 function LightSystem:cast(x, y, lightComponent)
    local out = prism.lighting.LightBuffer(lightComponent:getColor(), lightComponent.lightEffect)
-   local frontier = prism.Queue() 
+   local frontier = prism.Queue()
 
    frontier:push(samplePool:acquire(x, y, 0))
    out:set(x, y, 1)
@@ -115,7 +118,7 @@ function LightSystem:cast(x, y, lightComponent)
                if luminance >= self.MINIMUM_LUMINANCE then
                   frontier:push(samplePool:acquire(nx, ny, current.depth + 1))
                end
-            end           
+            end
          end
       end
 
@@ -136,14 +139,10 @@ local function getValuePerspectiveImpl(self, getValue, x, y, actor)
    if not senses then return nil end
 
    -- Actor cannot perceive this cell at all
-   if not senses.cells:get(x, y) then
-      return nil
-   end
+   if not senses.cells:get(x, y) then return nil end
 
    -- If the cell itself is transparent, return true lighting
-   if getValue(self, x, y) then
-      return getValue(self, x, y)
-   end
+   if getValue(self, x, y) then return getValue(self, x, y) end
 
    local accum = prism.Color4(0, 0, 0, 1)
    local count = 0
@@ -160,17 +159,13 @@ local function getValuePerspectiveImpl(self, getValue, x, y, actor)
       end
    end
 
-   if count > 0 then
-      return accum / count
-   end
+   if count > 0 then return accum / count end
 
    return prism.Color4(0, 0, 0, 1)
 end
 
 function LightSystem:getValue(x, y)
-   if self.needsRebuild then
-      self:rebuild()
-   end
+   if self.needsRebuild then self:rebuild() end
 
    return self.buffer:get(x, y)
 end
@@ -190,6 +185,5 @@ end
 function LightSystem:getRTValuePerspective(x, y, actor)
    return getValuePerspectiveImpl(self, LightSystem.getRTValue, x, y, actor)
 end
-
 
 return LightSystem
