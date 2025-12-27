@@ -28,7 +28,8 @@ end
 ---@param editor Editor
 ---@param display Display
 function Pen:draw(editor, display)
-   local x, y = editor.display:getCellUnderMouse()
+   local mx, my = love.mouse.getPosition()
+   local x, y = editor.display:getCellUnderMouse(mx / 3, my / 3)
    local drawable = self:getDrawable(editor.placeable)
 
    self:drawCell(display, drawable, x, y)
