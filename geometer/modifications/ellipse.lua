@@ -18,7 +18,7 @@ end
 function EllipseModification:execute(attachable, editor)
    local cellSet = prism.SparseGrid()
 
-   prism.Ellipse(editor.fillMode and "fill" or "line", self.center, self.rx, self.ry, function(x, y)
+   prism.ellipse(editor.fillMode and "fill" or "line", self.center, self.rx, self.ry, function(x, y)
       if not attachable:inBounds(x, y) then return end
 
       if cellSet:get(x, y) then return end

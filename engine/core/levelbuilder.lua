@@ -130,7 +130,7 @@ end
 --- @param ry number The radius along the y-axis.
 --- @param cellFactory CellFactory The cell factory to fill the ellipse with.
 function LevelBuilder:ellipse(mode, cx, cy, rx, ry, cellFactory)
-   prism.Ellipse(mode, prism.Vector2(cx, cy), rx, ry, function(x, y)
+   prism.ellipse(mode, prism.Vector2(cx, cy), rx, ry, function(x, y)
       self:set(x, y, cellFactory())
    end)
 end
@@ -142,7 +142,7 @@ end
 --- @param y2 number The y-coordinate of the ending point.
 --- @param cellFactory CellFactory The cell factory to draw the line with.
 function LevelBuilder:line(x1, y1, x2, y2, cellFactory)
-   local path = prism.Bresenham(x1, y1, x2, y2)
+   local path = prism.bresenham(x1, y1, x2, y2)
    for _, position in ipairs(path:getPath()) do
       self:set(position.x, position.y, cellFactory())
    end
