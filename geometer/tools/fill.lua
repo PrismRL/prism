@@ -25,7 +25,7 @@ end
 function Fill:bucket(attachable, x, y)
    local cell = attachable:getCell(x, y)
 
-   prism.BreadthFirstSearch(prism.Vector2(x, y), function(searchX, searchY)
+   prism.breadthFirstSearch(prism.Vector2(x, y), function(searchX, searchY)
       local cellAt
       if prism.LevelBuilder:is(attachable) then
          --- @cast attachable LevelBuilder

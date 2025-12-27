@@ -227,7 +227,7 @@ function Target:los(mask)
       end
 
       local ownerPosition = owner:expectPosition()
-      local path = prism.Bresenham(ownerPosition.x, ownerPosition.y, targetPosition:decompose())
+      local path = prism.bresenham(ownerPosition.x, ownerPosition.y, targetPosition:decompose())
 
       for _, point in ipairs(path:getPath()) do
          if ownerPosition ~= point then

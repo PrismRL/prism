@@ -21,7 +21,7 @@ function Ellipse:draw(editor, display)
 
    local drawable = self:getDrawable(editor.placeable)
 
-   prism.Ellipse(editor.fillMode and "fill" or "line", self.center, rx, ry, function(x, y)
+   prism.ellipse(editor.fillMode and "fill" or "line", self.center, rx, ry, function(x, y)
       if self.editor.attachable:inBounds(x, y) then self:drawCell(display, drawable, x, y) end
    end)
 end

@@ -48,7 +48,7 @@ end
 function Line:draw(editor, display)
    if not self.origin or not self.to then return end
 
-   local path = prism.Bresenham(self.origin.x, self.origin.y, self.to.x, self.to.y)
+   local path = prism.bresenham(self.origin.x, self.origin.y, self.to.x, self.to.y)
    local drawable = self:getDrawable(editor.placeable)
    for _, point in ipairs(path:getPath()) do
       self:drawCell(display, drawable, point.x, point.y)
