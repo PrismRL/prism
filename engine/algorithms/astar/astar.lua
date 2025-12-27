@@ -39,10 +39,11 @@ end
 ---@param minDistance? integer A minimum distance to be away from the goal. Defaults to zero.
 ---@param distanceType? DistanceType An optional distance type to use for calculating the minimum distance. Defaults to prism._defaultDistance.
 ---@return Path? path A path to the goal, or nil if a path could not be found or the start is already at the minimum distance.
-local function astarSearch(start, goal, passableCallback, costCallback, minDistance, distanceType)
+local function astarSearch(start, goal, passableCallback, costCallback, minDistance, distanceType, neighborhood)
    minDistance = minDistance or 0
    costCallback = costCallback or defaultCostCallback
    distanceType = distanceType or prism._defaultDistance
+   neighborhood = neighborhood or prism.neighborhood
 
    local frontier = prism.PriorityQueue()
    frontier:push(start, 0)
@@ -64,7 +65,7 @@ local function astarSearch(start, goal, passableCallback, costCallback, minDista
          break
       end
 
-      for _, neighborDir in ipairs(prism.neighborhood) do
+      for _, neighborDir in ipairs(neighborhood) do
          local neighbor = current + neighborDir
          --- @cast neighbor Vector2
          if passableCallback(neighbor.x, neighbor.y) then
