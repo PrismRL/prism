@@ -29,7 +29,8 @@ local function EditorGrid(self, scene)
 
    self:onPointer("press", function(_, pointer)
       local display = self.props.display
-      local cx, cy = display:getCellUnderMouse()
+      local mx, my = love.mouse.getPosition()
+      local cx, cy = display:getCellUnderMouse(mx / 3, my / 3)
 
       local tool = self.props.editor.tool
 
@@ -54,8 +55,11 @@ local function EditorGrid(self, scene)
       local r, g, b, a = love.graphics.getColor()
       self.props.display:clear()
       self.props.display:putLevel(self.props.attachable)
+      love.graphics.push()
+      love.graphics.scale(3, 3)
       self.props.editor.tool:draw(self.props.editor, self.props.display)
       self.props.display:draw()
+      love.graphics.pop()
       love.graphics.setColor(r, g, b, a)
 
       love.graphics.setScissor()
