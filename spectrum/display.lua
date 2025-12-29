@@ -416,11 +416,11 @@ end
 --- This function respects drawing layers, so higher layer values will overwrite lower ones.
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
---- @param char string|integer The character or index to draw.
+--- @param index? string|integer The character or index to draw.
 --- @param fg? Color4 The foreground color. Defaults to white.
 --- @param bg? Color4 The background color. Defaults to transparent.
---- @param layer number? The draw layer (higher numbers draw on top). Defaults to -math.huge.
-function Display:put(x, y, char, fg, bg, layer)
+--- @param layer? number The draw layer (higher numbers draw on top). Defaults to -math.huge.
+function Display:put(x, y, index, fg, bg, layer)
    if self.pushed then
       x = x + self.camera.x
       y = y + self.camera.y
@@ -433,7 +433,7 @@ function Display:put(x, y, char, fg, bg, layer)
    local cell = self.cells[x][y]
 
    if not layer or layer >= cell.depth then
-      cell.char = char
+      cell.char = index
       fg:copy(cell.fg)
       bg:copy(cell.bg)
       cell.depth = layer or -math.huge
@@ -446,21 +446,18 @@ end
 --- @param bg Color4 The background color to set.
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putBG(x, y, bg, layer)
-   if self.pushed then
-      x = x + self.camera.x
-      y = y + self.camera.y
-   end
-
-   if x < 1 or x > self.width or y < 1 or y > self.height then return end
-
-   bg = bg or prism.Color4.TRANSPARENT
-
    local cell = self.cells[x][y]
+   self:put(x, y, cell.char, cell.fg, bg, layer)
+end
 
-   if not layer or layer >= cell.depth then
-      bg:copy(cell.bg)
-      cell.depth = layer or -math.huge
-   end
+--- Sets only the foreground color of a cell at a specific grid position, with depth checking.
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @param fg Color4 The foreground color to set.
+--- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
+function Display:putFG(x, y, fg, layer)
+   local cell = self.cells[x][y]
+   self:put(x, y, cell.char, fg, cell.bg, layer)
 end
 
 --- Draws a string of characters at a grid position, with optional alignment.
