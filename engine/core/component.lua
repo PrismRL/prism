@@ -31,7 +31,7 @@ function Component:getBase()
    while proto and proto ~= prism.Component do
       proto = getmetatable(proto)
    end
-   
+
    return proto
 end
 
@@ -42,9 +42,7 @@ function Component:clone()
    local copy = {}
 
    for k, v in pairs(self) do
-      if not self._serializationBlacklist[k] then
-         copy[k] = v
-      end
+      if not self._serializationBlacklist[k] then copy[k] = v end
    end
 
    return getmetatable(self):adopt(copy)
@@ -97,17 +95,13 @@ function Component:diff(other)
 
    -- Fields present only on other: detect additions
    for k, ov in pairs(other) do
-      if not isIgnoredKey(k, ov) and self[k] == nil then
-         set[k] = ov
-      end
+      if not isIgnoredKey(k, ov) and self[k] == nil then set[k] = ov end
    end
 
    -- Nil out empty subtables; return nil if no diffs
    if next(set) == nil then set = nil end
    if next(unset) == nil then unset = nil end
-   if not (set or unset) then
-      return nil
-   end
+   if not (set or unset) then return nil end
 
    return { set = set, unset = unset }
 end
@@ -133,7 +127,9 @@ function Component:applyDiff(patch)
 
       -- Prefer object-provided clone when available
       if type(val.clone) == "function" then
-         local ok, cloned = pcall(function() return val:clone() end)
+         local ok, cloned = pcall(function()
+            return val:clone()
+         end)
          if ok and cloned ~= nil then return cloned end
       end
 
@@ -150,9 +146,7 @@ function Component:applyDiff(patch)
    -- Unset fields (skip transient)
    if patch.unset then
       for k, _ in pairs(patch.unset) do
-         if not isIgnoredKey(k) then
-            rawset(self, k, nil)
-         end
+         if not isIgnoredKey(k) then rawset(self, k, nil) end
       end
    end
 
@@ -171,6 +165,5 @@ function Component:applyDiff(patch)
 
    return self
 end
-
 
 return Component

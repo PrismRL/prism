@@ -249,9 +249,9 @@ local tmpBG = prism.Color4()
 local tmpDrawable
 
 local function copytemp(drawable)
-   if not tmpDrawable then tmpDrawable = prism.components.Drawable{} end
+   if not tmpDrawable then tmpDrawable = prism.components.Drawable {} end
 
-   for k,v in pairs(tmpDrawable) do
+   for k, v in pairs(tmpDrawable) do
       tmpDrawable[k] = nil
    end
 
@@ -279,9 +279,7 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
          local drawable = cell:expect(prism.components.Drawable)
          drawable = copytemp(drawable)
 
-         if self.pass then
-            self.pass(cell, cx, cy, drawable)
-         end
+         if self.pass then self.pass(cell, cx, cy, drawable) end
 
          tempColor = drawable.color:copy(tempColor)
          tempColor.a = tempColor.a * alpha

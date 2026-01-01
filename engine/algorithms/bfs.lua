@@ -1,7 +1,8 @@
 ---@param start Vector2 The starting position.
 ---@param passableCallback PassableCallback A callback to determine if a position is passable.
 ---@param callback fun(x: number, y: number) A callback function called for each visited cell.
-local function bfs(start, passableCallback, callback)
+local function bfs(start, passableCallback, callback, neighborhood)
+   neighborhood = neighborhood or prism.neighborhood
    -- Queue for exploring cells (FIFO for BFS behavior)
    local frontier = { start }
 

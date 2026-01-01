@@ -29,8 +29,8 @@ function Color4.fromHex(hex)
    local hasAlpha = #string.format("%x", hex) > 6
 
    local a = bit.band(bit.rshift(hex, 0), 0xff) / 0xff
-   local b = bit.band(bit.rshift(hex, hasAlpha and 8  or 0 ), 0xff) / 0xff
-   local g = bit.band(bit.rshift(hex, hasAlpha and 16 or 8 ), 0xff) / 0xff
+   local b = bit.band(bit.rshift(hex, hasAlpha and 8 or 0), 0xff) / 0xff
+   local g = bit.band(bit.rshift(hex, hasAlpha and 16 or 8), 0xff) / 0xff
    local r = bit.band(bit.rshift(hex, hasAlpha and 24 or 16), 0xff) / 0xff
 
    return Color4(r, g, b, hasAlpha and a or 1)
@@ -237,28 +237,25 @@ end
 --- Does not allocate a Color4.
 --- @return string
 function Color4:__tostring()
-   return string.format(
-      "r: %.2f, g: %.2f, b: %.2f, a: %.2f",
-      self.r, self.g, self.b, self.a
-   )
+   return string.format("r: %.2f, g: %.2f, b: %.2f, a: %.2f", self.r, self.g, self.b, self.a)
 end
 
-Color4.BLACK       = Color4(0, 0, 0, 1)
-Color4.WHITE       = Color4.fromHex(0xFFF1E8)
-Color4.RED         = Color4.fromHex(0xFF004D)
-Color4.GREEN       = Color4.fromHex(0x008751)
-Color4.LIME        = Color4.fromHex(0x00E436)
-Color4.BLUE        = Color4.fromHex(0x29ADFF)
-Color4.NAVY        = Color4.fromHex(0x1D2B53)
-Color4.PURPLE      = Color4.fromHex(0x7E2553)
-Color4.BROWN       = Color4.fromHex(0xAB5236)
-Color4.DARKGREY    = Color4.fromHex(0x5F574F)
-Color4.GREY        = Color4.fromHex(0xC2C3C7)
-Color4.YELLOW      = Color4.fromHex(0xFFEC27)
-Color4.ORANGE      = Color4.fromHex(0xFFA300)
-Color4.PINK        = Color4.fromHex(0xFF77A8)
-Color4.LAVENDER    = Color4.fromHex(0x83769C)
-Color4.PEACH       = Color4.fromHex(0xFFCCAA)
+Color4.BLACK = Color4(0, 0, 0, 1)
+Color4.WHITE = Color4.fromHex(0xFFF1E8)
+Color4.RED = Color4.fromHex(0xFF004D)
+Color4.GREEN = Color4.fromHex(0x008751)
+Color4.LIME = Color4.fromHex(0x00E436)
+Color4.BLUE = Color4.fromHex(0x29ADFF)
+Color4.NAVY = Color4.fromHex(0x1D2B53)
+Color4.PURPLE = Color4.fromHex(0x7E2553)
+Color4.BROWN = Color4.fromHex(0xAB5236)
+Color4.DARKGREY = Color4.fromHex(0x5F574F)
+Color4.GREY = Color4.fromHex(0xC2C3C7)
+Color4.YELLOW = Color4.fromHex(0xFFEC27)
+Color4.ORANGE = Color4.fromHex(0xFFA300)
+Color4.PINK = Color4.fromHex(0xFF77A8)
+Color4.LAVENDER = Color4.fromHex(0x83769C)
+Color4.PEACH = Color4.fromHex(0xFFCCAA)
 Color4.TRANSPARENT = Color4(0, 0, 0, 0)
 
 return Color4

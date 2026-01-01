@@ -5,7 +5,10 @@
 local Controller = prism.Component:extend "Controller"
 
 function Controller:decide(level, actor, decision)
-   assert(prism.decisions.ActionDecision:is(decision), "For non-action decisions override the Controller:decide method!")
+   assert(
+      prism.decisions.ActionDecision:is(decision),
+      "For non-action decisions override the Controller:decide method!"
+   )
    decision:setAction(self:act(level, actor), level)
    return decision
 end
