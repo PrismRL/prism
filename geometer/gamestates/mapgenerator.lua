@@ -13,24 +13,23 @@ local MapGeneratorState = EditorState:extend "MapGeneratorState"
 --- @param display Display
 --- @param onFinish? fun(builder: LevelBuilder)
 function MapGeneratorState:__new(generator, builder, display, onFinish)
-   self.super.__new(self, builder, display)
+   self.super.__new(self, prism.LevelBuilder(), display)
    self.onFinish = onFinish
    self.co = coroutine.create(generator)
 end
 
 function MapGeneratorState:update(dt)
-   controls:update()
+   self.editor:update(dt)
 
    if not self.editor.active then
-      if not coroutine.resume(self.co) and self.onFinish then
-         self.onFinish(self.editor.attachable)
-      end
+      local success, builder = coroutine.resume(self.co)
+      if not success then error(builder .. "\n" .. debug.traceback(self.co)) end
+
+      if not builder and self.onFinish then self.onFinish(builder) end
+
+      self.editor:setAttachable(builder)
       self.editor.active = true
    end
-
-   if controls.close.pressed then self.editor.active = false end
-
-   self.editor:update(dt)
 end
 
 return MapGeneratorState

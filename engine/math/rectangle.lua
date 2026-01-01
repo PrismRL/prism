@@ -138,4 +138,3 @@ function Rectangle:__tostring()
 end
 
 return Rectangle
-

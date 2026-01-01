@@ -72,11 +72,11 @@ local function File(self, scene)
       love.window.showFileDialog("openfile", function(result)
          if not result[1] then return end
 
-         result = result[1]                      -- Assuming success contains a list of selected files
+         result = result[1] -- Assuming success contains a list of selected files
          -- Open the file in read mode and read its content
          local file, err = io.open(result, "rb") -- Open in binary mode to handle compressed data
          if file then
-            local compressed = file:read("*a")   -- Read the entire file content
+            local compressed = file:read("*a") -- Read the entire file content
             file:close()
 
             -- Decompress the content

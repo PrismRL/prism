@@ -39,7 +39,15 @@ end
 ---@param minDistance? integer A minimum distance to be away from the goal. Defaults to zero.
 ---@param distanceType? DistanceType An optional distance type to use for calculating the minimum distance. Defaults to prism._defaultDistance.
 ---@return Path? path A path to the goal, or nil if a path could not be found or the start is already at the minimum distance.
-local function astarSearch(start, goal, passableCallback, costCallback, minDistance, distanceType, neighborhood)
+local function astarSearch(
+   start,
+   goal,
+   passableCallback,
+   costCallback,
+   minDistance,
+   distanceType,
+   neighborhood
+)
    minDistance = minDistance or 0
    costCallback = costCallback or defaultCostCallback
    distanceType = distanceType or prism._defaultDistance

@@ -35,11 +35,11 @@ function HeartbeatLightEffect:effect(time, color, x, y)
    local t = (time % period) / period
 
    -- Primary beat (sharp spike)
-   local beat1 = math.exp(-self.sharpness * (t / 0.15)^2)
+   local beat1 = math.exp(-self.sharpness * (t / 0.15) ^ 2)
 
    -- Secondary beat (weaker, delayed)
    local dt = t - 0.25
-   local beat2 = math.exp(-self.sharpness * (dt / 0.12)^2) * 0.5
+   local beat2 = math.exp(-self.sharpness * (dt / 0.12) ^ 2) * 0.5
 
    local pulse = beat1 + beat2
    local scale = self.bias + pulse * self.amplitude
