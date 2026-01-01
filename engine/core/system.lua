@@ -82,7 +82,6 @@ function System:onComponentAdded(level, actor, component) end
 --- @param component Component The Component instance that was removed.
 function System:onComponentRemoved(level, actor, component) end
 
-
 --- Called when an actor or tile has its opacity changed.
 --- @param level Level The Level object this System is attached to.
 --- @param x number The x coordinate of the tile.

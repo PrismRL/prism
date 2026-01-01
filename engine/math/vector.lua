@@ -133,7 +133,7 @@ end
 --- @param y integer
 function Vector2._hash(x, y)
    -- Shift to handle negatives (assuming 26-bit signed integers)
-   x = x + 0x2000000        -- Shift range from [-2^25, 2^25-1] to [0, 2^26-1]
+   x = x + 0x2000000 -- Shift range from [-2^25, 2^25-1] to [0, 2^26-1]
    y = y + 0x2000000
    return y * 0x4000000 + x -- Combine into a single number
 end

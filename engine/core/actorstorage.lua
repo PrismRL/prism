@@ -178,7 +178,7 @@ function ActorStorage:__wire()
    self:setCallbacks(self.insertSparseMapCallback, self.removeSparseMapCallback)
 
    -- rebuild runtime-only caches
-   self.componentCache  = {}
+   self.componentCache = {}
    self.componentCounts = {}
 
    for _, actor in pairs(self.actors) do

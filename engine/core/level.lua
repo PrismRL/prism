@@ -195,7 +195,7 @@ function Level:addActor(actor, x, y)
       end
    end
 
-   prism.logger.debug("Actor", actor:getName(), "was added to level")
+   --prism.logger.debug("Actor", actor:getName(), "was added to level")
    actor.level = self
 
    self.actorStorage:addActor(actor)
