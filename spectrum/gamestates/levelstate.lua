@@ -42,7 +42,6 @@ end
 --- @param dt number The time delta since the last update.
 function LevelState:update(dt)
    self.time = self.time + dt
-   self.display:update(self.level, dt)
 
    while self:shouldAdvance() do
       local message = prism.advanceCoroutine(self.updateCoroutine, self.level, self.decision)
@@ -51,6 +50,9 @@ function LevelState:update(dt)
    end
 
    if self.decision then self:updateDecision(dt, self.decision.actor, self.decision) end
+
+   local primary, secondary = self:getSenses()
+   self.display:update(self.level, dt, unpack(primary), unpack(secondary))
 
    if spectrum.Input.key["`"].pressed and self.editor then self.manager:push(self.editor) end
 end
