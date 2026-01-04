@@ -62,12 +62,26 @@ end
 --- Updates animations in the display.
 --- @param level Level
 --- @param dt number
-function Display:update(level, dt)
+--- @param ...? Senses
+function Display:update(level, dt, ...)
+   local senses = { ... }
+
    for i = #self.animations, 1, -1 do
       local animation = self.animations[i]
       animation.animation:update(dt)
 
-      if animation.animation.status == "paused" then self:removeAnimation(i) end
+      if animation.animation.status == "paused" then
+         self:removeAnimation(i)
+      elseif animation.actor then
+         for _, sense in ipairs(senses) do
+            if
+               self.animations[i]
+               and not sense.owner:hasRelation(prism.relations.SensesRelation, animation.actor)
+            then
+               self:removeAnimation(i)
+            end
+         end
+      end
    end
 
    for _, _, animation in
@@ -173,28 +187,13 @@ function Display:putAnimations(level, ...)
    end
 
    for i = #self.animations, 1, -1 do
-      self:putAnimation(self.animations[i], senses)
+      self:putAnimation(self.animations[i])
    end
 end
 
 --- Puts a single animation to the display. Handles senses.
 --- @param message AnimationMessage The animation to put.
---- @param senses Senses[] If the animation has an actor, it must be sensed by one of these to be drawn.
-function Display:putAnimation(message, senses)
-   local shouldPlay = false
-   if message.actor and message.actor.level then
-      for _, sense in ipairs(senses) do
-         if sense.owner:hasRelation(prism.relations.SensesRelation, message.actor) then
-            shouldPlay = true
-         end
-      end
-
-      if not shouldPlay then
-         message.animation:pause()
-         return
-      end
-   end
-
+function Display:putAnimation(message)
    if message.animation:isCustom() then
       message.animation:draw(self)
    else
