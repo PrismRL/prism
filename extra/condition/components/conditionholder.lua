@@ -114,17 +114,36 @@ end
 
 local dummy = {}
 
---- Helper method to retrieve an actor's modifier of a given type.
+--- Helper method to retrieve an entity's modifier of a given type.
 --- @generic T
---- @param actor Entity
+--- @param entity Entity
 --- @param prototype T
 --- @return T[] -- A list of modifiers. Treat this as immutable.
-function ConditionHolder.getActorModifiers(actor, prototype)
-   local conditions = actor:get(prism.components.ConditionHolder)
+function ConditionHolder.getActorModifiers(entity, prototype)
+   local conditions = entity:get(prism.components.ConditionHolder)
    if not conditions then return dummy end
 
    local modifiers = conditions:getModifiers(prototype)
    return modifiers
+end
+
+--- Checks if an entity has an instance of the given condition prototype.
+--- @param entity Entity
+--- @param prototype Condition
+--- @return boolean -- True if the entity has a condition holder and it has an instance of the prototype, false otherwise.
+function ConditionHolder.entityHas(entity, prototype)
+   local conditions = entity:get(ConditionHolder)
+   return conditions and conditions:has(prototype) or false
+end
+
+--- Checks if there is an instance of the given condition prototype.
+--- @param prototype Condition
+--- @return boolean -- True if there is at least one instance of the prototype, false otherwise.
+function ConditionHolder:has(prototype)
+   for _, condition in self:pairs() do
+      if prototype:is(condition) then return true end
+   end
+   return false
 end
 
 --- Iterator on each condition.
