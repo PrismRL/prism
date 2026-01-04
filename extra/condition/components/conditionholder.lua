@@ -127,6 +127,12 @@ function ConditionHolder.getActorModifiers(actor, prototype)
    return modifiers
 end
 
+function ConditionHolder:has(prototype)
+   for _, condition in self:pairs() do
+      if prototype:is(condition) then return true end
+   end
+end
+
 --- Iterator on each condition.
 --- @return fun():(ConditionHandle, Condition)
 function ConditionHolder:pairs()
