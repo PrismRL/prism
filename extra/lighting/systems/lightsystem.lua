@@ -20,8 +20,10 @@ end
 
 --- @param actor Actor
 function LightSystem:setDirty(actor)
-   self.needsRebuild = true
-   self.lightBuffers[actor] = nil
+   if self.lightBuffers[actor] or actor:has(prism.components.Light) then
+      self.needsRebuild = true
+      self.lightBuffers[actor] = nil
+   end
 
    for litby, _ in pairs(actor:getRelations(prism.relations.LitByRelation)) do
       self:setDirty(litby)
