@@ -513,9 +513,12 @@ function Level:updateOpacityCache(x, y)
       break
    end
 
+   local currentValue = self.opacityCache:get(x, y)
    opaque = opaque or self.map.opacityCache:get(x, y)
-   self.opacityCache:set(x, y, opaque)
-   self.systemManager:afterOpacityChanged(self, x, y)
+   if currentValue ~= opaque then
+      self.opacityCache:set(x, y, opaque)
+      self.systemManager:afterOpacityChanged(self, x, y)
+   end
 end
 
 --- Finds a path between two positions.
