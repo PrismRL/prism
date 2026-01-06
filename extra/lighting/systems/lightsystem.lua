@@ -122,7 +122,7 @@ function LightSystem:cast(x, y, lightComponent)
       for _, neighborDir in ipairs(prism.neighborhood) do
          local nx, ny = current.x + neighborDir.x, current.y + neighborDir.y
          if nx >= 1 and nx <= self.owner.map.w and ny >= 1 and ny <= self.owner.map.h then
-            if not out:get(nx, ny) and not self.owner:getOpacityCache():get(x, y) then
+            if not out:get(nx, ny) and not self.owner:getOpacityCache():get(nx, ny) then
                local luminance = lightComponent:attenuate(current.depth + 1)
                out:set(nx, ny, luminance)
                if luminance >= self.MINIMUM_LUMINANCE then
