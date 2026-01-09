@@ -22,7 +22,7 @@ end
 ---@alias BFSPassableCallback fun(x: integer, y: integer, depth: integer): boolean
 ---@param start Vector2 The starting position.
 ---@param passableCallback PassableCallback A callback to determine if a position is passable.
----@param callback fun(x: number, y: number) A callback function called for each visited cell.
+---@param callback fun(x: number, y: number, depth: integer) A callback function called for each visited cell.
 local function bfs(start, passableCallback, callback, neighborhood)
    neighborhood = neighborhood or prism.neighborhood
 
@@ -30,7 +30,7 @@ local function bfs(start, passableCallback, callback, neighborhood)
    local visited = prism.SparseGrid()
 
    visited:set(start.x, start.y, true)
-   callback(start.x, start.y)
+   callback(start.x, start.y, 0)
 
    while #frontier > 0 do
       local entry = table.remove(frontier, 1)
@@ -47,7 +47,7 @@ local function bfs(start, passableCallback, callback, neighborhood)
 
          if not visited:get(nx, ny) and passableCallback(nx, ny, nextDepth) then
             visited:set(nx, ny, true)
-            callback(nx, ny)
+            callback(nx, ny, nextDepth)
             table.insert(frontier, allocEntry(neighbor, nextDepth))
          end
       end

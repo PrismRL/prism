@@ -48,9 +48,7 @@ end
 
 function LightSystem:afterOpacityChanged(level, x, y)
    for actor, buffer in pairs(self.lightBuffers) do
-      if buffer:get(x, y) then
-         self:setDirty(actor)
-      end
+      if buffer:get(x, y) then self:setDirty(actor) end
    end
 end
 
