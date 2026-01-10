@@ -127,10 +127,17 @@ function ConditionHolder.getActorModifiers(actor, prototype)
    return modifiers
 end
 
+--- @param actor Entity
+function ConditionHolder.actorHas(actor, prototype)
+   local conditions = actor:get(ConditionHolder)
+   return conditions and conditions:has(prototype) or false
+end
+
 function ConditionHolder:has(prototype)
    for _, condition in self:pairs() do
       if prototype:is(condition) then return true end
    end
+   return false
 end
 
 --- Iterator on each condition.
