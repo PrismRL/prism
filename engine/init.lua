@@ -278,6 +278,7 @@ function prism.registerRegistry(name, type, factory, module)
 
    prism.writeDefinitions(
       "--- The " .. type.className .. " registry.",
+      "--- @class " .. type.className .. "Registry",
       module .. "." .. name .. " = {}"
    )
 end
