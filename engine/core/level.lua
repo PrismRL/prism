@@ -519,14 +519,15 @@ function Level:updateOpacityCache(x, y)
 end
 
 --- Finds a path between two positions.
----@param start Vector2 The starting position.
----@param goal Vector2 The goal position.
----@param actor Actor The actor to find a path for.
----@param mask Bitmask
----@param minDistance? integer The minimum distance away to pathfind to.
----@param distanceType? DistanceType An optional distance type to use for calculating the minimum distance. Defaults to prism._defaultDistance.
----@return Path? path A path to the goal, or nil if a path could not be found or the start is already at the minimum distance.
-function Level:findPath(start, goal, actor, mask, minDistance, distanceType)
+--- @param start Vector2 The starting position.
+--- @param goal Vector2 The goal position.
+--- @param actor Actor The actor to find a path for.
+--- @param mask Bitmask
+--- @param minDistance? integer The minimum distance away to pathfind to.
+--- @param distanceType? DistanceType An optional distance type to use for calculating the minimum distance. Defaults to prism._defaultDistance.
+--- @param costCallback? CostCallback An optional function to return the cost of traversing each cell.
+--- @return Path? path A path to the goal, or nil if a path could not be found or the start is already at the minimum distance.
+function Level:findPath(start, goal, actor, mask, minDistance, distanceType, costCallback)
    if not self.map:isInBounds(start.x, start.y) or not self.map:isInBounds(goal.x, goal.y) then
       return
    end
@@ -538,7 +539,7 @@ function Level:findPath(start, goal, actor, mask, minDistance, distanceType)
    end
 
    self.actorStorage:removeSparseMapEntries(actor)
-   local path = prism.astar(start, goal, passableCallback, nil, minDistance, distanceType)
+   local path = prism.astar(start, goal, passableCallback, costCallback, minDistance, distanceType)
    self.actorStorage:insertSparseMapEntries(actor)
 
    return path
