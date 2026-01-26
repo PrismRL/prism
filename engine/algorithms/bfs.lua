@@ -24,7 +24,7 @@ end
 --- @param start Vector2 The starting position.
 --- @param passableCallback BFSPassableCallback A callback to determine if a position is passable.
 --- @param callback fun(x: number, y: number, depth: integer) A callback function called for each visited cell.
---- @param neighborhood Neighborhood An optional set of vectors that count as adjacent. Defaults to prism.neighborhood.
+--- @param neighborhood? Neighborhood An optional set of vectors that count as adjacent. Defaults to prism.neighborhood.
 local function bfs(start, passableCallback, callback, neighborhood)
    neighborhood = neighborhood or prism.neighborhood
 

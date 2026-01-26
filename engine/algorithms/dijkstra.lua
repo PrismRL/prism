@@ -1,7 +1,7 @@
 --- Computes a dijkstra map from a list of goal positions.
 --- @param goals table<number, Vector2> List of goal positions.
 --- @param passableCallback PassableCallback
---- @param neighborhood Neighborhood An optional set of vectors that count as adjacent. Defaults to prism.neighborhood.
+--- @param neighborhood? Neighborhood An optional set of vectors that count as adjacent. Defaults to prism.neighborhood.
 --- @return SparseGrid<number> map The Dijkstra map as a SparseGrid where each cell's value is its distance to the nearest goal.
 local function dijkstraMap(goals, passableCallback, neighborhood)
    neighborhood = neighborhood or prism.neighborhood
