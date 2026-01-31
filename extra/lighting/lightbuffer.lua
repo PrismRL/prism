@@ -1,4 +1,5 @@
 --- @class LightBuffer
+--- @field effect? LightEffect
 --- @field private grid SparseGrid
 --- @field private minX integer?
 --- @field private minY integer?

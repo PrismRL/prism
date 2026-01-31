@@ -12,14 +12,13 @@ function LightSightSystem:onSenses(level, actor)
 
    local sightComponent = actor:get(prism.components.Sight)
    if not sightComponent then return end
-   local sightLimit = sightComponent.range
 
    local actorPos = actor:getPosition()
    if not actorPos then return end
 
+   local sightLimit = sightComponent.range
    -- we check if the sight component has a fov and if so we clear it
    if sightComponent.fov then
-      local sightLimit = sightComponent.range
       self.computeFOV(level, sensesComponent, actorPos, sightLimit)
    else
       -- we have a sight component but no fov which essentially means the actor has blind sight and can see
@@ -56,3 +55,4 @@ function LightSightSystem:onSenses(level, actor)
 end
 
 return LightSightSystem
+

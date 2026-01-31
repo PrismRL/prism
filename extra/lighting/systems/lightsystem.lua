@@ -13,9 +13,9 @@ LightSystem.MINIMUM_LUMINANCE = 1 / 16
 function LightSystem:initialize(level)
    self.lightBuffers = {}
    self.needsRebuild = false
-   self.buffer = prism.Grid(level:getSize():decompose())
-   self.rtBuffer = prism.Grid(level:getSize():decompose())
-   self.tileInfluence = prism.Grid(level:getSize():decompose())
+   self.buffer = prism.Grid(level:getSize())
+   self.rtBuffer = prism.Grid(level:getSize())
+   self.tileInfluence = prism.Grid(level:getSize())
 end
 
 --- @param actor Actor
@@ -48,9 +48,7 @@ end
 
 function LightSystem:afterOpacityChanged(level, x, y)
    for actor, buffer in pairs(self.lightBuffers) do
-      if buffer:get(x, y) then
-         self:setDirty(actor)
-      end
+      if buffer:get(x, y) then self:setDirty(actor) end
    end
 end
 

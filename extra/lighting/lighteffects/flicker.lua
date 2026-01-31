@@ -1,14 +1,16 @@
---- @class TorchFlicker : LightEffect
---- @field baseIntensity number
---- @field flickerAmplitude number
---- @field colorShift number
---- @field speedA number
---- @field speedB number
---- @field speedC number
-local TorchFlicker = prism.lighting.LightEffect:extend "Flicker"
+--- @class FlickerEffectOptions : LightEffect
+--- @field baseIntensity? number
+--- @field speed? number
+--- @field flickerAmplitude? number
+--- @field colorShift? number
 
---- @param opts table?
-function TorchFlicker:__new(opts)
+--- An effect that makes the light flicker, reminiscent of a torch.
+--- @class FlickerEffect : LightEffect
+--- @overload fun(options?: FlickerEffectOptions): FlickerEffect
+local FlickerEffect = prism.lighting.LightEffect:extend "FlickerEffect"
+
+--- @param opts FlickerEffectOptions
+function FlickerEffect:__new(opts)
    opts = opts or {}
 
    self.flickerAmplitude = opts.flickerAmplitude or 0.3
@@ -20,7 +22,7 @@ end
 --- @param time number
 --- @param color Color4
 --- @return Color4
-function TorchFlicker:effect(time, color)
+function FlickerEffect:effect(time, color)
    local flicker = love.math.noise(time * self.speed)
 
    local intensity = self.baseIntensity + flicker * self.flickerAmplitude
@@ -35,4 +37,4 @@ function TorchFlicker:effect(time, color)
    )
 end
 
-return TorchFlicker
+return FlickerEffect

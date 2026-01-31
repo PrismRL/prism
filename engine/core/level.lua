@@ -611,9 +611,11 @@ function Level:__finalize()
    end
 end
 
---- @return Vector2
+--- Returns the width and height of the level.
+--- @return integer width
+--- @return integer height
 function Level:getSize()
-   return prism.Vector2(self.map.w, self.map.h)
+   return self.map.w, self.map.h
 end
 
 return Level

@@ -1,12 +1,16 @@
---- @class HeartbeatLightEffect : LightEffect
---- @field bpm number
---- @field amplitude number
---- @field bias number
---- @field sharpness number
-local HeartbeatLightEffect = prism.lighting.LightEffect:extend "Heartbeat"
+--- @class HeartbeatEffectOptions : LightEffect
+--- @field bpm? number
+--- @field amplitude? number
+--- @field bias? number
+--- @field sharpness? number
 
---- @param opts table?
-function HeartbeatLightEffect:__new(opts)
+--- A light effect that pulses the light like a heartbeat.
+--- @class HeartbeatEffect : LightEffect
+--- @overload fun(options?: HeartbeatEffectOptions): HeartbeatEffect
+local HeartbeatEffect = prism.lighting.LightEffect:extend "HeartbeatEffect"
+
+--- @param opts HeartbeatEffectOptions
+function HeartbeatEffect:__new(opts)
    opts = opts or {}
 
    -- Beats per minute
@@ -27,7 +31,7 @@ end
 --- @param x integer
 --- @param y integer
 --- @return Color4
-function HeartbeatLightEffect:effect(time, color, x, y)
+function HeartbeatEffect:effect(time, color, x, y)
    -- Convert BPM to seconds per beat
    local period = 60 / self.bpm
 
@@ -35,11 +39,11 @@ function HeartbeatLightEffect:effect(time, color, x, y)
    local t = (time % period) / period
 
    -- Primary beat (sharp spike)
-   local beat1 = math.exp(-self.sharpness * (t / 0.15)^2)
+   local beat1 = math.exp(-self.sharpness * (t / 0.15) ^ 2)
 
    -- Secondary beat (weaker, delayed)
    local dt = t - 0.25
-   local beat2 = math.exp(-self.sharpness * (dt / 0.12)^2) * 0.5
+   local beat2 = math.exp(-self.sharpness * (dt / 0.12) ^ 2) * 0.5
 
    local pulse = beat1 + beat2
    local scale = self.bias + pulse * self.amplitude
@@ -52,4 +56,4 @@ function HeartbeatLightEffect:effect(time, color, x, y)
    )
 end
 
-return HeartbeatLightEffect
+return HeartbeatEffect

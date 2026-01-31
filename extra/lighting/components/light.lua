@@ -1,15 +1,15 @@
 --- @class Light : Component
 --- @field private color Color4
---- @overload fun(color: Color4): Light
+--- @overload fun(color: Color4, radius: integer, effect?: LightEffect): Light
 local Light = prism.Component:extend "Light"
 
 function Light:__new(color, radius, effect)
    self.color = color
-   self.radius = radius or 6
+   self.radius = radius
    self.lightEffect = effect
 end
 
-function Light:attenuate(distance, out)
+function Light:attenuate(distance)
    local atten = math.max(0, (self.radius - distance) / self.radius)
    return atten * atten
 end
@@ -19,3 +19,4 @@ function Light:getColor()
 end
 
 return Light
+

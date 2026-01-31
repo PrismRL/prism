@@ -1,12 +1,16 @@
---- @class SineLightEffect : LightEffect
---- @field amplitude number
---- @field speed number
---- @field spatialScale number
---- @field noiseScale number
-local SineLightEffect = prism.lighting.LightEffect:extend "Sin"
+--- @class SineEffectOptions
+--- @field amplitude? number
+--- @field speed? number
+--- @field spatialScale? number
+--- @field noiseScale? number
 
---- @param opts table?
-function SineLightEffect:__new(opts)
+--- An effect that makes the light wax and wane in a smooth wave.
+--- @class SineEffect : LightEffect
+--- @overload fun(options?: SineEffectOptions)
+local SineEffect = prism.lighting.LightEffect:extend "SineEffect"
+
+--- @param opts SineEffectOptions
+function SineEffect:__new(opts)
    opts = opts or {}
 
    self.amplitude = opts.amplitude or 0.2
@@ -24,7 +28,7 @@ end
 --- @param x integer
 --- @param y integer
 --- @return Color4
-function SineLightEffect:effect(time, color, x, y)
+function SineEffect:effect(time, color, x, y)
    -- Sample smooth spatial noise
    local n = love.math.noise(x * self.spatialScale, y * self.spatialScale)
 
@@ -45,4 +49,4 @@ function SineLightEffect:effect(time, color, x, y)
    )
 end
 
-return SineLightEffect
+return SineEffect
