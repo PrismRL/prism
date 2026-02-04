@@ -443,9 +443,7 @@ end
 function Display:putBG(x, y, bg, layer)
    local cell = self:getCell(x, y)
 
-   if cell then
-      self:put(x, y, cell.char, cell.fg, bg, layer)
-   end
+   if cell then self:put(x, y, cell.char, cell.fg, bg, layer) end
 end
 
 --- Sets only the foreground color of a cell at a specific grid position, with depth checking.
@@ -455,9 +453,7 @@ end
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putFG(x, y, fg, layer)
    local cell = self:getCell(x, y)
-   if cell then
-      self:put(x, y, cell.char, fg, cell.bg, layer)
-   end
+   if cell then self:put(x, y, cell.char, fg, cell.bg, layer) end
 end
 
 ---Returns the cell at this location, respecting camera and bounds.
@@ -470,12 +466,9 @@ function Display:getCell(x, y)
       y = y + self.camera.y
    end
 
-   if x < 1 or x > self.width or y < 1 or y > self.height then
-      return nil
-   end
+   if x < 1 or x > self.width or y < 1 or y > self.height then return nil end
 
-   return
-       self.cells[x][y]
+   return self.cells[x][y]
 end
 
 --- Draws a string of characters at a grid position, with optional alignment.
