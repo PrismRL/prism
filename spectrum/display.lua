@@ -457,6 +457,7 @@ function Display:putFG(x, y, fg, layer)
 end
 
 ---Returns the cell at this location, respecting camera and bounds.
+--- @private
 --- @param x integer The X grid coordinate.
 --- @param y integer The Y grid coordinate.
 --- @return DisplayCell?
