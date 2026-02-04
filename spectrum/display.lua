@@ -420,16 +420,12 @@ end
 --- @param bg? Color4 The background color. Defaults to transparent.
 --- @param layer? number The draw layer (higher numbers draw on top). Defaults to -math.huge.
 function Display:put(x, y, index, fg, bg, layer)
-   if self.pushed then
-      x = x + self.camera.x
-      y = y + self.camera.y
-   end
-   if x < 1 or x > self.width or y < 1 or y > self.height then return end
+   local cell = self:getCell(x, y)
+
+   if not cell then return end
 
    fg = fg or prism.Color4.WHITE
    bg = bg or prism.Color4.TRANSPARENT
-
-   local cell = self.cells[x][y]
 
    if not layer or layer >= cell.depth then
       cell.char = index
@@ -445,8 +441,9 @@ end
 --- @param bg Color4 The background color to set.
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putBG(x, y, bg, layer)
-   local cell = self.cells[x][y]
-   self:put(x, y, cell.char, cell.fg, bg, layer)
+   local cell = self:getCell(x, y)
+
+   if cell then self:put(x, y, cell.char, cell.fg, bg, layer) end
 end
 
 --- Sets only the foreground color of a cell at a specific grid position, with depth checking.
@@ -455,8 +452,24 @@ end
 --- @param fg Color4 The foreground color to set.
 --- @param layer number? The draw layer (optional, higher numbers draw on top). Defaults to -math.huge.
 function Display:putFG(x, y, fg, layer)
-   local cell = self.cells[x][y]
-   self:put(x, y, cell.char, fg, cell.bg, layer)
+   local cell = self:getCell(x, y)
+   if cell then self:put(x, y, cell.char, fg, cell.bg, layer) end
+end
+
+---Returns the cell at this location, respecting camera and bounds.
+--- @private
+--- @param x integer The X grid coordinate.
+--- @param y integer The Y grid coordinate.
+--- @return DisplayCell?
+function Display:getCell(x, y)
+   if self.pushed then
+      x = x + self.camera.x
+      y = y + self.camera.y
+   end
+
+   if x < 1 or x > self.width or y < 1 or y > self.height then return nil end
+
+   return self.cells[x][y]
 end
 
 --- Draws a string of characters at a grid position, with optional alignment.
