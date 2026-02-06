@@ -40,6 +40,8 @@ local FOUR_WAY = {
    prism.Vector2.DOWN,
 }
 
+local BLACKLIST = {}
+
 -- Each category maps input names to their current state
 local INPUT = {
    key = {}, -- Keyboard keys by name
@@ -591,8 +593,11 @@ local function trigger_to_input(trigger_string, joystick_id)
    return inputs
 end
 
+--- @alias ControlConfig (string|string[]|function)
+--- @alias ControlsConfig table<string, ControlConfig>
+
 --- @class ControlsOptions
---- @field controls table<string, (string|string[]|function)>
+--- @field controls ControlsConfig
 --- @field pairs? table<string, string[]>
 --- @field mode? InputMode
 --- @field autoSwitch? boolean
@@ -604,6 +609,7 @@ function Controls:__new(config)
    assert(type(config) == "table", "Config must be a table")
 
    config = config or {}
+   self._config = config
 
    -- Validate mode if specified
    if config.mode then
@@ -635,7 +641,7 @@ function Controls:__new(config)
 end
 
 --- Sets the control configuration for this input instance
---- @param controls table A table mapping control names to trigger definitions
+--- @param controls ControlsConfig A table mapping control names to trigger definitions
 --   - Key: string - The name of the control (e.g., "jump", "move_left")
 --   - Value: string|table|function - The trigger definition:
 --     - string: Single trigger (e.g., "key:space")
@@ -644,45 +650,65 @@ end
 function Controls:setControls(controls)
    assert(type(controls) == "table", "Controls must be a table")
 
-   local controls_list = {}
+   self._controls = {}
    for name, value in pairs(controls) do
       assert(type(name) == "string", "Control name must be a string")
-      assert(not self[name], name .. "input already exists on the controls!")
+      assert(not BLACKLIST[name], "Control name already exists as a field!")
+      assert(not self[name], name .. " input already exists on the controls!")
 
-      local definition_type = type(value)
-      local config = {
-         name = name,
-      }
+      self:setControl(name, value)
+   end
+end
 
-      if definition_type == "string" then
-         -- Single trigger string
-         config.list = { trigger_to_input(value, self._joystickId or 1) }
-         --- @diagnostic disable-next-line
-         self[name] = {}
-      elseif definition_type == "table" then
-         -- Multiple trigger strings
-         local input_list = {}
-         for _, trigger_string in ipairs(value) do
-            assert(type(trigger_string) == "string", "Trigger item must be a string")
-            local input_state = trigger_to_input(trigger_string, self._joystickId or 1)
-            table.insert(input_list, input_state)
-         end
-         config.list = input_list
-         --- @diagnostic disable-next-line
-         self[name] = {}
-      elseif definition_type == "function" then
-         -- Custom function
-         config.func = value
-         --- @diagnostic disable-next-line
-         self[name] = {}
-      else
-         error("Invalid trigger type: " .. definition_type .. " for control: " .. name)
+--- @param name string
+--- @param controlConfig ControlConfig
+function Controls:setControl(name, controlConfig)
+   assert(type(name) == "string", "Control name must be a string!")
+   assert(not BLACKLIST[name], "Control name already exists as a field!")
+   local definition_type = type(controlConfig)
+   local config = {
+      name = name,
+   }
+
+   if definition_type == "string" then
+      -- Single trigger string
+      config.list = { trigger_to_input(controlConfig, self._joystickId or 1) }
+      --- @diagnostic disable-next-line
+      self[name] = {}
+   elseif definition_type == "table" then
+      -- Multiple trigger strings
+      local input_list = {}
+      for _, trigger_string in ipairs(controlConfig) do
+         assert(type(trigger_string) == "string", "Trigger item must be a string")
+         local input_state = trigger_to_input(trigger_string, self._joystickId or 1)
+         table.insert(input_list, input_state)
       end
-
-      table.insert(controls_list, config)
+      config.list = input_list
+      --- @diagnostic disable-next-line
+      self[name] = {}
+   elseif definition_type == "function" then
+      -- Custom function
+      config.func = controlConfig
+      --- @diagnostic disable-next-line
+      self[name] = {}
+   else
+      error("Invalid trigger type: " .. definition_type .. " for control: " .. name)
    end
 
-   self._controls = controls_list
+   local existing_index = nil
+   for i, control in ipairs(self._controls) do
+      if control.name == name then
+         existing_index = i
+         break
+      end
+   end
+
+   if existing_index then
+      self._controls[existing_index] = config
+   else
+      table.insert(self._controls, config)
+   end
+   self._config.controls[name] = controlConfig
 end
 
 function Controls:setPairs(pairs_config)
@@ -906,4 +932,10 @@ end
 Input.get = setmetatable({ _parent = { _joystickId = 1, _mode = modes.both } }, get_mt)
 
 Input.Controls = Controls
+for key, _ in pairs(Controls) do
+   BLACKLIST[key] = true
+end
+for key, _ in pairs(getmetatable(prism.Object)) do
+   BLACKLIST[key] = true
+end
 return Input
