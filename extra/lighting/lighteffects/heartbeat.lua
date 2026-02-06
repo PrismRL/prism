@@ -1,4 +1,4 @@
---- @class HeartbeatEffectOptions : LightEffect
+--- @class HeartbeatEffectOptions
 --- @field bpm? number
 --- @field amplitude? number
 --- @field bias? number

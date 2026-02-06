@@ -26,6 +26,7 @@
 --- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
 --- @field animations AnimationMessage[]
 --- @field fgCallback fun(fg, bg): fg, bg
+--- @field passes DisplayPass[]
 --- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
@@ -44,6 +45,7 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.pushed = false
    self.overridenActors = {}
    self.animations = {}
+   self.passes = {}
 
    self.cells = { {} }
 
@@ -248,9 +250,9 @@ local tmpBG = prism.Color4()
 local tmpDrawable
 
 local function copytemp(drawable)
-   if not tmpDrawable then tmpDrawable = prism.components.Drawable{} end
+   if not tmpDrawable then tmpDrawable = prism.components.Drawable {} end
 
-   for k,v in pairs(tmpDrawable) do
+   for k, v in pairs(tmpDrawable) do
       tmpDrawable[k] = nil
    end
 
@@ -262,6 +264,24 @@ local function copytemp(drawable)
    tmpDrawable.background = drawable.background:copy(tmpBG)
 
    return tmpDrawable
+end
+
+--- Applies stack of display passes on the given entity.
+--- @param entity Entity
+--- @param x integer
+--- @param y integer
+--- @param drawable Drawable
+--- @param alpha? number
+function Display:applyPasses(entity, x, y, drawable, alpha)
+   drawable = copytemp(drawable)
+
+   for _, pass in ipairs(self.passes) do
+      pass:run(entity, x, y, drawable)
+   end
+
+   tempColor = drawable.color:copy(tempColor)
+   tempColor.a = tempColor.a * (alpha or 0)
+   if self.fgCallback then self.fgCallback("cell", tempColor) end
 end
 
 --- Draws cells from a given cell map onto the display, handling depth and transparency.
@@ -276,15 +296,7 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
          --- @cast cell Cell
 
          local drawable = cell:expect(prism.components.Drawable)
-         drawable = copytemp(drawable)
-
-         if self.pass then
-            self.pass(cell, cx, cy, drawable)
-         end
-
-         tempColor = drawable.color:copy(tempColor)
-         tempColor.a = tempColor.a * alpha
-         if self.fgCallback then self.fgCallback("cell", tempColor) end
+         self:applyPasses(cell, cx, cy, drawable, alpha)
          self:putDrawable(cx, cy, drawable, tempColor)
       end
    end
@@ -303,26 +315,23 @@ function Display:_drawActors(drawnActors, senses, level, alpha)
       --- @cast drawable Drawable
       if not drawnActors[actor] and not self.overridenActors[actor] then
          drawnActors[actor] = true
-         drawable = copytemp(drawable)
 
          --- @cast position Position
          local ax, ay = position:getVector():decompose()
-         if self.pass then self.pass(actor, ax, ay, drawable) end
-
-         tempColor = drawable.color:copy(tempColor)
-         tempColor.a = tempColor.a * alpha
+         self:applyPasses(actor, ax, ay, drawable, alpha)
 
          self:putDrawable(ax, ay, drawable, tempColor)
       end
    end
 end
 
-function Display:pushModifier(func)
-   self.pass = func
+--- @param pass DisplayPass
+function Display:pushPass(pass)
+   table.insert(self.passes, pass)
 end
 
-function Display:popModifier()
-   self.pass = nil
+function Display:popPass()
+   table.remove(self.passes, #self.passes)
 end
 
 --- @param drawnActors table

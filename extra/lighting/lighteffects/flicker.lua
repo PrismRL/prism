@@ -1,4 +1,4 @@
---- @class FlickerEffectOptions : LightEffect
+--- @class FlickerEffectOptions
 --- @field baseIntensity? number
 --- @field speed? number
 --- @field flickerAmplitude? number
