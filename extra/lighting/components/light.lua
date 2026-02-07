@@ -1,3 +1,4 @@
+--- A light to emit from an entity.
 --- @class Light : Component
 --- @field private color Color4
 --- @overload fun(color: Color4, radius: integer, effect?: LightEffect): Light
@@ -19,4 +20,3 @@ function Light:getColor()
 end
 
 return Light
-

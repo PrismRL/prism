@@ -1,6 +1,7 @@
 --- @type LightSamplePool
 local samplePool = prism.lighting.LightSamplePool()
 
+--- Handles lighting calculations for the level. LightSystem:update must be called every frame.
 --- @class LightSystem : System
 --- @field lightBuffers table<Actor, LightBuffer>
 --- @field buffer Grid<Color4>

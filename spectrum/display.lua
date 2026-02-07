@@ -325,11 +325,13 @@ function Display:_drawActors(drawnActors, senses, level, alpha)
    end
 end
 
+--- Pushes a pass onto display pass stack.
 --- @param pass DisplayPass
 function Display:pushPass(pass)
    table.insert(self.passes, pass)
 end
 
+--- Pops a display pass off of the stack.
 function Display:popPass()
    table.remove(self.passes, #self.passes)
 end
