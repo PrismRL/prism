@@ -25,6 +25,8 @@
 --- @field pushed boolean Whether to draw with the camera offset applied or not.
 --- @field overridenActors table<Actor, boolean> A set of actors that are being manually drawn to the display.
 --- @field animations AnimationMessage[]
+--- @field fgCallback fun(fg, bg): fg, bg
+--- @field passes DisplayPass[]
 --- @overload fun(width: integer, heigh: integer, spriteAtlas: SpriteAtlas, cellSize: Vector2): Display
 local Display = prism.Object:extend("Display")
 
@@ -39,9 +41,11 @@ function Display:__new(width, height, spriteAtlas, cellSize)
    self.width = width
    self.height = height
    self.camera = prism.Vector2()
+   self.lighting = nil
    self.pushed = false
    self.overridenActors = {}
    self.animations = {}
+   self.passes = {}
 
    self.cells = { {} }
 
@@ -241,6 +245,45 @@ end
 
 local tempColor = prism.Color4()
 
+local tmpFG = prism.Color4()
+local tmpBG = prism.Color4()
+local tmpDrawable
+
+local function copytemp(drawable)
+   if not tmpDrawable then tmpDrawable = prism.components.Drawable {} end
+
+   for k, v in pairs(tmpDrawable) do
+      tmpDrawable[k] = nil
+   end
+
+   for k, v in pairs(drawable) do
+      tmpDrawable[k] = v
+   end
+
+   tmpDrawable.color = drawable.color:copy(tmpFG)
+   tmpDrawable.background = drawable.background:copy(tmpBG)
+
+   return tmpDrawable
+end
+
+--- Applies stack of display passes on the given entity.
+--- @param entity Entity
+--- @param x integer
+--- @param y integer
+--- @param drawable Drawable
+--- @param alpha? number
+function Display:applyPasses(entity, x, y, drawable, alpha)
+   drawable = copytemp(drawable)
+
+   for _, pass in ipairs(self.passes) do
+      pass:run(entity, x, y, drawable)
+   end
+
+   tempColor = drawable.color:copy(tempColor)
+   tempColor.a = tempColor.a * (alpha or 0)
+   if self.fgCallback then self.fgCallback("cell", tempColor) end
+end
+
 --- Draws cells from a given cell map onto the display, handling depth and transparency.
 --- @private
 --- @param drawnCells SparseGrid A sparse grid to keep track of already drawn cells to prevent overdrawing.
@@ -253,8 +296,7 @@ function Display:_drawCells(drawnCells, cellMap, alpha)
          --- @cast cell Cell
 
          local drawable = cell:expect(prism.components.Drawable)
-         tempColor = drawable.color:copy(tempColor)
-         tempColor.a = tempColor.a * alpha
+         self:applyPasses(cell, cx, cy, drawable, alpha)
          self:putDrawable(cx, cy, drawable, tempColor)
       end
    end
@@ -273,14 +315,25 @@ function Display:_drawActors(drawnActors, senses, level, alpha)
       --- @cast drawable Drawable
       if not drawnActors[actor] and not self.overridenActors[actor] then
          drawnActors[actor] = true
-         tempColor = drawable.color:copy(tempColor)
-         tempColor.a = tempColor.a * alpha
 
          --- @cast position Position
          local ax, ay = position:getVector():decompose()
+         self:applyPasses(actor, ax, ay, drawable, alpha)
+
          self:putDrawable(ax, ay, drawable, tempColor)
       end
    end
+end
+
+--- Pushes a pass onto display pass stack.
+--- @param pass DisplayPass
+function Display:pushPass(pass)
+   table.insert(self.passes, pass)
+end
+
+--- Pops a display pass off of the stack.
+function Display:popPass()
+   table.remove(self.passes, #self.passes)
 end
 
 --- @param drawnActors table
