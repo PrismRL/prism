@@ -32,7 +32,7 @@ Let's head back to ``modules/game/components/health.lua`` and define a new
    --- @class HealthModifier : ConditionModifier
    --- @field maxHP integer
    --- @overload fun(delta: integer): HealthModifier
-   local HealthModifier = prism.condition.Modifier:extend "HealthModifier"
+   local HealthModifier = prism.condition.ConditionModifier:extend "HealthModifier"
 
    function HealthModifier:__new(delta)
       self.maxHP = delta
