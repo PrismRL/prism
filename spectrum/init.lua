@@ -29,5 +29,9 @@ spectrum.GameState = spectrum.require "gamestate"
 --- @module "spectrum.statemanager"
 spectrum.StateManager = spectrum.require "statemanager"
 
+--- @module "spectrum.displaypass"
+spectrum.DisplayPass = spectrum.require "displaypass"
+
 prism.registerRegistry("animations", spectrum.Animation, true, "spectrum")
 prism.registerRegistry("gamestates", spectrum.GameState, false, "spectrum")
+prism.registerRegistry("passes", spectrum.DisplayPass, false, "spectrum")

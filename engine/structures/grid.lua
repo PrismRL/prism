@@ -3,7 +3,7 @@
 --- @field w integer The width of the grid.
 --- @field h integer The height of the grid.
 --- @field data any[] The data stored in the grid.
---- @overload fun(w: integer, h: integer, initialValue: any?): Grid
+--- @overload fun(w: integer, h: integer, initialValue: any?): Grid<any>
 local Grid = prism.Object:extend("Grid")
 
 --- The constructor for the 'Grid' class.
@@ -84,6 +84,10 @@ function Grid:fill(value)
    for i = 1, #self.data do
       self.data[i] = value
    end
+end
+
+function Grid:clear()
+   self.data = {}
 end
 
 --- Iterates over each cell in the grid, yielding x, y, and the value.

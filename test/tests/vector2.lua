@@ -4,7 +4,6 @@ local describe, it, expect = lester.describe, lester.it, lester.expect
 local Vector2 = prism.Vector2
 
 describe("Vector2", function()
-
    it("constructs with defaults", function()
       local v = Vector2()
       expect.equal(v.x, 0)
@@ -114,10 +113,10 @@ describe("Vector2", function()
 
    it("hash and unhash are reversible", function()
       for _, coords in ipairs({
-         {0, 0},
-         {10, -10},
-         {-20, 50},
-         {-100000, 999999},
+         { 0, 0 },
+         { 10, -10 },
+         { -20, 50 },
+         { -100000, 999999 },
       }) do
          local x, y = coords[1], coords[2]
          local h = Vector2._hash(x, y)
