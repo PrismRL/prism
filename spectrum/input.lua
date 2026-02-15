@@ -561,6 +561,7 @@ end
 
 --- A configured set of controls.
 --- @class Controls : Object
+--- @field private _config ControlsOptions
 --- @field private _mode integer
 --- @field private _autoSwitch boolean
 --- @field private _transform? love.Transform
@@ -642,11 +643,6 @@ end
 
 --- Sets the control configuration for this input instance
 --- @param controls ControlsConfig A table mapping control names to trigger definitions
---   - Key: string - The name of the control (e.g., "jump", "move_left")
---   - Value: string|table|function - The trigger definition:
---     - string: Single trigger (e.g., "key:space")
---     - table: Multiple triggers (e.g., {"key:space", "button:a"})
---     - function: Custom function returning (pressed, x, y)
 function Controls:setControls(controls)
    assert(type(controls) == "table", "Controls must be a table")
 
@@ -660,6 +656,7 @@ function Controls:setControls(controls)
    end
 end
 
+--- Adds or overwrites a control.
 --- @param name string
 --- @param controlConfig ControlConfig
 function Controls:setControl(name, controlConfig)
@@ -719,6 +716,12 @@ function Controls:setPairs(pairs_config)
       table.insert(pairs_list, pair)
    end
    self._pairs = pairs_list
+end
+
+--- Returns the configuration for the controls.
+--- @return ControlsOptions
+function Controls:getConfig()
+   return self._config
 end
 
 --- @param control_state ControlState
