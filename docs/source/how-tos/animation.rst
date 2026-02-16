@@ -94,7 +94,7 @@ Other parameters passed to the constructor are ignored.
       --- @cast owner Actor
       --- @cast targetPosition Vector2
       local x, y = owner:expectPosition():decompose()
-      local line = prism.Bresenham(x, y, targetPosition.x, targetPosition.y)
+      local line = prism.bresenham(x, y, targetPosition.x, targetPosition.y)
 
       return spectrum.Animation(function(t, display)
          local index = math.floor(t / 0.05) + 1
