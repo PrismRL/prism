@@ -86,3 +86,9 @@ This can retrieve things like the mouse position, scroll wheel, control sticks, 
 .. code-block:: lua
 
    local x, y = controls.get:mouse()
+
+Rebinding keys
+--------------
+
+A demo project with rebindable keys and persistence is available on `GitHub <https://github.com/PrismRL/remapping-demo>`_.
+

@@ -26,6 +26,8 @@
     <link rel="icon" href="../../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Equip" href="../actions/equip.html" />
+    <link rel="prev" title="Equipment" href="equipment.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -45,20 +47,20 @@
             
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-EquipmentSlot">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EquipmentSlot</span></span><a class="headerlink" href="#lua-EquipmentSlot" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EquipmentSlot</span></span><a class="headerlink" href="#lua-EquipmentSlot" title="Link to this definition">¶</a></dt>
 <dd><dl class="lua data">
 <dt class="sig sig-object lua" id="lua-EquipmentSlot.name">
-<span class="sig-name descname"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.name" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-EquipmentSlot.label">
-<span class="sig-name descname"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.label" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.label" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-EquipmentSlot.category">
-<span class="sig-name descname"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.category" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><a class="headerlink" href="#lua-EquipmentSlot.category" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <div class="lua-inherited-members docutils container">
@@ -67,23 +69,23 @@
 
 <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-Equipper">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Equipper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/component.html#lua-Component" title="Component"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Component</span></code></a><a class="headerlink" href="#lua-Equipper" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Equipper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/component.html#lua-Component" title="Component"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Component</span></code></a><a class="headerlink" href="#lua-Equipper" title="Link to this definition">¶</a></dt>
 <dd><p>Handles equipping and tracking of Equipment components on an Actor.
 Maintains available slots, equipped items, and their conditions.</p>
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Equipper.slots">
-<span class="sig-name descname"><span class="pre">slots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-EquipmentSlot" title="EquipmentSlot"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">EquipmentSlot</span></code></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lua-Equipper.slots" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">slots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-EquipmentSlot" title="EquipmentSlot"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">EquipmentSlot</span></code></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#lua-Equipper.slots" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Equipper.equipped">
-<span class="sig-name descname"><span class="pre">equipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Equipper.equipped" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">equipped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Equipper.equipped" title="Link to this definition">¶</a></dt>
 <dd><p>The list of currently equipped actors representing equipment items.</p>
 </dd></dl>
 
 <dl class="lua data">
 <dt class="sig sig-object lua" id="lua-Equipper.statusMap">
-<span class="sig-name descname"><span class="pre">statusMap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Equipper.statusMap" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">statusMap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">table</span></code><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">integer</span></code><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#lua-Equipper.statusMap" title="Link to this definition">¶</a></dt>
 <dd><p>Maps equipped actors to their applied status handles for easy removal.</p>
 </dd></dl>
 
@@ -99,7 +101,7 @@ Maintains available slots, equipped items, and their conditions.</p>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Equipper.canEquip">
-<span class="sig-name descname"><span class="pre">canEquip</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">equipment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="equipment.html#lua-Equipment" title="Equipment"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipment</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Equipper.canEquip" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">canEquip</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">equipment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="equipment.html#lua-Equipment" title="Equipment"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipment</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><a class="headerlink" href="#lua-Equipper.canEquip" title="Link to this definition">¶</a></dt>
 <dd><p>Checks if the given equipment can be equipped with current available slots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -113,7 +115,7 @@ Maintains available slots, equipped items, and their conditions.</p>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Equipper.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Equipper.get" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">string</span></code><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">?</span></span><a class="headerlink" href="#lua-Equipper.get" title="Link to this definition">¶</a></dt>
 <dd><p>Gets the actor equipped in the slot, or nil if it’s empty.</p>
 <dl class="field-list simple">
 </dl>
@@ -121,7 +123,7 @@ Maintains available slots, equipped items, and their conditions.</p>
 
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Equipper.isEquipped">
-<span class="sig-name descname"><span class="pre">isEquipped</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">True</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Equipper.isEquipped" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">isEquipped</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-Equipper" title="Equipper"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Equipper</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">actor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">True</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">boolean</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Equipper.isEquipped" title="Link to this definition">¶</a></dt>
 <dd><p>Checks whether the given actor is currently equipped.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -268,10 +270,40 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../spectrum/index.html">Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Extra</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Extra</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../condition/index.html">Conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../droptable/index.html">Drop table module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Equipment module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="equipment.html"><code class="docutils literal notranslate"><span class="pre">Equipment</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">EquipmentSlot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-EquipmentSlot.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-EquipmentSlot.label"><code class="docutils literal notranslate"><span class="pre">label</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-EquipmentSlot.category"><code class="docutils literal notranslate"><span class="pre">category</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lua-Equipper"><code class="docutils literal notranslate"><span class="pre">Equipper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.slots"><code class="docutils literal notranslate"><span class="pre">slots</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.equipped"><code class="docutils literal notranslate"><span class="pre">equipped</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.statusMap"><code class="docutils literal notranslate"><span class="pre">statusMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.canEquip"><code class="docutils literal notranslate"><span class="pre">canEquip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.get"><code class="docutils literal notranslate"><span class="pre">get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Equipper.isEquipped"><code class="docutils literal notranslate"><span class="pre">isEquipped()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../actions/equip.html"><code class="docutils literal notranslate"><span class="pre">Equip</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../actions/unequip.html"><code class="docutils literal notranslate"><span class="pre">Unequip</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../inventory/index.html">Inventory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lighting/index.html">Lighting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../log/index.html">Log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sight/index.html">Sight module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../geometer/index.html">Geometer</a></li>
 </ul>
 
@@ -279,6 +311,12 @@ SOFTWARE.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Extra</a><ul>
+  <li><a href="../index.html">Equipment module</a><ul>
+      <li>Previous: <a href="equipment.html" title="previous chapter">Equipment</a></li>
+      <li>Next: <a href="../actions/equip.html" title="next chapter">Equip</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

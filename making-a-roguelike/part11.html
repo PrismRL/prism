@@ -81,7 +81,7 @@ inventory. We get all the items at the time of instantiation and store them in t
 convenience. Finally we create a mapping of letters from 1-26 corresponding to a-z which we’ll use
 during input handling.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">utf8</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;utf8&quot;</span>
-<span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
+<span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryState : GameState</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, decision: ActionDecision, level: Level, inventory: Inventory)</span>
@@ -141,12 +141,14 @@ and draw it to the screen.</p>
 keypress and for now we just try to drop the item when we hit that button. <code class="docutils literal notranslate"><span class="pre">Drop</span></code>’s
 <a class="reference internal" href="../reference/prism/core/action.html#lua-Action.canPerform" title="Action.canPerform"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">canPerform()</span></code></a> will return false if given a <code class="docutils literal notranslate"><span class="pre">nil</span></code> target.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+
    <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">letter</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">)</span> <span class="kr">do</span>
       <span class="kr">if</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">.</span><span class="n">key</span><span class="p">[</span><span class="n">letter</span><span class="p">].</span><span class="n">pressed</span> <span class="kr">then</span>
          <span class="kd">local</span> <span class="n">pressedItem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
          <span class="kd">local</span> <span class="n">drop</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actions</span><span class="p">.</span><span class="n">Drop</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">.</span><span class="n">actor</span><span class="p">,</span> <span class="n">pressedItem</span><span class="p">)</span>
          <span class="kr">if</span> <span class="n">drop</span><span class="p">:</span><span class="n">canPerform</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">)</span> <span class="kr">then</span>
-            <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">drop</span><span class="p">)</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">decision</span><span class="p">:</span><span class="n">setAction</span><span class="p">(</span><span class="n">drop</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">level</span><span class="p">)</span>
          <span class="kr">end</span>
 
          <span class="n">self</span><span class="p">.</span><span class="n">manager</span><span class="p">:</span><span class="n">pop</span><span class="p">()</span>
@@ -169,7 +171,7 @@ keypress and for now we just try to drop the item when we hit that button. <code
 <summary class="sd-summary-title sd-card-header">
 <span class="sd-summary-text">Complete inventorystate.lua</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
 <p class="sd-card-text"><a class="reference external" href="https://github.com/PrismRL/Kicking-Kobolds/blob/part10/gamestates/inventorystate.lua">Source</a></p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">keybindings</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;keybindingschema&quot;</span>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="kd">local</span> <span class="n">controls</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">&quot;controls&quot;</span>
 
 <span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> InventoryState : GameState</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> previousState GameState</span>
@@ -219,6 +221,8 @@ keypress and for now we just try to drop the item when we hit that button. <code
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">InventoryState</span><span class="p">:</span><span class="nf">update</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+   <span class="n">controls</span><span class="p">:</span><span class="n">update</span><span class="p">()</span>
+
    <span class="kr">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">letter</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">letters</span><span class="p">)</span> <span class="kr">do</span>
       <span class="kr">if</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">Input</span><span class="p">.</span><span class="n">key</span><span class="p">[</span><span class="n">letter</span><span class="p">].</span><span class="n">pressed</span> <span class="kr">then</span>
          <span class="kd">local</span> <span class="n">pressedItem</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>

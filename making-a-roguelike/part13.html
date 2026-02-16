@@ -69,7 +69,7 @@ effects.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> HealthModifier : ConditionModifier</span>
 <span class="cm">--- </span><span class="k k-Comment">@field</span><span class="cm"> maxHP integer</span>
 <span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(delta: integer): HealthModifier</span>
-<span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">Modifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
+<span class="kd">local</span> <span class="n">HealthModifier</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">condition</span><span class="p">.</span><span class="n">ConditionModifier</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;HealthModifier&quot;</span>
 
 <span class="kr">function</span> <span class="nc">HealthModifier</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
    <span class="n">self</span><span class="p">.</span><span class="n">maxHP</span> <span class="o">=</span> <span class="n">delta</span>

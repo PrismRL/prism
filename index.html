@@ -47,6 +47,20 @@
   <section id="prism">
 <h1>Prism<a class="headerlink" href="#prism" title="Link to this heading">¶</a></h1>
 <p>A comprehensive traditional roguelike engine, built on top of <a class="reference external" href="https://love2d.org/">LÖVE</a>.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Geometer</strong>: a built-in live editor for testing, prefab creation, and level generation
+debugging/visualization.</p></li>
+<li><p><strong>Collision</strong>: An easy way to define how movement through the level works.</p></li>
+<li><p><strong>Multi-tile actors</strong>: No longer does a dragon need to inhabit just one tile!</p></li>
+<li><p><strong>Animations</strong>: Liven up the world with a flexible animation system.</p></li>
+<li><p><strong>Input handling</strong>: Easily handle input of all kinds, including textual inputs (like <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>) or
+combinations.</p></li>
+<li><p><strong>Built-in modules</strong>: A suite of “extra” modules for common features like equipment, inventory,
+status effects, lighting, etc. that you can drop in or use as a base for custom implementations</p></li>
+</ul>
+</section>
 <section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
 <p>Check out <a class="reference internal" href="making-a-roguelike/part1.html"><span class="doc">the tutorial</span></a> for a guided walk-through of creating a
@@ -61,7 +75,99 @@ grid levels. Other turn-based tactics games might also be a good fit.</p>
 <section id="community">
 <h2>Community<a class="headerlink" href="#community" title="Link to this heading">¶</a></h2>
 <p>Our discord can be found <a class="reference external" href="https://discord.gg/9YpsH4hYVF">here</a>.</p>
-<div class="toctree-wrapper compound">
+</section>
+<section id="demo">
+<h2>Demo<a class="headerlink" href="#demo" title="Link to this heading">¶</a></h2>
+<p>Below is the template project. Try pressing <code class="docutils literal notranslate"><span class="pre">~</span></code> to enable Geometer, the live editor!</p>
+ <canvas id="loadingCanvas" oncontextmenu="event.preventDefault()" width="800" height="600"></canvas>
+ <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+<script type='text/javascript'>
+  function goFullScreen(){
+        var canvas = document.getElementById("canvas");
+        if(canvas.requestFullScreen)
+            canvas.requestFullScreen();
+        else if(canvas.webkitRequestFullScreen)
+            canvas.webkitRequestFullScreen();
+        else if(canvas.mozRequestFullScreen)
+            canvas.mozRequestFullScreen();
+  }
+  function FullScreenHook(){
+    var canvas = document.getElementById("canvas");
+    canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  }
+  var loadingContext = document.getElementById('loadingCanvas').getContext('2d');
+  function drawLoadingText(text) {
+    var canvas = loadingContext.canvas;
+
+    loadingContext.fillStyle = "rgb(142, 195, 227)";
+    loadingContext.fillRect(0, 0, canvas.scrollWidth, canvas.scrollHeight);
+
+    loadingContext.font = '2em arial';
+    loadingContext.textAlign = 'center'
+    loadingContext.fillStyle = "rgb( 11, 86, 117 )";
+    loadingContext.fillText(text, canvas.scrollWidth / 2, canvas.scrollHeight / 2);
+
+    loadingContext.fillText("Powered By Emscripten.", canvas.scrollWidth / 2, canvas.scrollHeight / 4);
+    loadingContext.fillText("Powered By LÖVE.", canvas.scrollWidth / 2, canvas.scrollHeight / 4 * 3);
+  }
+
+  window.onload = function () { window.focus(); };
+  window.onclick = function () { window.focus(); };
+
+  window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+    }
+  }, false);
+
+  var Module = {
+    arguments: ["./game.love"],
+    INITIAL_MEMORY: 20000000,
+    printErr: console.error.bind(console),
+    canvas: (function() {
+      var canvas = document.getElementById('canvas');
+
+      // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+      // application robust, you may want to override this behavior before shipping!
+      // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+      canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+
+      return canvas;
+    })(),
+    setStatus: function(text) {
+      if (text) {
+        drawLoadingText(text);
+      } else if (Module.remainingDependencies === 0) {
+        document.getElementById('loadingCanvas').style.display = 'none';
+        document.getElementById('canvas').style.visibility = 'visible';
+      }
+    },
+    totalDependencies: 0,
+    remainingDependencies: 0,
+    monitorRunDependencies: function(left) {
+      this.remainingDependencies = left;
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+  };
+  Module.setStatus('Downloading...');
+  window.onerror = function(event) {
+    // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
+    Module.setStatus('Exception thrown, see JavaScript console');
+    Module.setStatus = function(text) {
+      if (text) Module.printErr('[post-exception status] ' + text);
+    };
+  };
+
+  var applicationLoad = function(e) {
+    Love(Module);
+  }
+</script>
+<script type="text/javascript" src="_static/demo/game.js"></script>
+<script async type="text/javascript" src="_static/demo/love.js" onload="applicationLoad(this)"></script><div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>

@@ -1,0 +1,16 @@
+.. title:: FlickerEffectOptions
+.. lua:autoobject:: FlickerEffectOptions
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+
+.. title:: FlickerEffect
+.. lua:autoobject:: FlickerEffect
+   :members:
+   :special-members: __new
+   :undoc-members:
+   :inherited-members: __new
+   :inherited-members-table:
+

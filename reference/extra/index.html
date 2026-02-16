@@ -47,7 +47,19 @@
             
   <section id="extra">
 <h1>Extra<a class="headerlink" href="#extra" title="Link to this heading">¶</a></h1>
-<p>These are optional modules for common features.</p>
+<p>These are optional modules for common features. Use them in your games and modify them when
+necessary by copying the module into your game’s modules. To prevent the Lua language server from
+complaining about double declarations, you can specify modules directly in the <code class="docutils literal notranslate"><span class="pre">.luarc.json</span></code>, e.g.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;Lua.workspace.library&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;prism/engine&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;prism/lib&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;prism/spectrum&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;prism/geometer&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;prism/extra/condition&quot;</span><span class="p">,</span>
+<span class="p">],</span>
+</pre></div>
+</div>
+<p>If you wanted to modify the <code class="docutils literal notranslate"><span class="pre">condition</span></code> module, delete its entry.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="condition/index.html">Conditions module</a><ul>
@@ -65,6 +77,14 @@
 <li class="toctree-l2"><a class="reference internal" href="droptable/components/droptable.html#lua-DropTable"><code class="docutils literal notranslate"><span class="pre">DropTable</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="equipment/index.html">Equipment module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="equipment/components/equipment.html"><code class="docutils literal notranslate"><span class="pre">Equipment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="equipment/components/equipper.html"><code class="docutils literal notranslate"><span class="pre">EquipmentSlot</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="equipment/components/equipper.html#lua-Equipper"><code class="docutils literal notranslate"><span class="pre">Equipper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="equipment/actions/equip.html"><code class="docutils literal notranslate"><span class="pre">Equip</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="equipment/actions/unequip.html"><code class="docutils literal notranslate"><span class="pre">Unequip</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="inventory/index.html">Inventory module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="inventory/components/inventory.html"><code class="docutils literal notranslate"><span class="pre">Inventory</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/components/item.html"><code class="docutils literal notranslate"><span class="pre">Item</span></code></a></li>
@@ -73,6 +93,22 @@
 <li class="toctree-l2"><a class="reference internal" href="inventory/relations/heldby.html"><code class="docutils literal notranslate"><span class="pre">HeldByRelation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/relations/inventory.html"><code class="docutils literal notranslate"><span class="pre">InventoryRelation</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/index.html#lua-prism.targets.InventoryTarget"><code class="docutils literal notranslate"><span class="pre">prism.targets.InventoryTarget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lighting/index.html">Lighting module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lighting/components/light.html"><code class="docutils literal notranslate"><span class="pre">Light</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/components/lightsight.html"><code class="docutils literal notranslate"><span class="pre">LightSightOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/components/lightsight.html#lua-LightSight"><code class="docutils literal notranslate"><span class="pre">LightSight</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/systems/lightsystem.html"><code class="docutils literal notranslate"><span class="pre">LightSystem</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/relations/lights.html"><code class="docutils literal notranslate"><span class="pre">LightsRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/relations/litby.html"><code class="docutils literal notranslate"><span class="pre">LitByRelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/passes/sightlightpass.html"><code class="docutils literal notranslate"><span class="pre">SightLightPass</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/flicker.html"><code class="docutils literal notranslate"><span class="pre">FlickerEffectOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/flicker.html#lua-FlickerEffect"><code class="docutils literal notranslate"><span class="pre">FlickerEffect</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/heartbeat.html"><code class="docutils literal notranslate"><span class="pre">HeartbeatEffectOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/heartbeat.html#lua-HeartbeatEffect"><code class="docutils literal notranslate"><span class="pre">HeartbeatEffect</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/sin.html"><code class="docutils literal notranslate"><span class="pre">SineEffectOptions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/lighteffects/sin.html#lua-SineEffect"><code class="docutils literal notranslate"><span class="pre">SineEffect</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="log/index.html">Log module</a><ul>
@@ -222,7 +258,9 @@ SOFTWARE.
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Extra</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="condition/index.html">Conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="droptable/index.html">Drop table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="equipment/index.html">Equipment module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inventory/index.html">Inventory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lighting/index.html">Lighting module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="log/index.html">Log module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sight/index.html">Sight module</a></li>
 </ul>

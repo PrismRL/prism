@@ -26,6 +26,8 @@
     <link rel="icon" href="../../../../_static/prism.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Inventory module" href="../../inventory/index.html" />
+    <link rel="prev" title="Equip" href="equip.html" />
    
   <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
   
@@ -45,12 +47,12 @@
             
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-Unequip">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Unequip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><a class="headerlink" href="#lua-Unequip" title="Link to this definition">¶</a><br /></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Unequip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><a class="headerlink" href="#lua-Unequip" title="Link to this definition">¶</a></dt>
 <dd><p>Action that removes an equipped item from the actor and returns it to their inventory.
 Also clears any active status effects granted by the equipment.</p>
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-Unequip.__new">
-<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Unequip.__new" title="Link to this definition">¶</a><br /></dt>
+<span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Action</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/actor.html#lua-Actor" title="Actor"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Actor</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-Unequip.__new" title="Link to this definition">¶</a></dt>
 <dd><p>Constructor for the Action class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -197,10 +199,29 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../explainers/game-loop.html">The game loop</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Reference</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../prism/index.html">Prism</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../spectrum/index.html">Spectrum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Extra</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Extra</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../condition/index.html">Conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../droptable/index.html">Drop table module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Equipment module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../components/equipment.html"><code class="docutils literal notranslate"><span class="pre">Equipment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/equipper.html"><code class="docutils literal notranslate"><span class="pre">EquipmentSlot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/equipper.html#lua-Equipper"><code class="docutils literal notranslate"><span class="pre">Equipper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="equip.html"><code class="docutils literal notranslate"><span class="pre">Equip</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Unequip</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lua-Unequip.__new"><code class="docutils literal notranslate"><span class="pre">__new()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../inventory/index.html">Inventory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lighting/index.html">Lighting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../log/index.html">Log module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sight/index.html">Sight module</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../geometer/index.html">Geometer</a></li>
 </ul>
 
@@ -208,6 +229,12 @@ SOFTWARE.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Extra</a><ul>
+  <li><a href="../index.html">Equipment module</a><ul>
+      <li>Previous: <a href="equip.html" title="previous chapter">Equip</a></li>
+      <li>Next: <a href="../../inventory/index.html" title="next chapter">Inventory module</a></li>
+  </ul></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>

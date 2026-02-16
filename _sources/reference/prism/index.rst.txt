@@ -129,7 +129,7 @@ objects, making them easy to access, e.g. ``prism.actors.Player()``.
 
 **Functions**
 
-- .. lua:function:: prism.Ellipse(mode: ("fill" | "line"), center: Vector2, rx: integer, ry: integer, callback: PassableCallback?)
+- .. lua:function:: prism.ellipse(mode: ("fill" | "line"), center: Vector2, rx: integer, ry: integer, callback: PassableCallback?)
 
      Generates points for an ellipse on a grid using the Vector2 class.
 
@@ -138,7 +138,7 @@ objects, making them easy to access, e.g. ``prism.actors.Player()``.
      :param integer rx: The radius on the x axis.
      :param integer ry: The radius on the y axis.
      :param PassableCallback? callback: An optional callback to determine passability.
-- .. lua:function:: prism.Bresenham(x0: integer, y0: integer, x1: integer, y1: integer, callback: PassableCallback)
+- .. lua:function:: prism.bresenham(x0: integer, y0: integer, x1: integer, y1: integer, callback: PassableCallback)
 
      Generates points for an ellipse on a grid using the Vector2 class.
 
