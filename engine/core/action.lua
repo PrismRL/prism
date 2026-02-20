@@ -5,8 +5,7 @@
 --- @class Action : Object
 --- @field owner Actor The actor taking the action.
 --- @field name? string A name for the action.
---- @field protected targets Target[] (static) A list of targets to apply the action to.
---- @field protected targetObjects Object[] The objects that correspond to the targets.
+--- @field protected targets table<string, Target> (static) A list of targets to apply the action to.
 --- @field protected requiredComponents Component[] (static) Components required for an actor to take this action.
 --- @field protected reaction boolean
 --- @field protected abstract boolean
@@ -18,12 +17,13 @@ Action.targets = {}
 --- Constructor for the Action class.
 ---@param owner Actor The actor that is performing the action.
 ---@param ... Object An optional list of target actors. Not all actions require targets.
-function Action:__new(owner, ...)
+function Action:__new(owner, targets)
    assert(owner, "Actions must have an owner!")
 
    self.owner = owner
-   self.targets = self.targets or {}
-   self.targetObjects = { ... }
+   for target, object in pairs(targets) do
+      self[target] = object
+   end
 end
 
 function Action:isAbstract()
@@ -36,25 +36,33 @@ end
 
 --- @private
 function Action:__validateTargets(level)
-   if #self.targets < #self.targetObjects then
-      return false,
-         string.format(
-            "Expected %s targets got %s targets for action %s",
-            #self.targets,
-            #self.targetObjects,
-            self.className
-         )
+   for name, target in pairs(self.targets) do
+      local valid, err = target:validate(level, self.owner, self[name])
+      if not valid then
+         return false,
+            "Invalid target [" .. name .. "] for action " .. self.className .. ": " .. (err or "")
+      end
    end
 
-   local previousTargets = {}
-   for i = 1, #self.targets do
-      local target = self.targets[i]
-      --- @diagnostic disable-next-line
-      if not target:validate(level, self.owner, self.targetObjects[i], previousTargets) then
-         return false, "Invalid target " .. i .. " for action " .. self.className
-      end
-      table.insert(previousTargets, self.targetObjects[i])
-   end
+   -- if #self.targets < #self.targetObjects then
+   --    return false,
+   --       string.format(
+   --          "Expected %s targets got %s targets for action %s",
+   --          #self.targets,
+   --          #self.targetObjects,
+   --          self.className
+   --       )
+   -- end
+   --
+   -- local previousTargets = {}
+   -- for i = 1, #self.targets do
+   --    local target = self.targets[i]
+   --    --- @diagnostic disable-next-line
+   --    if not target:validate(level, self.owner, self.targetObjects[i], previousTargets) then
+   --       return false, "Invalid target " .. i .. " for action " .. self.className
+   --    end
+   --    table.insert(previousTargets, self.targetObjects[i])
+   -- end
 
    return true
 end

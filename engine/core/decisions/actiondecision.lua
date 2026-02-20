@@ -24,7 +24,11 @@ function ActionDecision:setAction(action, level)
    if self.action then return false, "ActionDecision already has an action!" end
 
    local can, err = level:canPerform(action)
-   if can then self.action = action end
+   if can then
+      self.action = action
+   else
+      prism.logger.debug(err)
+   end
 
    return can, err
 end

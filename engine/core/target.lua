@@ -1,3 +1,5 @@
+--- @alias TargetValidator fun(level: Level, owner: Actor, object: any, action: Action): boolean, string?
+
 --- Targets represent what actions are able to act on. The builder pattern is used to
 --- narrow down various requirements for actions.
 --- @class Target : Object
@@ -6,7 +8,8 @@
 --- @field inLevel boolean
 --- @field type? Object An object prototype for the targeted to adhere to.
 --- @field rangeValue integer
---- @field validators table<string, (fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean)>
+--- @field validators table<string, TargetValidator>
+--- @field filters TargetValidator[]
 --- @field requiredComponents table<Component, boolean>
 --- @field excludedComponents table<Component, boolean>
 --- @overload fun(...: Component): Target
@@ -15,6 +18,7 @@ local Target = prism.Object:extend("Target")
 --- Creates a new Target and accepts components and sends them to with().
 function Target:__new(...)
    self.validators = {}
+   self.filters = {}
    self.requiredComponents = {}
    self.excludedComponents = {}
    self.inLevel = true
@@ -28,27 +32,29 @@ end
 --- @param owner Actor The actor performing the action.
 --- @param targetObject any
 --- @param previousTargets any[]? A list of the previous target objects.
+--- @return boolean valid Whether the target is valid or not.
+--- @return string? error If the target is not valid, an error message explaining why.
 function Target:validate(level, owner, targetObject, previousTargets)
    if targetObject == nil then
       if self._optional then
          return true
       else
-         return false
+         return false, "Target was nil and is not optional."
       end
    end
 
    if self.inLevel and prism.Actor:is(targetObject) and not level:hasActor(targetObject) then
-      return false
+      return false, "Target required to be in level but it was not."
    end
 
-   for k, validator in pairs(self.validators) do
-      if type(k) == "string" then
-         if not validator(level, owner, targetObject, previousTargets) then return false end
-      end
+   for _, validator in pairs(self.validators) do
+      local valid, err = validator(level, owner, targetObject, previousTargets)
+      if not valid then return valid, err end
    end
 
-   for _, validator in ipairs(self.validators) do
-      if not validator(level, owner, targetObject, previousTargets) then return false end
+   for _, filter in ipairs(self.filters) do
+      local valid, err = filter(level, owner, targetObject, previousTargets)
+      if not valid then return valid, err end
    end
 
    return true
@@ -59,7 +65,7 @@ end
 --- The order of filter application is not guaranteed!
 --- @param filter fun(level: Level, owner: Actor, targetObject: any, previousTargets: any[]): boolean
 function Target:filter(filter)
-   table.insert(self.validators, filter)
+   table.insert(self.filters, filter)
    return self
 end
 
@@ -74,10 +80,12 @@ function Target:with(...)
    self.validators["with"] = function(level, owner, target)
       if not next(self.requiredComponents) then return true end
 
-      if not prism.Entity:is(target) then return false end
+      if not prism.Entity:is(target) then return false, "Target was not an entity." end
 
       for comp, _ in pairs(self.requiredComponents) do
-         if not target:has(comp) then return false end
+         if not target:has(comp) then
+            return false, "Target was missing component " .. comp.className
+         end
       end
 
       return true
@@ -97,10 +105,12 @@ function Target:without(...)
    self.validators["with"] = function(level, owner, target)
       if not next(self.excludedComponents) then return true end
 
-      if not prism.Entity:is(target) then return false end
+      if not prism.Entity:is(target) then return false, "Target was not a Cell or Actor!" end
 
       for comp, _ in pairs(self.excludedComponents) do
-         if target:has(comp) then return false end
+         if target:has(comp) then
+            return false, "Target had " .. comp.className " but was required not to."
+         end
       end
 
       return true
@@ -125,20 +135,22 @@ function Target:range(range, distanceType)
    --- @param owner Actor
    --- @param target any
    self.validators["range"] = function(level, owner, target)
-      if not owner:getPosition() then return false end
+      if not owner:getPosition() then return false, "Owner did not have a position!" end
 
       if prism.Actor:is(target) then
-         if not target:getPosition() then return false end
+         if not target:getPosition() then return false, "Target did not have a position!" end
          --- @cast target Actor
-         return owner:getRange(target, distanceType) <= self.rangeValue
+         return owner:getRange(target, distanceType) <= self.rangeValue,
+            "Target was not within range."
       end
 
       if prism.Vector2:is(target) then
          --- @cast target Vector2
-         return owner:getRangeVec(target, distanceType) <= self.rangeValue
+         return owner:getRangeVec(target, distanceType) <= self.rangeValue,
+            "Target was not within range."
       end
 
-      return false
+      return false, "Target was not an Actor or a Vector2."
    end
 
    return self
@@ -152,7 +164,7 @@ function Target:isPrototype(type)
    self.type = type
 
    self.validators["type"] = function(level, owner, target)
-      return self.type:is(target)
+      return self.type:is(target), "Target was not a " .. type.className .. "."
    end
 
    return self
@@ -176,6 +188,7 @@ end
 --- Checks if the target is specific Lua type.
 --- @param luaType type
 function Target:isType(luaType)
+   self.luaType = luaType
    self.validators["luatype"] = function(_, _, target)
       return type(target) == luaType
    end
@@ -261,8 +274,9 @@ function Target:related(relationType)
 
    --- @param owner Actor
    self.validators["related"] = function(_, owner, target)
-      if not prism.Entity:is(target) then return false end
-      return owner:hasRelation(relationType, target)
+      if not prism.Entity:is(target) then return false, "Target was not a Cell or Actor!" end
+      return owner:hasRelation(relationType, target) or false,
+         "Owner did not have relation to target."
    end
 
    return self
@@ -271,7 +285,7 @@ end
 --- Excludes the owner from being a valid target.
 function Target:excludeOwner()
    self.validators["excludeOwner"] = function(_, owner, target)
-      return owner ~= target
+      return owner ~= target or false, "Owner was passed as target!"
    end
 
    return self

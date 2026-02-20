@@ -286,6 +286,37 @@ function prism.registerRegistry(name, type, factory, module)
    )
 end
 
+--- @param action Action
+local function writeActionDefinitions(action)
+   local targets = ""
+   local targetList = {}
+   if next(action.targets) then
+      targets = ", targets: {"
+      for name, target in pairs(action.targets) do
+         local targetType = "any"
+         if target.luaType then targetType = target.luaType end
+
+         if next(target.requiredComponents) then targetType = "Entity" end
+
+         if target.rangeValue then targetType = "Actor|Vector2" end
+
+         if target.type then targetType = target.type.className end
+
+         if target._optional then name = name .. "?" end
+         targets = targets .. " " .. name .. ": " .. targetType .. ","
+         table.insert(targetList, "--- @field " .. name .. " " .. targetType)
+      end
+      targets = targets .. "}"
+   end
+   prism.writeDefinitions(
+      "--- @class " .. action.className,
+      unpack(targetList),
+      "--- @overload fun(owner: Actor" .. targets .. "): " .. action.className,
+      "local " .. action.className .. " = nil",
+      "prism.actions." .. action.className .. " = " .. action.className
+   )
+end
+
 --- Registers an object into its registry. Errors if the object has no registry.
 --- For factories (Actor, Cell, Animation, etc.) use the specific function, e.g. prism.registerActor.
 --- @param object Object The object to register.
@@ -330,11 +361,17 @@ function prism.register(object, skipDefinitions)
 
    if skipDefinitions then return end
 
-   prism.writeDefinitions(
-      "--- @class " .. object.className .. " : " .. getmetatable(object).className,
-      "local " .. object.className .. " = nil",
-      registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
-   )
+   print(object.className)
+   if prism.Action:is(object) then
+      --- @cast object Action
+      writeActionDefinitions(object)
+   else
+      prism.writeDefinitions(
+         "--- @class " .. object.className,
+         "local " .. object.className .. " = nil",
+         registry.module .. "." .. registry.name .. "." .. objectName .. " = " .. object.className
+      )
+   end
 end
 
 --- @param path string The path to load into the registry from.
@@ -355,7 +392,7 @@ local function loadRegistry(path, registry, recurse, definitions)
          local item = require(requireName)
 
          if not registry.manualRegistration then
-            prism.register(item, true)
+            prism.register(item)
             local objectName = item.className
             prism.writeDefinitions(
                '--- @module "' .. requireName .. '"',
