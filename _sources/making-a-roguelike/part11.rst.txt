@@ -123,9 +123,7 @@ keypress and for now we just try to drop the item when we hit that button. ``Dro
          if spectrum.Input.key[letter].pressed then
             local pressedItem = self.items[i]
             local drop = prism.actions.Drop(self.decision.actor, pressedItem)
-            if drop:canPerform(self.level) then
-               self.decision:setAction(drop, self.level)
-            end
+            self.decision:setAction(drop, self.level)
 
             self.manager:pop()
             return
@@ -206,7 +204,7 @@ Then we check if the user hit the inventory or return key, and if so we call
             if spectrum.Input.key[letter].pressed then
                local pressedItem = self.items[i]
                local drop = prism.actions.Drop(self.decision.actor, pressedItem)
-               if drop:canPerform(self.level) then self.decision:setAction(drop) end
+               self.decision:setAction(drop, self.level)
 
                self.manager:pop()
                return

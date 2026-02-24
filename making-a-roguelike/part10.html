@@ -83,7 +83,7 @@ We’ll make it consumable in a future chapter!</p>
 drop one of our meat bricks.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">DropTable</span> <span class="p">{</span>
    <span class="n">chance</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
-   <span class="n">entry</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">actors</span><span class="p">.</span><span class="n">MeatBrick</span><span class="p">,</span>
+   <span class="n">entry</span> <span class="o">=</span> <span class="s2">&quot;MeatBrick&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -95,7 +95,7 @@ the level when an actor dies.</p>
    <span class="kd">local</span> <span class="n">dropTable</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">owner</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">DropTable</span><span class="p">)</span>
 
    <span class="kr">if</span> <span class="n">dropTable</span> <span class="kr">then</span>
-      <span class="kd">local</span> <span class="n">drops</span> <span class="o">=</span> <span class="n">dropTable</span><span class="p">:</span><span class="n">getDrops</span><span class="p">(</span><span class="n">level</span><span class="p">.</span><span class="n">rng</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">drops</span> <span class="o">=</span> <span class="n">dropTable</span><span class="p">:</span><span class="n">getDrops</span><span class="p">(</span><span class="n">level</span><span class="p">.</span><span class="n">RNG</span><span class="p">)</span>
       <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">drop</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">drops</span><span class="p">)</span> <span class="kr">do</span>
          <span class="n">level</span><span class="p">:</span><span class="n">addActor</span><span class="p">(</span><span class="n">drop</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
       <span class="kr">end</span>
@@ -180,7 +180,7 @@ with. Let’s create a new file in <code class="docutils literal notranslate"><s
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Name</span><span class="p">(</span><span class="s2">&quot;Chest&quot;</span><span class="p">),</span>
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Position</span><span class="p">(),</span>
        <span class="n">inventory</span><span class="p">,</span>
-       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">),</span>
+       <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Drawable</span><span class="p">{</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">prism</span><span class="p">.</span><span class="n">Color4</span><span class="p">.</span><span class="n">YELLOW</span> <span class="p">},</span>
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Container</span><span class="p">(),</span>
        <span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Collider</span><span class="p">()</span>
    <span class="p">}</span>

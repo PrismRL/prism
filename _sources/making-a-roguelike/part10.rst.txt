@@ -48,7 +48,7 @@ drop one of our meat bricks.
 
    prism.components.DropTable {
       chance = 0.3,
-      entry = prism.actors.MeatBrick,
+      entry = "MeatBrick",
    }
 
 If you were to kick a few kobolds you'd notice nothing is happening! That's because the drop table
@@ -62,7 +62,7 @@ the level when an actor dies.
       local dropTable = self.owner:get(prism.components.DropTable)
 
       if dropTable then
-         local drops = dropTable:getDrops(level.rng)
+         local drops = dropTable:getDrops(level.RNG)
          for _, drop in ipairs(drops) do
             level:addActor(drop, x, y)
          end
@@ -159,7 +159,7 @@ with. Let's create a new file in ``modules/game/actors`` called ``chest.lua``. W
           prism.components.Name("Chest"),
           prism.components.Position(),
           inventory,
-          prism.components.Drawable("(", prism.Color4.YELLOW),
+          prism.components.Drawable{ index = "(", color = prism.Color4.YELLOW },
           prism.components.Container(),
           prism.components.Collider()
       }
