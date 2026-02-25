@@ -5,6 +5,37 @@ In this tutorial we're going to get the game saving and loading. We'll introduce
 choosing between continuing and starting a new game, and we'll hook into ``love.quit`` to save the
 game when we quit.
 
+Dynamic ``GameLevelState`` constructor
+--------------------------------------
+
+First, we'll make ``GameLevelState`` accept a ``LevelBuilder`` *or* a ``Level``, for when it gets
+deserialized. If it is a ``Level``, we pass it directly to the constructor.
+
+.. code-block:: lua
+
+   --- @overload fun(display: Display, level: Level|LevelBuilder, seed?: string): GameLevelState
+   local GameLevelState = spectrum.gamestates.LevelState:extend "GameLevelState"
+
+   --- @param display Display
+   --- @param level Level|LevelBuilder
+   --- @param seed string?
+   function GameLevelState:__new(display, level, seed)
+      if prism.LevelBuilder:is(level) then
+         level:addSeed(seed)
+         level:addSystems(
+            prism.systems.SensesSystem(),
+            prism.systems.SightSystem(),
+            prism.systems.FallSystem()
+         )
+
+         -- Initialize with the created level and display, the heavy lifting is done by
+         -- the parent class.
+         self.super.__new(self, level:build(prism.cells.Wall), display)
+      else
+         self.super.__new(self, level, display)
+      end
+   end
+
 Introductions
 -------------
 
@@ -209,4 +240,3 @@ In the next chapter
 
 We'll use serialization in a different way, creating prefabs and using them to spice up level
 generation!
-

@@ -1,12 +1,8 @@
 Zapping wands
 =============
 
-.. note::
-
-   This chapter is very work in progress, beware! Don't procede yet adventurer!
-
 In this chapter we'll add wands and a generalized targetting system for actions. We'll add a Wand of
-Hurt to zap a creatures with.
+Hurt to zap creatures at range.
 
 Creating a base module
 ----------------------

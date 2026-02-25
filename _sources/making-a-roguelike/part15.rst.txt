@@ -138,7 +138,7 @@ display. Then for each of our entries we build up a line to display, e.g. ``[a] 
          local line = ("[%s] %s - %s"):format(letter, slot, name)
          self.display:print(self.display.width - 28, 1 + i, line, nil, nil, 2)
          if entry.actor then
-            self.display:putActor(self.display.width - 28 + #line, 1 + i, drawable)
+            self.display:putActor(self.display.width - 28 + #line, 1 + i, entry.actor)
          end
       end
 

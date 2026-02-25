@@ -50,6 +50,35 @@
 <p>In this tutorial we’re going to get the game saving and loading. We’ll introduce a start menu for
 choosing between continuing and starting a new game, and we’ll hook into <code class="docutils literal notranslate"><span class="pre">love.quit</span></code> to save the
 game when we quit.</p>
+<section id="dynamic-gamelevelstate-constructor">
+<h2>Dynamic <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code> constructor<a class="headerlink" href="#dynamic-gamelevelstate-constructor" title="Link to this heading">¶</a></h2>
+<p>First, we’ll make <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code> accept a <code class="docutils literal notranslate"><span class="pre">LevelBuilder</span></code> <em>or</em> a <code class="docutils literal notranslate"><span class="pre">Level</span></code>, for when it gets
+deserialized. If it is a <code class="docutils literal notranslate"><span class="pre">Level</span></code>, we pass it directly to the constructor.</p>
+<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@overload</span><span class="cm"> fun(display: Display, level: Level|LevelBuilder, seed?: string): GameLevelState</span>
+<span class="kd">local</span> <span class="n">GameLevelState</span> <span class="o">=</span> <span class="n">spectrum</span><span class="p">.</span><span class="n">gamestates</span><span class="p">.</span><span class="n">LevelState</span><span class="p">:</span><span class="n">extend</span> <span class="s2">&quot;GameLevelState&quot;</span>
+
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> display Display</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> level Level|LevelBuilder</span>
+<span class="cm">--- </span><span class="k k-Comment">@param</span><span class="cm"> seed string?</span>
+<span class="kr">function</span> <span class="nc">GameLevelState</span><span class="p">:</span><span class="nf">__new</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+   <span class="kr">if</span> <span class="n">prism</span><span class="p">.</span><span class="n">LevelBuilder</span><span class="p">:</span><span class="n">is</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="kr">then</span>
+      <span class="n">level</span><span class="p">:</span><span class="n">addSeed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+      <span class="n">level</span><span class="p">:</span><span class="n">addSystems</span><span class="p">(</span>
+         <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SensesSystem</span><span class="p">(),</span>
+         <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">SightSystem</span><span class="p">(),</span>
+         <span class="n">prism</span><span class="p">.</span><span class="n">systems</span><span class="p">.</span><span class="n">FallSystem</span><span class="p">()</span>
+      <span class="p">)</span>
+
+      <span class="c1">-- Initialize with the created level and display, the heavy lifting is done by</span>
+      <span class="c1">-- the parent class.</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span><span class="n">build</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">cells</span><span class="p">.</span><span class="n">Wall</span><span class="p">),</span> <span class="n">display</span><span class="p">)</span>
+   <span class="kr">else</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">super</span><span class="p">.</span><span class="n">__new</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">display</span><span class="p">)</span>
+   <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+</div>
+</section>
 <section id="introductions">
 <h2>Introductions<a class="headerlink" href="#introductions" title="Link to this heading">¶</a></h2>
 <p>Head to <code class="docutils literal notranslate"><span class="pre">modules/game/gamestates</span></code> and create a new file <code class="docutils literal notranslate"><span class="pre">gamestartstate.lua</span></code>.</p>
@@ -344,6 +373,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="part14.html">Zapping wands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="part15.html">Gearing up</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Saving the game</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-gamelevelstate-constructor">Dynamic <code class="docutils literal notranslate"><span class="pre">GameLevelState</span></code> constructor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#introductions">Introductions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#controls">Controls</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cleaning-up-main">Cleaning up main</a></li>

@@ -248,6 +248,7 @@ modify our ``InventoryState:update`` to look like this:
 .. code-block:: lua
 
    function InventoryState:update(dt)
+      controls:update()
       for i, letter in ipairs(self.letters) do
          if spectrum.Input.key[letter].pressed then
             self.manager:push(InventoryActionState(self.display, self.decision, self.level, self.items[i]))

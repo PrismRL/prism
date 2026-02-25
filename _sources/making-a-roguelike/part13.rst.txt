@@ -183,7 +183,7 @@ well.
          prism.components.Position(),
          prism.components.Drinkable {
             healing = 5,
-            condition = prism.condition.Condition(prism.modifiers.Health(5))
+            condition = prism.condition.Condition(prism.modifiers.HealthModifier(5))
          }
       }
    end)
@@ -220,7 +220,7 @@ condition lasts.
    local TickedCondition = prism.condition.Condition:extend "TickedCondition"
 
    function TickedCondition:__new(duration, ...)
-      self.super.__new(self, { ... })
+      self.super.__new(self, ...)
       self.duration = duration
    end
 
