@@ -48,7 +48,8 @@
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-BehaviorTree.Root">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BehaviorTree.</span></span><span class="sig-name descname"><span class="pre">Root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="btnode.html#lua-BehaviorTree.Node" title="BehaviorTree.Node"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a><a class="headerlink" href="#lua-BehaviorTree.Root" title="Link to this definition">¶</a></dt>
-<dd><p>The root node of a behavior tree.</p>
+<dd><p>The entry point of a behavior tree. It evaluates its children in order and returns
+the first action it encounters.</p>
 <dl class="lua method">
 <dt class="sig sig-object lua" id="lua-BehaviorTree.Root.__new">
 <span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-BehaviorTree.Root" title="BehaviorTree.Root"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">BehaviorTree.Root</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><br /><span class="w">&#160;&#160;&#160; </span><span class="n"><span class="pre">children</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="btnode.html#lua-BehaviorTree.Node" title="BehaviorTree.Node"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><br /><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-BehaviorTree.Root.__new" title="Link to this definition">¶</a><br /></dt>
@@ -168,6 +169,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/query.html">Queries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/behavior-trees.html">Behavior trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/collision.html">Collision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-tos/spriteatlas.html">Sprites</a></li>

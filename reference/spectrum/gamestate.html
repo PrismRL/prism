@@ -48,8 +48,7 @@
   <dl class="lua class">
 <dt class="sig sig-object lua" id="lua-GameState">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GameState</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><a class="headerlink" href="#lua-GameState" title="Link to this definition">¶</a></dt>
-<dd><p>A game state used to organize different screens of a game in conjunction with a manager.</p>
-<dl class="lua method">
+<dd><dl class="lua method">
 <dt class="sig sig-object lua" id="lua-GameState.__new">
 <span class="sig-name descname"><span class="pre">__new</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../prism/core/object.html#lua-Object" title="Object"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">Object</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-GameState.__new" title="Link to this definition">¶</a></dt>
 <dd><p>The default constructor for the class. Subclasses should override this.</p>
@@ -68,9 +67,6 @@
 <span class="sig-name descname"><span class="pre">load</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">previous?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-GameState.load" title="Link to this definition">¶</a></dt>
 <dd><p>Called when this state is pushed or switched to.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous?</strong> (<a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a>) – A game state used to organize different screens of a game in conjunction with a manager.</p>
-</dd>
 </dl>
 </dd></dl>
 
@@ -87,9 +83,6 @@
 <span class="sig-name descname"><span class="pre">resume</span></span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">previous?</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">...</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">any</span></code><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#lua-GameState.resume" title="Link to this definition">¶</a></dt>
 <dd><p>Called when a state is popped and this one becomes active.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous?</strong> (<a class="reference internal" href="#lua-GameState" title="GameState"><code class="xref lua lua-_auto docutils literal notranslate"><span class="pre">GameState</span></code></a>) – A game state used to organize different screens of a game in conjunction with a manager.</p>
-</dd>
 </dl>
 </dd></dl>
 
@@ -827,6 +820,7 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/object-registration.html">Object registration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/query.html">Queries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/animation.html">Animation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-tos/behavior-trees.html">Behavior trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/collision.html">Collision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/controls.html">Input handling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how-tos/spriteatlas.html">Sprites</a></li>
