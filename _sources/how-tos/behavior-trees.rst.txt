@@ -2,15 +2,15 @@ Behavior trees
 ==============
 
 Behavior trees are a common tool for driving NPC decision-making. They work particularly well in a
-discrete context like turn-based games, so an implementation is included. It's composed of a set of
-core building blocks for developing behavior trees. Each time you run a tree, it's evaluated from
-top to bottom, ultimately producing a single action. an actor is taking its turn.
+discrete context like turn-based games, so we've included a set of building blocks for developing
+behavior trees. Each time you run a tree it's evaluated from top to bottom, ultimately producing a
+single action.
 
 Behavior tree nodes
 -------------------
 
-BehaviorTree.Node
------------------
+:lua:class:`BehaviorTree.Node`
+------------------------------
 
 This is the base class that all other behavior nodes inherit from. Custom behaviors are created by
 extending this class.
@@ -26,14 +26,14 @@ extending this class.
 
    return WaitBehavior
 
-BehaviorTree.Root
------------------
+:lua:class:`BehaviorTree.Root`
+------------------------------
 
 The entry point of the tree. It evaluates its children in order and returns the first action it
 encounters.
 
-BehaviorTree.Sequence
----------------------
+:lua:class:`BehaviorTree.Sequence`
+----------------------------------
 
 Executes each child in order. If every child succeeds, the sequence succeeds. If any child fails,
 the sequence fails. If a child returns an ``Action``, execution pauses and that action is returned
@@ -46,8 +46,8 @@ immediately.
       prism.behaviors.AttackBehavior,
    })
 
-BehaviorTree.Selector
----------------------
+:lua:class:`BehaviorTree.Selector`
+----------------------------------
 
 Evaluates children in order, returning the first successful result. If a child produces an
 ``Action``, that action is returned right away. Think of it as "try this, otherwise that."
@@ -60,14 +60,14 @@ Evaluates children in order, returning the first successful result. If a child p
       prism.behaviors.WaitBehavior,
    })
 
-BehaviorTree.Succeeder
-----------------------
+:lua:class:`BehaviorTree.Succeeder`
+-----------------------------------
 
 Always reports success, no matter what its child returns. Handy when you want to ignore failure and
 keep things moving.
 
-BehaviorTree.Conditional
-------------------------
+:lua:class:`BehaviorTree.Conditional`
+-------------------------------------
 
 Evaluates a condition function. Returns ``true`` if the condition passes, otherwise ``false``.
 

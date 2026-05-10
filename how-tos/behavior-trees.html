@@ -48,14 +48,14 @@
   <section id="behavior-trees">
 <h1>Behavior trees<a class="headerlink" href="#behavior-trees" title="Link to this heading">¶</a></h1>
 <p>Behavior trees are a common tool for driving NPC decision-making. They work particularly well in a
-discrete context like turn-based games, so an implementation is included. It’s composed of a set of
-core building blocks for developing behavior trees. Each time you run a tree, it’s evaluated from
-top to bottom, ultimately producing a single action. an actor is taking its turn.</p>
+discrete context like turn-based games, so we’ve included a set of building blocks for developing
+behavior trees. Each time you run a tree it’s evaluated from top to bottom, ultimately producing a
+single action.</p>
 <section id="behavior-tree-nodes">
 <h2>Behavior tree nodes<a class="headerlink" href="#behavior-tree-nodes" title="Link to this heading">¶</a></h2>
 </section>
 <section id="behaviortree-node">
-<h2>BehaviorTree.Node<a class="headerlink" href="#behaviortree-node" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btnode.html#lua-BehaviorTree.Node" title="BehaviorTree.Node"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a><a class="headerlink" href="#behaviortree-node" title="Link to this heading">¶</a></h2>
 <p>This is the base class that all other behavior nodes inherit from. Custom behaviors are created by
 extending this class.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="cm">--- </span><span class="k k-Comment">@class</span><span class="cm"> WaitBehavior : BehaviorTree.Node</span>
@@ -70,12 +70,12 @@ extending this class.</p>
 </div>
 </section>
 <section id="behaviortree-root">
-<h2>BehaviorTree.Root<a class="headerlink" href="#behaviortree-root" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btroot.html#lua-BehaviorTree.Root" title="BehaviorTree.Root"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Root</span></code></a><a class="headerlink" href="#behaviortree-root" title="Link to this heading">¶</a></h2>
 <p>The entry point of the tree. It evaluates its children in order and returns the first action it
 encounters.</p>
 </section>
 <section id="behaviortree-sequence">
-<h2>BehaviorTree.Sequence<a class="headerlink" href="#behaviortree-sequence" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btsequence.html#lua-BehaviorTree.Sequence" title="BehaviorTree.Sequence"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Sequence</span></code></a><a class="headerlink" href="#behaviortree-sequence" title="Link to this heading">¶</a></h2>
 <p>Executes each child in order. If every child succeeds, the sequence succeeds. If any child fails,
 the sequence fails. If a child returns an <code class="docutils literal notranslate"><span class="pre">Action</span></code>, execution pauses and that action is returned
 immediately.</p>
@@ -87,7 +87,7 @@ immediately.</p>
 </div>
 </section>
 <section id="behaviortree-selector">
-<h2>BehaviorTree.Selector<a class="headerlink" href="#behaviortree-selector" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btselector.html#lua-BehaviorTree.Selector" title="BehaviorTree.Selector"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Selector</span></code></a><a class="headerlink" href="#behaviortree-selector" title="Link to this heading">¶</a></h2>
 <p>Evaluates children in order, returning the first successful result. If a child produces an
 <code class="docutils literal notranslate"><span class="pre">Action</span></code>, that action is returned right away. Think of it as “try this, otherwise that.”</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">BehaviorTree</span><span class="p">.</span><span class="n">Selector</span><span class="p">({</span>
@@ -99,12 +99,12 @@ immediately.</p>
 </div>
 </section>
 <section id="behaviortree-succeeder">
-<h2>BehaviorTree.Succeeder<a class="headerlink" href="#behaviortree-succeeder" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btsucceeder.html#lua-BehaviorTree.Succeeder" title="BehaviorTree.Succeeder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Succeeder</span></code></a><a class="headerlink" href="#behaviortree-succeeder" title="Link to this heading">¶</a></h2>
 <p>Always reports success, no matter what its child returns. Handy when you want to ignore failure and
 keep things moving.</p>
 </section>
 <section id="behaviortree-conditional">
-<h2>BehaviorTree.Conditional<a class="headerlink" href="#behaviortree-conditional" title="Link to this heading">¶</a></h2>
+<h2><a class="reference internal" href="../reference/prism/core/behavior_tree/btconditional.html#lua-BehaviorTree.Conditional" title="BehaviorTree.Conditional"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Conditional</span></code></a><a class="headerlink" href="#behaviortree-conditional" title="Link to this heading">¶</a></h2>
 <p>Evaluates a condition function. Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the condition passes, otherwise <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 <div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="n">prism</span><span class="p">.</span><span class="n">BehaviorTree</span><span class="p">.</span><span class="n">Conditional</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">controller</span><span class="p">)</span>
    <span class="kr">return</span> <span class="n">actor</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">prism</span><span class="p">.</span><span class="n">components</span><span class="p">.</span><span class="n">Health</span><span class="p">).</span><span class="n">current</span> <span class="o">&gt;</span> <span class="mi">50</span>
@@ -290,12 +290,12 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="animation.html">Animation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Behavior trees</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#behavior-tree-nodes">Behavior tree nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-node">BehaviorTree.Node</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-root">BehaviorTree.Root</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-sequence">BehaviorTree.Sequence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-selector">BehaviorTree.Selector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-succeeder">BehaviorTree.Succeeder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#behaviortree-conditional">BehaviorTree.Conditional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-node"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Node</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-root"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Root</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-sequence"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Sequence</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-selector"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Selector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-succeeder"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Succeeder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#behaviortree-conditional"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">BehaviorTree.Conditional</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#registering-behavior-trees">Registering behavior trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-behavior-trees-in-an-entity">Using behavior trees in an entity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#controller-blackboard-pattern">Controller Blackboard Pattern</a></li>
