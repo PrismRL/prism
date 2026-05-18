@@ -47,13 +47,18 @@ Below is the template project. Try pressing ``~`` to enable Geometer, the live e
 
 .. raw:: html
 
+   <button style="margin-bottom: var(--global-space)" onclick="document.getElementById('demo-app').contentWindow.applicationLoad();" class="btn btn-default">
+      Launch
+   </button>
    <iframe
+      style="display: block;"
       frameborder="0"
-      width="725"
+      width="700"
       height="516"
       scrolling="no"
       src="_static/demo/index.html"
       title="The prism demo project"
+      id="demo-app"
    >
    </iframe>
 
@@ -64,7 +69,7 @@ Below is the template project. Try pressing ``~`` to enable Geometer, the live e
    architecture-primer
    conventions
    gallery
-   roadmap
+   releases
 
 .. toctree::
    :caption: How-tos

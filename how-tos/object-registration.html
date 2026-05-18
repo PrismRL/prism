@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/lua.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=c90e5a8a" />
+    <link rel="stylesheet" type="text/css" href="../_static/terminal.css?v=356c0b92" />
     <link rel="stylesheet" type="text/css" href="../_static/goto-top/style.css?v=c152bd81" />
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Queries" href="query.html" />
-    <link rel="prev" title="Roadmap" href="../roadmap.html" />
+    <link rel="prev" title="Gallery" href="../gallery.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -74,12 +74,12 @@ directory containing a module. Subdirectories are processed recursively.</p>
 </li>
 </ul>
 <p>Below is a walk through of how and when each type of object is loaded.</p>
-<div class="terminal-timeline"><section class="terminal-card"><header>
+<div class="terminal-timeline "><section class="terminal-card "><header>
 module.lua</header><div class="docutils container">
 <p><code class="docutils literal notranslate"><span class="pre">module.lua</span></code> or <code class="docutils literal notranslate"><span class="pre">init.lua</span></code> is ran. You can use it to create move types with <a class="reference internal" href="../reference/prism/core/collision.html#lua-Collision.assignNextAvailableMovetype" title="Collision.assignNextAvailableMovetype"><code class="xref lua lua-func docutils literal notranslate"><span class="pre">Collision.assignNextAvailableMovetype()</span></code></a>,
 or to perform other miscellaneous set up.</p>
 </div>
-</section><section class="terminal-card"><header>
+</section><section class="terminal-card "><header>
 Components</header><div class="docutils container">
 <p>Files in <code class="docutils literal notranslate"><span class="pre">module/components/</span></code> are assumed to return a single <a class="reference internal" href="../reference/prism/core/component.html#lua-Component" title="Component"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Component</span></code></a> each. These are loaded
 into <a class="reference internal" href="../reference/prism/index.html#lua-prism.components" title="prism.components"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.components</span></code></a>.</p>
@@ -94,7 +94,7 @@ into <a class="reference internal" href="../reference/prism/index.html#lua-prism
 </pre></div>
 </div>
 </div>
-<section class="terminal-card"><header>
+<section class="terminal-card "><header>
 Targets</header><div class="docutils container">
 <p>All files in <code class="docutils literal notranslate"><span class="pre">module/targets/</span></code> are ran.
 <a class="reference internal" href="../reference/prism/core/target.html"><span class="doc">Targets</span></a> must be registered by providing a name and a
@@ -109,7 +109,7 @@ Factories can accept parameters.</p>
 </pre></div>
 </div>
 </div>
-<section class="terminal-card"><header>
+<section class="terminal-card "><header>
 Cells</header><div class="docutils container">
 <p>All files in <code class="docutils literal notranslate"><span class="pre">module/cells/</span></code> are ran.
 <a class="reference internal" href="../reference/prism/core/cell.html"><span class="doc">Cells</span></a> must be registered by providing a name and a
@@ -132,12 +132,12 @@ factory function to <a class="reference internal" href="../reference/prism/index
 </pre></div>
 </div>
 </div>
-<section class="terminal-card"><header>
+<section class="terminal-card "><header>
 Actions</header><div class="docutils container">
 <p>Files in <code class="docutils literal notranslate"><span class="pre">module/components/</span></code> are assumed to return a single <a class="reference internal" href="../reference/prism/core/action.html#lua-Action" title="Action"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Action</span></code></a> each.
 These are loaded into <a class="reference internal" href="../reference/prism/index.html#lua-prism.actions" title="prism.actions"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.actions</span></code></a>.</p>
 </div>
-</section><section class="terminal-card"><header>
+</section><section class="terminal-card "><header>
 Actors</header><div class="docutils container">
 <p>All files in <code class="docutils literal notranslate"><span class="pre">module/actors/</span></code> are ran.
 <a class="reference internal" href="../reference/prism/core/actor.html"><span class="doc">Actors</span></a> must be registered by providing a name and a factory
@@ -164,17 +164,17 @@ function to <a class="reference internal" href="../reference/prism/index.html#lu
 </pre></div>
 </div>
 </div>
-<section class="terminal-card"><header>
+<section class="terminal-card "><header>
 Messages</header><div class="docutils container">
 <p>Files in <code class="docutils literal notranslate"><span class="pre">module/messages/</span></code> are assumed to return a single <a class="reference internal" href="../reference/prism/core/message.html#lua-Message" title="Message"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Message</span></code></a> each.
 These are loaded into <a class="reference internal" href="../reference/prism/index.html#lua-prism.messages" title="prism.messages"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.messages</span></code></a>.</p>
 </div>
-</section><section class="terminal-card"><header>
+</section><section class="terminal-card "><header>
 Decisions</header><div class="docutils container">
 <p>Files in <code class="docutils literal notranslate"><span class="pre">module/decisions/</span></code> are assumed to return a single <a class="reference internal" href="../reference/prism/core/decision.html#lua-Decision" title="Decision"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Decision</span></code></a> each.
 These are loaded into <a class="reference internal" href="../reference/prism/index.html#lua-prism.decisions" title="prism.decisions"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.decisions</span></code></a>.</p>
 </div>
-</section><section class="terminal-card"><header>
+</section><section class="terminal-card "><header>
 Systems</header><div class="docutils container">
 <p>Files in <code class="docutils literal notranslate"><span class="pre">module/systems/</span></code> are assumed to return a single <a class="reference internal" href="../reference/prism/core/system.html#lua-System" title="System"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">System</span></code></a> each.
 These are loaded into <a class="reference internal" href="../reference/prism/index.html#lua-prism.systems" title="prism.systems"><code class="xref lua lua-data docutils literal notranslate"><span class="pre">prism.systems</span></code></a>.</p>
@@ -201,7 +201,7 @@ These are loaded into <a class="reference internal" href="../reference/prism/ind
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=watch&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=prismrl&repo=prism&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -270,7 +270,6 @@ SOFTWARE.
 <li class="toctree-l1"><a class="reference internal" href="../architecture-primer.html">Architecture primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../conventions.html">Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
 <ul class="current">
@@ -318,7 +317,7 @@ SOFTWARE.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../roadmap.html" title="previous chapter">Roadmap</a></li>
+      <li>Previous: <a href="../gallery.html" title="previous chapter">Gallery</a></li>
       <li>Next: <a href="query.html" title="next chapter">Queries</a></li>
   </ul></li>
 </ul>
