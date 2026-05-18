@@ -7,7 +7,7 @@
 <template id="tmpl_gotoTop"><div id="gotoTop">
   <button>Back to top</button>
 </div></template>
-    <title>Installation &#8212; Prism  documentation</title>
+    <title>Releases &#8212; Prism  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=266695fe" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=fbfae649" />
@@ -26,8 +26,8 @@
     <link rel="icon" href="_static/prism.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Architecture primer" href="architecture-primer.html" />
-    <link rel="prev" title="Prism" href="index.html" />
+    <link rel="next" title="Object registration" href="how-tos/object-registration.html" />
+    <link rel="prev" title="Gallery" href="gallery.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -45,61 +45,88 @@
 
           <div class="body" role="main">
             
-  <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
-<p>Prism is based on version 12.0 of <a class="reference external" href="https://love2d.org">LÖVE</a>, which is in a stable but pre-release
-state.</p>
-<p>Latest downloads:</p>
+  <section id="releases">
+<h1>Releases<a class="headerlink" href="#releases" title="Link to this heading">¶</a></h1>
+<p>Past releases and future plans for prism. Open an issue on <a class="reference external" href="https://github.com/PrismRL/prism/issues">GitHub</a> or talk to us on <a class="reference external" href="https://discord.gg/9YpsH4hYVF">Discord</a> to give input on priorities!</p>
+<div class="terminal-timeline no-padding"><section class="terminal-card released"><header>
+1.1</header><div class="docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Release notes</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Added</strong></p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://nightly.link/love2d/love/workflows/main/main/love-windows-x64.zip">Windows</a></p></li>
-<li><p><a class="reference external" href="https://nightly.link/love2d/love/workflows/main/main/love-linux-X64.AppImage.zip">Linux AppImage</a></p></li>
-<li><p><a class="reference external" href="https://nightly.link/love2d/love/workflows/main/main/love-macos.zip">macOS</a></p></li>
-<li><p><a class="reference external" href="https://nightly.link/love2d/love/workflows/main/main">Others</a></p></li>
+<li><p class="sd-card-text">Compatibility for Lua 5.1, enabling web builds via love.js</p></li>
+<li><p class="sd-card-text">Tests for all of the data structure classes</p></li>
+<li><p class="sd-card-text">Better dark mode syntax highlighting in the documentation</p></li>
+<li><p class="sd-card-text">A how-to on <code class="docutils literal notranslate"><span class="pre">SpriteAtlas</span></code></p></li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Prism makes heavy use of Lua type annotations to improve autocomplete and catch typing errors, so
-we recommend installing the <a class="reference external" href="https://luals.github.io/">Lua language server</a> for your editor.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>We’ve published a VS Code <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=prismrl.prismrl">extension</a> for Prism that includes a
-few snippets for creating common objects.</p>
-</div>
-<section id="project-template">
-<h2>Project template<a class="headerlink" href="#project-template" title="Link to this heading">¶</a></h2>
-<p>It is highly recommended to use our project template to kick off games made with prism. <a class="reference external" href="https://github.com/new?template_name=prism-template&amp;template_owner=PrismRL">Click here</a> to start a new GitHub
-repository, or you can download it directly. Use the following command to clone it locally,
-replacing the URL if you created a new repository:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>--depth<span class="w"> </span><span class="m">1</span><span class="w"> </span>https://github.com/PrismRL/prism-template.git
-</pre></div>
-</div>
-<p>The following command will initialize the submodule if <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> was left out:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
-</pre></div>
-</div>
-<p>You can start the game by running <code class="docutils literal notranslate"><span class="pre">love</span> <span class="pre">.</span></code> in the terminal from the root directory, or dragging
-the root folder onto the LÖVE executable.</p>
-<p>Upon launching, you should see an <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> symbol on the screen. You can move this character using the
-following default keys:</p>
+<p class="sd-card-text"><strong>Fixed</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">WASD</span></code> for movement</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">QEZC</span></code> for diagonal movement</p></li>
+<li><p class="sd-card-text">Geometer fill tool crashing when used on the edge of a level</p></li>
+<li><p class="sd-card-text">A bug with <code class="docutils literal notranslate"><span class="pre">SparseArray:remove()</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">SparseMap:removeAll</span></code> not keeping track of count</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">SparseMap:remove</span></code> not completely removing the object</p></li>
+<li><p class="sd-card-text">Many missed API changes in the tutorial, thank you to new users for reporting them!</p></li>
 </ul>
-</section>
-<section id="without-the-template">
-<h2>Without the template<a class="headerlink" href="#without-the-template" title="Link to this heading">¶</a></h2>
-<p>Simply clone prism itself into your project:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/PrismRL/prism.git
-</pre></div>
 </div>
-<p>Then <code class="docutils literal notranslate"><span class="pre">require</span></code> prism:</p>
-<div class="highlight-lua notranslate"><div class="highlight"><pre><span></span><span class="c1">-- prism uses globals, sorry!</span>
-<span class="nb">require</span> <span class="s2">&quot;path.to.prism&quot;</span>
-</pre></div>
+</details></div>
+</section><section class="terminal-card released"><header>
+1.1.1</header><div class="docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Release notes</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Fixed</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Targets not validating when <code class="docutils literal notranslate"><span class="pre">false</span></code> was the actual value passed in</p></li>
+<li><p class="sd-card-text">Systems actually checking their requirements</p></li>
+</ul>
 </div>
-</section>
-</section>
+</details></div>
+</section><section class="terminal-card released"><header>
+2.0</header><div class="docutils container">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">Release notes</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><strong>Breaking</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">prism.Ellipse</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">prism.ellipse</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">prism.BreadthFirstSearch</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">prism.breadthFirstSearch</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">prism.Bresenham</span></code> renamed to <code class="docutils literal notranslate"><span class="pre">prism.bresenham</span></code></p></li>
+</ul>
+<p class="sd-card-text"><strong>Added</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">The lighting extra module</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">onComponentAdded</span></code> and <code class="docutils literal notranslate"><span class="pre">onComponentRemoved</span></code> system hooks</p></li>
+<li><p class="sd-card-text">Geometer can now use a display separate from the level state / game</p></li>
+<li><p class="sd-card-text">Exposed <code class="docutils literal notranslate"><span class="pre">prism.djikstra</span></code></p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">Display:putFG</span></code> &#64;drewww</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">ConditionHolder:has</span></code> to easily check for condition types</p></li>
+<li><p class="sd-card-text">Render passes to <code class="docutils literal notranslate"><span class="pre">Display</span></code>, motivated by the lighting module</p></li>
+<li><p class="sd-card-text">Non-idle animations can now respect senses</p></li>
+<li><p class="sd-card-text">Cost callbacks to algorithms</p></li>
+</ul>
+<p class="sd-card-text"><strong>Fixed</strong></p>
+<ul class="simple">
+<li><p class="sd-card-text">Targets not validating when <code class="docutils literal notranslate"><span class="pre">false</span></code> was the actual value passed in</p></li>
+<li><p class="sd-card-text">Systems actually checking their requirements</p></li>
+<li><p class="sd-card-text">Throw an error when <code class="docutils literal notranslate"><span class="pre">Object:is</span></code> is called with an instance</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">Target:optional()</span></code> checking was reversed</p></li>
+<li><p class="sd-card-text"><code class="docutils literal notranslate"><span class="pre">Display:rectangle()</span></code> line/fill mode was reversed</p></li>
+<li><p class="sd-card-text">Sight is now computed from each tile in a multi-tile actor</p></li>
+</ul>
+</div>
+</details></div>
+</section><section class="terminal-card "><header>
+Future</header><div class="docutils container">
+<ul class="simple">
+<li><p>Unify querying for actors and cells</p></li>
+<li><p>Unify the <a class="reference internal" href="reference/prism/core/components/controller.html#lua-Controller" title="Controller"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Controller</span></code></a> and <a class="reference internal" href="reference/prism/core/decision.html#lua-Decision" title="Decision"><code class="xref lua lua-class docutils literal notranslate"><span class="pre">Decision</span></code></a> API</p></li>
+<li><p>Rework targets to be named rather than positional</p></li>
+<li><p>Rewrite Geometer and support live component modification</p></li>
+<li><p>Expand the <code class="docutils literal notranslate"><span class="pre">extra</span></code> module library with lighting, sound, smell, and auto tiling modules</p></li>
+</ul>
+</div>
+</section></div></section>
 
 
           </div>
@@ -186,15 +213,11 @@ SOFTWARE.
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#project-template">Project template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#without-the-template">Without the template</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture-primer.html">Architecture primer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conventions.html">Conventions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Releases</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">How-tos</span></p>
 <ul>
@@ -242,8 +265,8 @@ SOFTWARE.
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Prism</a></li>
-      <li>Next: <a href="architecture-primer.html" title="next chapter">Architecture primer</a></li>
+      <li>Previous: <a href="gallery.html" title="previous chapter">Gallery</a></li>
+      <li>Next: <a href="how-tos/object-registration.html" title="next chapter">Object registration</a></li>
   </ul></li>
 </ul>
 </div>
@@ -267,7 +290,7 @@ SOFTWARE.
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="_sources/installation.rst.txt"
+      <a href="_sources/releases.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
