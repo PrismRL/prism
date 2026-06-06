@@ -14,6 +14,7 @@ function StackedDisplay:__new(width, height, spriteAtlas, cellSize)
    for x = 1, self.width do
       for y = 1, self.height do
          self.cells[x][y].sprites = {}
+         self.cells[x][y].bgDepth = -math.huge
       end
    end
 end
@@ -267,6 +268,21 @@ function StackedDisplay:putFG(x, y, fg, layer)
             return
          end
       end
+   end
+end
+
+--- @param x integer
+--- @param y integer
+--- @param bg Color4
+--- @param layer number?
+function StackedDisplay:putBG(x, y, bg, layer)
+   local cell = self:getCell(x, y)
+   if not cell then return end
+
+   local depth = layer or -math.huge
+   if depth >= cell.bgDepth then
+      bg:copy(cell.bg)
+      cell.bgDepth = depth
    end
 end
 
