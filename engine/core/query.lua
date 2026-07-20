@@ -9,6 +9,7 @@
 --- @field private requiredComponentsList Component[] Ordered list of required component types.
 --- @field private requiredComponentsCount integer The number of required component types.
 --- @field private requiredPosition Vector2? Optional position filter.
+--- @field private excludedComponents table<Component, boolean>
 local Query = prism.Object:extend "Query"
 
 --- @param storage ActorStorage The storage system to query from.
@@ -19,6 +20,7 @@ function Query:__new(storage, ...)
    self.requiredComponents = {}
    self.requiredComponentsList = {}
    self.requiredComponentsCount = 0
+   self.excludedComponents = {}
 
    self:with(...)
    self.requiredPosition = nil
@@ -43,6 +45,29 @@ function Query:with(...)
       table.insert(self.requiredComponentsList, component)
 
       self.requiredComponents[component] = true
+   end
+
+   return self
+end
+
+--- Adds excluded component types to the query.
+--- Can be called multiple times to accumulate components.
+--- @param ... Component A variable number of component types.
+--- @return Query query Returns self to allow method chaining.
+function Query:without(...)
+   local req = { ... }
+
+   for _, component in ipairs(req) do
+      assert(
+         not self.excludedComponents[component],
+         "Multiple component of the same type added to query!"
+      )
+      assert(
+         not self.requiredComponents[component],
+         "Can't require and exclude the same component in query!"
+      )
+
+      self.excludedComponents[component] = true
    end
 
    return self
@@ -200,6 +225,13 @@ function Query:iter()
       table.insert(counts, #storage:getAllActors()) -- or just use length
    end
 
+   -- Excluded components — actors present in any of these caches are skipped below.
+   local excludedSets = {}
+   for componentType in pairs(self.excludedComponents) do
+      local cache = storage:getComponentCache(componentType)
+      if cache then table.insert(excludedSets, cache) end
+   end
+
    local intersectionIter = lazyIntersectSets(sets, counts, self.requiredComponentsList)
 
    return function()
@@ -207,7 +239,15 @@ function Query:iter()
          local actor = intersectionIter()
          if not actor then return nil end
 
-         if not self.targetValidator or self.targetValidator(actor) then
+         local excluded = false
+         for _, excludedSet in ipairs(excludedSets) do
+            if excludedSet[actor] then
+               excluded = true
+               break
+            end
+         end
+
+         if not excluded and (not self.targetValidator or self.targetValidator(actor)) then
             return actor, getComponents(actor, self.requiredComponentsList)
          end
       end
