@@ -15,6 +15,7 @@ describe("prism", function()
    require "test.tests.booleanbuffer"
    require "test.tests.cascadingbitmaskbuffer"
    require "test.tests.query"
+   require "test.tests.serialization"
 
    describe("Component", function()
       it("add component", function()

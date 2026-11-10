@@ -28,6 +28,9 @@ prism._defaultDistance = "8way"
 --- @module "engine.core.object"
 prism.Object = prism.require "core.object"
 
+--- @module "engine.core.serializer"
+prism.Serializer = prism.require "core.serializer"
+
 -- Colors
 --- @module "engine.math.color"
 prism.Color4 = prism.require "math.color"
@@ -198,7 +201,9 @@ local function writeFile(name, content, mode)
    file:close()
 end
 
---- Registers a factory for a registry.
+--- Registers a factory for a registry. Serialization calls factories again with no
+--- arguments when loading, so their parameters must be optional and they should
+--- build the same thing every time.
 --- @param registry Registry
 local function registerFactory(registry)
    local className = registry.class.className
@@ -206,6 +211,7 @@ local function registerFactory(registry)
    prism.writeDefinitions(
       string.format("--- @alias %sFactory fun(...): %s", className, className),
       string.format("--- Registers a %s in the %s registry.", className, registry.name),
+      "--- The factory is called again with no arguments when a save is loaded, so its parameters must be optional.",
       "--- @param name string A name for the factory",
       string.format("--- @param factory %sFactory", className),
       string.format("function %s.register%s(name, factory) end", registry.module, className)
@@ -242,10 +248,11 @@ end
 function prism.resolveFactory(path)
    local node = _G
    for seg in string.gmatch(path, "[^%.]+") do
+      if type(node) ~= "table" then return nil end
       node = node[seg]
    end
 
-   return node
+   return type(node) == "function" and node or nil
 end
 
 --- Registers a registry, a global list of game objects.

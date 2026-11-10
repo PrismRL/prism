@@ -8,6 +8,7 @@ local bit = require("bit")
 --- @field a number The alpha component (0–1).
 --- @overload fun(r?: number, g?: number, b?: number, a?: number): Color4
 local Color4 = prism.Object:extend("Color4")
+Color4._serializationFields = { "r", "g", "b", "a" }
 
 --- Creates a new Color4.
 --- @param r number? Red component (0–1)

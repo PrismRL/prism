@@ -7,6 +7,7 @@ local bit = require "bit"
 --- @field actorStorage ActorStorage                    Stores all actors; supports lookup and indexing.
 --- @field map Map                                      The static layout of terrain, walls, etc.
 --- @field RNG RNG                                      Level-local RNG; supports deterministic behavior.
+--- @field maximumActorSize integer                     The largest actor size the passability cache supports.
 --- @field private systemManager SystemManager          Manages systems, dispatches events, controls lifecycle.
 --- @field private scheduler Scheduler                  Controls actor turn order in the game loop.
 --- @field private turnHandler TurnHandler                     Function to perform an actor's turn in the level.
@@ -18,7 +19,7 @@ local bit = require "bit"
 --- @overload fun(builder: LevelBuilder): Level
 local Level = prism.Object:extend("Level")
 
-Level.serializationBlacklist = {
+Level._serializationBlacklist = {
    opacityCache = true,
    passableCache = true,
 }
@@ -36,7 +37,8 @@ function Level:__new(builder)
    --- @diagnostic disable-next-line
    local map, actors = builder:getEntities()
    self.opacityCache = prism.BooleanBuffer(map.w, map.h) -- holds a cache of opacity to speed up fov calcs
-   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, builder.maximumActorSize or 4) -- holds a cache of passability to speed up a* calcs
+   self.maximumActorSize = builder.maximumActorSize or 4
+   self.passableCache = prism.CascadingBitmaskBuffer(map.w, map.h, self.maximumActorSize) -- holds a cache of passability to speed up a* calcs
    self.map = map
 
    self:initialize(actors, builder.systems)
@@ -604,7 +606,7 @@ function Level:__finalize()
 
    local w, h = self.map.w, self.map.h
    self.opacityCache = prism.BooleanBuffer(w, h)
-   self.passableCache = prism.CascadingBitmaskBuffer(w, h, 4)
+   self.passableCache = prism.CascadingBitmaskBuffer(w, h, self.maximumActorSize or 4)
 
    for x, y, _ in self.map:each() do
       self:updateCaches(x, y)

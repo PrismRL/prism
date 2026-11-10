@@ -18,6 +18,7 @@
 --- @field x number The x component of the vector.
 --- @field y number The y component of the vector.
 local Vector2 = prism.Object:extend("Vector2")
+Vector2._serializationFields = { "x", "y" }
 
 --- Constructor for Vector2 accepts two numbers, x and y. Both default to zero.
 --- @param x number The x component of the vector.

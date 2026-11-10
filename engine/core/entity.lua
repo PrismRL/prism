@@ -3,10 +3,23 @@
 --- @field components Component[] A table containing all of the entity's component instances. Generated at runtime.
 --- @field relations table<Relation, table<Entity, Relation>>
 --- @field componentCache table<Component, Component> This is a cache of prototype -> component for component queries, reducing most queries to a hashmap lookup.
---- @field protected __factory function The factory this entity was initialized from.
---- @field private __diff table A diff from the factory this entity was initialized from, only used during serialization.
+--- @field protected __factory string? The registry path of the factory this entity was created by, e.g. "prism.cells.Wall".
 --- @overload fun(): Entity
 local Entity = prism.Object:extend("Entity")
+Entity._serializationBlacklist = { componentCache = true }
+
+--- Rebuilds the component cache and component owners, which aren't saved.
+function Entity:__deserialize()
+   self.componentCache = {}
+   for _, component in ipairs(self.components) do
+      component.owner = self
+      local proto = getmetatable(component)
+      while proto and proto ~= prism.Component do
+         self.componentCache[proto] = component
+         proto = getmetatable(proto)
+      end
+   end
+end
 
 --- Constructor for an entity.
 --- Initializes and copies the entity's fields from its prototype.

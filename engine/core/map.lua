@@ -5,7 +5,7 @@
 --- @overload fun(width: integer, height: integer, initialValue: CellFactory): Map
 local Map = prism.Grid:extend("Map")
 
-Map.serializationBlacklist = {
+Map._serializationBlacklist = {
    opacityCache = true,
    passableCache = true,
 }

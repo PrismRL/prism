@@ -22,6 +22,8 @@ local ActorStorage = prism.Object:extend("ActorStorage")
 ActorStorage._serializationBlacklist = {
    componentCache = true,
    componentCounts = true,
+   actorToID = true,
+   sparseMap = true,
 }
 
 --- The constructor for the 'ActorStorage' class.
@@ -175,10 +177,15 @@ function ActorStorage:merge(other)
    end
 end
 function ActorStorage:__wire()
+   self.actorToID = {}
+   for id, actor in self.ids:pairs() do
+      self.actorToID[actor] = id
+   end
+   self.sparseMap = prism.SparseMap()
    self:setCallbacks(self.insertSparseMapCallback, self.removeSparseMapCallback)
 
    -- rebuild runtime-only caches
-   self.componentCache  = {}
+   self.componentCache = {}
    self.componentCounts = {}
 
    for _, actor in pairs(self.actors) do

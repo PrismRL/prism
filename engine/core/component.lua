@@ -8,6 +8,7 @@
 --- @overload fun(): Component
 local Component = prism.Object:extend("Component")
 Component.requirements = {}
+Component._serializationBlacklist = { owner = true }
 
 --- Returns a list of components (prototypes) the entity must have before this one can be applied.
 --- Override this to provide requirements, and it will get called to populate the list.
@@ -31,7 +32,7 @@ function Component:getBase()
    while proto and getmetatable(proto) ~= prism.Component do
       proto = getmetatable(proto)
    end
-   
+
    return proto
 end
 
@@ -42,9 +43,7 @@ function Component:clone()
    local copy = {}
 
    for k, v in pairs(self) do
-      if not self._serializationBlacklist[k] then
-         copy[k] = v
-      end
+      if not self:getSerializationBlacklist()[k] then copy[k] = v end
    end
 
    return getmetatable(self):adopt(copy)
@@ -75,8 +74,9 @@ function Component:diff(other)
       return true
    end
 
+   local blacklist = self:getSerializationBlacklist()
    local function isIgnoredKey(k, v)
-      if self._serializationBlacklist[k] then return true end
+      if blacklist[k] then return true end
       local t = type(v)
       return t == "function" or t == "userdata"
    end
@@ -120,8 +120,9 @@ end
 function Component:applyDiff(patch)
    assert(type(patch) == "table", "Component:applyDiff expected a table patch")
 
+   local blacklist = self:getSerializationBlacklist()
    local function isIgnoredKey(k)
-      return self._serializationBlacklist[k] == true
+      return blacklist[k] == true
    end
 
    local function deepCopy(val, seen)
@@ -171,6 +172,5 @@ function Component:applyDiff(patch)
 
    return self
 end
-
 
 return Component

@@ -8,7 +8,7 @@
 --- @field systems System[]
 --- @overload fun(): LevelBuilder
 local LevelBuilder = prism.SparseGrid:extend("LevelBuilder")
-LevelBuilder._serializationBlacklist.initialValue = true
+LevelBuilder._serializationBlacklist = { initialValue = true }
 
 --- Initialize a new LevelBuilder.
 function LevelBuilder:__new()

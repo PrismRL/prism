@@ -235,6 +235,11 @@ state of the game for the user's next session.
       love.filesystem.write("save.lz4", lz)
    end
 
+.. note::
+
+   See :doc:`../how-tos/serialization` for how to keep fields out of a save, rebuild state after
+   loading, and keep old saves working as your game changes.
+
 In the next chapter
 -------------------
 

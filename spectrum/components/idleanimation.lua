@@ -3,6 +3,7 @@
 --- @field animation Animation
 --- @overload fun(animationName: string): IdleAnimation
 local IdleAnimation = prism.Component:extend "IdleAnimation"
+IdleAnimation._serializationBlacklist = { animation = true }
 
 function IdleAnimation:__new(animationName)
    self.animationName = animationName

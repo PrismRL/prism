@@ -1,5 +1,28 @@
 # Changelog
 
+## 3.0.0 (Unreleased)
+
+### Breaking
+
+* The save format has changed. Saves and Geometer files written by earlier versions no longer load
+* Registered actor and cell factories must work when called with no arguments and build the same thing every time, since saves now call them again on load
+
+### Fixed
+
+* Deserialized objects no longer gain stray `revive` and `getById` fields
+* `_serializationBlacklist` is inherited, and setting it on a class no longer affects other classes
+* `ActorStorage` caches were being written to saves
+* Loading a `Level` now keeps its maximum actor size
+
+### Added
+
+* A smaller save format. Actors and cells from registered factories are saved as their factory plus what changed
+* Serializing userdata now errors with the path to the field
+* Serialization now lives in `prism.Serializer`; `Object.serialize` and `Object.deserialize` still work
+* `Serializer.registerClassAlias` for loading saves made before a class was renamed
+* A how-to on serialization
+* Tests for serialization
+
 ## 1.1
 
 * Compatibility for Lua 5.1, enabling web builds via love.js
