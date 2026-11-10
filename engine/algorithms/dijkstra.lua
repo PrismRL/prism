@@ -9,16 +9,16 @@ local function dijkstraMap(goals, passableCallback, neighborhood)
    local distances = prism.SparseGrid()
 
    -- Queue for exploring cells (FIFO for BFS-like behavior)
-   local frontier = {}
+   local frontier = prism.Queue()
 
    -- Initialize frontier with goals
    for _, goal in ipairs(goals) do
-      table.insert(frontier, goal)
+      frontier:push(goal)
       distances:set(goal.x, goal.y, 0)
    end
 
-   while #frontier > 0 do
-      local current = table.remove(frontier, 1)
+   while not frontier:empty() do
+      local current = frontier:pop()
       ---@cast current Vector2
 
       local currentCost = distances:get(current.x, current.y) or math.huge
@@ -32,7 +32,7 @@ local function dijkstraMap(goals, passableCallback, neighborhood)
 
             if currentCost + 1 < existingCost then
                distances:set(neighbor.x, neighbor.y, currentCost + 1)
-               table.insert(frontier, neighbor)
+               frontier:push(neighbor)
             end
          end
       end

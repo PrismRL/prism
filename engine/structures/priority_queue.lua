@@ -3,7 +3,9 @@
 local PriorityQueue = prism.Object:extend("PriorityQueue")
 
 function PriorityQueue:__new()
+   -- Payloads may be nil; the dense priorities array determines the heap size.
    self._heap = {}
+   self._priorities = {}
 end
 
 --- Swap elements at indices i and j in the heap
@@ -11,55 +13,55 @@ end
 --- @param j integer
 function PriorityQueue:_swap(i, j)
    self._heap[i], self._heap[j] = self._heap[j], self._heap[i]
+   self._priorities[i], self._priorities[j] = self._priorities[j], self._priorities[i]
 end
 
 --- Bubble up the element at index i to its proper place in the heap
 --- @param i integer
 function PriorityQueue:_bubbleUp(i)
+   local heap, priorities = self._heap, self._priorities
+   local element, priority = heap[i], priorities[i]
    while i > 1 do
       local parent = math.floor(i / 2)
-      if self._heap[parent].priority > self._heap[i].priority then
-         self:_swap(parent, i)
+      if priorities[parent] > priority then
+         heap[i], priorities[i] = heap[parent], priorities[parent]
          i = parent
       else
          break
       end
    end
+   heap[i], priorities[i] = element, priority
 end
 
 --- Bubble down the element at index i to its proper place in the heap
 --- @param i integer
 function PriorityQueue:_bubbleDown(i)
-   local leftChild = 2 * i
-   local rightChild = 2 * i + 1
-   local smallest = i
+   local heap, priorities = self._heap, self._priorities
+   local size = #priorities
+   local element, priority = heap[i], priorities[i]
+   while 2 * i <= size do
+      local child = 2 * i
+      local rightChild = child + 1
+      if rightChild <= size and priorities[rightChild] < priorities[child] then
+         child = rightChild
+      end
 
-   if
-      leftChild <= #self._heap and self._heap[leftChild].priority < self._heap[smallest].priority
-   then
-      smallest = leftChild
+      if priorities[child] >= priority then break end
+      heap[i], priorities[i] = heap[child], priorities[child]
+      i = child
    end
-
-   if
-      rightChild <= #self._heap
-      and self._heap[rightChild].priority < self._heap[smallest].priority
-   then
-      smallest = rightChild
-   end
-
-   if smallest ~= i then
-      self:_swap(i, smallest)
-      self:_bubbleDown(smallest)
-   end
+   heap[i], priorities[i] = element, priority
 end
 
 --- Push a new element to the PriorityQueue.
 --- @param data any
 --- @param priority integer
 function PriorityQueue:push(data, priority)
-   local newElement = { priority = priority, data = data }
-   table.insert(self._heap, newElement)
-   self:_bubbleUp(#self._heap)
+   -- Keep priorities separate to avoid allocating a wrapper for every push.
+   local index = #self._priorities + 1
+   self._heap[index] = data
+   self._priorities[index] = priority
+   self:_bubbleUp(index)
 end
 
 --- @generic T
@@ -67,9 +69,11 @@ end
 function PriorityQueue:pop()
    if self:isEmpty() then return nil end
 
-   local highestPriorityElement = self._heap[1].data
-   self._heap[1] = self._heap[#self._heap]
-   table.remove(self._heap)
+   local heap, priorities = self._heap, self._priorities
+   local size = #priorities
+   local highestPriorityElement = heap[1]
+   heap[1], priorities[1] = heap[size], priorities[size]
+   heap[size], priorities[size] = nil, nil
 
    if not self:isEmpty() then self:_bubbleDown(1) end
 
@@ -77,11 +81,11 @@ function PriorityQueue:pop()
 end
 
 function PriorityQueue:isEmpty()
-   return #self._heap == 0
+   return #self._priorities == 0
 end
 
 function PriorityQueue:size()
-   return #self._heap
+   return #self._priorities
 end
 
 -- Unit tests

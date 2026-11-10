@@ -3,18 +3,18 @@
 ----------------------------------------------------------------
 local _frontierPool = {}
 
-local function allocEntry(pos, depth)
+local function allocEntry(x, y, depth)
    local t = _frontierPool[#_frontierPool]
    if t then
       _frontierPool[#_frontierPool] = nil
-      t[1], t[2] = pos, depth
+      t[1], t[2], t[3] = x, y, depth
       return t
    end
-   return { pos, depth }
+   return { x, y, depth }
 end
 
 local function freeEntry(t)
-   t[1], t[2] = nil, nil
+   t[1], t[2], t[3] = nil, nil, nil
    _frontierPool[#_frontierPool + 1] = t
 end
 
@@ -28,29 +28,27 @@ end
 local function bfs(start, passableCallback, callback, neighborhood)
    neighborhood = neighborhood or prism.neighborhood
 
-   local frontier = { allocEntry(start, 0) }
+   local frontier = prism.Queue()
+   frontier:push(allocEntry(start.x, start.y, 0))
    local visited = prism.SparseGrid()
 
    visited:set(start.x, start.y, true)
    callback(start.x, start.y, 0)
 
-   while #frontier > 0 do
-      local entry = table.remove(frontier, 1)
-      local current, depth = entry[1], entry[2]
+   while not frontier:empty() do
+      local entry = frontier:pop()
+      local x, y, depth = entry[1], entry[2], entry[3]
       freeEntry(entry)
-      ---@cast current Vector2
 
       for _, neighborDir in ipairs(prism.neighborhood) do
-         local neighbor = current + neighborDir
-         ---@cast neighbor Vector2
+         local nx, ny = x + neighborDir.x, y + neighborDir.y
 
-         local nx, ny = neighbor.x, neighbor.y
          local nextDepth = depth + 1
 
          if not visited:get(nx, ny) and passableCallback(nx, ny, nextDepth) then
             visited:set(nx, ny, true)
             callback(nx, ny, nextDepth)
-            table.insert(frontier, allocEntry(neighbor, nextDepth))
+            frontier:push(allocEntry(nx, ny, nextDepth))
          end
       end
    end

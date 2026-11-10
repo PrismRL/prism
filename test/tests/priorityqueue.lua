@@ -89,6 +89,52 @@ describe("PriorityQueue", function()
       expect.truthy(pq:isEmpty())
    end)
 
+   it("preserves heap order across interleaved pushes and pops", function()
+      local pq = PriorityQueue()
+      for i = 100, 1, -1 do
+         pq:push(i, i)
+      end
+      for i = 1, 50 do
+         expect.equal(pq:pop(), i)
+         pq:push(i + 100, i + 100)
+      end
+      for i = 51, 150 do
+         expect.equal(pq:pop(), i)
+      end
+      expect.truthy(pq:isEmpty())
+   end)
+
+   it("supports nil and false payloads without losing heap size", function()
+      local pq = PriorityQueue()
+      pq:push("last", 3)
+      pq:push(nil, 1)
+      pq:push(false, 2)
+      expect.equal(pq:size(), 3)
+      expect.equal(pq:pop(), nil)
+      expect.equal(pq:size(), 2)
+      expect.equal(pq:pop(), false)
+      expect.equal(pq:pop(), "last")
+      expect.truthy(pq:isEmpty())
+      pq:push("reused", 0)
+      expect.equal(pq:pop(), "reused")
+   end)
+
+   it("releases popped payloads", function()
+      local pq = PriorityQueue()
+      local references = setmetatable({}, { __mode = "v" })
+      for i = 1, 10 do
+         local payload = { i }
+         references[i] = payload
+         pq:push(payload, i)
+      end
+      for i = 1, 10 do
+         pq:pop()
+      end
+      collectgarbage("collect")
+      expect.equal(next(references), nil)
+      expect.truthy(pq:isEmpty())
+   end)
+
    it("pop on empty returns nil and leaves size zero", function()
       local pq = PriorityQueue()
       expect.truthy(pq:isEmpty())

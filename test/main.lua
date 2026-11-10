@@ -9,6 +9,7 @@ describe("prism", function()
    require "test.tests.sparsemap"
    require "test.tests.grid"
    require "test.tests.priorityqueue"
+   require "test.tests.pathfinding"
    require "test.tests.queue"
    require "test.tests.sparsemap"
    require "test.tests.bitmaskbuffer"

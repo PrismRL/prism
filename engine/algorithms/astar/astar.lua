@@ -5,25 +5,25 @@ local function heuristic(a, b)
 end
 
 -- helper function to reconstruct the path
-local function reconstructPath(cameFrom, costSoFar, current)
+local function reconstructPath(cameFrom, costSoFar, currentHash)
    local path = {}
    local costs = {}
 
-   local last
-   while current do
-      table.insert(path, 1, current)
-
-      if last then
-         local lastCost = costSoFar[last:hash()]
-         local cost = costSoFar[current:hash()]
-         table.insert(costs, 1, lastCost - cost)
-      end
-
-      last = current
-      current = cameFrom[current:hash()]
+   local parent = cameFrom[currentHash]
+   while parent do
+      path[#path + 1] = prism.Vector2.unhash(currentHash)
+      costs[#costs + 1] = costSoFar[currentHash] - costSoFar[parent]
+      currentHash = parent
+      parent = cameFrom[currentHash]
    end
 
-   table.remove(path, 1)
+   -- Reverse once instead of shifting the arrays for every step.
+   for i = 1, math.floor(#path / 2) do
+      local j = #path - i + 1
+      path[i], path[j] = path[j], path[i]
+      costs[i], costs[j] = costs[j], costs[i]
+   end
+
    return prism.Path(path, costs)
 end
 
@@ -32,6 +32,8 @@ local function defaultCostCallback(_, _)
 end
 
 --- Gets a path between two points using A* pathfinding. It is usually preferable to use :lua:func:`Level.findPath`.
+--- Search positions must use integer grid coordinates within Vector2's hash range:
+--- [-2^25, 2^25 - 1] on each axis.
 --- @param start Vector2 The starting position.
 --- @param goal Vector2 The goal position.
 --- @param passableCallback PassableCallback A callback for determining passability.
@@ -55,36 +57,43 @@ local function astarSearch(
    neighborhood = neighborhood or prism.neighborhood
 
    local frontier = prism.PriorityQueue()
-   frontier:push(start, 0)
+   local startHash = start:hash()
+   frontier:push(startHash, 0)
 
-   local cameFrom = {} -- [vec] = vec | nil
-   local costSoFar = {} -- [vec] = float
+   local cameFrom = {} -- [hash] = parent hash
+   local costSoFar = {} -- [hash] = float
 
-   cameFrom[start:hash()] = nil
-   costSoFar[start:hash()] = 0
+   costSoFar[startHash] = 0
 
+   -- Search with coordinate hashes and reuse two scratch vectors.
+   -- Persistent vectors are only needed when reconstructing the returned path.
+   local current = prism.Vector2()
+   local neighbor = prism.Vector2()
    local final
    local pathFound = false
    while not frontier:isEmpty() do
-      local current = frontier:pop()
-      --- @cast current Vector2
+      local currentHash = frontier:pop()
+      current.x, current.y = prism.Vector2._unhash(currentHash)
       if current:getRange(goal, distanceType) <= minDistance then
-         final = current
+         final = currentHash
          pathFound = true
          break
       end
 
+      local currentCost = costSoFar[currentHash]
       for _, neighborDir in ipairs(neighborhood) do
-         local neighbor = current + neighborDir
-         --- @cast neighbor Vector2
-         if passableCallback(neighbor.x, neighbor.y) then
-            local moveCost = costCallback(neighbor.x, neighbor.y)
-            local newCost = costSoFar[current:hash()] + moveCost
-            if not costSoFar[neighbor:hash()] or newCost < costSoFar[neighbor:hash()] then
-               costSoFar[neighbor:hash()] = newCost
+         local nx, ny = current.x + neighborDir.x, current.y + neighborDir.y
+         if passableCallback(nx, ny) then
+            local moveCost = costCallback(nx, ny)
+            local newCost = currentCost + moveCost
+            local neighborHash = prism.Vector2._hash(nx, ny)
+            local existingCost = costSoFar[neighborHash]
+            if not existingCost or newCost < existingCost then
+               neighbor.x, neighbor.y = nx, ny
+               costSoFar[neighborHash] = newCost
                local priority = newCost + heuristic(neighbor, goal)
-               frontier:push(neighbor, priority)
-               cameFrom[neighbor:hash()] = current
+               frontier:push(neighborHash, priority)
+               cameFrom[neighborHash] = currentHash
             end
          end
       end
