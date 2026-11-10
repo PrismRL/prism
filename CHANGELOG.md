@@ -25,6 +25,7 @@
 
 ### Fixed
 
+* `Entity:give()` replaces an existing component of the same type instead of leaving the old one in the component list
 * Targets not validating when `false` was the actual value passed in
 * Systems actually checking their requirements
 * Throw an error when `Object:is` is called with an instance
