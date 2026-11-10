@@ -8,6 +8,7 @@
 --- @class HeartbeatEffect : LightEffect
 --- @overload fun(options?: HeartbeatEffectOptions): HeartbeatEffect
 local HeartbeatEffect = prism.lighting.LightEffect:extend "HeartbeatEffect"
+HeartbeatEffect.spatiallyUniform = true
 
 --- @param opts HeartbeatEffectOptions
 function HeartbeatEffect:__new(opts)
@@ -28,10 +29,12 @@ end
 
 --- @param time number
 --- @param color Color4
---- @param x integer
---- @param y integer
+--- @param x? integer
+--- @param y? integer
+--- @param out? Color4
+--- @param cache? table
 --- @return Color4
-function HeartbeatEffect:effect(time, color, x, y)
+function HeartbeatEffect:effect(time, color, x, y, out, cache)
    -- Convert BPM to seconds per beat
    local period = 60 / self.bpm
 
@@ -48,7 +51,8 @@ function HeartbeatEffect:effect(time, color, x, y)
    local pulse = beat1 + beat2
    local scale = self.bias + pulse * self.amplitude
 
-   return prism.Color4(
+   return prism.Color4.compose(
+      out or prism.Color4(),
       math.max(0, color.r * scale),
       math.max(0, color.g * scale),
       math.max(0, color.b * scale),

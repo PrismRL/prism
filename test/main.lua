@@ -5,6 +5,7 @@ local describe, it, expect = lester.describe, lester.it, lester.expect
 
 describe("prism", function()
    require "test.tests.vector2"
+   require "test.tests.color"
    require "test.tests.sparsearray"
    require "test.tests.sparsemap"
    require "test.tests.grid"
@@ -15,6 +16,7 @@ describe("prism", function()
    require "test.tests.booleanbuffer"
    require "test.tests.cascadingbitmaskbuffer"
    require "test.tests.query"
+   require "test.tests.lighting"
 
    describe("Component", function()
       it("add component", function()

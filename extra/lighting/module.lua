@@ -9,6 +9,8 @@ prism.lighting.LightSample = require(basePath .. ".lightsample")
 prism.lighting.LightSamplePool = require(basePath .. ".lightsamplepool")
 --- @module "extra.lighting.lightbuffer"
 prism.lighting.LightBuffer = require(basePath .. ".lightbuffer")
+--- @module "extra.lighting.lightbufferpool"
+prism.lighting.LightBufferPool = require(basePath .. ".lightbufferpool")
 --- @module "extra.lighting.lighteffect"
 prism.lighting.LightEffect = require(basePath .. ".lighteffect")
 

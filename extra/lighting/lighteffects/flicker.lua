@@ -8,6 +8,7 @@
 --- @class FlickerEffect : LightEffect
 --- @overload fun(options?: FlickerEffectOptions): FlickerEffect
 local FlickerEffect = prism.lighting.LightEffect:extend "FlickerEffect"
+FlickerEffect.spatiallyUniform = true
 
 --- @param opts FlickerEffectOptions
 function FlickerEffect:__new(opts)
@@ -21,15 +22,20 @@ end
 
 --- @param time number
 --- @param color Color4
+--- @param x? integer
+--- @param y? integer
+--- @param out? Color4
+--- @param cache? table
 --- @return Color4
-function FlickerEffect:effect(time, color)
+function FlickerEffect:effect(time, color, x, y, out, cache)
    local flicker = love.math.noise(time * self.speed)
 
    local intensity = self.baseIntensity + flicker * self.flickerAmplitude
 
    local warm = flicker * self.colorShift
 
-   return prism.Color4(
+   return prism.Color4.compose(
+      out or prism.Color4(),
       math.max(0, color.r * intensity + warm),
       math.max(0, color.g * intensity),
       math.max(0, color.b * intensity - warm),

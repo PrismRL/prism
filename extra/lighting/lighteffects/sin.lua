@@ -27,10 +27,26 @@ end
 --- @param color Color4
 --- @param x integer
 --- @param y integer
+--- @param out? Color4
+--- @param cache? table
 --- @return Color4
-function SineEffect:effect(time, color, x, y)
+function SineEffect:effect(time, color, x, y, out, cache)
    -- Sample smooth spatial noise
-   local n = love.math.noise(x * self.spatialScale, y * self.spatialScale)
+   local n
+   if cache then
+      if cache.spatialScale ~= self.spatialScale then
+         cache.spatialScale = self.spatialScale
+         cache.noise = {}
+      end
+      local key = prism.Vector2._hash(x, y)
+      n = cache.noise[key]
+      if n == nil then
+         n = love.math.noise(x * self.spatialScale, y * self.spatialScale)
+         cache.noise[key] = n
+      end
+   else
+      n = love.math.noise(x * self.spatialScale, y * self.spatialScale)
+   end
 
    -- Map noise to phase offset
    local phase = n * self.noiseScale
@@ -41,7 +57,8 @@ function SineEffect:effect(time, color, x, y)
    local baseIntensity = 1.0 - self.amplitude
    local scale = baseIntensity + s * self.amplitude
 
-   return prism.Color4(
+   return prism.Color4.compose(
+      out or prism.Color4(),
       math.max(0, color.r * scale),
       math.max(0, color.g * scale),
       math.max(0, color.b * scale),

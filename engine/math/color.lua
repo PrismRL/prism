@@ -76,6 +76,22 @@ function Color4.add(a, b, out)
    return out
 end
 
+--- Adds a scaled color: a + b * scale.
+--- Allocates a new Color4 if `out` is nil. `out` may alias either input.
+--- @param a Color4
+--- @param b Color4
+--- @param scale number
+--- @param out Color4? Optional output color
+--- @return Color4 out
+function Color4.addScaled(a, b, scale, out)
+   out = out or Color4()
+   out.r = a.r + b.r * scale
+   out.g = a.g + b.g * scale
+   out.b = a.b + b.b * scale
+   out.a = a.a + b.a * scale
+   return out
+end
+
 --- Subtracts one color from another component-wise.
 --- Allocates a new Color4 if `out` is nil.
 --- @param a Color4
