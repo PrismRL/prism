@@ -1,78 +1,75 @@
 --- @param level Level The level to take opacity information from.
 --- @param origin Vector2 The origin point of the fov.
 --- @param maxDepth integer The range in tiles the fov will extend from origin.
---- @param callback function
+--- @param callback fun(x: integer, y: integer, cell: Cell)
 local function fov(level, origin, maxDepth, callback)
-   callback(origin.x, origin.y, level:getCell(origin.x, origin.y))
+   local getCell, getOpaque = level.getCell, level.getCellOpaque
+   local ox, oy = origin.x, origin.y
+   callback(ox, oy, getCell(level, ox, oy))
+   if maxDepth < 1 then return end
 
-   for i = 0, 3 do
-      local quadrant = prism.FOV.Quadrant(i, origin)
+   local width, height = level.map.w, level.map.h
+   -- Pending sectors use five numeric slots: depth, start numerator/denominator,
+   -- end numerator/denominator. Each invocation owns its stack for reentrant callbacks.
+   local pending = {}
+   local top = 0
 
-      local function reveal(x, y)
-         local x, y = quadrant:transform(x, y)
-
-         if x < 1 or y < 1 or x > level.map.w or y > level.map.w then return end
-
-         callback(x, y, level:getCell(x, y))
+   for quadrant = 0, 3 do
+      local dx, dy, cx, cy
+      if quadrant == 0 then
+         dx, dy, cx, cy = 0, -1, 1, 0
+      elseif quadrant == 1 then
+         dx, dy, cx, cy = 1, 0, 0, 1
+      elseif quadrant == 2 then
+         dx, dy, cx, cy = 0, 1, 1, 0
+      else
+         dx, dy, cx, cy = -1, 0, 0, 1
       end
 
-      ---@param row FOV.Row
-      ---@param col integer
-      local function isSymmetric(row, col)
-         local startNum = row.startSlope:tonumber()
-         local endNum = row.endSlope:tonumber()
-         return (col >= row.depth * startNum) and (col <= row.depth * endNum)
-      end
+      local depth = 1
+      local startNum, startDen, endNum, endDen = -1, 1, 1, 1
+      while true do
+         -- Keep the rational slopes until rounding to preserve half-tile ties.
+         local mincol = math.floor(startNum * depth / startDen + 0.5)
+         local maxcol = math.ceil(endNum * depth / endDen - 0.5)
+         local startBound = depth * (startNum / startDen)
+         local endBound = depth * (endNum / endDen)
+         local baseX, baseY = ox + depth * dx, oy + depth * dy
+         local canAdvance = depth + 1 <= maxDepth
+         -- nil distinguishes the first tile from a floor or wall transition.
+         local previousWall
 
-      local function isWall(x, y)
-         if not y then return false end
-         local x, y = quadrant:transform(x, y)
+         for col = mincol, maxcol do
+            local x, y = baseX + col * cx, baseY + col * cy
+            local inBounds = x >= 1 and y >= 1 and x <= width and y <= height
+            local wall = not inBounds or getOpaque(level, x, y)
 
-         if x < 1 or y < 1 or x > level.map.w or y > level.map.w then return true end
-         return level:getCellOpaque(x, y)
-      end
-
-      local function isFloor(x, y)
-         if not y then return false end
-         local x, y = quadrant:transform(x, y)
-
-         if x < 1 or y < 1 or x > level.map.w or y > level.map.w then return false end
-
-         return not level:getCellOpaque(x, y)
-      end
-
-      local function slope(x, y)
-         return prism.FOV.Fraction(2 * y - 1, 2 * x)
-      end
-
-      local function scanIterative(row)
-         --- @type FOV.Row[]
-         local rows = { row }
-         while #rows > 0 do
-            ---@type FOV.Row
-            row = table.remove(rows)
-
-            local px, py
-            for x, y in row:eachTile() do
-               if isWall(x, y) or isSymmetric(row, y) then reveal(x, y) end
-               if isWall(px, py) and isFloor(x, y) then row.startSlope = slope(x, y) end
-               if isFloor(px, py) and isWall(x, y) then
-                  local nextRow = row:next()
-                  nextRow.endSlope = slope(x, y)
-
-                  if nextRow.depth <= maxDepth then table.insert(rows, nextRow) end
-               end
-               px, py = x, y
+            if inBounds and (wall or (col >= startBound and col <= endBound)) then
+               callback(x, y, getCell(level, x, y))
             end
-            if isFloor(px, py) then
-               local nextRow = row:next()
-               if nextRow.depth <= maxDepth then table.insert(rows, row:next()) end
+
+            if previousWall == true and not wall then
+               startNum, startDen = 2 * col - 1, 2 * depth
+               startBound = depth * (startNum / startDen)
+            elseif previousWall == false and wall and canAdvance then
+               pending[top + 1], pending[top + 2], pending[top + 3], pending[top + 4], pending[top + 5] =
+                  depth + 1, startNum, startDen, 2 * col - 1, 2 * depth
+               top = top + 5
             end
+            previousWall = wall
+         end
+
+         if previousWall == false and canAdvance then
+            -- Continue directly; earlier splits remain on the stack in scan order.
+            depth = depth + 1
+         elseif top > 0 then
+            depth, startNum, startDen, endNum, endDen =
+               pending[top - 4], pending[top - 3], pending[top - 2], pending[top - 1], pending[top]
+            top = top - 5
+         else
+            break
          end
       end
-
-      local firstRow = prism.FOV.Row(1, prism.FOV.Fraction(-1), prism.FOV.Fraction(1))
-      scanIterative(firstRow)
    end
 end
 

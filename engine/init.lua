@@ -87,13 +87,6 @@ prism.Queue = prism.require "structures.queue"
 prism.PriorityQueue = prism.require "structures.priority_queue"
 
 -- Algorithms
-prism.FOV = {}
---- @module "engine.algorithms.fov.row"
-prism.FOV.Row = prism.require "algorithms.fov.row"
---- @module "engine.algorithms.fov.quadrant"
-prism.FOV.Quadrant = prism.require "algorithms.fov.quadrant"
---- @module "engine.algorithms.fov.fraction"
-prism.FOV.Fraction = prism.require "algorithms.fov.fraction"
 --- @module "engine.algorithms.fov.fov"
 prism.computeFOV = prism.require "algorithms.fov.fov"
 
