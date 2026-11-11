@@ -59,8 +59,10 @@ function SightSystem:updateSeenActors(level, actor)
 
    actor:removeAllRelations(prism.relations.SeesRelation)
 
-   for x, y, _ in sensesComponent.cells:each() do
-      for other, _ in pairs(level.actorStorage:getSparseMap():get(x, y)) do
+   -- Visibility and actor buckets share the same coordinate hashes.
+   local positions = level.actorStorage:getSparseMap()
+   for key in pairs(sensesComponent.cells.data) do
+      for other in pairs(positions:getByHash(key)) do
          actor:addRelation(prism.relations.SeesRelation, other)
          actor:addRelation(prism.relations.SensesRelation, other)
       end

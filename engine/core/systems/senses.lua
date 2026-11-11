@@ -39,21 +39,25 @@ function SensesSystem:triggerRebuild(level, actor)
       senses.explored = senses.exploredStorage[level]
    end
 
-   if not senses.remembered or senses.remembered ~= senses.exploredStorage[level] then
+   if not senses.remembered or senses.remembered ~= senses.rememberedStorage[level] then
       senses.rememberedStorage[level] = senses.rememberedStorage[level] or prism.SparseGrid()
       senses.remembered = senses.rememberedStorage[level]
    end
 
    local temp = prism.Vector2(-1, -1)
-   for x, y, cell in senses.cells:each() do
-      senses.explored:set(x, y, cell)
+   -- All three grids use the same coordinate keys. Copy those directly rather
+   -- than decoding and re-encoding every visible cell's coordinates.
+   local explored = senses.explored.data
+   local rememberedCells = senses.remembered.data
+   for key, cell in pairs(senses.cells.data) do
+      explored[key] = cell
 
       --- @type Actor?
-      local remembered = senses.remembered:get(x, y)
+      local remembered = rememberedCells[key]
       if remembered then
-         remembered:getPosition(temp)
-         if remembered.level ~= level or not temp:equals(x, y) then
-            senses.remembered:set(x, y, nil)
+         local position = remembered:getPosition(temp)
+         if remembered.level ~= level or not position or position:hash() ~= key then
+            rememberedCells[key] = nil
          end
       end
    end
@@ -64,7 +68,7 @@ function SensesSystem:triggerRebuild(level, actor)
          :relation(actor, prism.relations.SensesRelation)
          :iter()
    do
-      local x, y = rememberedActor:getPosition():decompose()
+      local x, y = rememberedActor:getPosition(temp):decompose()
       senses.remembered:set(x, y, rememberedActor)
    end
 end
