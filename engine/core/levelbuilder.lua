@@ -8,7 +8,6 @@
 --- @field systems System[]
 --- @overload fun(): LevelBuilder
 local LevelBuilder = prism.SparseGrid:extend("LevelBuilder")
-LevelBuilder._serializationBlacklist.initialValue = true
 
 --- Initialize a new LevelBuilder.
 function LevelBuilder:__new()
@@ -33,6 +32,7 @@ end
 --- @param actor table The actor to add.
 --- @param x number? The x-coordinate.
 --- @param y number? The y-coordinate.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:addActor(actor, x, y)
    if x and y then
       if actor:getPosition() then
@@ -47,17 +47,20 @@ function LevelBuilder:addActor(actor, x, y)
    end
 
    self.actors:addActor(actor)
+   return self
 end
 
 --- Removes an actor from the map.
 --- @param actor table The actor to remove.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:removeActor(actor)
    self.actors:removeActor(actor)
+   return self
 end
 
 --- Adds systems to the level.
 --- @param ... System Initial systems to add to the level.
---- @return LevelBuilder
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:addSystems(...)
    for _, system in ipairs { ... } do
       table.insert(self.systems, system)
@@ -67,13 +70,15 @@ end
 
 --- Adds a custom turn handler to the level.
 --- @param turnHandler TurnHandler A custom turn handler.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:addTurnHandler(turnHandler)
    self.turnHandler = turnHandler
+   return self
 end
 
 --- Adds a custom scheduler to the level.
 --- @param scheduler Scheduler A scheduler. Defaults to a SimpleScheduler.
---- @return LevelBuilder
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:addScheduler(scheduler)
    self.scheduler = scheduler
    return self
@@ -81,7 +86,7 @@ end
 
 --- Adds a custom seed to the level.
 --- @param seed any A seed. Defaults to a time-based seed.
---- @return LevelBuilder
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:addSeed(seed)
    self.seed = seed
    return self
@@ -102,6 +107,7 @@ end
 --- @param x2 number The x-coordinate of the bottom-right corner.
 --- @param y2 number The y-coordinate of the bottom-right corner.
 --- @param cellFactory CellFactory The cell factory to fill the rectangle with.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:rectangle(mode, x1, y1, x2, y2, cellFactory)
    if mode == "fill" then
       for x = x1, x2 do
@@ -120,6 +126,8 @@ function LevelBuilder:rectangle(mode, x1, y1, x2, y2, cellFactory)
          self:set(x2, y, cellFactory())
       end
    end
+
+   return self
 end
 
 --- Draws an ellipse on the map.
@@ -129,10 +137,12 @@ end
 --- @param rx number The radius along the x-axis.
 --- @param ry number The radius along the y-axis.
 --- @param cellFactory CellFactory The cell factory to fill the ellipse with.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:ellipse(mode, cx, cy, rx, ry, cellFactory)
    prism.ellipse(mode, prism.Vector2(cx, cy), rx, ry, function(x, y)
       self:set(x, y, cellFactory())
    end)
+   return self
 end
 
 --- Draws a line on the map using Bresenham's line algorithm.
@@ -141,16 +151,20 @@ end
 --- @param x2 number The x-coordinate of the ending point.
 --- @param y2 number The y-coordinate of the ending point.
 --- @param cellFactory CellFactory The cell factory to draw the line with.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:line(x1, y1, x2, y2, cellFactory)
    local path = prism.bresenham(x1, y1, x2, y2)
    for _, position in ipairs(path:getPath()) do
       self:set(position.x, position.y, cellFactory())
    end
+
+   return self
 end
 
 --- Draws a sequence of lines between given points.
 --- @param cellFactory CellFactory The cell factory to draw the lines with.
 --- @param ... integer Pairs of (x, y) coordinates given as a sequence of numbers.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:polygon(cellFactory, ...)
    --- @type integer[]
    local points = { ... }
@@ -159,12 +173,14 @@ function LevelBuilder:polygon(cellFactory, ...)
    for i = 1, #points - 2, 2 do
       self:line(points[i], points[i + 1], points[i + 2], points[i + 3], cellFactory)
    end
+
+   return self
 end
 
---- Gets the value at the specified coordinates, or the initialValue if not set.
+--- Gets the value at the specified coordinates.
 --- @param x number The x-coordinate.
 --- @param y number The y-coordinate.
---- @return Cell -- The cell at the specified coordinates, or the initialValue if not set.
+--- @return Cell? -- The cell at the specified coordinates, or nil if not set.
 function LevelBuilder:get(x, y)
    local value = prism.SparseGrid.get(self, x, y)
    return value
@@ -174,14 +190,17 @@ end
 --- @param x number The x-coordinate.
 --- @param y number The y-coordinate.
 --- @param cell Cell The cell to set.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:set(x, y, cell)
    assert(cell == nil or cell:isInstance(), "set expects an instance, not a factory!")
    prism.SparseGrid.set(self, x, y, cell)
+   return self
 end
 
 --- Adds padding around the map with a specified width and cell value.
 --- @param width number The width of the padding to add.
 --- @param cellFactory CellFactory The cell factory to use for padding.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:pad(width, cellFactory)
    local min, max = self:getBounds()
    local minX, minY = min:decompose()
@@ -204,6 +223,8 @@ function LevelBuilder:pad(width, cellFactory)
          self:set(x, y, cellFactory())
       end
    end
+
+   return self
 end
 
 --- Returns the location of the upper left and lower right points that exist in the level,
@@ -254,6 +275,7 @@ end
 --- @param destX number The x-coordinate of the top-left corner in the destination LevelBuilder.
 --- @param destY number The y-coordinate of the top-left corner in the destination LevelBuilder.
 --- @param maskFn fun(x: integer, y: integer, source: Cell, dest: Cell)|nil A callback function for masking. Should return true if the cell should be copied, false otherwise.
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:blit(source, destX, destY, maskFn)
    maskFn = maskFn or function()
       return true
@@ -279,6 +301,8 @@ function LevelBuilder:blit(source, destX, destY, maskFn)
       end
       self.actors:addActor(actor)
    end
+
+   return self
 end
 
 --- @private
@@ -313,7 +337,8 @@ function LevelBuilder:getEntities()
    return map, self.actors:getAllActors()
 end
 
---- @param defaultCell CellFactory
+--- Finalize the level.
+--- @param defaultCell CellFactory The cell to fill any unspecified locations with.
 --- @return Level
 function LevelBuilder:build(defaultCell)
    self.defaultCell = defaultCell -- ephemeral

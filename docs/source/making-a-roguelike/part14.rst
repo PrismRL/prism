@@ -42,9 +42,9 @@ charges and checking if we have charges left to zap.
 
    return Zappable
 
-Now let's head to ``modules/basegame/actions`` and create a new action in ``zap.lua``. We implement
-a :lua:func:`Action.canPerform` that checks if the wand has enough charges to zap. Then we implement
-a ``perform`` action that reduces the wand's charges.
+Now let's head to ``modules/base/actions`` and create a new action in ``zap.lua``. We implement a
+:lua:func:`Action.canPerform` that checks if the wand has enough charges to zap. Then we implement a
+``perform`` action that reduces the wand's charges.
 
 .. code-block:: lua
 
