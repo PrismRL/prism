@@ -45,8 +45,7 @@ while equipped.
          prism.components.Equipment(
             "ring",
             prism.condition.Condition(prism.modifiers.HealthModifier(5))
-         ),
-         prism.components.Position(),
+         )
       }
    end)
 
