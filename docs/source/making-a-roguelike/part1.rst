@@ -35,7 +35,7 @@ To make the game more engaging, let’s introduce an enemy: the **Kobold**.
 3. Add the following code to define the Kobold actor:
 
 .. code-block:: lua
-scm-history-item:/home/matthewb/Projects/prism-ui?%7B%22repositoryId%22%3A%22scm0%22%2C%22historyItemId%22%3A%22d0f2588075fc06091f2155f88f190269e16caeb1%22%2C%22historyItemParentId%22%3A%2272a17adc783ca823d90bf1ff26406f6998ba4863%22%2C%22historyItemDisplayId%22%3A%22d0f2588%22%7D
+
    prism.registerActor("Kobold", function()
       return prism.Actor.fromComponents {
          prism.components.Drawable{ index = "k", color = prism.Color4.RED },
