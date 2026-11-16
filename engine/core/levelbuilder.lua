@@ -246,6 +246,7 @@ function LevelBuilder:getBounds()
 end
 
 --- Shifts all cells and actors so the minimum bound is (0, 0).
+--- @return LevelBuilder self for chaining.
 function LevelBuilder:normalize()
    local min = self:getBounds()
    local minX, minY = min:decompose()
@@ -268,6 +269,8 @@ function LevelBuilder:normalize()
          actor:give(prism.components.Position(prism.Vector2(pos.x - minX, pos.y - minY)))
       end
    end
+
+   return self
 end
 
 --- Blits the source LevelBuilder onto this LevelBuilder at the specified coordinates.
