@@ -28,7 +28,7 @@ end
 
 function Component:getBase()
    local proto = self:isInstance() and getmetatable(self) or self
-   while proto and proto ~= prism.Component do
+   while proto and getmetatable(proto) ~= prism.Component do
       proto = getmetatable(proto)
    end
    
