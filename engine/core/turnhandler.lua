@@ -9,10 +9,9 @@ local TurnHandler = prism.Object:extend("TurnHandler")
 --- @param controller Controller
 function TurnHandler:handleTurn(level, actor, controller)
    local action
-   
+
    local activity = actor:get(prism.components.Activity)
    if activity and (not activity.cancellable or controller:decideContinue(level, actor, activity)) then
-      ---@diagnostic disable-next-line
       action = activity:next()
    end
    if not action then actor:remove(prism.components.Activity) end
