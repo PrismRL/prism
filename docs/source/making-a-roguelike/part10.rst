@@ -26,7 +26,6 @@ following actor.
    prism.registerActor("MeatBrick", function ()
       return prism.Actor.fromComponents{
          prism.components.Name("Meat Brick"),
-         prism.components.Position(),
          prism.components.Drawable { index = "%", color = prism.Color4.RED },
          prism.components.Item{
             stackable = "MeatBrick",
@@ -157,7 +156,6 @@ with. Let's create a new file in ``modules/game/actors`` called ``chest.lua``. W
       local inventory = prism.components.Inventory()
       local chest = prism.Actor.fromComponents {
           prism.components.Name("Chest"),
-          prism.components.Position(),
           inventory,
           prism.components.Drawable{ index = "(", color = prism.Color4.YELLOW },
           prism.components.Container(),

@@ -94,7 +94,7 @@ function Target:without(...)
    end
 
    --- @param target Entity
-   self.validators["with"] = function(level, owner, target)
+   self.validators["without"] = function(level, owner, target)
       if not next(self.excludedComponents) then return true end
 
       if not prism.Entity:is(target) then return false end

@@ -35,15 +35,7 @@ end
 --- @return LevelBuilder self for chaining.
 function LevelBuilder:addActor(actor, x, y)
    if x and y then
-      if actor:getPosition() then
-         actor:give(prism.components.Position(prism.Vector2(x, y)))
-      else
-         -- stylua: ignore
-         prism.logger.warn(
-            "Attempted to add", actor:getName(), "to mapbuilder",
-            "at position", x, ",", y, "but it did not have a position component!"
-         )
-      end
+      actor:give(prism.components.Position(prism.Vector2(x, y)))
    end
 
    self.actors:addActor(actor)

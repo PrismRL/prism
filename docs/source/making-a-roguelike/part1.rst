@@ -38,7 +38,6 @@ To make the game more engaging, let’s introduce an enemy: the **Kobold**.
 
    prism.registerActor("Kobold", function()
       return prism.Actor.fromComponents {
-         prism.components.Position(),
          prism.components.Drawable{ index = "k", color = prism.Color4.RED },
       }
    end)
@@ -130,7 +129,6 @@ game. Let's make them follow the player around.
       prism.registerActor("Kobold", function()
          return prism.Actor.fromComponents {
             prism.components.Name("Kobold"),
-            prism.components.Position(),
             prism.components.Collider(),
             prism.components.Drawable{ index = "k", color = prism.Color4.RED },
             prism.components.Senses(),

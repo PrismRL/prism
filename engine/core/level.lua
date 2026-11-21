@@ -179,20 +179,7 @@ function Level:addActor(actor, x, y)
    assert(not actor.level, "Actor is already in a level!")
 
    if x and y then
-      if actor:getPosition() then
-         actor:give(prism.components.Position(prism.Vector2(x, y)))
-      else
-         prism.logger.warn(
-            "Attempted to add",
-            actor:getName(),
-            "to level",
-            "at position",
-            x,
-            ",",
-            y,
-            "but it did not have a position component!"
-         )
-      end
+      actor:give(prism.components.Position(prism.Vector2(x, y)))
    end
 
    prism.logger.debug("Actor", actor:getName(), "was added to level")

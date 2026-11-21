@@ -180,7 +180,6 @@ well.
          prism.components.Name("Potion of Vitality"),
          prism.components.Drawable{ index = "!", color = prism.Color4.RED },
          prism.components.Item(),
-         prism.components.Position(),
          prism.components.Drinkable {
             healing = 5,
             condition = prism.condition.Condition(prism.modifiers.HealthModifier(5))
