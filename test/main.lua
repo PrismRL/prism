@@ -3,6 +3,9 @@ require "engine"
 local lester = require "test.lester"
 local describe, it, expect = lester.describe, lester.it, lester.expect
 
+local actor = prism.Actor()
+print(actor:has(nil))
+
 describe("prism", function()
    require "test.tests.vector2"
    require "test.tests.sparsearray"
@@ -15,6 +18,7 @@ describe("prism", function()
    require "test.tests.booleanbuffer"
    require "test.tests.cascadingbitmaskbuffer"
    require "test.tests.query"
+   require "test.tests.fov"
 
    describe("Component", function()
       it("add component", function()

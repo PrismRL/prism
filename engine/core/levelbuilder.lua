@@ -34,9 +34,7 @@ end
 --- @param y number? The y-coordinate.
 --- @return LevelBuilder self for chaining.
 function LevelBuilder:addActor(actor, x, y)
-   if x and y then
-      actor:give(prism.components.Position(prism.Vector2(x, y)))
-   end
+   if x and y then actor:give(prism.components.Position(prism.Vector2(x, y))) end
 
    self.actors:addActor(actor)
    return self
@@ -242,7 +240,7 @@ end
 function LevelBuilder:normalize()
    local min = self:getBounds()
    local minX, minY = min:decompose()
-   if minX == 0 and minY == 0 then return end
+   if minX == 0 and minY == 0 then return self end
 
    local shifted = prism.SparseGrid()
    for x, y, value in self:each() do

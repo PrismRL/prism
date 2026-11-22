@@ -1,9 +1,11 @@
 --- @param level Level The level to take opacity information from.
 --- @param origin Vector2 The origin point of the fov.
 --- @param maxDepth integer The range in tiles the fov will extend from origin.
---- @param callback function
+--- @param callback fun(x: integer, y: integer, cell: Cell) A function called for each visible cell.
 local function fov(level, origin, maxDepth, callback)
    callback(origin.x, origin.y, level:getCell(origin.x, origin.y))
+
+   if maxDepth < 1 then return end
 
    for i = 0, 3 do
       local quadrant = prism.FOV.Quadrant(i, origin)
