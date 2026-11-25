@@ -17,6 +17,9 @@ spectrum.SpriteAtlas = spectrum.require "spriteatlas"
 --- @module "spectrum.display"
 spectrum.Display = spectrum.require "display"
 
+--- @module "spectrum.stackeddisplay"
+spectrum.StackedDisplay = spectrum.require "stackeddisplay"
+
 --- @module "spectrum.input"
 spectrum.Input = spectrum.require "input"
 
